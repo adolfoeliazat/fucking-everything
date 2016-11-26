@@ -1,0 +1,58 @@
+PostgreSQL
+==========
+
+cd /d E:\work\aps\back\bin\dev\win
+title pg-test & pg-test-start.cmd
+    | It will output following shit, which is OK: FATAL:  role "Vladimir" does not exist
+
+
+
+JavaScript
+==========
+
+F.dumpLocalStorage()
+localStorage.setItem('reloadTest', 'true')
+
+
+Redis
+=====
+
+cd /d C:\opt\Redis
+title redis-server & redis-server redis.windows.conf
+title redis-cli & redis-cli
+
+
+Links
+=====
+
+aps-ua-writer.local:3022/faq.html?test=TestWriter_Boot_Cool
+
+
+Git
+===
+
+git show --pretty="" --name-status <commit-sha>
+
+git diff-tree -r <commit-sha>
+http://stackoverflow.com/questions/1314950/git-get-all-commits-and-blobs-they-created
+
+git diff c7514737083c88979579a936621a0a428112b23a --  "E:\work\aps\aps\vendor\bootstrap-master\js\bootstrap.js"
+
+
+IntelliJ
+========
+
+Reload ideavimrc          :source ~/.ideavimrc
+
+
+Misc
+====
+
+netstat -a -o
+netstat -a -o | findstr 8080
+taskkill /f /pid zz
+
+echo -ne '\e]0;Title\a'
+
+
+

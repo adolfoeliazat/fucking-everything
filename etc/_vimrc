@@ -1,0 +1,36 @@
+set nocp
+
+set encoding=utf-8
+
+set guicursor+=a:blinkon0
+"set guifont=Meslo_LG_S_DZ:h13:cRUSSIAN
+set guifont=Consolas:h13:b:cRUSSIAN
+"color default
+syn on
+
+set hlsearch
+set incsearch
+
+set ignorecase
+set smartcase
+
+set nu
+set rnu
+
+set backspace=indent,eol,start
+
+set ts=8
+set sw=4
+set sts=4
+set ai
+set et
+
+set ruler
+
+imap <s-cr> <esc>o
+nmap <s-cr> o<esc>
+imap <c-s-cr> <esc>O
+nmap <c-s-cr> O<esc>
+imap <a-d> <del>
+nmap <c-n> :noh<cr>
+

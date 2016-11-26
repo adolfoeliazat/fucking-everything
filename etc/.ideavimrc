@@ -1,0 +1,33 @@
+set surround
+
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+set wrapscan
+
+imap <c-e> <end>
+imap <c-a> <home>
+
+map <c-n> :noh<cr>
+imap <c-f> <right>
+imap <c-b> <left>
+imap <c-n> <down>
+imap <c-p> <up>
+
+nmap <c-cr> 3<cr>
+vmap <c-cr> 3<cr>
+nmap <c-a-cr> 5<cr>
+vmap <c-a-cr> 5<cr>
+
+nmap <c--> 3-
+vmap <c--> 3-
+nmap <c-a--> 5-
+vmap <c-a--> 5-
+
+nmap <a-s-3> *
+
+nnoremap [[ h[{
+nnoremap ]] <cr>]}
+
+vmap r "_dP

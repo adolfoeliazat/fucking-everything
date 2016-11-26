@@ -1,0 +1,173 @@
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+set noregexsearch
+
+set ts=4
+set sw=4
+
+" save
+map <a-[> <esc>:noh<cr>:w<cr>
+imap <a-[> <esc>:noh<cr>:w<cr>
+
+" turn off search highlight
+map <c-n> :noh<cr>
+
+" paragraph motion
+nmap ) }}{<cr>
+vmap ) }-
+nmap ( {{}-
+vmap ( {<cr>
+
+" --- Cursor movement in insert mode ---
+imap <c-f> <right>
+imap <c-b> <left>
+imap <c-n> <down>
+imap <c-p> <up>
+" imap <c-=> <esc>lwi<left>
+" imap <c--> <esc>lbi
+
+imap <a-i> <space><space><space><space>
+imap <a-u> <space><space><space><space><space><space>
+imap <a-o> <bs><bs><bs><bs>
+imap <a-y> <bs><bs><bs><bs><bs><bs>
+
+
+" newline + semicolon/comma after closing brace or paren
+" imap <a-c> <esc>mtA,<esc>`ta<cr><up><right><right><right><right>
+
+"--- funny characters ---
+
+" inoremap \w ω
+" inoremap \a α
+" inoremap \b β
+" inoremap \g γ
+" inoremap \l λ
+" inoremap \L Λ
+" inoremap \o θ
+" inoremap \r ϱ
+" inoremap \x ξ
+" inoremap \P Π
+" inoremap \f φ
+" inoremap \t τ
+" inoremap \- →
+" inoremap \\- →→
+" inoremap \< ←
+" inoremap \\< ←←
+" inoremap \ql «
+" inoremap \qr »
+inoremap \1 ’
+inoremap \2 ”
+" inoremap \= ≡
+" inoremap \$ §
+" inoremap \0 •
+" inoremap \s ■
+" inoremap \S □
+
+"--- indentation ---
+
+nnoremap >{ f{v%>
+nnoremap <{ f{v%<
+
+nnoremap >} >i{
+nnoremap <} <i{
+
+vnoremap 1> :set sw=1<cr>gv>>:set sw=4<cr>
+vnoremap 2> :set sw=2<cr>gv>>:set sw=4<cr>
+vnoremap 3> :set sw=3<cr>gv>>:set sw=4<cr>
+vnoremap 1< :set sw=1<cr>gv<<:set sw=4<cr>
+vnoremap 2< :set sw=2<cr>gv<<:set sw=4<cr>
+vnoremap 3< :set sw=3<cr>gv<<:set sw=4<cr>
+
+"--- faster movements ---
+
+nmap <c-cr> 3<cr>
+vmap <c-cr> 3<cr>
+nmap <c-a-cr> 9<cr>
+vmap <c-a-cr> 9<cr>
+
+nmap <c--> 3-
+vmap <c--> 3-
+nmap <c-a--> 9-
+vmap <c-a--> 9-
+
+" nmap <c-b> 15h
+
+
+"--- centering up/down screenful ---
+
+nmap <c-u> <c-u>zz
+
+"--- Fix Vrapper inserting Windows newlines ---
+
+"nmap o A<cr>
+"nmap O I<up>
+
+"--- Auto-inserted pair items ---
+
+" imap <a-j> <right>;<bs><bs><cr>)<left>
+
+nmap <a-3> *
+
+
+" --- Code blocks ---
+
+nmap vrr [{V%
+nmap vrR [{v_o%
+
+" Shift in-curly region right, then add another level of curlies around it
+" nmap vrc vi{VS}i <left>
+
+" Shift in-curly region left, then delete surronding curlies
+nmap dac vi{V<[[%dd``dd
+
+" Block select inside curlies
+nmap vic vi{V
+
+" Change inside curlies
+nmap cic vicc
+
+" Block select around curlies
+nmap vac va{V
+
+" Block delete inside curlies
+nmap dic vi{Vd
+
+vmap C S}i <left>
+
+nmap vv $F{f{V%
+vmap vv $F{f{%
+" nmap dr vrd
+" nmap dR vRd
+" nmap cr vRc
+" nmap cR vrc
+nmap [[ [{
+vmap [[ [{
+nmap ]] ]}
+vmap ]] ]}
+
+
+" Paste in visual mode preserving @"
+vmap r "_dP
+" vnoremap p :let @t=@"<cr>gvp:let @"=@t<cr>
+
+" Return to curly brace and insert newline there
+" nmap <c-l> $F}i<cr><up><right><right><right><right>
+nmap <c-l> $F}ci}<cr><up><right><right><right><right>
+nmap <a-l> $F}ci}
+imap <c-l> <esc><c-l>
+
+" Jump to pair symbol in insert mode
+imap <c-5> <esc>%i<right>
+
+
+" imap <a-j> <esc>:leaveLinkedModeUI<cr>a<cr>
+" imap <a-j> <esc>:leaveLinkedModeUI<cr>a<cr><up><right><right><right><right>
+
+" nmap du :bringIntoCurliesUp<cr>
+" vmap du :bringIntoCurliesUp<cr>
+
+nmap <a-l> mm$`m
+nmap <c-a-l> mm_`m
+
