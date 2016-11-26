@@ -1,33 +1,3 @@
-PostgreSQL
-==========
-
-cd /d E:\work\aps\back\bin\dev\win
-title pg-test & pg-test-start.cmd
-    | It will output following shit, which is OK: FATAL:  role "Vladimir" does not exist
-
-
-
-JavaScript
-==========
-
-F.dumpLocalStorage()
-localStorage.setItem('reloadTest', 'true')
-
-
-Redis
-=====
-
-cd /d C:\opt\Redis
-title redis-server & redis-server redis.windows.conf
-title redis-cli & redis-cli
-
-
-Links
-=====
-
-aps-ua-writer.local:3022/faq.html?test=TestWriter_Boot_Cool
-
-
 Git
 ===
 
