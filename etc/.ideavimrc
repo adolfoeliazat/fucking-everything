@@ -31,3 +31,6 @@ nnoremap [[ h[{
 nnoremap ]] <cr>]}
 
 vmap r "_dP
+
+nmap \v V% %
+
