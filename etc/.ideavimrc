@@ -34,3 +34,15 @@ vmap r "_dP
 
 nmap \v V% %
 
+nmap \f :%s/^\(\s*\)o - /\1o- /g<cr>
+
+
+
+
+
+
+
+
+
+
+
