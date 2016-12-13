@@ -9,6 +9,22 @@ http://stackoverflow.com/questions/1314950/git-get-all-commits-and-blobs-they-cr
 git diff c7514737083c88979579a936621a0a428112b23a --  "E:\work\aps\aps\vendor\bootstrap-master\js\bootstrap.js"
 
 
+Delete commit history
+---------------------
+
+http://stackoverflow.com/questions/13716658/how-to-delete-all-commit-history-in-github
+
+For deleting all shit in gh-pages:
+
+git clone --branch gh-pages --depth 1 git@github.com:staticshit/apsua.git
+git checkout --orphan pizda
+git add -A
+git commit -am "Initial shit"
+git branch -D gh-pages
+git branch -m gh-pages
+git push -f origin master
+
+
 IntelliJ
 ========
 
