@@ -1,11 +1,14 @@
 ;---------- Disable Alt+Numpad character code input ----------
 
+NumpadClear::SendInput {Right}
+
 !NumpadIns::SendInput !{Ins}
 !NumpadEnd::SendInput !{End}
 !NumpadDown::SendInput !{Down}
 !NumpadPgDn::SendInput !{PgDn}
 !NumpadLeft::SendInput !{Left}
-!NumpadClear::SendInput !{Clear}
+!NumpadClear::SendInput !{Right}
+; !NumpadClear::SendInput !{Clear}
 !NumpadRight::SendInput !{Right}
 !NumpadHome::SendInput !{Home}
 !NumpadUp::SendInput !{Up}
@@ -17,7 +20,8 @@
 +!NumpadDown::SendInput +!{Down}
 +!NumpadPgDn::SendInput +!{PgDn}
 +!NumpadLeft::SendInput +!{Left}
-+!NumpadClear::SendInput +!{Clear}
++!NumpadClear::SendInput +!{Right}
+; +!NumpadClear::SendInput +!{Clear}
 +!NumpadRight::SendInput +!{Right}
 +!NumpadHome::SendInput +!{Home}
 +!NumpadUp::SendInput +!{Up}
@@ -29,7 +33,8 @@
 ^!NumpadDown::SendInput ^!{Down}
 ^!NumpadPgDn::SendInput ^!{PgDn}
 ^!NumpadLeft::SendInput ^!{Left}
-^!NumpadClear::SendInput ^!{Clear}
+^!NumpadClear::SendInput ^!{Right}
+; ^!NumpadClear::SendInput ^!{Clear}
 ^!NumpadRight::SendInput ^!{Right}
 ^!NumpadHome::SendInput ^!{Home}
 ^!NumpadUp::SendInput ^!{Up}
@@ -41,7 +46,8 @@
 ^+!NumpadDown::SendInput ^+!{Down}
 ^+!NumpadPgDn::SendInput ^+!{PgDn}
 ^+!NumpadLeft::SendInput ^+!{Left}
-^+!NumpadClear::SendInput ^+!{Clear}
+^+!NumpadClear::SendInput ^+!{Right}
+; ^+!NumpadClear::SendInput ^+!{Clear}
 ^+!NumpadRight::SendInput ^+!{Right}
 ^+!NumpadHome::SendInput ^+!{Home}
 ^+!NumpadUp::SendInput ^+!{Up}
