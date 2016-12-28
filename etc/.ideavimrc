@@ -34,12 +34,12 @@ vmap r "_dP
 
 nmap \v V% %
 
-nmap \f :%s/^\(\s*\)o - /\1o- /g<cr>:%s/) {o ->$/){o->/g<cr>:%s/) - {o ->$/)-{o->/g<cr>:%s/) -{o->/)-{o->/g<cr>
+nmap \f :%s/^\(\s*\)o - /\1o- /g<cr>:%s/) {o ->$/){o->/g<cr>:%s/) - {o ->$/)-{o->/g<cr>:%s/) -{o->/)-{o->/g<cr>:%s/kdiv {o ->/kdiv{o->/g<cr>:%s/row {o ->/row{o->/g<cr>
+" nmap \f :%s/^\(\s*\)o - /\1o- /g<cr>:%s/) {o ->$/){o->/g<cr>:%s/) - {o ->$/)-{o->/g<cr>:%s/) -{o->/)-{o->/g<cr>
 
 nmap cc ct
 
-
-
+imap <c-=> <c-right>
 
 
 
