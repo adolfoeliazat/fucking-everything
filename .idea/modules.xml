@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/etc/etc.iml" filepath="$PROJECT_DIR$/etc/etc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fekjs/fekjs.iml" filepath="$PROJECT_DIR$/fekjs/fekjs.iml" />
       <module fileurl="file://$PROJECT_DIR$/txt/txt.iml" filepath="$PROJECT_DIR$/txt/txt.iml" />
     </modules>
   </component>
