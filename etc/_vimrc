@@ -34,3 +34,6 @@ nmap <c-s-cr> O<esc>
 imap <a-d> <del>
 nmap <c-n> :noh<cr>
 
+set wrap
+set linebreak
+
