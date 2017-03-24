@@ -164,6 +164,9 @@ object HTTPClient {
             .post(body)
             .build()
         val response = client.newCall(request).execute()
+        val code = response.code()
+        if (code != 200)
+            bitch("Shitty HTTP response code: $code")
         return response.body().string()
     }
 }

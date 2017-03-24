@@ -78,12 +78,9 @@ class IdeaBackdoorPlugin : ApplicationComponent {
 
         inner class FuckingServlet : HttpServlet() {
             override fun service(req: HttpServletRequest, res: HttpServletResponse) {
-                req.characterEncoding = "UTF-8"
-                val rawRequest = req.reader.readText()
-                clog("Got request:", rawRequest)
-
                 val loader = UrlClassLoader.build()
-                    .parent(Messages::class.java.classLoader)
+                    .parent(this::class.java.classLoader)
+//                    .parent(Messages::class.java.classLoader)
                     .urls(*run {
                         val fuck = File("E:/fegh/out/production").listFiles()
                         val shit = File("E:/fegh/lib").listFiles()
@@ -91,30 +88,28 @@ class IdeaBackdoorPlugin : ApplicationComponent {
                         (fuck + shit + bitch).map {it.toURI().toURL()}.toTypedArray()
                     })
                     .get()
-                val clazz = loader.loadClass("vgrechka.idea.HotReloadableIdeaPieceOfShit")
+                val clazz = loader.loadClass("vgrechka.idea.hripos.HotReloadableIdeaPieceOfShit")
                 val inst = clazz.newInstance()
-                val method = clazz.getMethod("doShit", String::class.java)
+                val httpServletRequestClass = HttpServletRequest::class.java // loader.loadClass(HttpServletRequest::class.qualifiedName)
+                val httpServletResponseClass = HttpServletResponse::class.java // loader.loadClass(HttpServletResponse::class.qualifiedName)
+                val method = clazz.getMethod("serve", httpServletRequestClass, httpServletResponseClass)
 
-                val rawResponse = method.invoke(inst, rawRequest) as String
-
-                res.contentType = "application/json; charset=utf-8"
-                res.writer.println(rawResponse)
-                res.status = HttpServletResponse.SC_OK
+                method.invoke(inst, req, res)
             }
         }
     }
 }
 
-// Ex: _run vgrechka.ideabackdoor.SendSomeShitToBackdoor idea-backdoor-fucking fucking?
+// Ex: _run vgrechka.ideabackdoor.SendSomeShitToBackdoor idea-backdoor-fucking "Fucking around?"
 object SendSomeShitToBackdoor {
     @JvmStatic
     fun main(args: Array<String>) {
         val project = args[0]
-        val shit = args[1]
-        val res = HTTPClient.postJSON("http://localhost:${BackdoorGlobal.rpcServerPort}",
+        val message = args[1]
+        val res = HTTPClient.postJSON("http://localhost:${BackdoorGlobal.rpcServerPort}?proc=PrintToBullshitter",
                             """{
-                                   "project": "$project",
-                                   "shit": "$shit"
+                                   "projectName": "$project",
+                                   "message": "$message"
                                }""")
         clog("Response: $res")
         clog("OK")
