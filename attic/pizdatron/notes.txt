@@ -1,0 +1,8 @@
+Run Pizdatron spike
+
+    e:\fegh\fekjs\bin\pizdatron fekjs.pizdatron.Spike_Pizdatron_FuckYou
+
+Misc
+
+    node e:\fegh\fekjs\bin\fekjsrun.js fekjs.pizdatron.Spike_Pizdatron_FuckYou
+

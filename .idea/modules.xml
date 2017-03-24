@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/attic/attic.iml" filepath="$PROJECT_DIR$/attic/attic.iml" />
       <module fileurl="file://$PROJECT_DIR$/etc/etc.iml" filepath="$PROJECT_DIR$/etc/etc.iml" />
-      <module fileurl="file://$PROJECT_DIR$/fekjs/fekjs.iml" filepath="$PROJECT_DIR$/fekjs/fekjs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/idea-backdoor/idea-backdoor.iml" filepath="$PROJECT_DIR$/idea-backdoor/idea-backdoor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shared-jvm/shared-jvm.iml" filepath="$PROJECT_DIR$/shared-jvm/shared-jvm.iml" />
       <module fileurl="file://$PROJECT_DIR$/txt/txt.iml" filepath="$PROJECT_DIR$/txt/txt.iml" />
     </modules>
   </component>

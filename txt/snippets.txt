@@ -1,55 +1,44 @@
 Git
 ===
 
-git show --pretty="" --name-status <commit-sha>
+    git show --pretty="" --name-status <commit-sha>
 
-git diff-tree -r <commit-sha>
-http://stackoverflow.com/questions/1314950/git-get-all-commits-and-blobs-they-created
+    git diff-tree -r <commit-sha>
+    http://stackoverflow.com/questions/1314950/git-get-all-commits-and-blobs-they-created
 
-git diff c7514737083c88979579a936621a0a428112b23a --  "E:\work\aps\aps\vendor\bootstrap-master\js\bootstrap.js"
+    git diff c7514737083c88979579a936621a0a428112b23a --  "E:\work\aps\aps\vendor\bootstrap-master\js\bootstrap.js"
 
 
-Delete commit history
----------------------
+    Delete commit history
+    ---------------------
 
-http://stackoverflow.com/questions/13716658/how-to-delete-all-commit-history-in-github
+        http://stackoverflow.com/questions/13716658/how-to-delete-all-commit-history-in-github
 
-For deleting all shit in gh-pages:
+        For deleting all shit in gh-pages:
 
-git clone --branch gh-pages --depth 1 git@github.com:staticshit/apsua.git
-git checkout --orphan pizda
-git add -A
-git commit -am "Initial shit"
-git branch -D gh-pages
-git branch -m gh-pages
-git push -f origin master
+        git clone --branch gh-pages --depth 1 git@github.com:staticshit/apsua.git
+        git checkout --orphan pizda
+        git add -A
+        git commit -am "Initial shit"
+        git branch -D gh-pages
+        git branch -m gh-pages
+        git push -f origin master
 
 
 IntelliJ
 ========
 
-Reload ideavimrc          :source ~/.ideavimrc
+    Reload ideavimrc          :source ~/.ideavimrc
 
-
-FEKJS
-=====
-
-Run Pizdatron spike
-
-    e:\fegh\fekjs\bin\pizdatron fekjs.pizdatron.Spike_Pizdatron_FuckYou
-
-Misc
-
-    node e:\fegh\fekjs\bin\fekjsrun.js fekjs.pizdatron.Spike_Pizdatron_FuckYou
 
 Misc
 ====
 
-netstat -a -o
-netstat -a -o | findstr 8080
-taskkill /f /pid zz
+    netstat -a -o
+    netstat -a -o | findstr 8080
+    taskkill /f /pid zz
 
-echo -ne '\e]0;Title\a'
+    echo -ne '\e]0;Title\a'
 
 
 
