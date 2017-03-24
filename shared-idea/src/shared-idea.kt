@@ -16,6 +16,7 @@ import com.intellij.execution.ui.*
 import com.intellij.execution.ui.actions.CloseAction
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ApplicationComponent
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
@@ -38,49 +39,53 @@ val Project.bullshitter by AttachedComputedShit(::Bullshitter)
 
 class Bullshitter(val project: Project) {
     private val consoleView: ConsoleView by relazy {
-        clog("Creating bullshitter for project ${project.name}")
+        var newConsoleView by notNullOnce<ConsoleView>()
 
-        val builder = TextConsoleBuilderFactory.getInstance().createBuilder(project)
-        val newConsoleView = builder.console
+        ApplicationManager.getApplication().invokeAndWait {
+            clog("Creating bullshitter for project ${project.name}")
 
-        val toolbarActions = DefaultActionGroup()
-        val consoleComponent = MyConsolePanel(newConsoleView, toolbarActions)
-        val bullshitterDescr = object : RunContentDescriptor(newConsoleView, null, consoleComponent, "Bullshitter", null) {
-            override fun isContentReuseProhibited(): Boolean {
-                return true
+            val builder = TextConsoleBuilderFactory.getInstance().createBuilder(project)
+            newConsoleView = builder.console
+
+            val toolbarActions = DefaultActionGroup()
+            val consoleComponent = MyConsolePanel(newConsoleView, toolbarActions)
+            val bullshitterDescr = object : RunContentDescriptor(newConsoleView, null, consoleComponent, "Bullshitter", null) {
+                override fun isContentReuseProhibited(): Boolean {
+                    return true
+                }
             }
-        }
 
-        val executor = DefaultRunExecutor.getRunExecutorInstance()
-        for (action in newConsoleView.createConsoleActions()) {
-            toolbarActions.add(action)
-        }
-        val console = newConsoleView as ConsoleViewImpl
-        ConsoleViewUtil.enableReplaceActionForConsoleViewEditor(console.editor)
-        console.editor.settings.isCaretRowShown = true
-        toolbarActions.add(AnnotateStackTraceAction(console.editor, console.hyperlinks))
-        toolbarActions.add(CloseAction(executor, bullshitterDescr, project))
-        ExecutionManager.getInstance(project).contentManager.showRunContent(executor, bullshitterDescr)
-        newConsoleView.allowHeavyFilters()
+            val executor = DefaultRunExecutor.getRunExecutorInstance()
+            for (action in newConsoleView.createConsoleActions()) {
+                toolbarActions.add(action)
+            }
+            val console = newConsoleView as ConsoleViewImpl
+            ConsoleViewUtil.enableReplaceActionForConsoleViewEditor(console.editor)
+            console.editor.settings.isCaretRowShown = true
+            toolbarActions.add(AnnotateStackTraceAction(console.editor, console.hyperlinks))
+            toolbarActions.add(CloseAction(executor, bullshitterDescr, project))
+            ExecutionManager.getInstance(project).contentManager.showRunContent(executor, bullshitterDescr)
+            newConsoleView.allowHeavyFilters()
 
-        ExecutionManager.getInstance(project).contentManager
+            ExecutionManager.getInstance(project).contentManager
 
-        val con = project.messageBus.connect()
-        con.subscribe(RunContentManager.TOPIC, object:RunContentWithExecutorListener {
-            override fun contentSelected(descriptor: RunContentDescriptor?, executor: Executor) {
+            val con = project.messageBus.connect()
+            con.subscribe(RunContentManager.TOPIC, object:RunContentWithExecutorListener {
+                override fun contentSelected(descriptor: RunContentDescriptor?, executor: Executor) {
 //                if (descriptor != null) {
 //                    clog("Shit selected", descriptor.displayName)
 //                }
-            }
-
-            override fun contentRemoved(descriptor: RunContentDescriptor?, executor: Executor) {
-                if (descriptor == bullshitterDescr) {
-                    clog("Bullshitter for project ${project.name} was removed")
-                    con.disconnect()
-                    relazy.reset(this@Bullshitter::consoleView)
                 }
-            }
-        })
+
+                override fun contentRemoved(descriptor: RunContentDescriptor?, executor: Executor) {
+                    if (descriptor == bullshitterDescr) {
+                        clog("Bullshitter for project ${project.name} was removed")
+                        con.disconnect()
+                        relazy.reset(this@Bullshitter::consoleView)
+                    }
+                }
+            })
+        }
 
         newConsoleView
     }
