@@ -8,6 +8,8 @@ import kotlin.concurrent.thread
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
+import kotlin.reflect.KProperty0
+import kotlin.reflect.jvm.isAccessible
 
 
 var exhaustive: Any? = null
@@ -118,6 +120,29 @@ class AttachedComputedShit<in Host : Any, out Shit>(val create: (Host) -> Shit) 
 //        val shitToShit = ConcurrentHashMap<Key, Any?>()
 //    }
 //}
+
+fun <T: Any> mere(value: T) = object:ReadOnlyProperty<Any?, T> {
+    override fun getValue(thisRef: Any?, property: KProperty<*>): T = value
+}
+
+class relazy<out T>(val initializer: () -> T) {
+    private var backing = lazy(initializer)
+
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): T = backing.value
+
+    fun reset() {
+        backing = lazy(initializer)
+    }
+
+    companion object {
+        fun reset(prop: KProperty0<Any?>) {
+            val delegate = prop.also{it.isAccessible = true}.getDelegate() as relazy<*>
+            delegate.reset()
+        }
+    }
+}
+
+
 
 
 

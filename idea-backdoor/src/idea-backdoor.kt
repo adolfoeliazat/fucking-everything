@@ -1,5 +1,9 @@
 package vgrechka.ideabackdoor
 
+import com.intellij.openapi.actionSystem.ActionManager
+import com.intellij.openapi.actionSystem.AnAction
+import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.components.ApplicationComponent
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
@@ -23,6 +27,19 @@ class IdeaBackdoorPlugin : ApplicationComponent {
                 project.bullshitter.mumble("Hello, sweetheart")
             }
         })
+
+        val am = ActionManager.getInstance()
+        val group = am.getAction("ToolsMenu") as DefaultActionGroup
+        group.addSeparator()
+
+        run {
+            val action = object : AnAction("Bullshit Something") {
+                override fun actionPerformed(event: AnActionEvent) {
+                    event.project!!.bullshitter.mumble("Something? How about fuck you?")
+                }
+            }
+            group.add(action)
+        }
     }
 }
 

@@ -12,10 +12,7 @@ import com.intellij.execution.filters.TextConsoleBuilderFactory
 import com.intellij.execution.impl.ConsoleViewImpl
 import com.intellij.execution.impl.ConsoleViewUtil
 import com.intellij.execution.runners.ExecutionUtil
-import com.intellij.execution.ui.ConsoleView
-import com.intellij.execution.ui.ConsoleViewContentType
-import com.intellij.execution.ui.ExecutionConsole
-import com.intellij.execution.ui.RunContentDescriptor
+import com.intellij.execution.ui.*
 import com.intellij.execution.ui.actions.CloseAction
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.actionSystem.*
@@ -40,32 +37,54 @@ import java.io.StringWriter
 val Project.bullshitter by AttachedComputedShit(::Bullshitter)
 
 class Bullshitter(val project: Project) {
-    var consoleView by notNullOnce<ConsoleView>()
+    private val consoleView: ConsoleView by relazy {
+        clog("Creating bullshitter for project ${project.name}")
 
-    init {
         val builder = TextConsoleBuilderFactory.getInstance().createBuilder(project)
-        consoleView = builder.console
+        val newConsoleView = builder.console
 
         val toolbarActions = DefaultActionGroup()
-        val consoleComponent = MyConsolePanel(consoleView, toolbarActions)
-        val descriptor = object : RunContentDescriptor(consoleView, null, consoleComponent, "Vagina", null) {
+        val consoleComponent = MyConsolePanel(newConsoleView, toolbarActions)
+        val bullshitterDescr = object : RunContentDescriptor(newConsoleView, null, consoleComponent, "Bullshitter", null) {
             override fun isContentReuseProhibited(): Boolean {
                 return true
             }
         }
 
         val executor = DefaultRunExecutor.getRunExecutorInstance()
-        for (action in consoleView.createConsoleActions()) {
+        for (action in newConsoleView.createConsoleActions()) {
             toolbarActions.add(action)
         }
-        val console = consoleView as ConsoleViewImpl
+        val console = newConsoleView as ConsoleViewImpl
         ConsoleViewUtil.enableReplaceActionForConsoleViewEditor(console.editor)
         console.editor.settings.isCaretRowShown = true
         toolbarActions.add(AnnotateStackTraceAction(console.editor, console.hyperlinks))
-        toolbarActions.add(CloseAction(executor, descriptor, project))
-        ExecutionManager.getInstance(project).contentManager.showRunContent(executor, descriptor)
-        consoleView.allowHeavyFilters()
+        toolbarActions.add(CloseAction(executor, bullshitterDescr, project))
+        ExecutionManager.getInstance(project).contentManager.showRunContent(executor, bullshitterDescr)
+        newConsoleView.allowHeavyFilters()
+
+        ExecutionManager.getInstance(project).contentManager
+
+        val con = project.messageBus.connect()
+        con.subscribe(RunContentManager.TOPIC, object:RunContentWithExecutorListener {
+            override fun contentSelected(descriptor: RunContentDescriptor?, executor: Executor) {
+//                if (descriptor != null) {
+//                    clog("Shit selected", descriptor.displayName)
+//                }
+            }
+
+            override fun contentRemoved(descriptor: RunContentDescriptor?, executor: Executor) {
+                if (descriptor == bullshitterDescr) {
+                    clog("Bullshitter for project ${project.name} was removed")
+                    con.disconnect()
+                    relazy.reset(this@Bullshitter::consoleView)
+                }
+            }
+        })
+
+        newConsoleView
     }
+
 
     fun mumble(s: String) {
         consoleView.print(s + "\n", ConsoleViewContentType.NORMAL_OUTPUT)
@@ -86,7 +105,7 @@ class Bullshitter(val project: Project) {
         init {
             val toolbarPanel = JPanel(BorderLayout())
             toolbarPanel.add(ActionManager.getInstance()
-                                 .createActionToolbar(ActionPlaces.ANALYZE_STACKTRACE_PANEL_TOOLBAR, toolbarActions, false)
+                                 .createActionToolbar("PLACE?", toolbarActions, false)
                                  .component)
             add(toolbarPanel, BorderLayout.WEST)
             add(consoleView.component, BorderLayout.CENTER)
