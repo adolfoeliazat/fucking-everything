@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/attic/attic.iml" filepath="$PROJECT_DIR$/attic/attic.iml" />
       <module fileurl="file://$PROJECT_DIR$/etc/etc.iml" filepath="$PROJECT_DIR$/etc/etc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hot-reloadable-idea-piece-of-shit/hot-reloadable-idea-piece-of-shit.iml" filepath="$PROJECT_DIR$/hot-reloadable-idea-piece-of-shit/hot-reloadable-idea-piece-of-shit.iml" />
       <module fileurl="file://$PROJECT_DIR$/idea-backdoor/idea-backdoor.iml" filepath="$PROJECT_DIR$/idea-backdoor/idea-backdoor.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared-idea/shared-idea.iml" filepath="$PROJECT_DIR$/shared-idea/shared-idea.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared-jvm/shared-jvm.iml" filepath="$PROJECT_DIR$/shared-jvm/shared-jvm.iml" />

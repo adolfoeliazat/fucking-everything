@@ -8,11 +8,14 @@ import com.intellij.openapi.components.ApplicationComponent
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
+import com.intellij.openapi.ui.Messages
+import com.intellij.util.lang.UrlClassLoader
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletHandler
 import org.eclipse.jetty.servlet.ServletHolder
 import vgrechka.*
 import vgrechka.idea.*
+import java.io.File
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -76,18 +79,44 @@ class IdeaBackdoorPlugin : ApplicationComponent {
         inner class FuckingServlet : HttpServlet() {
             override fun service(req: HttpServletRequest, res: HttpServletResponse) {
                 req.characterEncoding = "UTF-8"
-                val raw = req.reader.readText()
-                clog("Got request:", raw)
+                val rawRequest = req.reader.readText()
+                clog("Got request:", rawRequest)
+
+                val loader = UrlClassLoader.build()
+                    .parent(Messages::class.java.classLoader)
+                    .urls(*run {
+                        val fuck = File("E:/fegh/out/production").listFiles()
+                        val shit = File("E:/fegh/lib").listFiles()
+                        val bitch = File("E:/fegh/lib-gradle").listFiles()
+                        (fuck + shit + bitch).map {it.toURI().toURL()}.toTypedArray()
+                    })
+                    .get()
+                val clazz = loader.loadClass("vgrechka.idea.HotReloadableIdeaPieceOfShit")
+                val inst = clazz.newInstance()
+                val method = clazz.getMethod("doShit", String::class.java)
+
+                val rawResponse = method.invoke(inst, rawRequest) as String
+
+                res.contentType = "application/json; charset=utf-8"
+                res.writer.println(rawResponse)
+                res.status = HttpServletResponse.SC_OK
             }
         }
     }
 }
 
+// Ex: _run vgrechka.ideabackdoor.SendSomeShitToBackdoor idea-backdoor-fucking fucking?
 object SendSomeShitToBackdoor {
     @JvmStatic
     fun main(args: Array<String>) {
-        HTTPClient.postXML("http://localhost:${BackdoorGlobal.rpcServerPort}",
-                           "{\"shit\": \"some\"}")
+        val project = args[0]
+        val shit = args[1]
+        val res = HTTPClient.postJSON("http://localhost:${BackdoorGlobal.rpcServerPort}",
+                            """{
+                                   "project": "$project",
+                                   "shit": "$shit"
+                               }""")
+        clog("Response: $res")
         clog("OK")
     }
 }
