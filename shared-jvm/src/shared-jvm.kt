@@ -3,7 +3,9 @@ package vgrechka
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.concurrent.thread
+import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -82,6 +84,40 @@ private class NotNullOnceVar<T: Any> : ReadWriteProperty<Any?, T> {
         this.value = value
     }
 }
+
+
+
+class AttachedComputedShit<in Host : Any, out Shit>(val create: (Host) -> Shit) : ReadOnlyProperty<Host, Shit> {
+    override fun getValue(thisRef: Host, property: KProperty<*>): Shit {
+        @Suppress("UNCHECKED_CAST")
+        return shitToShit.computeIfAbsent(Key(thisRef, property.name)) {create(thisRef)} as Shit
+    }
+
+    data class Key(val host: Any, val prop: String)
+
+    companion object {
+        val shitToShit = ConcurrentHashMap<Key, Any?>()
+    }
+}
+
+
+
+//class AttachedShit<in Host : Any, Shit>(val create: (Host) -> Shit) : ReadWriteProperty<Host, Shit> {
+//    override fun getValue(thisRef: Host, property: KProperty<*>): Shit {
+//        @Suppress("UNCHECKED_CAST")
+//        return shitToShit.computeIfAbsent(Key(thisRef, property.name)) {create(thisRef)} as Shit
+//    }
+//
+//    override fun setValue(thisRef: Host, property: KProperty<*>, value: Shit) {
+//        shitToShit[Key(thisRef, property.name)] = value
+//    }
+//
+//    data class Key(val host: Any, val prop: String)
+//
+//    companion object {
+//        val shitToShit = ConcurrentHashMap<Key, Any?>()
+//    }
+//}
 
 
 
