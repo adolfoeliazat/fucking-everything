@@ -1,0 +1,55 @@
+<component name="libraryTable">
+  <library name="lib-gradle">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib-gradle/asm-5.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/asm-commons-5.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/asm-tree-5.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/http2-client-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/http2-common-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/http2-hpack-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/http2-server-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jackson-annotations-2.8.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jackson-core-2.8.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jackson-databind-2.8.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/javax-websocket-client-impl-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/javax-websocket-server-impl-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/javax.activation-1.1.0.v201105071233.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/javax.annotation-api-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/javax.mail.glassfish-1.4.1.v201005082020.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/javax.security.auth.message-1.0.0.v201108011116.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/javax.servlet-api-3.1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/javax.transaction-api-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/javax.websocket-api-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-alpn-client-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-annotations-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-client-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-continuation-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-deploy-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-http-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-io-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-jaspi-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-jmx-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-jndi-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-plus-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-quickstart-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-rewrite-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-security-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-server-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-servlet-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-servlets-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-util-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-webapp-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-xml-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/okhttp-3.6.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/okio-1.11.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/slf4j-api-1.6.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/websocket-api-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/websocket-client-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/websocket-common-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/websocket-server-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/websocket-servlet-9.4.3.v20170317.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

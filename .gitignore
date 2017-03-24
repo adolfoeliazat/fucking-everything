@@ -2,3 +2,5 @@
 /fekjs/out
 node_modules
 /out
+/lib-gradle
+/.gradle

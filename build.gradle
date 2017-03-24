@@ -1,0 +1,31 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+repositories {
+    mavenCentral()
+//    maven { url 'https://repo.spring.io/libs-snapshot' }
+//    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+//    maven { url "https://repo.gradle.org/gradle/libs-releases-local" }
+}
+
+apply plugin: 'java'
+
+dependencies {
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.7'
+    compile 'org.eclipse.jetty.aggregate:jetty-all:9.4.3.v20170317'
+}
+
+task importDeps(type: Copy) {
+    from (configurations.compile + configurations.testCompile) {
+        include "*.jar"
+    }
+    into rootProject.rootDir.getAbsolutePath() + "/lib-gradle"
+}
+
+
+
+

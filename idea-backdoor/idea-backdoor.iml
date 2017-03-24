@@ -12,5 +12,6 @@
     <orderEntry type="library" name="kotlin-jvm" level="project" />
     <orderEntry type="module" module-name="shared-jvm" />
     <orderEntry type="module" module-name="shared-idea" />
+    <orderEntry type="library" name="lib-gradle" level="project" />
   </component>
 </module>

@@ -1,5 +1,9 @@
 package vgrechka
 
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -142,6 +146,27 @@ class relazy<out T>(val initializer: () -> T) {
     }
 }
 
+object HTTPClient {
+    fun postJSON(url: String, content: String): String {
+        return post(url, "application/json", content)
+    }
+
+    fun postXML(url: String, content: String): String {
+        return post(url, "application/xml", content)
+    }
+
+    fun post(url: String, mime: String, content: String): String {
+        val JSON = MediaType.parse(mime + "; charset=utf-8")
+        val client = OkHttpClient()
+        val body = RequestBody.create(JSON, content)
+        val request = Request.Builder()
+            .url(url)
+            .post(body)
+            .build()
+        val response = client.newCall(request).execute()
+        return response.body().string()
+    }
+}
 
 
 

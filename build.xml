@@ -1,0 +1,18 @@
+<project name="fucking-everything">
+    <path id="cp">
+        <pathelement location="out/production/shared-jvm"/>
+        <pathelement location="out/production/shared-idea"/>
+        <pathelement location="out/production/idea-backdoor"/>
+        <fileset dir="lib" includes="*.jar"/>
+        <fileset dir="lib-gradle" includes="*.jar"/>
+    </path>
+
+    <target name="after-compilation">
+        <pathconvert targetos="windows" property="cpstring" refid="cp"/>
+        <echo file="_run.cmd">
+            @java -cp ${cpstring} %*
+        </echo>
+    </target>
+</project>
+
+
