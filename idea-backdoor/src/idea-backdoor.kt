@@ -5,6 +5,8 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.components.ApplicationComponent
+import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
@@ -38,7 +40,8 @@ class IdeaBackdoorPlugin : ApplicationComponent {
         pm.addProjectManagerListener(object : ProjectManagerListener {
             override fun projectOpened(project: Project) {
                 clog("Opened project", project.name)
-                project.bullshitter.mumble("Hello, sweetheart")
+                val bs = Bullshitter(project)
+                bs.mumble("Hello, sweetheart")
             }
         })
 
@@ -46,10 +49,35 @@ class IdeaBackdoorPlugin : ApplicationComponent {
         val group = am.getAction("ToolsMenu") as DefaultActionGroup
         group.addSeparator()
 
+//        run {
+//            val action = object : AnAction("Backdoor: Bullshit Something") {
+//                override fun actionPerformed(event: AnActionEvent) {
+//                    val bs = Bullshitter(event.project!!)
+//                    bs.mumble("Something? How about fuck you?")
+//                }
+//            }
+//            group.add(action)
+//        }
+
         run {
-            val action = object : AnAction("Bullshit Something") {
+            val action = object : AnAction("Backdoor: _Mess Around") {
                 override fun actionPerformed(event: AnActionEvent) {
-                    event.project!!.bullshitter.mumble("Something? How about fuck you?")
+                    val title = "Sending shit to backdoor"
+                    object : Task.Backgroundable(event.project, title, true) {
+                        var rawResponse by notNullOnce<String>()
+
+                        override fun run(indicator: ProgressIndicator) {
+                            indicator.text = title
+                            indicator.fraction = 0.5
+                            val json = "{projectName: '${event.project!!.name}'}"
+                            rawResponse = HTTPClient.postJSON("http://localhost:${BackdoorGlobal.rpcServerPort}?proc=MessAround", json)
+                            indicator.fraction = 1.0
+                        }
+
+                        override fun onFinished() {
+                            Messages.showInfoMessage(rawResponse, "Response")
+                        }
+                    }.queue()
                 }
             }
             group.add(action)
@@ -88,6 +116,8 @@ class IdeaBackdoorPlugin : ApplicationComponent {
                             .map {it.toURI().toURL()}.toTypedArray())
                 ) {
                     override fun loadClass(name: String, resolve: Boolean): Class<*> {
+//                        if (name.contains("AttachedComputedShit"))
+//                            clog("Loading " + name)
                         if (!name.startsWith("vgrechka."))
                             return super.loadClass(name, resolve)
 

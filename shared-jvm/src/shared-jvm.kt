@@ -109,7 +109,6 @@ class AttachedComputedShit<in Host : Any, out Shit>(val create: (Host) -> Shit) 
 }
 
 
-
 //class AttachedShit<in Host : Any, Shit>(val create: (Host) -> Shit) : ReadWriteProperty<Host, Shit> {
 //    override fun getValue(thisRef: Host, property: KProperty<*>): Shit {
 //        @Suppress("UNCHECKED_CAST")
@@ -174,7 +173,6 @@ object HTTPClient {
 }
 
 val relaxedObjectMapper by lazy {
-    clog("ccccccccccccccccccccccccccc")
     ObjectMapper()-{o->
         o.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true)
         o.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)

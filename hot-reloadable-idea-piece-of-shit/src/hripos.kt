@@ -13,6 +13,7 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.wm.ToolWindowId
 import vgrechka.*
 import vgrechka.idea.*
+import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -23,7 +24,7 @@ class HotReloadableIdeaPieceOfShit {
         req.queryString
         val rawRequest = req.reader.readText()
         clog("Got request:", rawRequest)
-        val requestClass = Class.forName(this::class.java.`package`.name + "." + req.getParameter("proc"))
+        val requestClass = Class.forName(this::class.java.`package`.name + ".Command_" + req.getParameter("proc"))
         val servant = relaxedObjectMapper.readValue(rawRequest, requestClass) as Servant
 
         var response by notNullOnce<Any>()
@@ -54,15 +55,26 @@ private fun withProjectNamed(projectName: String, block: (Project) -> SimpleResp
 private fun coolResponse() = SimpleResponse("Cool")
 
 @Ser @Suppress("Unused")
-class PrintToBullshitter(val projectName: String, val message: String) : Servant {
+class Command_MessAround(val projectName: String) : Servant {
     override fun serve() = withProjectNamed(projectName) {project->
-        project.bullshitter.mumble("Someone said: " + message)
+        val title = this::class.simpleName!!.substring("Command_".length)
+        val bs = Bullshitter(project, title = title)
+        bs.mumble("Just messing around... (${Date()})")
         coolResponse()
     }
 }
 
 @Ser @Suppress("Unused")
-class DebugConfiguration(val projectName: String, val configurationName: String) : Servant {
+class Command_PrintToBullshitter(val projectName: String, val message: String) : Servant {
+    override fun serve() = withProjectNamed(projectName) {project->
+        val bs = Bullshitter(project)
+        bs.mumble("Someone said: " + message)
+        coolResponse()
+    }
+}
+
+@Ser @Suppress("Unused")
+class Command_DebugConfiguration(val projectName: String, val configurationName: String) : Servant {
     override fun serve(): Any {
         return withProjectNamed(projectName) o@{project->
             val executor = ExecutorRegistry.getInstance().getExecutorById(ToolWindowId.DEBUG)

@@ -17,22 +17,24 @@ import javax.swing.JPanel
 import vgrechka.*
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.util.*
 
-val Project.bullshitter by AttachedComputedShit(::Bullshitter)
+//val Project.bullshitter by AttachedComputedShit(::Bullshitter)
 
-class Bullshitter(val project: Project) {
+class Bullshitter(val project: Project, val title: String? = null) {
     private val consoleView: ConsoleView by relazy {
         var newConsoleView by notNullOnce<ConsoleView>()
 
         ApplicationManager.getApplication().invokeAndWait {
-            clog("Creating bullshitter for project ${project.name}")
+            val bullshitterID = UUID.randomUUID().toString()
+            clog("Creating bullshitter for project ${project.name}: $bullshitterID")
 
             val builder = TextConsoleBuilderFactory.getInstance().createBuilder(project)
             newConsoleView = builder.console
 
             val toolbarActions = DefaultActionGroup()
             val consoleComponent = MyConsolePanel(newConsoleView, toolbarActions)
-            val bullshitterDescr = object : RunContentDescriptor(newConsoleView, null, consoleComponent, "Bullshitter", null) {
+            val bullshitterDescr = object : RunContentDescriptor(newConsoleView, null, consoleComponent, title ?: "Bullshitter", null) {
                 override fun isContentReuseProhibited(): Boolean {
                     return true
                 }
@@ -55,14 +57,14 @@ class Bullshitter(val project: Project) {
             val con = project.messageBus.connect()
             con.subscribe(RunContentManager.TOPIC, object:RunContentWithExecutorListener {
                 override fun contentSelected(descriptor: RunContentDescriptor?, executor: Executor) {
-//                if (descriptor != null) {
-//                    clog("Shit selected", descriptor.displayName)
-//                }
+                    if (descriptor == bullshitterDescr) {
+                        clog("Bullshitter selected: $bullshitterID")
+                    }
                 }
 
                 override fun contentRemoved(descriptor: RunContentDescriptor?, executor: Executor) {
                     if (descriptor == bullshitterDescr) {
-                        clog("Bullshitter for project ${project.name} was removed")
+                        clog("Bullshitter removed: $bullshitterID")
                         con.disconnect()
                         relazy.reset(this@Bullshitter::consoleView)
                     }
