@@ -1,5 +1,7 @@
 package vgrechka
 
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.ObjectMapper
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -170,6 +172,39 @@ object HTTPClient {
         return response.body().string()
     }
 }
+
+val relaxedObjectMapper by lazy {
+    clog("ccccccccccccccccccccccccccc")
+    ObjectMapper()-{o->
+        o.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true)
+        o.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -78,16 +78,31 @@ class IdeaBackdoorPlugin : ApplicationComponent {
 
         inner class FuckingServlet : HttpServlet() {
             override fun service(req: HttpServletRequest, res: HttpServletResponse) {
-                val loader = UrlClassLoader.build()
-                    .parent(this::class.java.classLoader)
-//                    .parent(Messages::class.java.classLoader)
-                    .urls(*run {
-                        val fuck = File("E:/fegh/out/production").listFiles()
-                        val shit = File("E:/fegh/lib").listFiles()
-                        val bitch = File("E:/fegh/lib-gradle").listFiles()
-                        (fuck + shit + bitch).map {it.toURI().toURL()}.toTypedArray()
-                    })
-                    .get()
+                val loader = object:UrlClassLoader(
+                    build()
+                        .parent(this::class.java.classLoader)
+                        .urls(*(
+                            File("E:/fegh/out/production").listFiles()
+                            + File("E:/fegh/lib").listFiles()
+                            + File("E:/fegh/lib-gradle").listFiles())
+                            .map {it.toURI().toURL()}.toTypedArray())
+                ) {
+                    override fun loadClass(name: String, resolve: Boolean): Class<*> {
+                        if (!name.startsWith("vgrechka."))
+                            return super.loadClass(name, resolve)
+
+                        synchronized(getClassLoadingLock(name)) {
+                            var c = findLoadedClass(name)
+                            if (c == null) {
+                                    c = findClass(name)
+                            }
+                            if (resolve) {
+                                resolveClass(c)
+                            }
+                            return c
+                        }
+                    }
+                }
                 val clazz = loader.loadClass("vgrechka.idea.hripos.HotReloadableIdeaPieceOfShit")
                 val inst = clazz.newInstance()
                 val httpServletRequestClass = HttpServletRequest::class.java // loader.loadClass(HttpServletRequest::class.qualifiedName)
@@ -100,17 +115,14 @@ class IdeaBackdoorPlugin : ApplicationComponent {
     }
 }
 
-// Ex: _run vgrechka.ideabackdoor.SendSomeShitToBackdoor idea-backdoor-fucking "Fucking around?"
+// Ex: _run vgrechka.ideabackdoor.SendSomeShitToBackdoor DebugConfiguration "{projectName: 'idea-backdoor-fucking', configurationName: 'FuckKt'}"
 object SendSomeShitToBackdoor {
     @JvmStatic
     fun main(args: Array<String>) {
-        val project = args[0]
-        val message = args[1]
-        val res = HTTPClient.postJSON("http://localhost:${BackdoorGlobal.rpcServerPort}?proc=PrintToBullshitter",
-                            """{
-                                   "projectName": "$project",
-                                   "message": "$message"
-                               }""")
+        val proc = args[0]
+        val json = args[1]
+        clog("json", json)
+        val res = HTTPClient.postJSON("http://localhost:${BackdoorGlobal.rpcServerPort}?proc=$proc", json)
         clog("Response: $res")
         clog("OK")
     }
