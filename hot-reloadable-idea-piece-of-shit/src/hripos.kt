@@ -68,6 +68,7 @@ class Command_MessAround(val projectName: String) : Servant {
         p.println("Fuck")
         p.println("Shit")
         p.println("Bitch")
+        p.println("Like that")
 
         val out = sw.toString()
 //        Messages.showInfoMessage(out, title)

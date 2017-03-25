@@ -40,8 +40,8 @@ class IdeaBackdoorPlugin : ApplicationComponent {
         pm.addProjectManagerListener(object : ProjectManagerListener {
             override fun projectOpened(project: Project) {
                 clog("Opened project", project.name)
-                val bs = Bullshitter(project)
-                bs.mumble("Hello, sweetheart")
+//                val bs = Bullshitter(project)
+//                bs.mumble("Hello, sweetheart")
             }
         })
 
