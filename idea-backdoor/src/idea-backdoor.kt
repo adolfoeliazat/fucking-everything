@@ -62,7 +62,7 @@ class IdeaBackdoorPlugin : ApplicationComponent {
         run {
             val action = object : AnAction("Backdoor: _Mess Around") {
                 override fun actionPerformed(event: AnActionEvent) {
-                    val title = "Sending shit to backdoor"
+                    val title = "Fucking through backdoor"
                     object : Task.Backgroundable(event.project, title, true) {
                         var rawResponse by notNullOnce<String>()
 
@@ -75,7 +75,7 @@ class IdeaBackdoorPlugin : ApplicationComponent {
                         }
 
                         override fun onFinished() {
-                            Messages.showInfoMessage(rawResponse, "Response")
+                            // Messages.showInfoMessage(rawResponse, "Response")
                         }
                     }.queue()
                 }

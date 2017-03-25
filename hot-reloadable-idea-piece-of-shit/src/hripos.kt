@@ -13,6 +13,8 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.wm.ToolWindowId
 import vgrechka.*
 import vgrechka.idea.*
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -45,7 +47,7 @@ private interface Servant {
 
 class SimpleResponse(val status: String)
 
-private fun withProjectNamed(projectName: String, block: (Project) -> SimpleResponse): SimpleResponse {
+private fun withProjectNamed(projectName: String, block: (Project) -> Any): Any {
     val project = ProjectManager.getInstance().openProjects.find {it.name == projectName}
         ?: return SimpleResponse("No fucking project `$projectName`")
 
@@ -58,9 +60,19 @@ private fun coolResponse() = SimpleResponse("Cool")
 class Command_MessAround(val projectName: String) : Servant {
     override fun serve() = withProjectNamed(projectName) {project->
         val title = this::class.simpleName!!.substring("Command_".length)
-        val bs = Bullshitter(project, title = title)
-        bs.mumble("Just messing around... (${Date()})")
-        coolResponse()
+//        val bs = Bullshitter(project, title = title)
+//        bs.mumble("Just messing around... (${Date()})")
+        val sw = StringWriter()
+        val p = PrintWriter(sw)
+
+        p.println("Fuck")
+        p.println("Shit")
+        p.println("Bitch")
+
+        val out = sw.toString()
+//        Messages.showInfoMessage(out, title)
+        Messages.showMultilineInputDialog(project, "Output", title, out, null, null)
+        object {val output = out}
     }
 }
 
