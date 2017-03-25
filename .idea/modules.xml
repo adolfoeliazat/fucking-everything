@@ -2,10 +2,15 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/aps/back-php/aps-back-php.iml" filepath="$PROJECT_DIR$/aps/back-php/aps-back-php.iml" group="aps" />
+      <module fileurl="file://$PROJECT_DIR$/aps/roots/aps-roots.iml" filepath="$PROJECT_DIR$/aps/roots/aps-roots.iml" group="aps" />
       <module fileurl="file://$PROJECT_DIR$/attic/attic.iml" filepath="$PROJECT_DIR$/attic/attic.iml" />
       <module fileurl="file://$PROJECT_DIR$/etc/etc.iml" filepath="$PROJECT_DIR$/etc/etc.iml" />
       <module fileurl="file://$PROJECT_DIR$/hot-reloadable-idea-piece-of-shit/hot-reloadable-idea-piece-of-shit.iml" filepath="$PROJECT_DIR$/hot-reloadable-idea-piece-of-shit/hot-reloadable-idea-piece-of-shit.iml" />
       <module fileurl="file://$PROJECT_DIR$/idea-backdoor/idea-backdoor.iml" filepath="$PROJECT_DIR$/idea-backdoor/idea-backdoor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/photlin/photlin.iml" filepath="$PROJECT_DIR$/photlin/photlin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/photlin-dev-tools/photlin-dev-tools.iml" filepath="$PROJECT_DIR$/photlin-dev-tools/photlin-dev-tools.iml" />
+      <module fileurl="file://$PROJECT_DIR$/photlin-stdlib/photlin-stdlib.iml" filepath="$PROJECT_DIR$/photlin-stdlib/photlin-stdlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared-idea/shared-idea.iml" filepath="$PROJECT_DIR$/shared-idea/shared-idea.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared-jvm/shared-jvm.iml" filepath="$PROJECT_DIR$/shared-jvm/shared-jvm.iml" />
       <module fileurl="file://$PROJECT_DIR$/txt/txt.iml" filepath="$PROJECT_DIR$/txt/txt.iml" />
