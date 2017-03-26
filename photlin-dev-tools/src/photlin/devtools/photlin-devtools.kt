@@ -23,13 +23,23 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import kotlin.concurrent.thread
 
+
+private var bs by notNullOnce<Bullshitter>()
+
+
 object PhotlinDevToolsGlobal {
     val rpcServerPort = 12321
 }
 
 @Ser class PDTRemoteCommand_TestResult(
     val rawResponseFromPHPScript: String
-)
+) : Servant {
+    override fun serve(): Any {
+        bs.mumble("\n------------------- TEST RESULT ------------------\n")
+        bs.mumble(rawResponseFromPHPScript)
+        return "Cool"
+    }
+}
 
 class PhotlinDevToolsPlugin : ApplicationComponent {
     override fun getComponentName(): String {
@@ -44,7 +54,7 @@ class PhotlinDevToolsPlugin : ApplicationComponent {
         pm.addProjectManagerListener(object : ProjectManagerListener {
             override fun projectOpened(project: Project) {
                 clog("Opened project", project.name)
-                val bs = Bullshitter(project)
+                bs = Bullshitter(project)
                 bs.mumble("Hello, sweetheart. I am Photlin Development Tools. Now use me")
             }
         })

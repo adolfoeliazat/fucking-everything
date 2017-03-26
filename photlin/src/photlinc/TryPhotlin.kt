@@ -211,9 +211,12 @@ object TryPhotlin {
 
     private fun sendTestResultToDevTools(req: PDTRemoteCommand_TestResult) {
         print("Sending shit to photlin-dev-tools...")
-        HTTPClient.postJSON("http://localhost:" + PhotlinDevToolsGlobal.rpcServerPort,
-                            ObjectMapper().writeValueAsString(req))
+        val proc = req::class.simpleName!!.substring("PDTRemoteCommand_".length)
+        val rawResponse = HTTPClient.postJSON(
+            "http://localhost:" + PhotlinDevToolsGlobal.rpcServerPort + "?proc=$proc",
+            ObjectMapper().writeValueAsString(req))
         println(" OK")
+        clog("Response: $rawResponse")
     }
 
 //    fun postJSON(url: String, content: String): String {
