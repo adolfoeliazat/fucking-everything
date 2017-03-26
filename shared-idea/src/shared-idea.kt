@@ -22,7 +22,7 @@ import java.util.*
 //val Project.bullshitter by AttachedComputedShit(::Bullshitter)
 
 class Bullshitter(val project: Project, val title: String? = null) {
-    private val consoleView: ConsoleView by relazy {
+    val consoleView: ConsoleView by relazy {
         var newConsoleView by notNullOnce<ConsoleView>()
 
         ApplicationManager.getApplication().invokeAndWait {
@@ -77,7 +77,11 @@ class Bullshitter(val project: Project, val title: String? = null) {
 
 
     fun mumble(s: String) {
-        consoleView.print(s + "\n", ConsoleViewContentType.NORMAL_OUTPUT)
+        mumbleNoln(s + "\n")
+    }
+
+    fun mumbleNoln(s: String) {
+        consoleView.print(s, ConsoleViewContentType.NORMAL_OUTPUT)
     }
 
     fun bark(s: String) {

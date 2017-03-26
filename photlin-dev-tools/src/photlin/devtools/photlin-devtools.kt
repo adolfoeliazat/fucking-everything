@@ -1,5 +1,7 @@
 package photlin.devtools
 
+import com.intellij.execution.filters.HyperlinkInfo
+import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -36,8 +38,31 @@ object PhotlinDevToolsGlobal {
 ) : Servant {
     override fun serve(): Any {
         bs.mumble("\n------------------- TEST RESULT ------------------\n")
-        bs.mumble(rawResponseFromPHPScript)
+        // bs.mumble(rawResponseFromPHPScript)
+
+        val re = Regex("<b>([^<]*?)</b> on line <b>([^<]*?)</b>")
+//        var plainTextStart = 0
+        var searchStart = 0
+        while (true) {
+            val mr = re.find(rawResponseFromPHPScript, searchStart) ?: break
+            val filePath = mr.groupValues[1]
+            val lineNumber = mr.groupValues[2].toInt()
+
+            bs.mumbleNoln(rawResponseFromPHPScript.substring(searchStart, mr.range.start))
+            bs.mumbleNoln("$filePath on line ")
+            bs.consoleView.printHyperlink("$lineNumber") {project ->
+                bs.mumble("Jumping to $filePath:$lineNumber")
+            }
+
+            searchStart = mr.range.endInclusive + 1
+            if (searchStart > rawResponseFromPHPScript.lastIndex) break
+        }
+        bs.mumble("")
+
         return "Cool"
+
+
+        bs.mumble("What5?")
     }
 }
 
@@ -62,6 +87,15 @@ class PhotlinDevToolsPlugin : ApplicationComponent {
         val am = ActionManager.getInstance()
         val group = am.getAction("ToolsMenu") as DefaultActionGroup
         group.addSeparator()
+
+        run {
+            val action = object : AnAction("PDT: _Mess Around") {
+                override fun actionPerformed(event: AnActionEvent) {
+                    messAroundAction(event)
+                }
+            }
+            group.add(action)
+        }
 
 //        run {
 //            val action = object : AnAction("Backdoor: Bullshit Something") {
@@ -144,6 +178,30 @@ class PhotlinDevToolsPlugin : ApplicationComponent {
 private interface Servant {
     fun serve(): Any
 }
+
+private fun messAroundAction(event: AnActionEvent) {
+    PDTRemoteCommand_TestResult(rawResponseFromPHPScript = """<br />
+<b>Notice</b>:  Use of undefined constant aps - assumed 'aps' in <b>C:\opt\xampp\htdocs\TryPhotlin\aps-back\aps-back.php</b> on line <b>16392</b><br />
+<br />
+<b>Fatal error</b>:  Call to undefined function back_main() in <b>C:\opt\xampp\htdocs\TryPhotlin\aps-back\aps-back.php</b> on line <b>16392</b><br />
+    """).serve()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
