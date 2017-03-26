@@ -2,17 +2,28 @@ package photlin.devtools
 
 import com.intellij.execution.filters.HyperlinkInfo
 import com.intellij.execution.ui.ConsoleViewContentType
+import com.intellij.ide.IdeBundle
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ApplicationNamesInfo
 import com.intellij.openapi.components.ApplicationComponent
+import com.intellij.openapi.editor.LogicalPosition
+import com.intellij.openapi.editor.ScrollType
+import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.fileEditor.OpenFileDescriptor
+import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager
+import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
+import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.util.lang.UrlClassLoader
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletHandler
@@ -33,6 +44,28 @@ object PhotlinDevToolsGlobal {
     val rpcServerPort = 12321
 }
 
+fun openFile(path: String, line: Int) {
+    val projects = ProjectManager.getInstance().openProjects
+    check(projects.size == 1) {"e5469c93-424d-4eef-81de-41c190b7f188"}
+    val project = projects.first()
+
+    val file = LocalFileSystem.getInstance().findFileByPath(path)
+        ?: return Messages.showErrorDialog("File not fucking found", "Fuck You")
+    NonProjectFileWritingAccessProvider.allowWriting(file)
+
+    val descriptor = OpenFileDescriptor(project, file)
+    val editor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true)
+        ?: bitch("f1924b93-fc47-4c88-8d7a-75c94e67e481")
+
+    val position = LogicalPosition(line - 1, 0)
+    editor.caretModel.removeSecondaryCarets()
+    editor.caretModel.moveToLogicalPosition(position)
+    editor.scrollingModel.scrollToCaret(ScrollType.CENTER)
+    editor.selectionModel.removeSelection()
+    IdeFocusManager.getGlobalInstance().requestFocus(editor.contentComponent, true)
+
+}
+
 @Ser class PDTRemoteCommand_TestResult(
     val rawResponseFromPHPScript: String
 ) : Servant {
@@ -51,7 +84,7 @@ object PhotlinDevToolsGlobal {
             bs.mumbleNoln(rawResponseFromPHPScript.substring(searchStart, mr.range.start))
             bs.mumbleNoln("$filePath on line ")
             bs.consoleView.printHyperlink("$lineNumber") {project ->
-                bs.mumble("Jumping to $filePath:$lineNumber")
+                openFile(filePath, lineNumber)
             }
 
             searchStart = mr.range.endInclusive + 1
