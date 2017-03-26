@@ -145,6 +145,7 @@ object TryPhotlin {
             val deploymentDir = "$HTDOCS_OUT${p.testName}"
             if (!preventCompilationAndDeploying) {
                 copyFile(p.outFilePath, deploymentDir + "/${p.testName}.php")
+                copyFile("${p.outFilePath}--tagged", deploymentDir + "/${p.testName}.php--tagged")
                 copyFile(p.phpSettingsSourceFilePath, deploymentDir + "/${p.phpSettingsFileName}")
             }
 

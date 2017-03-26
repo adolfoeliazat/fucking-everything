@@ -3,6 +3,7 @@ package photlin.devtools
 import com.intellij.execution.filters.HyperlinkInfo
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.ide.IdeBundle
+import com.intellij.lang.Language
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -16,12 +17,16 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider
+import com.intellij.openapi.fileTypes.FileTypeConsumer
+import com.intellij.openapi.fileTypes.FileTypeFactory
+import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
 import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.util.lang.UrlClassLoader
@@ -34,6 +39,7 @@ import java.io.File
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import javax.swing.Icon
 import kotlin.concurrent.thread
 
 
@@ -71,10 +77,8 @@ fun openFile(path: String, line: Int) {
 ) : Servant {
     override fun serve(): Any {
         bs.mumble("\n------------------- TEST RESULT ------------------\n")
-        // bs.mumble(rawResponseFromPHPScript)
 
         val re = Regex("<b>([^<]*?)</b> on line <b>([^<]*?)</b>")
-//        var plainTextStart = 0
         var searchStart = 0
         while (true) {
             val mr = re.find(rawResponseFromPHPScript, searchStart) ?: break
@@ -83,19 +87,23 @@ fun openFile(path: String, line: Int) {
 
             bs.mumbleNoln(rawResponseFromPHPScript.substring(searchStart, mr.range.start))
             bs.mumbleNoln("$filePath on line ")
-            bs.consoleView.printHyperlink("$lineNumber") {project ->
+            bs.consoleView.printHyperlink("$lineNumber") {
                 openFile(filePath, lineNumber)
             }
+            bs.mumbleNoln("(")
+            bs.consoleView.printHyperlink("@") {
+                openFile("$filePath--tagged", lineNumber)
+            }
+            bs.mumbleNoln(")")
 
             searchStart = mr.range.endInclusive + 1
             if (searchStart > rawResponseFromPHPScript.lastIndex) break
         }
+        if (searchStart < rawResponseFromPHPScript.lastIndex)
+            bs.mumbleNoln(rawResponseFromPHPScript.substring(searchStart))
         bs.mumble("")
 
         return "Cool"
-
-
-        bs.mumble("What5?")
     }
 }
 
@@ -220,9 +228,37 @@ private fun messAroundAction(event: AnActionEvent) {
     """).serve()
 }
 
+object PHPTaggedLanguage : Language("PHP Tagged") {
 
+}
 
+object PDTIcons {
+    val phpTagged = IconLoader.getIcon("/photlin/devtools/php--tagged.png")
+}
 
+object PHPTaggedFileType : LanguageFileType(PHPTaggedLanguage) {
+    override fun getIcon(): Icon? {
+        return PDTIcons.phpTagged
+    }
+
+    override fun getName(): String {
+        return "PHP Tagged file"
+    }
+
+    override fun getDefaultExtension(): String {
+        return "php--tagged"
+    }
+
+    override fun getDescription(): String {
+        return name
+    }
+}
+
+class PHPTaggedFileTypeFactory : FileTypeFactory() {
+    override fun createFileTypes(consumer: FileTypeConsumer) {
+        consumer.consume(PHPTaggedFileType, PHPTaggedFileType.defaultExtension)
+    }
+}
 
 
 

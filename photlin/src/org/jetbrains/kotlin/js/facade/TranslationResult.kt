@@ -75,7 +75,7 @@ abstract class TranslationResult protected constructor(val diagnostics: Diagnost
             }
 
             val jsFile = SimpleOutputFile(sourceFiles, outputFile.name, prefix + code + postfix)
-            val jsFileTagged = SimpleOutputFile(sourceFiles, outputFile.name.substring(0, outputFile.name.lastIndexOf(".")) + "-tagged.php", prefix + codeTagged + postfix)
+            val jsFileTagged = SimpleOutputFile(sourceFiles, outputFile.name.substring(0, outputFile.name.lastIndexOf(".")) + ".php--tagged", prefix + codeTagged + postfix)
             val outputFiles = arrayListOf<OutputFile>(jsFile, jsFileTagged)
 
             if (config.configuration.getBoolean(JSConfigurationKeys.META_INFO)) {
