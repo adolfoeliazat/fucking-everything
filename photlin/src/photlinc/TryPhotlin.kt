@@ -199,7 +199,7 @@ object TryPhotlin {
                             .replace("&lt;", "<")
                             .replace("&amp;", "&"))
 
-                        val message = DevToolsTestResultRequest(rawResponseFromPHPScript = actualResponseJSON)
+                        val message = PDTRemoteCommand_TestResult(rawResponseFromPHPScript = actualResponseJSON)
                         sendTestResultToDevTools(message)
                     }
 
@@ -209,7 +209,7 @@ object TryPhotlin {
         }
     }
 
-    private fun sendTestResultToDevTools(req: DevToolsTestResultRequest) {
+    private fun sendTestResultToDevTools(req: PDTRemoteCommand_TestResult) {
         print("Sending shit to photlin-dev-tools...")
         HTTPClient.postJSON("http://localhost:" + PhotlinDevToolsGlobal.rpcServerPort,
                             ObjectMapper().writeValueAsString(req))
