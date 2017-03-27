@@ -1,6 +1,8 @@
 package photlin.devtools
 
 import com.intellij.codeInsight.highlighting.TooltipLinkHandler
+import com.intellij.codeInsight.hint.HintManager
+import com.intellij.codeInsight.hint.HintUtil
 import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandler
 import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandlerBase
 import com.intellij.codeInsight.preview.PreviewHintProvider
@@ -59,6 +61,7 @@ import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.PsiUtil
 import javax.swing.JComponent
 import javax.swing.JLabel
+import javax.swing.event.HyperlinkEvent
 
 
 private var bs by notNullOnce<Bullshitter>()
@@ -134,7 +137,6 @@ class PhotlinDevToolsPlugin : ApplicationComponent {
     }
 
     override fun initComponent() {
-
         EditorFactory.getInstance().eventMulticaster.addEditorMouseListener(object : EditorMouseListener {
             override fun mouseReleased(e: EditorMouseEvent?) {
             }
@@ -147,8 +149,15 @@ class PhotlinDevToolsPlugin : ApplicationComponent {
                 if (psiFile is PHPTaggedFile) {
                     val el = psiFile.findElementAt(e.editor.caretModel.offset)
                     if (el is LeafPsiElement && el.elementType == PHPTaggedTypes.AT_TOKEN) {
-                        val debugTag = el.text
-                        Messages.showInfoMessage("Digging tag $debugTag", "Cool?")
+                        check(el.text.last() == '@') {"0ba8fb8b-4800-4cb8-b136-f4ce2106c39b"}
+                        val debugTag = el.text.dropLast(1)
+                        HintManager.getInstance().showInformationHint(e.editor, HintUtil.createInformationLabel(
+                            "<a href='fuck'>Debug $debugTag</a>",
+                            {linkEvent->
+                                if (linkEvent.eventType == HyperlinkEvent.EventType.ACTIVATED) {
+                                    Messages.showInfoMessage(debugTag, "Fuck You")
+                                }
+                            }, null, null))
                     }
                 }
             }
@@ -378,61 +387,6 @@ class PHPTaggedSyntaxHighlighterFactory : SyntaxHighlighterFactory() {
     }
 }
 
-class Pizda : GotoDeclarationHandler {
-    override fun getGotoDeclarationTargets(sourceElement: PsiElement?, offset: Int, editor: Editor?): Array<PsiElement>? {
-        clog("getGotoDeclarationTargets: $sourceElement")
-        if (sourceElement != null) {
-            if ((sourceElement as LeafPsiElement).elementType == PHPTaggedTypes.AT_TOKEN) {
-                return arrayOf(sourceElement)
-            }
-        }
-        return null
-    }
-
-    override fun getActionText(context: DataContext?): String? {
-        return null
-    }
-
-}
-
-
-class PizdaDocumentationProvider : DocumentationProvider {
-    override fun getUrlFor(element: PsiElement?, originalElement: PsiElement?): MutableList<String>? {
-        return null
-    }
-
-    override fun getQuickNavigateInfo(element: PsiElement?, originalElement: PsiElement?): String? {
-        return "pizdunec <a href='#pizda/big'>big</a>"
-    }
-
-    override fun getDocumentationElementForLookupItem(psiManager: PsiManager?, `object`: Any?, element: PsiElement?): PsiElement? {
-        return null
-    }
-
-    override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
-        return "pizda"
-    }
-
-    override fun getDocumentationElementForLink(psiManager: PsiManager?, link: String?, context: PsiElement?): PsiElement? {
-        return null
-    }
-
-}
-
-class PizdaLinkHandler : TooltipLinkHandler() {
-    override fun handleLink(refSuffix: String, editor: Editor): Boolean {
-        "fuck"
-        return false
-    }
-}
-
-
-class PizdaElementDescriptionProvider : ElementDescriptionProvider {
-    override fun getElementDescription(element: PsiElement, location: ElementDescriptionLocation): String? {
-        return "pizda"
-    }
-
-}
 
 
 
