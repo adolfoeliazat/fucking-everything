@@ -1,0 +1,30 @@
+{
+    parserClass = "photlin.devtools.PHPTaggedParser"
+
+    extends = "com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+    psiClassPrefix = "PHPTagged"
+    psiImplClassSuffix = "Impl"
+    psiPackage = "photlin.devtools.psi"
+    psiImplPackage = "photlin.devtools.psi.impl"
+
+    elementTypeHolderClass = "photlin.devtools.psi.PHPTaggedTypes"
+    elementTypeClass = "photlin.devtools.psi.PHPTaggedElementType"
+    tokenTypeClass = "photlin.devtools.psi.PHPTaggedTokenType"
+
+    psiImplUtilClass = "photlin.devtools.psi.impl.PHPTaggedPsiImplUtil"
+
+    tokens = [
+        SHIT_TOKEN = "SHIT_TOKEN"
+        AT_TOKEN = "AT_TOKEN"
+        NL = "NL"
+    ]
+}
+
+phpTaggedFile ::= (at | shit | NL)*
+
+shit ::= SHIT_TOKEN
+
+at ::= AT_TOKEN
+
+

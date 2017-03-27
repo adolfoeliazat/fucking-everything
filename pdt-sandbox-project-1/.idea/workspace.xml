@@ -26,21 +26,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="aps-back.php" pinned="false" current-in-tab="false">
-        <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php">
+      <file leaf-file-name="fuck.php--tagged" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/fuck.php--tagged">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360558">
-              <caret line="16389" column="20" lean-forward="false" selection-start-line="16389" selection-start-column="20" selection-end-line="16389" selection-end-column="20" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="aps-back.php--tagged" pinned="false" current-in-tab="true">
-        <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php--tagged">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="344">
-              <caret line="16367" column="2" lean-forward="false" selection-start-line="16367" selection-start-column="2" selection-end-line="16367" selection-end-column="2" />
+            <state relative-caret-position="66">
+              <caret line="3" column="0" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -48,11 +38,19 @@
       </file>
     </leaf>
   </component>
+  <component name="GradleLocalSettings">
+    <option name="externalProjectsViewState">
+      <projects_view />
+    </option>
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/fuck.txt" />
         <option value="C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php" />
+        <option value="$PROJECT_DIR$/fuck.kt" />
+        <option value="$APPLICATION_CONFIG_DIR$/consoles/ide/ide-scripting.kts" />
+        <option value="$PROJECT_DIR$/fuck.php--tagged" />
       </list>
     </option>
   </component>
@@ -77,8 +75,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -93,11 +92,10 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Font" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.tabs" />
     <property name="settings.editor.splitter.proportion" value="0.2304038" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
@@ -116,6 +114,13 @@
     </option>
   </component>
   <component name="RunManager">
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <predefined_log_file id="idea.log" enabled="true" />
+      <method />
+    </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="HTML_USED" value="false" />
       <option name="WIDTH" value="400" />
@@ -136,6 +141,42 @@
       <option name="PASS_PARENT_ENVS" value="true" />
       <module name="" />
       <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="GradleRunConfiguration" factoryName="Gradle">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list />
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
       <method />
     </configuration>
     <configuration default="true" type="JarApplication" factoryName="JAR Application">
@@ -188,20 +229,11 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
-    <configuration name="&lt;template&gt;" type="JUnit" default="true" selected="false">
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-    </configuration>
     <configuration name="&lt;template&gt;" type="TestNG" default="true" selected="false">
       <option name="MAIN_CLASS_NAME" />
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-    </configuration>
-    <configuration name="&lt;template&gt;" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" default="true" selected="false">
-      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
     </configuration>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
@@ -259,15 +291,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360558">
           <caret line="16389" column="20" lean-forward="false" selection-start-line="16389" selection-start-column="20" selection-end-line="16389" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php--tagged">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360074">
-          <caret line="16367" column="2" lean-forward="false" selection-start-line="16367" selection-start-column="2" selection-end-line="16367" selection-end-column="2" />
-          <folding />
+        <state relative-caret-position="359898">
+          <caret line="16359" column="18" lean-forward="false" selection-start-line="16359" selection-start-column="18" selection-end-line="16359" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuck.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -283,7 +320,160 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360558">
           <caret line="16389" column="20" lean-forward="false" selection-start-line="16389" selection-start-column="20" selection-end-line="16389" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php--tagged">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="359964">
+          <caret line="16362" column="2" lean-forward="false" selection-start-line="16362" selection-start-column="2" selection-end-line="16362" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuck.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360558">
+          <caret line="16389" column="20" lean-forward="false" selection-start-line="16389" selection-start-column="20" selection-end-line="16389" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php--tagged">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="359964">
+          <caret line="16362" column="2" lean-forward="false" selection-start-line="16362" selection-start-column="2" selection-end-line="16362" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuck.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360558">
+          <caret line="16389" column="20" lean-forward="false" selection-start-line="16389" selection-start-column="20" selection-end-line="16389" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php--tagged">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="359964">
+          <caret line="16362" column="2" lean-forward="false" selection-start-line="16362" selection-start-column="2" selection-end-line="16362" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuck.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360558">
+          <caret line="16389" column="20" lean-forward="false" selection-start-line="16389" selection-start-column="20" selection-end-line="16389" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php--tagged">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="359964">
+          <caret line="16362" column="2" lean-forward="false" selection-start-line="16362" selection-start-column="2" selection-end-line="16362" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuck.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360558">
+          <caret line="16389" column="20" lean-forward="false" selection-start-line="16389" selection-start-column="20" selection-end-line="16389" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php--tagged">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="359964">
+          <caret line="16362" column="2" lean-forward="false" selection-start-line="16362" selection-start-column="2" selection-end-line="16362" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuck.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360558">
+          <caret line="16389" column="20" lean-forward="false" selection-start-line="16389" selection-start-column="20" selection-end-line="16389" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php--tagged">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360074">
+          <caret line="16367" column="2" lean-forward="false" selection-start-line="16367" selection-start-column="2" selection-end-line="16367" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuck.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360558">
+          <caret line="16389" column="20" lean-forward="false" selection-start-line="16389" selection-start-column="20" selection-end-line="16389" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php--tagged">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360074">
+          <caret line="16367" column="2" lean-forward="false" selection-start-line="16367" selection-start-column="2" selection-end-line="16367" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuck.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360558">
+          <caret line="16389" column="20" lean-forward="false" selection-start-line="16389" selection-start-column="20" selection-end-line="16389" selection-end-column="20" />
         </state>
       </provider>
     </entry>
@@ -291,7 +481,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360162">
           <caret line="16371" column="46" lean-forward="false" selection-start-line="16371" selection-start-column="46" selection-end-line="16371" selection-end-column="46" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -307,7 +496,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360558">
           <caret line="16389" column="20" lean-forward="true" selection-start-line="16389" selection-start-column="20" selection-end-line="16389" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -315,7 +503,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360558">
           <caret line="16389" column="0" lean-forward="false" selection-start-line="16389" selection-start-column="0" selection-end-line="16389" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -412,6 +599,36 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shit.php-tagged" />
+    <entry file="file://$PROJECT_DIR$/shit.php--tagged" />
+    <entry file="file://$PROJECT_DIR$/fuck.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/ide/ide-scripting.kts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php--tagged">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="325" column="0" lean-forward="false" selection-start-line="325" selection-start-column="0" selection-end-line="325" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="549">
+          <caret line="16391" column="45" lean-forward="false" selection-start-line="16391" selection-start-column="45" selection-end-line="16391" selection-end-column="45" />
         </state>
       </provider>
     </entry>
@@ -423,20 +640,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/shit.php-tagged" />
-    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php">
+    <entry file="file://$PROJECT_DIR$/fuck.php--tagged">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360558">
-          <caret line="16389" column="20" lean-forward="false" selection-start-line="16389" selection-start-column="20" selection-end-line="16389" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shit.php--tagged" />
-    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php--tagged">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="16367" column="2" lean-forward="false" selection-start-line="16367" selection-start-column="2" selection-end-line="16367" selection-end-column="2" />
+        <state relative-caret-position="66">
+          <caret line="3" column="0" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
           <folding />
         </state>
       </provider>

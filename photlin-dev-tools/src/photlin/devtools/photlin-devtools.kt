@@ -3,7 +3,12 @@ package photlin.devtools
 import com.intellij.execution.filters.HyperlinkInfo
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.ide.IdeBundle
+import com.intellij.lang.ASTNode
 import com.intellij.lang.Language
+import com.intellij.lang.ParserDefinition
+import com.intellij.lang.PsiParser
+import com.intellij.lexer.FlexAdapter
+import com.intellij.lexer.Lexer
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -17,9 +22,6 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider
-import com.intellij.openapi.fileTypes.FileTypeConsumer
-import com.intellij.openapi.fileTypes.FileTypeFactory
-import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
@@ -29,10 +31,17 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.wm.IdeFocusManager
+import com.intellij.psi.FileViewProvider
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
+import com.intellij.psi.tree.IElementType
+import com.intellij.psi.tree.IFileElementType
+import com.intellij.psi.tree.TokenSet
 import com.intellij.util.lang.UrlClassLoader
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletHandler
 import org.eclipse.jetty.servlet.ServletHolder
+import photlin.devtools.psi.*
 import vgrechka.*
 import vgrechka.idea.*
 import java.io.File
@@ -41,6 +50,11 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.swing.Icon
 import kotlin.concurrent.thread
+import com.intellij.openapi.editor.HighlighterColors
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
+import com.intellij.openapi.editor.colors.TextAttributesKey
+import com.intellij.openapi.fileTypes.*
+import com.intellij.openapi.vfs.VirtualFile
 
 
 private var bs by notNullOnce<Bullshitter>()
@@ -228,7 +242,7 @@ private fun messAroundAction(event: AnActionEvent) {
     """).serve()
 }
 
-object PHPTaggedLanguage : Language("PHP Tagged") {
+object PHPTaggedLanguage : Language("PHPTagged") {
 
 }
 
@@ -242,7 +256,7 @@ object PHPTaggedFileType : LanguageFileType(PHPTaggedLanguage) {
     }
 
     override fun getName(): String {
-        return "PHP Tagged file"
+        return "PHPTagged file"
     }
 
     override fun getDefaultExtension(): String {
@@ -260,14 +274,77 @@ class PHPTaggedFileTypeFactory : FileTypeFactory() {
     }
 }
 
+class PHPTaggedLexerAdapter : FlexAdapter(PHPTaggedLexer())
 
+class PHPTaggedParserDefinition : ParserDefinition {
+    override fun createParser(project: Project): PsiParser {
+        return PHPTaggedParser()
+    }
 
+    override fun createFile(viewProvider: FileViewProvider): PsiFile {
+        return PHPTaggedFile(viewProvider)
+    }
 
+    override fun spaceExistanceTypeBetweenTokens(left: ASTNode?, right: ASTNode?): ParserDefinition.SpaceRequirements {
+        return ParserDefinition.SpaceRequirements.MAY
+    }
 
+    override fun getStringLiteralElements(): TokenSet {
+        return TokenSet.EMPTY
+    }
 
+    val FILE = IFileElementType(PHPTaggedLanguage)
 
+    override fun getFileNodeType(): IFileElementType {
+        return FILE
+    }
 
+    override fun getWhitespaceTokens(): TokenSet {
+        return TokenSet.create(PHPTaggedTypes.NL)
+//        return TokenSet.EMPTY
+    }
 
+    override fun createLexer(project: Project?): Lexer {
+        return PHPTaggedLexerAdapter()
+    }
+
+    override fun createElement(node: ASTNode): PsiElement {
+        return PHPTaggedTypes.Factory.createElement(node)
+    }
+
+    override fun getCommentTokens(): TokenSet {
+        return TokenSet.EMPTY
+    }
+
+}
+
+class PHPTaggedSyntaxHighlighter : SyntaxHighlighterBase() {
+    override fun getHighlightingLexer(): Lexer {
+        return PHPTaggedLexerAdapter()
+    }
+
+    override fun getTokenHighlights(tokenType: IElementType): Array<TextAttributesKey> {
+        clog("tokenType: $tokenType")
+        if (tokenType == PHPTaggedTypes.AT_TOKEN) {
+            return VALUE_KEYS
+        } else {
+            return EMPTY_KEYS
+        }
+    }
+
+    companion object {
+        val VALUE = TextAttributesKey.createTextAttributesKey("SIMPLE_VALUE", DefaultLanguageHighlighterColors.STRING)
+
+        private val VALUE_KEYS = arrayOf(VALUE)
+        private val EMPTY_KEYS = arrayOf<TextAttributesKey>()
+    }
+}
+
+class PHPTaggedSyntaxHighlighterFactory : SyntaxHighlighterFactory() {
+    override fun getSyntaxHighlighter(project: Project?, virtualFile: VirtualFile?): SyntaxHighlighter {
+        return PHPTaggedSyntaxHighlighter()
+    }
+}
 
 
 
