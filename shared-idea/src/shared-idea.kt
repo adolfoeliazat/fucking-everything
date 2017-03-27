@@ -11,6 +11,7 @@ import com.intellij.execution.ui.actions.CloseAction
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.Messages
 import com.intellij.unscramble.AnnotateStackTraceAction
 import java.awt.BorderLayout
 import javax.swing.JPanel
@@ -107,8 +108,6 @@ class Bullshitter(val project: Project, val title: String? = null) {
     }
 
 }
-
-
 
 
 

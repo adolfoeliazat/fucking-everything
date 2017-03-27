@@ -19,8 +19,8 @@
       <file leaf-file-name="aps-back.php--tagged" pinned="false" current-in-tab="true">
         <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php--tagged">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="372">
-              <caret line="231" column="50" lean-forward="false" selection-start-line="231" selection-start-column="50" selection-end-line="231" selection-end-column="50" />
+            <state relative-caret-position="328">
+              <caret line="229" column="50" lean-forward="true" selection-start-line="229" selection-start-column="50" selection-end-line="229" selection-end-column="50" />
               <folding />
             </state>
           </provider>
@@ -75,7 +75,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -90,8 +91,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -647,8 +647,8 @@
     </entry>
     <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php--tagged">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="372">
-          <caret line="231" column="50" lean-forward="false" selection-start-line="231" selection-start-column="50" selection-end-line="231" selection-end-column="50" />
+        <state relative-caret-position="328">
+          <caret line="229" column="50" lean-forward="true" selection-start-line="229" selection-start-column="50" selection-end-line="229" selection-end-column="50" />
           <folding />
         </state>
       </provider>

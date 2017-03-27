@@ -31,7 +31,11 @@ class HotReloadableIdeaPieceOfShit {
 
         var response by notNullOnce<Any>()
         ApplicationManager.getApplication().invokeAndWait {
-            response = servant.serve()
+            response = try {
+                servant.serve()
+            } catch (e: Throwable) {
+                SimpleResponse("Error: ${e.message}")
+            }
         }
 
         val rawResponse = relaxedObjectMapper.writeValueAsString(response)
@@ -49,8 +53,7 @@ class SimpleResponse(val status: String)
 
 private fun withProjectNamed(projectName: String, block: (Project) -> Any): Any {
     val project = ProjectManager.getInstance().openProjects.find {it.name == projectName}
-        ?: return SimpleResponse("No fucking project `$projectName`")
-
+        ?: bitch("No fucking project `$projectName`")
     return block(project)
 }
 
@@ -86,24 +89,41 @@ class Command_PrintToBullshitter(val projectName: String, val message: String) :
     }
 }
 
-@Ser @Suppress("Unused")
-class Command_DebugConfiguration(val projectName: String, val configurationName: String) : Servant {
-    override fun serve(): Any {
-        return withProjectNamed(projectName) o@{project->
-            val executor = ExecutorRegistry.getInstance().getExecutorById(ToolWindowId.DEBUG)
-            val executorProvider = ExecutorProvider {executor}
-            val list = ChooseRunConfigurationPopup.createSettingsList(project, executorProvider, false)
-            for (item in list) {
-                val config = item.value
-                if (config is RunnerAndConfigurationSettings) {
-                    if (config.name == configurationName) {
-                        ExecutionUtil.runConfiguration(config, executor)
-                        return@o coolResponse()
-                    }
-                }
-            }
+//@Ser @Suppress("Unused")
+//class Command_DebugConfiguration(val projectName: String, val configurationName: String) : Servant {
+//    override fun serve(): Any {
+//        return withProjectNamed(projectName) {project->
+//            val error = debugConfiguration(project, configurationName)
+//            when (error) {
+//                null -> coolResponse()
+//                else -> SimpleResponse(error)
+//            }
+//        }
+//    }
+//
+//}
 
-            SimpleResponse("No fucking debug configuration `$configurationName`")
+private fun debugConfiguration(project: Project, configurationName: String) {
+    val executor = ExecutorRegistry.getInstance().getExecutorById(ToolWindowId.DEBUG)
+    val executorProvider = ExecutorProvider {executor}
+    val list = ChooseRunConfigurationPopup.createSettingsList(project, executorProvider, false)
+    for (item in list) {
+        val config = item.value
+        if (config is RunnerAndConfigurationSettings) {
+            if (config.name == configurationName) {
+                ExecutionUtil.runConfiguration(config, executor)
+                return
+            }
+        }
+    }
+    bitch("No fucking debug configuration `$configurationName` in `${project.name}`")
+}
+
+@Ser @Suppress("Unused")
+class Command_Photlin_BreakOnDebugTag(val debugTag: String) : Servant {
+    override fun serve() {
+        withProjectNamed("fegh") {project->
+            debugConfiguration(project, "photlinc.TryPhotlin")
         }
     }
 }

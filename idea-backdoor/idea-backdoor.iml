@@ -13,5 +13,6 @@
     <orderEntry type="module" module-name="shared-jvm" />
     <orderEntry type="module" module-name="shared-idea" />
     <orderEntry type="library" name="lib-gradle" level="project" />
+    <orderEntry type="module" module-name="idea-backdoor-client" />
   </component>
 </module>

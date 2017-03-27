@@ -1,5 +1,6 @@
 package vgrechka.ideabackdoor
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -22,10 +23,6 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import kotlin.concurrent.thread
-
-object BackdoorGlobal {
-    val rpcServerPort = 12312
-}
 
 class IdeaBackdoorPlugin : ApplicationComponent {
     override fun getComponentName(): String {
@@ -62,22 +59,7 @@ class IdeaBackdoorPlugin : ApplicationComponent {
         run {
             val action = object : AnAction("Backdoor: _Mess Around") {
                 override fun actionPerformed(event: AnActionEvent) {
-                    val title = "Fucking through backdoor"
-                    object : Task.Backgroundable(event.project, title, true) {
-                        var rawResponse by notNullOnce<String>()
-
-                        override fun run(indicator: ProgressIndicator) {
-                            indicator.text = title
-                            indicator.fraction = 0.5
-                            val json = "{projectName: '${event.project!!.name}'}"
-                            rawResponse = HTTPClient.postJSON("http://localhost:${BackdoorGlobal.rpcServerPort}?proc=MessAround", json)
-                            indicator.fraction = 1.0
-                        }
-
-                        override fun onFinished() {
-                            // Messages.showInfoMessage(rawResponse, "Response")
-                        }
-                    }.queue()
+                    rubRemoteIdeaTits(event.project, mapOf("projectName" to event.project!!.name), proc = "MessAround")
                 }
             }
             group.add(action)
@@ -86,11 +68,12 @@ class IdeaBackdoorPlugin : ApplicationComponent {
         startRPCServer()
     }
 
+
     inner class startRPCServer {
         init {
             thread {
                 try {
-                    Server(BackdoorGlobal.rpcServerPort)-{o->
+                    Server(BackdoorClientGlobal.rpcServerPort)-{o->
                         o.handler = ServletHandler()-{o->
                             o.addServletWithMapping(ServletHolder(FuckingServlet()), "/*")
                         }
@@ -152,7 +135,7 @@ object SendSomeShitToBackdoor {
         val proc = args[0]
         val json = args[1]
         clog("json", json)
-        val res = HTTPClient.postJSON("http://localhost:${BackdoorGlobal.rpcServerPort}?proc=$proc", json)
+        val res = HTTPClient.postJSON("http://localhost:${BackdoorClientGlobal.rpcServerPort}?proc=$proc", json)
         clog("Response: $res")
         clog("OK")
     }

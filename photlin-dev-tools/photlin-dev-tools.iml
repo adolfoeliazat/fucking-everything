@@ -14,5 +14,7 @@
     <orderEntry type="module" module-name="shared-idea" />
     <orderEntry type="module" module-name="shared-jvm" />
     <orderEntry type="library" name="lib-gradle" level="project" />
+    <orderEntry type="module" module-name="hot-reloadable-idea-piece-of-shit" />
+    <orderEntry type="module" module-name="idea-backdoor-client" />
   </component>
 </module>

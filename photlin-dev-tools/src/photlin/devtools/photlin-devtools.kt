@@ -59,6 +59,8 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.PsiUtil
+import vgrechka.idea.hripos.*
+import vgrechka.ideabackdoor.*
 import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.event.HyperlinkEvent
@@ -155,7 +157,7 @@ class PhotlinDevToolsPlugin : ApplicationComponent {
                             "<a href='fuck'>Debug $debugTag</a>",
                             {linkEvent->
                                 if (linkEvent.eventType == HyperlinkEvent.EventType.ACTIVATED) {
-                                    Messages.showInfoMessage(debugTag, "Fuck You")
+                                    rubRemoteIdeaTits(e.editor.project, Command_Photlin_BreakOnDebugTag(debugTag = debugTag))
                                 }
                             }, null, null))
                     }
