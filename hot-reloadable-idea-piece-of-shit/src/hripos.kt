@@ -34,7 +34,7 @@ class HotReloadableIdeaPieceOfShit {
             response = try {
                 servant.serve()
             } catch (e: Throwable) {
-                SimpleResponse("Error: ${e.message}")
+                ErrorResponse(e.message ?: "Obscure error")
             }
         }
 
@@ -50,6 +50,8 @@ private interface Servant {
 }
 
 class SimpleResponse(val status: String)
+
+class ErrorResponse(val error: String)
 
 private fun withProjectNamed(projectName: String, block: (Project) -> Any): Any {
     val project = ProjectManager.getInstance().openProjects.find {it.name == projectName}

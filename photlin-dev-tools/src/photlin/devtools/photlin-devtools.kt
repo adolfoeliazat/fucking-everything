@@ -157,7 +157,10 @@ class PhotlinDevToolsPlugin : ApplicationComponent {
                             "<a href='fuck'>Debug $debugTag</a>",
                             {linkEvent->
                                 if (linkEvent.eventType == HyperlinkEvent.EventType.ACTIVATED) {
-                                    rubRemoteIdeaTits(e.editor.project, Command_Photlin_BreakOnDebugTag(debugTag = debugTag))
+                                    rubRemoteIdeaTits(e.editor.project, Command_Photlin_BreakOnDebugTag(debugTag = debugTag),
+                                                      onError = {
+                                                          Messages.showErrorDialog(it, "Fuck You")
+                                                      })
                                 }
                             }, null, null))
                     }

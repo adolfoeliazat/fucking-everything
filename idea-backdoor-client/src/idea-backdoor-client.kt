@@ -10,7 +10,7 @@ object BackdoorClientGlobal {
     val rpcServerPort = 12312
 }
 
-fun rubRemoteIdeaTits(localProject: Project?, data: Any, taskTitle: String? = null, proc: String? = null) {
+fun rubRemoteIdeaTits(localProject: Project?, data: Any, taskTitle: String? = null, proc: String? = null, onError: ((String) -> Unit)? = null) {
     val title = taskTitle ?: "Rubbing remote IDEA tits"
     val theProc = proc ?: run {
         val s = data::class.simpleName!!
@@ -30,7 +30,18 @@ fun rubRemoteIdeaTits(localProject: Project?, data: Any, taskTitle: String? = nu
         }
 
         override fun onFinished() {
+            val res = relaxedObjectMapper.readValue(rawResponse, Any::class.java)
+            if (res is Map<*, *>) {
+                val error = res["error"]
+                if (error != null) {
+                    onError?.invoke(error as String)
+                }
+            }
             // Messages.showInfoMessage(rawResponse, "Response")
         }
     }.queue()
 }
+
+
+
+
