@@ -21,6 +21,10 @@
       <fileTypeFactory implementation="photlin.devtools.PHPTaggedFileTypeFactory"/>
       <lang.parserDefinition language="PHPTagged" implementationClass="photlin.devtools.PHPTaggedParserDefinition"/>
       <lang.syntaxHighlighterFactory language="PHPTagged" implementationClass="photlin.devtools.PHPTaggedSyntaxHighlighterFactory"/>
+      <gotoDeclarationHandler implementation="photlin.devtools.Pizda"/>
+      <!--<lang.documentationProvider language="PHPTagged" implementationClass="photlin.devtools.PizdaDocumentationProvider"/>-->
+      <!--<codeInsight.linkHandler prefix="#pizda/" handlerClass="photlin.devtools.PizdaLinkHandler"/>-->
+      <elementPreviewProvider implementation=""/>
   </extensions>
 
   <actions>
@@ -34,3 +38,4 @@
   </application-components>
 
 </idea-plugin>
+

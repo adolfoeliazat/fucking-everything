@@ -1,5 +1,9 @@
 package photlin.devtools
 
+import com.intellij.codeInsight.highlighting.TooltipLinkHandler
+import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandler
+import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandlerBase
+import com.intellij.codeInsight.preview.PreviewHintProvider
 import com.intellij.execution.filters.HyperlinkInfo
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.ide.IdeBundle
@@ -7,17 +11,14 @@ import com.intellij.lang.ASTNode
 import com.intellij.lang.Language
 import com.intellij.lang.ParserDefinition
 import com.intellij.lang.PsiParser
+import com.intellij.lang.documentation.DocumentationProvider
 import com.intellij.lexer.FlexAdapter
 import com.intellij.lexer.Lexer
-import com.intellij.openapi.actionSystem.ActionManager
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.DefaultActionGroup
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ApplicationNamesInfo
 import com.intellij.openapi.components.ApplicationComponent
-import com.intellij.openapi.editor.LogicalPosition
-import com.intellij.openapi.editor.ScrollType
+import com.intellij.openapi.editor.*
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager
@@ -31,9 +32,6 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.wm.IdeFocusManager
-import com.intellij.psi.FileViewProvider
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
@@ -50,11 +48,17 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.swing.Icon
 import kotlin.concurrent.thread
-import com.intellij.openapi.editor.HighlighterColors
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
+import com.intellij.openapi.editor.event.EditorMouseEvent
+import com.intellij.openapi.editor.event.EditorMouseListener
+import com.intellij.openapi.editor.impl.EditorImpl
 import com.intellij.openapi.fileTypes.*
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.*
+import com.intellij.psi.impl.source.tree.LeafPsiElement
+import com.intellij.psi.util.PsiUtil
+import javax.swing.JComponent
+import javax.swing.JLabel
 
 
 private var bs by notNullOnce<Bullshitter>()
@@ -130,6 +134,34 @@ class PhotlinDevToolsPlugin : ApplicationComponent {
     }
 
     override fun initComponent() {
+
+        EditorFactory.getInstance().eventMulticaster.addEditorMouseListener(object : EditorMouseListener {
+            override fun mouseReleased(e: EditorMouseEvent?) {
+            }
+
+            override fun mouseEntered(e: EditorMouseEvent?) {
+            }
+
+            override fun mouseClicked(e: EditorMouseEvent) {
+                val psiFile = PsiUtil.getPsiFile(e.editor.project!!, (e.editor as EditorImpl).virtualFile)
+                if (psiFile is PHPTaggedFile) {
+                    val el = psiFile.findElementAt(e.editor.caretModel.offset)
+                    if (el is LeafPsiElement && el.elementType == PHPTaggedTypes.AT_TOKEN) {
+                        val debugTag = el.text
+                        Messages.showInfoMessage("Digging tag $debugTag", "Cool?")
+                    }
+                }
+            }
+
+            override fun mouseExited(e: EditorMouseEvent?) {
+            }
+
+            override fun mousePressed(e: EditorMouseEvent?) {
+            }
+
+        })
+
+
         val pm = ProjectManager.getInstance()
         pm.addProjectManagerListener(object : ProjectManagerListener {
             override fun projectOpened(project: Project) {
@@ -324,7 +356,7 @@ class PHPTaggedSyntaxHighlighter : SyntaxHighlighterBase() {
     }
 
     override fun getTokenHighlights(tokenType: IElementType): Array<TextAttributesKey> {
-        clog("tokenType: $tokenType")
+        // clog("tokenType: $tokenType")
         if (tokenType == PHPTaggedTypes.AT_TOKEN) {
             return VALUE_KEYS
         } else {
@@ -345,6 +377,76 @@ class PHPTaggedSyntaxHighlighterFactory : SyntaxHighlighterFactory() {
         return PHPTaggedSyntaxHighlighter()
     }
 }
+
+class Pizda : GotoDeclarationHandler {
+    override fun getGotoDeclarationTargets(sourceElement: PsiElement?, offset: Int, editor: Editor?): Array<PsiElement>? {
+        clog("getGotoDeclarationTargets: $sourceElement")
+        if (sourceElement != null) {
+            if ((sourceElement as LeafPsiElement).elementType == PHPTaggedTypes.AT_TOKEN) {
+                return arrayOf(sourceElement)
+            }
+        }
+        return null
+    }
+
+    override fun getActionText(context: DataContext?): String? {
+        return null
+    }
+
+}
+
+
+class PizdaDocumentationProvider : DocumentationProvider {
+    override fun getUrlFor(element: PsiElement?, originalElement: PsiElement?): MutableList<String>? {
+        return null
+    }
+
+    override fun getQuickNavigateInfo(element: PsiElement?, originalElement: PsiElement?): String? {
+        return "pizdunec <a href='#pizda/big'>big</a>"
+    }
+
+    override fun getDocumentationElementForLookupItem(psiManager: PsiManager?, `object`: Any?, element: PsiElement?): PsiElement? {
+        return null
+    }
+
+    override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
+        return "pizda"
+    }
+
+    override fun getDocumentationElementForLink(psiManager: PsiManager?, link: String?, context: PsiElement?): PsiElement? {
+        return null
+    }
+
+}
+
+class PizdaLinkHandler : TooltipLinkHandler() {
+    override fun handleLink(refSuffix: String, editor: Editor): Boolean {
+        "fuck"
+        return false
+    }
+}
+
+
+class PizdaElementDescriptionProvider : ElementDescriptionProvider {
+    override fun getElementDescription(element: PsiElement, location: ElementDescriptionLocation): String? {
+        return "pizda"
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
