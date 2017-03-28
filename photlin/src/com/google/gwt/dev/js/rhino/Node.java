@@ -38,7 +38,7 @@
 
 package com.google.gwt.dev.js.rhino;
 
-import photlinc.DebugGlobal;
+import photlinc.PhotlincDebugGlobal;
 import photlinc.DebugTagged;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,9 +47,9 @@ import org.jetbrains.annotations.Nullable;
  */
 
 public class Node implements Cloneable, DebugTagged {
-    private String debugTag = DebugGlobal.INSTANCE.nextDebugTag();
+    private String debugTag = PhotlincDebugGlobal.INSTANCE.nextDebugTag();
     {
-        DebugGlobal.INSTANCE.taggedShitCreated(this);
+        PhotlincDebugGlobal.INSTANCE.taggedShitCreated(this);
     }
 
     @Nullable

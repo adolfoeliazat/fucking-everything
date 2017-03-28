@@ -30,8 +30,8 @@ public class JsName extends HasMetadata implements Symbol, DebugTagged {
     this.ident = ident;
     this.temporary = temporary;
     ordinal = temporary ? ordinalGenerator++ : 0;
-    debugTag = "n" + DebugGlobal.INSTANCE.nextDebugTag();
-    DebugGlobal.INSTANCE.taggedShitCreated(this);
+    debugTag = "n" + PhotlincDebugGlobal.INSTANCE.nextDebugTag();
+    PhotlincDebugGlobal.INSTANCE.taggedShitCreated(this);
   }
 
     public int getOrdinal() {

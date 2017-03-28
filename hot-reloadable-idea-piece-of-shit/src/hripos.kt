@@ -7,12 +7,19 @@ import com.intellij.execution.actions.ChooseRunConfigurationPopup
 import com.intellij.execution.actions.ExecutorProvider
 import com.intellij.execution.impl.ExecutionManagerImpl
 import com.intellij.execution.runners.ExecutionUtil
+import com.intellij.ide.plugins.PluginManager
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.wm.ToolWindowId
+import com.intellij.psi.util.PsiUtil
 import com.intellij.util.IconUtil
+import org.jetbrains.kotlin.psi.KtExpression
+import org.jetbrains.kotlin.psi.KtFile
+import org.jetbrains.kotlin.psi.KtPsiUtil
+import org.jetbrains.kotlin.resolve.BindingContext
 import vgrechka.*
 import vgrechka.idea.*
 import java.io.PrintWriter
@@ -69,18 +76,27 @@ class Command_MessAround(val projectName: String) : Servant {
         val title = this::class.simpleName!!.substring("Command_".length)
 //        val bs = Bullshitter(project, title = title)
 //        bs.mumble("Just messing around... (${Date()})")
-        val sw = StringWriter()
-        val p = PrintWriter(sw)
 
+        val p = HriposDebugOutput(project)
         p.println("Fuck")
         p.println("Shit")
         p.println("Bitch")
-        p.println("Like that")
+        p.println("Like that...")
+        p.showDialog(title = title)
+        object {val output = p.output}
+    }
+}
 
-        val out = sw.toString()
-//        Messages.showInfoMessage(out, title)
-        Messages.showMultilineInputDialog(project, "Output", title, out, null, null)
-        object {val output = out}
+private class HriposDebugOutput(val project: Project) {
+    val sw = StringWriter()
+    val p = PrintWriter(sw)
+
+    val output get() = sw.toString()
+
+    fun println(s: Any?) = p.println(s)
+
+    fun showDialog(title: String? = null) {
+        Messages.showMultilineInputDialog(project, "So, here is what was bullshitted...", title ?: "A Little Bullshit", output, null, null)
     }
 }
 
@@ -132,10 +148,35 @@ private fun debugConfiguration(project: Project, configurationName: String) {
 class Command_Photlin_BreakOnDebugTag(val debugTag: String) : Servant {
     override fun serve() {
         withProjectNamed("fegh") {project->
-            debugConfiguration(project, "photlinc.TryPhotlin")
+            val p = HriposDebugOutput(project)
+            val path = "E:/fegh/photlin/src/photlinc/shebang.kt"
+            val file = LocalFileSystem.getInstance().findFileByPath(path) ?: bitch("e8df55f6-bb15-42fe-8bfc-e33634b06d33")
+            val psiFile = PsiUtil.getPsiFile(project, file)
+
+            p.println("psiFile = $psiFile; is KtFile = ${psiFile is KtFile}")
+            p.showDialog()
+            // debugConfiguration(project, "photlinc.TryPhotlin")
         }
     }
 }
+
+@Ser @Suppress("Unused")
+class Command_IdeaBackdoorTesting_CheckKotlinClassesAreLoadedByPluginClassLoader : Servant {
+    override fun serve() {
+        withProjectNamed("idea-backdoor-fucking") {project->
+            val p = HriposDebugOutput(project)
+            val path = "E:/work/idea-backdoor-fucking/src/fuck.kt"
+            val file = LocalFileSystem.getInstance().findFileByPath(path) ?: bitch("c7f4046b-0a5d-4f09-94fe-712542170f12")
+            val psiFile = PsiUtil.getPsiFile(project, file)
+            p.println("psiFile = $psiFile")
+            p.println(psiFile.javaClass)
+            p.println("Passed: ${psiFile is KtFile}")
+            p.showDialog()
+        }
+    }
+}
+
+
 
 
 

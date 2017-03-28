@@ -4,8 +4,6 @@
 
 package org.jetbrains.kotlin.js.backend.ast;
 
-import photlinc.DebugGlobal;
-import photlinc.DebugTagged;
 import org.jetbrains.kotlin.js.common.Symbol;
 import org.jetbrains.kotlin.js.util.AstUtil;
 import com.intellij.util.SmartList;

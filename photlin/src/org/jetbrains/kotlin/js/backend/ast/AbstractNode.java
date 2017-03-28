@@ -17,7 +17,7 @@
 package org.jetbrains.kotlin.js.backend.ast;
 
 import photlinc.AttachedShit;
-import photlinc.DebugGlobal;
+import photlinc.PhotlincDebugGlobal;
 import photlinc.DebugTagged;
 import org.jetbrains.kotlin.js.backend.JsToStringGenerationVisitor;
 import org.jetbrains.kotlin.js.backend.ast.metadata.HasMetadata;
@@ -27,7 +27,6 @@ import org.jetbrains.kotlin.js.util.TextOutputImpl;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 abstract public class AbstractNode extends HasMetadata implements JsNode, DebugTagged {
     private String debugTag;
@@ -71,8 +70,8 @@ abstract public class AbstractNode extends HasMetadata implements JsNode, DebugT
     }
 
     protected void initDebugTag() {
-        debugTag = DebugGlobal.INSTANCE.nextDebugTag();
-        DebugGlobal.INSTANCE.taggedShitCreated(this);
+        debugTag = PhotlincDebugGlobal.INSTANCE.nextDebugTag();
+        PhotlincDebugGlobal.INSTANCE.taggedShitCreated(this);
     }
 }
 

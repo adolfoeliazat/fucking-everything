@@ -4,15 +4,10 @@
 
 package org.jetbrains.kotlin.js.backend.ast;
 
-import photlinc.DebugGlobal;
-import photlinc.DebugTagged;
-import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.js.util.AstUtil;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public final class JsInvocation extends JsExpression.JsExpressionHasArguments {

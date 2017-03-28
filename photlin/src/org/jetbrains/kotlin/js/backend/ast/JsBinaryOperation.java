@@ -4,8 +4,6 @@
 
 package org.jetbrains.kotlin.js.backend.ast;
 
-import photlinc.DebugGlobal;
-import photlinc.DebugTagged;
 import org.jetbrains.kotlin.js.util.AstUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

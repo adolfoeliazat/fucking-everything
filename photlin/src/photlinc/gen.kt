@@ -94,8 +94,8 @@ open class JsToStringGenerationVisitor2(out:TextOutput): JsVisitor() {
     }
 
     private fun pizdavalue(byReference: Boolean = false, fuck: (JsToStringGenerationVisitor2) -> Unit) {
-        val tag = DebugGlobal.nextDebugTag()
-        if (tag == DebugGlobal.breakOnPizdavalue) {
+        val tag = PhotlincDebugGlobal.nextDebugTag()
+        if (tag == PhotlincDebugGlobal.breakOnPizdavalue) {
             "break on me"
         }
         val varName = "pizdavalue" + tag
@@ -721,7 +721,7 @@ open class JsToStringGenerationVisitor2(out:TextOutput): JsVisitor() {
 
             PHPNameRefKind.LAMBDA,
             PHPNameRefKind.LAMBDA_CREATOR -> {
-                val varName = "pizda_" + DebugGlobal.nextDebugTag()
+                val varName = "pizda_" + PhotlincDebugGlobal.nextDebugTag()
 //            if (varName == "pizda_3485") {
 //                "break on me"
 //            }
@@ -834,7 +834,7 @@ open class JsToStringGenerationVisitor2(out:TextOutput): JsVisitor() {
     private fun printDebugTag(shit: AbstractNode, spaceBefore: Boolean = false) {
         val debugTag = shit.debugTag
         if (debugTag != null) {
-            if (debugTag == DebugGlobal.breakOnDebugTag) {
+            if (debugTag == PhotlincDebugGlobal.breakOnDebugTag) {
                 "break on me"
             }
 

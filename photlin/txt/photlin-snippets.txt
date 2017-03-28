@@ -1,0 +1,22 @@
+MetadataProperties
+getQualifiedReference(DeclarationDescriptor)
+JsScope scope = getScopeForDescriptor(descriptor);
+BindingContext (lot of "slices")
+KotlinType.getJetTypeFqName
+BindingUtils.getDescriptorForElement(context.bindingContext(), classOrObject) as ClassDescriptor
+context[TranslationContext].program().getStringLiteral("get")
+TranslationContext.getNameForDescriptor()
+val descriptor = getResolvedCall(bindingContext)?.resultingDescriptor
+KtElement.getCall(BindingContext).getResolvedCall(BindingContext)
+ShebangKt.getTypeName(resolvedCall.getResultingDescriptor().getReturnType())
+context.rootFunction.scope
+
+
+// @sample Defining temporary variable in current block
+// @sample Invoke stdlib shit
+// @fucking
+// @possibly-needed
+
+// @fucking Calling super exception
+// @fucking Export object
+

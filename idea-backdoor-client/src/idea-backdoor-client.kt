@@ -7,7 +7,7 @@ import com.intellij.openapi.project.Project
 import vgrechka.*
 
 object BackdoorClientGlobal {
-    val rpcServerPort = 12312
+    val defaultRPCServerPort = 12312
 }
 
 fun rubRemoteIdeaTits(localProject: Project?, data: Any, taskTitle: String? = null, proc: String? = null, onError: ((String) -> Unit)? = null) {
@@ -25,7 +25,7 @@ fun rubRemoteIdeaTits(localProject: Project?, data: Any, taskTitle: String? = nu
             indicator.text = title
             indicator.fraction = 0.5
             val json = ObjectMapper().writeValueAsString(data)
-            rawResponse = HTTPClient.postJSON("http://localhost:${BackdoorClientGlobal.rpcServerPort}?proc=$theProc", json)
+            rawResponse = HTTPClient.postJSON("http://localhost:${BackdoorClientGlobal.defaultRPCServerPort}?proc=$theProc", json)
             indicator.fraction = 1.0
         }
 

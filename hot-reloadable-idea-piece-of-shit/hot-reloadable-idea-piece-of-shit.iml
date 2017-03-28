@@ -11,5 +11,14 @@
     <orderEntry type="module" module-name="shared-idea" />
     <orderEntry type="module" module-name="shared-jvm" />
     <orderEntry type="library" name="lib-gradle" level="project" />
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib-gradle/kotlin-compiler-1.1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

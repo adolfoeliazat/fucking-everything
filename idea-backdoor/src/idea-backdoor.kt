@@ -1,6 +1,7 @@
 package vgrechka.ideabackdoor
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.intellij.ide.plugins.PluginManager
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -23,6 +24,10 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import kotlin.concurrent.thread
+
+object IdeaBackdoorGlobal {
+    val rpcPortSystemProperty = "vgrechka.ideabackdoor.rpcServerPort"
+}
 
 class IdeaBackdoorPlugin : ApplicationComponent {
     override fun getComponentName(): String {
@@ -73,7 +78,10 @@ class IdeaBackdoorPlugin : ApplicationComponent {
         init {
             thread {
                 try {
-                    Server(BackdoorClientGlobal.rpcServerPort)-{o->
+                    val s = System.getProperty(IdeaBackdoorGlobal.rpcPortSystemProperty)
+                    val port = s?.toInt() ?: BackdoorClientGlobal.defaultRPCServerPort
+
+                    Server(port)-{o->
                         o.handler = ServletHandler()-{o->
                             o.addServletWithMapping(ServletHolder(FuckingServlet()), "/*")
                         }
@@ -99,10 +107,16 @@ class IdeaBackdoorPlugin : ApplicationComponent {
                             .map {it.toURI().toURL()}.toTypedArray())
                 ) {
                     override fun loadClass(name: String, resolve: Boolean): Class<*> {
-//                        if (name.contains("AttachedComputedShit"))
-//                            clog("Loading " + name)
+                        if (name.startsWith("org.jetbrains.kotlin.")) {
+                            val kotlinPluginId = PluginManager.getPluginByClassName("org.jetbrains.kotlin.psi.KtFile") ?: bitch("5848894b-cf98-4da0-b826-751b9e7ca8d0")
+                            val kotlinPluginDescriptor = PluginManager.getPlugin(kotlinPluginId) ?: bitch("18c09d84-4d63-4380-80e4-8daac75c6e7e")
+                            val kotlinPluginClassLoader = kotlinPluginDescriptor.pluginClassLoader ?: bitch("3f8eb3ff-2985-4935-b5c8-e79e6f538274")
+                            return kotlinPluginClassLoader.loadClass(name)
+                        }
+
                         if (!name.startsWith("vgrechka."))
                             return super.loadClass(name, resolve)
+
 
                         synchronized(getClassLoadingLock(name)) {
                             var c = findLoadedClass(name)
@@ -129,13 +143,21 @@ class IdeaBackdoorPlugin : ApplicationComponent {
 }
 
 // Ex: _run vgrechka.ideabackdoor.SendSomeShitToBackdoor DebugConfiguration "{projectName: 'idea-backdoor-fucking', configurationName: 'FuckKt'}"
+// Ex: _run vgrechka.ideabackdoor.SendSomeShitToBackdoor IdeaBackdoorTesting_CheckKotlinClassesAreLoadedByPluginClassLoader:12313 "{projectName: 'idea-backdoor-fucking', configurationName: 'FuckKt'}"
 object SendSomeShitToBackdoor {
     @JvmStatic
     fun main(args: Array<String>) {
-        val proc = args[0]
+        var port = BackdoorClientGlobal.defaultRPCServerPort
+        var proc = args[0]
+        val colon = proc.indexOf(":")
+        if (colon != -1) {
+            port = proc.substring(colon + 1).toInt()
+            proc = proc.substring(0, colon)
+        }
+
         val json = args[1]
-        clog("json", json)
-        val res = HTTPClient.postJSON("http://localhost:${BackdoorClientGlobal.rpcServerPort}?proc=$proc", json)
+        clog("json =", json)
+        val res = HTTPClient.postJSON("http://localhost:$port?proc=$proc", json)
         clog("Response: $res")
         clog("OK")
     }
