@@ -6,6 +6,7 @@ import com.intellij.codeInsight.hint.HintUtil
 import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandler
 import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandlerBase
 import com.intellij.codeInsight.preview.PreviewHintProvider
+import com.intellij.execution.actions.ChooseRunConfigurationPopupAction
 import com.intellij.execution.filters.HyperlinkInfo
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.ide.IdeBundle
@@ -157,10 +158,7 @@ class PhotlinDevToolsPlugin : ApplicationComponent {
                             "<a href='fuck'>Debug $debugTag</a>",
                             {linkEvent->
                                 if (linkEvent.eventType == HyperlinkEvent.EventType.ACTIVATED) {
-                                    rubRemoteIdeaTits(e.editor.project, Command_Photlin_BreakOnDebugTag(debugTag = debugTag),
-                                                      onError = {
-                                                          Messages.showErrorDialog(it, "Fuck You")
-                                                      })
+                                    breakOnDebugTag(e.editor.project, debugTag)
                                 }
                             }, null, null))
                     }
@@ -280,12 +278,22 @@ private interface Servant {
     fun serve(): Any
 }
 
-private fun messAroundAction(event: AnActionEvent) {
-    PDTRemoteCommand_TestResult(rawResponseFromPHPScript = """<br />
+private class messAroundAction(val event: AnActionEvent) {
+    init {
+        fuck2()
+    }
+
+    fun fuck2() {
+        breakOnDebugTag(event.project, "123")
+    }
+
+    fun fuck1() {
+        PDTRemoteCommand_TestResult(rawResponseFromPHPScript = """<br />
 <b>Notice</b>:  Use of undefined constant aps - assumed 'aps' in <b>C:\opt\xampp\htdocs\TryPhotlin\aps-back\aps-back.php</b> on line <b>16392</b><br />
 <br />
 <b>Fatal error</b>:  Call to undefined function back_main() in <b>C:\opt\xampp\htdocs\TryPhotlin\aps-back\aps-back.php</b> on line <b>16392</b><br />
     """).serve()
+    }
 }
 
 object PHPTaggedLanguage : Language("PHPTagged") {
@@ -390,6 +398,13 @@ class PHPTaggedSyntaxHighlighterFactory : SyntaxHighlighterFactory() {
     override fun getSyntaxHighlighter(project: Project?, virtualFile: VirtualFile?): SyntaxHighlighter {
         return PHPTaggedSyntaxHighlighter()
     }
+}
+
+private fun breakOnDebugTag(localProject: Project?, debugTag: String) {
+    rubRemoteIdeaTits(localProject, Command_Photlin_BreakOnDebugTag(debugTag = debugTag),
+                      onError = {
+                          Messages.showErrorDialog(it, "Fuck You")
+                      })
 }
 
 

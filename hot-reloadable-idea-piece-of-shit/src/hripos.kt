@@ -5,12 +5,14 @@ import com.intellij.execution.ExecutorRegistry
 import com.intellij.execution.RunnerAndConfigurationSettings
 import com.intellij.execution.actions.ChooseRunConfigurationPopup
 import com.intellij.execution.actions.ExecutorProvider
+import com.intellij.execution.impl.ExecutionManagerImpl
 import com.intellij.execution.runners.ExecutionUtil
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.wm.ToolWindowId
+import com.intellij.util.IconUtil
 import vgrechka.*
 import vgrechka.idea.*
 import java.io.PrintWriter
@@ -113,7 +115,12 @@ private fun debugConfiguration(project: Project, configurationName: String) {
         val config = item.value
         if (config is RunnerAndConfigurationSettings) {
             if (config.name == configurationName) {
-                ExecutionUtil.runConfiguration(config, executor)
+                val runningDescriptors = ExecutionManagerImpl.getInstance(project).getRunningDescriptors {it == config}
+                if (runningDescriptors.size > 0) {
+                    ExecutionUtil.restart(runningDescriptors.first())
+                } else {
+                    ExecutionUtil.runConfiguration(config, executor)
+                }
                 return
             }
         }
