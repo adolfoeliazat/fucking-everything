@@ -9,6 +9,8 @@
       <module fileurl="file://$PROJECT_DIR$/hot-reloadable-idea-piece-of-shit/hot-reloadable-idea-piece-of-shit.iml" filepath="$PROJECT_DIR$/hot-reloadable-idea-piece-of-shit/hot-reloadable-idea-piece-of-shit.iml" />
       <module fileurl="file://$PROJECT_DIR$/idea-backdoor/idea-backdoor.iml" filepath="$PROJECT_DIR$/idea-backdoor/idea-backdoor.iml" />
       <module fileurl="file://$PROJECT_DIR$/idea-backdoor-client/idea-backdoor-client.iml" filepath="$PROJECT_DIR$/idea-backdoor-client/idea-backdoor-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/phizdets/phi-gross-test-1/phi-gross-test-1.iml" filepath="$PROJECT_DIR$/phizdets/phi-gross-test-1/phi-gross-test-1.iml" group="phizdets" />
+      <module fileurl="file://$PROJECT_DIR$/phizdets/phizdetsc/phizdetsc.iml" filepath="$PROJECT_DIR$/phizdets/phizdetsc/phizdetsc.iml" group="phizdets" />
       <module fileurl="file://$PROJECT_DIR$/photlin/photlin.iml" filepath="$PROJECT_DIR$/photlin/photlin.iml" />
       <module fileurl="file://$PROJECT_DIR$/photlin-dev-tools/photlin-dev-tools.iml" filepath="$PROJECT_DIR$/photlin-dev-tools/photlin-dev-tools.iml" />
       <module fileurl="file://$PROJECT_DIR$/photlin-stdlib/photlin-stdlib.iml" filepath="$PROJECT_DIR$/photlin-stdlib/photlin-stdlib.iml" />

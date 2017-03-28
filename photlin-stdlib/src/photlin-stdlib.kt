@@ -1,5 +1,6 @@
 package photlin
 
+import aps.*
 import kotlin.reflect.KProperty
 
 //------------------------- PHP -------------------------
@@ -284,8 +285,16 @@ fun String.replace(oldValue: String, newValue: String): String {
     return str_replace(oldValue, newValue, this)
 }
 
+fun String.startsWith(prefix: String, ignoreCase: Boolean = false): Boolean {
+    if (ignoreCase) imf("b6e4cc36-79bc-48e1-b241-ed4cb461485a")
+    return false
+}
 
-
+@PHPDumpBodyToContainer
+fun quickTest_String_startsWith() {
+    assertTrue("/rpc/shit".startsWith("/rpc/"), "8f1b5065-3ac2-49a8-87df-5d6bc8441206")
+    assertFalse("/rpc/shit".startsWith("pizda"), "a3b6e45e-c0c3-47cf-8455-a539f8afbeb2")
+}
 
 
 

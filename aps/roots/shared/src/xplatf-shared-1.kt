@@ -80,12 +80,12 @@ private class InitializedLazyImpl<out T>(override val value: T) : Lazy<T> {
 
 inline fun check(value: Boolean): Unit = check(value) { "Check failed." }
 
-inline fun check(value: Boolean, lazyMessage: () -> Any): Unit {
-    if (!value) {
-        val message = lazyMessage()
-        throw IllegalStateException(message.toString())
-    }
-}
+//inline fun check(value: Boolean, lazyMessage: () -> Any): Unit {
+//    if (!value) {
+//        val message = lazyMessage()
+//        throw IllegalStateException(message.toString())
+//    }
+//}
 
 interface ReadOnlyProperty<in R, out T> {
     operator fun getValue(thisRef: R, property: KProperty<*>): T
