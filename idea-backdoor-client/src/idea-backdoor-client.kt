@@ -10,7 +10,7 @@ object BackdoorClientGlobal {
     val defaultRPCServerPort = 12312
 }
 
-fun rubRemoteIdeaTits(localProject: Project?, data: Any, taskTitle: String? = null, proc: String? = null, onError: ((String) -> Unit)? = null) {
+fun rubRemoteIdeaTits(localProject: Project?, data: Any, taskTitle: String? = null, proc: String? = null, readTimeoutSeconds: Long? = null, onError: ((String) -> Unit)? = null) {
     val title = taskTitle ?: "Rubbing remote IDEA tits"
     val theProc = proc ?: run {
         val s = data::class.simpleName!!
@@ -25,7 +25,9 @@ fun rubRemoteIdeaTits(localProject: Project?, data: Any, taskTitle: String? = nu
             indicator.text = title
             indicator.fraction = 0.5
             val json = ObjectMapper().writeValueAsString(data)
-            rawResponse = HTTPClient.postJSON("http://localhost:${BackdoorClientGlobal.defaultRPCServerPort}?proc=$theProc", json)
+            rawResponse = HTTPClient.postJSON(
+                "http://localhost:${BackdoorClientGlobal.defaultRPCServerPort}?proc=$theProc",
+                json, readTimeoutSeconds = readTimeoutSeconds)
             indicator.fraction = 1.0
         }
 

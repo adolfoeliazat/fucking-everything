@@ -10,6 +10,7 @@ import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
@@ -148,17 +149,19 @@ class relazy<out T>(val initializer: () -> T) {
 }
 
 object HTTPClient {
-    fun postJSON(url: String, content: String): String {
-        return post(url, "application/json", content)
+    fun postJSON(url: String, content: String, readTimeoutSeconds: Long? = null): String {
+        return post(url, "application/json", content, readTimeoutSeconds = readTimeoutSeconds)
     }
 
     fun postXML(url: String, content: String): String {
         return post(url, "application/xml", content)
     }
 
-    fun post(url: String, mime: String, content: String): String {
+    fun post(url: String, mime: String, content: String, readTimeoutSeconds: Long? = null): String {
         val JSON = MediaType.parse(mime + "; charset=utf-8")
-        val client = OkHttpClient()
+        val client = OkHttpClient.Builder()
+            .readTimeout(readTimeoutSeconds ?: 5, TimeUnit.SECONDS)
+            .build()
         val body = RequestBody.create(JSON, content)
         val request = Request.Builder()
             .url(url)

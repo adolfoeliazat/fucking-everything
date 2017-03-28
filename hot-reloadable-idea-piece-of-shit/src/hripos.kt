@@ -9,17 +9,19 @@ import com.intellij.execution.impl.ExecutionManagerImpl
 import com.intellij.execution.runners.ExecutionUtil
 import com.intellij.ide.plugins.PluginManager
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.wm.ToolWindowId
+import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiUtil
 import com.intellij.util.IconUtil
-import org.jetbrains.kotlin.psi.KtExpression
-import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.psi.KtPsiUtil
+import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.resolve.BindingContext
+import org.jetbrains.kotlin.resolve.jvm.KotlinJavaPsiFacade
+import org.jetbrains.kotlin.resolve.source.toSourceElement
 import vgrechka.*
 import vgrechka.idea.*
 import java.io.PrintWriter
@@ -149,13 +151,24 @@ class Command_Photlin_BreakOnDebugTag(val debugTag: String) : Servant {
     override fun serve() {
         withProjectNamed("fegh") {project->
             val p = HriposDebugOutput(project)
-            val path = "E:/fegh/photlin/src/photlinc/shebang.kt"
-            val file = LocalFileSystem.getInstance().findFileByPath(path) ?: bitch("e8df55f6-bb15-42fe-8bfc-e33634b06d33")
-            val psiFile = PsiUtil.getPsiFile(project, file)
 
-            p.println("psiFile = $psiFile; is KtFile = ${psiFile is KtFile}")
-            p.showDialog()
-            // debugConfiguration(project, "photlinc.TryPhotlin")
+            run { // Change `breakOnDebugTag`
+                val path = "E:/fegh/photlin/src/photlinc/shebang.kt"
+                val file = LocalFileSystem.getInstance().findFileByPath(path) ?: wtf("e8df55f6-bb15-42fe-8bfc-e33634b06d33")
+                val ktFile = PsiUtil.getPsiFile(project, file) as KtFile
+                val globalObject = ktFile.declarations.find {it is KtObjectDeclaration && it.name == "PhotlincDebugGlobal"} as KtObjectDeclaration ?: wtf("0202ea08-d79c-4e8b-b156-98f90bb42dbc")
+                val globalObjectClassBody = globalObject.getBody() ?: wtf("6e3bf3c9-b163-4847-b405-65b53b7e2111")
+                val breakOnDebugTagProperty = globalObjectClassBody.properties.find {it.name == "breakOnDebugTag"} ?: wtf("7ece59a2-507e-46df-bf11-0a76baec99ca")
+                p.println("Found ${breakOnDebugTagProperty.name}")
+                val initializer = breakOnDebugTagProperty.initializer ?: wtf("cfe4f552-5f87-41ce-aac1-144a321a5a43")
+                WriteCommandAction.runWriteCommandAction(project) {
+                    initializer.replace(KtPsiFactory(project).createStringTemplate(debugTag))
+                }
+            }
+
+            debugConfiguration(project, "photlinc.TryPhotlin")
+
+            //p.showDialog()
         }
     }
 }

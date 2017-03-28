@@ -284,7 +284,7 @@ private class messAroundAction(val event: AnActionEvent) {
     }
 
     fun fuck2() {
-        breakOnDebugTag(event.project, "123")
+        breakOnDebugTag(event.project, "234")
     }
 
     fun fuck1() {
