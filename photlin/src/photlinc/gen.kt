@@ -188,6 +188,7 @@ open class JsToStringGenerationVisitor2(out:TextOutput): JsVisitor() {
     override fun visitPHPClass(x: PHPClass) {
         printAnnotations(x.classDescriptor, x)
         val fuckingName = escapeIdent(x.className.ident)
+        printDebugTag(x)
         p.print("class $fuckingName ")
         x.classDescriptor.phpSuperPrototypeNameRef?.let {
             val superClassName = (it.qualifier as JsNameRef).ident

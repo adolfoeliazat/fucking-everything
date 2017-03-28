@@ -8,6 +8,7 @@ import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandlerBase
 import com.intellij.codeInsight.preview.PreviewHintProvider
 import com.intellij.execution.actions.ChooseRunConfigurationPopupAction
 import com.intellij.execution.filters.HyperlinkInfo
+import com.intellij.execution.impl.ConsoleViewImpl
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.ide.IdeBundle
 import com.intellij.lang.ASTNode
@@ -127,6 +128,8 @@ fun openFile(path: String, line: Int) {
             bs.mumbleNoln(rawResponseFromPHPScript.substring(searchStart))
         bs.mumble("")
 
+        (bs.consoleView as ConsoleViewImpl).scrollToEnd()
+
         return "Cool"
     }
 }
@@ -148,7 +151,8 @@ class PhotlinDevToolsPlugin : ApplicationComponent {
             }
 
             override fun mouseClicked(e: EditorMouseEvent) {
-                val psiFile = PsiUtil.getPsiFile(e.editor.project!!, (e.editor as EditorImpl).virtualFile)
+                val virtualFile = (e.editor as EditorImpl).virtualFile ?: return
+                val psiFile = PsiUtil.getPsiFile(e.editor.project!!, virtualFile)
                 if (psiFile is PHPTaggedFile) {
                     val el = psiFile.findElementAt(e.editor.caretModel.offset)
                     if (el is LeafPsiElement && el.elementType == PHPTaggedTypes.AT_TOKEN) {
@@ -280,7 +284,7 @@ private interface Servant {
 
 private class messAroundAction(val event: AnActionEvent) {
     init {
-        fuck2()
+        fuck1()
     }
 
     fun fuck2() {

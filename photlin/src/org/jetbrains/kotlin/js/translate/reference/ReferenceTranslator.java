@@ -78,7 +78,8 @@ public final class ReferenceTranslator {
                 if (property.getContainingDeclaration() instanceof PackageFragmentDescriptor && fuck instanceof JsNameRef) {
                     JsNameRef shit = (JsNameRef) fuck;
                     if (shit.getQualifier() == null && shit.getName() != null) {
-                        fuck = new JsNameRef(shit.getName()).setKind(PHPNameRefKind.GLOBAL_VAR);
+                        shit.setKind(PHPNameRefKind.GLOBAL_VAR);
+//                        fuck = new JsNameRef(shit.getName()).setKind(PHPNameRefKind.GLOBAL_VAR);
                     }
                 }
                 return fuck;

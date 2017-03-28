@@ -156,6 +156,7 @@ class kotlin__BoxedChar {
 
 class stdClassWithPhotlinProps {
     private $__photlin_properties = array();
+    private $__photlin_dynamicProperties = array();
 
     function __photlin_defineProperty($name, $spec) {
         if (!isset($this->__photlin_properties)) {
@@ -172,6 +173,8 @@ class stdClassWithPhotlinProps {
                 $f = $p['get'];
                 return $f();
             }
+        } else {
+            return $this->__photlin_dynamicProperties[$name];
         }
     }
 
@@ -182,6 +185,8 @@ class stdClassWithPhotlinProps {
                 $f = $p['set'];
                 return $f($value);
             }
+        } else {
+            $this->__photlin_dynamicProperties[$name] = $value;
         }
     }
 }

@@ -57,7 +57,7 @@ val JsNode.kotlinTypeName: String? get() {
 
 object PhotlincDebugGlobal {
     private var puid = 1L
-    val breakOnDebugTag: String = "234"
+    val breakOnDebugTag: String = "1437"
 //    val breakOnDebugTag: String = "6607"
     val breakOnPizdavalue: String = "58248"
 

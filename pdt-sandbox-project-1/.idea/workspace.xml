@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php" line="1035" />
+    <bookmark url="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php" line="14812" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="50260cff-fbd9-4ed8-8f26-9d510da884e6" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -16,11 +20,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="aps-back.php--tagged" pinned="false" current-in-tab="true">
+      <file leaf-file-name="aps-back-php.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../out/production/aps-back-php/aps-back-php.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="154">
+              <caret line="319" column="11" lean-forward="false" selection-start-line="319" selection-start-column="11" selection-end-line="319" selection-end-column="11" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="aps-back.php--tagged" pinned="false" current-in-tab="false">
         <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php--tagged">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="328">
-              <caret line="229" column="50" lean-forward="false" selection-start-line="229" selection-start-column="50" selection-end-line="229" selection-end-column="50" />
+            <state relative-caret-position="308">
+              <caret line="927" column="2" lean-forward="false" selection-start-line="927" selection-start-column="2" selection-end-line="927" selection-end-column="2" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="aps-back.php" pinned="false" current-in-tab="true">
+        <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="330">
+              <caret line="1071" column="0" lean-forward="false" selection-start-line="1071" selection-start-column="0" selection-end-line="1071" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -44,13 +68,14 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/fuck.txt" />
-        <option value="C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php" />
         <option value="$PROJECT_DIR$/fuck.kt" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/ide/ide-scripting.kts" />
         <option value="$PROJECT_DIR$/fuck.php--tagged" />
         <option value="$PROJECT_DIR$/Fuck.java" />
         <option value="$PROJECT_DIR$/src/Pizda.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php--tagged" />
+        <option value="C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php" />
       </list>
     </option>
   </component>
@@ -75,8 +100,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -106,14 +129,17 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="editor.preferences.tabs" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="settings.editor.splitter.proportion" value="0.2304038" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../out/production/aps-back-php/aps-back-php.js" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -286,16 +312,16 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17864694" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18133047" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29105324" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2913832" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Dynamic Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3997735" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -321,13 +347,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/fuck.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fuck.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="44">
@@ -624,13 +643,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2133">
-          <caret line="16374" column="30" lean-forward="false" selection-start-line="16374" selection-start-column="30" selection-end-line="16374" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Fuck.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="176">
@@ -656,17 +668,29 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="154">
           <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding>
-            <element signature="e#65#66#0" expanded="true" />
-            <element signature="e#111#112#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php--tagged">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="328">
-          <caret line="229" column="50" lean-forward="false" selection-start-line="229" selection-start-column="50" selection-end-line="229" selection-end-column="50" />
+        <state relative-caret-position="308">
+          <caret line="927" column="2" lean-forward="false" selection-start-line="927" selection-start-column="2" selection-end-line="927" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../out/production/aps-back-php/aps-back-php.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="319" column="11" lean-forward="false" selection-start-line="319" selection-start-column="11" selection-end-line="319" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="1071" column="0" lean-forward="false" selection-start-line="1071" selection-start-column="0" selection-end-line="1071" selection-end-column="0" />
           <folding />
         </state>
       </provider>

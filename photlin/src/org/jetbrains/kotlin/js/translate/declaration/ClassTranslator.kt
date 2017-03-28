@@ -108,6 +108,7 @@ class ClassTranslator private constructor(
         phpClass.statements += constructorFunction.makeStmt()
 
         addFieldToPHPClass(context(), descriptor, "__photlin_properties", JsArrayLiteral())
+        addFieldToPHPClass(context(), descriptor, "__photlin_dynamicProperties", JsArrayLiteral())
 
         phpClass.statements += PHPPlainCodeExpression {"""
             function __photlin_defineProperty(*name, *spec) {
@@ -126,6 +127,8 @@ class ClassTranslator private constructor(
                         *f = *p['get'];
                         return *f();
                     }
+                } else {
+                    return *this->__photlin_dynamicProperties[*name];
                 }
             }
         """.replace("*", "$")}.makeStmt()
@@ -138,6 +141,8 @@ class ClassTranslator private constructor(
                         *f = *p['set'];
                         return *f(*value);
                     }
+                } else {
+                    *this->__photlin_dynamicProperties[*name] = *value;
                 }
             }
         """.replace("*", "$")}.makeStmt()

@@ -21,7 +21,7 @@ object phplog {
 }
 
 
-fun apsback_main(args: Array<String>) {
+fun main(args: Array<String>) {
     serveShit(XHttpServletRequest(), XHttpServletResponse())
 }
 

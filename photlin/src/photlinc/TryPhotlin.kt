@@ -216,8 +216,8 @@ object TryPhotlin {
         val rawResponse = HTTPClient.postJSON(
             "http://localhost:" + PhotlinDevToolsGlobal.rpcServerPort + "?proc=$proc",
             ObjectMapper().writeValueAsString(req))
-        println(" OK")
-        clog("Response: $rawResponse")
+        println(" " + rawResponse)
+        //clog("Response: $rawResponse")
     }
 
 //    fun postJSON(url: String, content: String): String {
@@ -296,7 +296,7 @@ object TryPhotlin {
         }
         val outFile = File(p.outFilePath)
         outFile.writeText(outFile.readText() +
-                              "\n\$mainArgs = array(); ${p.testName}_main(\$mainArgs);")
+                              "\n\$mainArgs = array(); main(\$mainArgs);")
         run(boobs)
     }
 }
