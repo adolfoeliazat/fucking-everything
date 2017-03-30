@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.jetbrains.kotlin.cli.js.K2PhizdetsCompiler
+import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
+import org.jetbrains.kotlin.descriptors.SimpleFunctionDescriptor
 import org.jetbrains.kotlin.js.backend.ast.*
 import org.jetbrains.kotlin.js.facade.K2JSTranslator
 import org.jetbrains.kotlin.js.translate.utils.jsAstUtils.array
@@ -20,6 +22,10 @@ import kotlin.properties.Delegates.notNull
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 import kotlin.system.exitProcess
+
+val shitToShit = mutableMapOf<Any, Any?>()
+var JsNode.declarationDescriptor by AttachedShit<DeclarationDescriptor?>(shitToShit)
+
 
 object GrossTestPhizdets {
     val preventCompilationAndDeploying =
@@ -146,6 +152,7 @@ object GrossTestPhizdets {
             if (!preventCompilationAndDeploying) {
                 copyFile(p.outFilePath, deploymentDir + "/${p.testName}.php")
                 copyFile(p.outFilePath + "--tagged-gen", deploymentDir + "/${p.testName}.php--tagged-gen")
+                copyFile(p.outRoot + "/phi-engine.php", deploymentDir + "/phi-engine.php")
                 // @here
 //                copyFile("${p.outFilePath}--tagged", deploymentDir + "/${p.testName}.php--tagged")
 //                copyFile(p.phpSettingsSourceFilePath, deploymentDir + "/${p.phpSettingsFileName}")
@@ -167,7 +174,7 @@ object GrossTestPhizdets {
                         bitch("Cannot delete freaking $file")
                 }
 
-                val actualResponseJSON = HTTPClient.postJSON("http://localhost/TryPhotlin/${p.testName}/${p.testName}.php?${entry.queryString}", adaptedRequestJSON)
+                val actualResponseJSON = HTTPClient.postJSON("http://localhost/GrossTestPhizdets/${p.testName}/${p.testName}.php?${entry.queryString}", adaptedRequestJSON)
                 val expectedResponseJSON = entry.responseJSON
                 val actualPreparedResponse = prepare(actualResponseJSON)
                 val expectedPreparedResponse = prepare(expectedResponseJSON)
@@ -186,26 +193,26 @@ object GrossTestPhizdets {
                 } else {
                     clog("Shit")
                     // @here
-//                    val expectedFilePath = "$apsTmp/expected-php-response.json"
-//                    val actualFilePath = "$apsTmp/actual-php-response.json"
-//                    File(expectedFilePath).writeText(expectedPreparedResponse.text)
-//                    File(actualFilePath).writeText(actualPreparedResponse.text)
-//
-//                    val res = runProcessAndWait(listOf("git", "diff", "--color", actualFilePath, expectedFilePath), inheritIO = true)
-//                    if (res.exitValue != 0) {
-//                        clog("Diff shitted at us with code ${res.exitValue}")
-//                    }
-//
-//                    if (!actualPreparedResponse.parsedOK) {
-//                        val responseText = actualPreparedResponse.text
-//                        printWrappedText("WRAPPED RESPONSE", responseText
-//                            .replace("&gt;", ">")
-//                            .replace("&lt;", "<")
-//                            .replace("&amp;", "&"))
-//
-//                        val message = PDTRemoteCommand_TestResult(rawResponseFromPHPScript = actualResponseJSON)
-//                        sendTestResultToDevTools(message)
-//                    }
+                    val expectedFilePath = "$apsTmp/expected-php-response.json"
+                    val actualFilePath = "$apsTmp/actual-php-response.json"
+                    File(expectedFilePath).writeText(expectedPreparedResponse.text)
+                    File(actualFilePath).writeText(actualPreparedResponse.text)
+
+                    val res = runProcessAndWait(listOf("git", "diff", "--color", actualFilePath, expectedFilePath), inheritIO = true)
+                    if (res.exitValue != 0) {
+                        clog("Diff shitted at us with code ${res.exitValue}")
+                    }
+
+                    if (!actualPreparedResponse.parsedOK) {
+                        val responseText = actualPreparedResponse.text
+                        printWrappedText("WRAPPED RESPONSE", responseText
+                            .replace("&gt;", ">")
+                            .replace("&lt;", "<")
+                            .replace("&amp;", "&"))
+
+                        val message = PDTRemoteCommand_TestResult(rawResponseFromPHPScript = actualResponseJSON)
+                        sendTestResultToDevTools(message)
+                    }
 
                     exitProcess(1)
                 }
@@ -349,6 +356,11 @@ fun phpify(program: JsProgram) {
         val shitToShit = mutableMapOf<Any, Any?>()
         var JsFunction.isFunctionDeclaration by AttachedShit<Boolean?>(shitToShit)
 
+        override fun endVisit(x: JsStringLiteral, ctx: JsContext<JsNode>) {
+            super.endVisit(x, ctx)
+            ctx.replaceMe(JsInvocation(JsNameRef("phi__stringLiteral"), x))
+        }
+
         override fun endVisit(x: JsVars, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
             val shit = x.vars.map {
@@ -372,9 +384,6 @@ fun phpify(program: JsProgram) {
 
         override fun endVisit(x: JsInvocation, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
-//            val args = mutableListOf<JsExpression>()
-//            for (a in x.arguments) {
-//            }
             ctx.replaceMe(JsInvocation(JsNameRef("phi__call"), x.qualifier, *x.arguments.toTypedArray()))
         }
 
@@ -425,18 +434,26 @@ fun phpify(program: JsProgram) {
         override fun endVisit(x: JsNew, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
             val constructorExpression = x.constructorExpression
-//            if (constructorExpression !is JsNameRef)
-//                wtf("4179b3ae-ae81-4bf9-bf0a-6b2608fb4e6d")
-            val args = mutableListOf<JsExpression>()
-            args += constructorExpression
-            for (arg in x.arguments)
-                args += arg
-            ctx.replaceMe(JsInvocation(JsNameRef("phi__new"), args))
+            ctx.replaceMe(JsInvocation(JsNameRef("phi__new"), x.constructorExpression, JsInvocation(JsNameRef("array"), *x.arguments.toTypedArray())))
         }
 
         override fun endVisit(x: JsNameRef, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
-            ctx.replaceMe(JsInvocation(JsNameRef("phi__nameRef"), JsStringLiteral(x.ident)))
+            val replacement = when {
+                x.qualifier == null -> {
+//                    if (x.ident == "echo") {
+//                        clog("eeeeeeeeeeee", x.debugTag)
+//                    }
+                    val dd = x.declarationDescriptor
+                    val shit = when {
+                        dd is SimpleFunctionDescriptor && dd.isExternal -> "phi__externalName"
+                        else -> "phi__name"
+                    }
+                    JsInvocation(JsNameRef(shit), JsStringLiteral(x.ident))
+                }
+                else -> JsInvocation(JsNameRef("phi__dot"), x.qualifier, JsStringLiteral(x.ident))
+            }
+            ctx.replaceMe(replacement)
         }
 
         override fun endVisit(x: JsPrefixOperation, ctx: JsContext<JsNode>) {

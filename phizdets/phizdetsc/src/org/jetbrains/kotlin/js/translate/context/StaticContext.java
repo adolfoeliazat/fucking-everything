@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns;
 import org.jetbrains.kotlin.descriptors.*;
 import org.jetbrains.kotlin.descriptors.impl.LocalVariableDescriptor;
+import org.jetbrains.kotlin.descriptors.impl.SimpleFunctionDescriptorImpl;
 import org.jetbrains.kotlin.js.backend.ast.*;
 import org.jetbrains.kotlin.js.backend.ast.metadata.MetadataProperties;
 import org.jetbrains.kotlin.js.backend.ast.metadata.SideEffectKind;
@@ -48,6 +49,7 @@ import org.jetbrains.kotlin.resolve.calls.tasks.DynamicCallsKt;
 import org.jetbrains.kotlin.resolve.descriptorUtil.DescriptorUtilsKt;
 import org.jetbrains.kotlin.serialization.js.ModuleKind;
 import org.jetbrains.kotlin.types.typeUtil.TypeUtilsKt;
+import phizdets.compiler.PhizdetscKt;
 
 import java.util.*;
 
@@ -301,6 +303,13 @@ public final class StaticContext {
 
         for (JsName partName : partNames) {
             expression = new JsNameRef(partName, expression);
+            // @fuck3
+            PhizdetscKt.setDeclarationDescriptor(expression, descriptor);
+//            if (declarationStatements instanceof SimpleFunctionDescriptorImpl) {
+//                SimpleFunctionDescriptorImpl fd = (SimpleFunctionDescriptorImpl) declarationStatements;
+//                if (fd.isExternal()) {
+//                }
+//            }
             applySideEffects(expression, suggested.getDescriptor());
         }
         assert expression != null : "Since partNames is not empty, expression must be non-null";

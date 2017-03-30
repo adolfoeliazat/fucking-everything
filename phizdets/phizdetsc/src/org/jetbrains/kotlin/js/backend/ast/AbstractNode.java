@@ -20,13 +20,15 @@ import org.jetbrains.kotlin.js.backend.JsToStringGenerationVisitor;
 import org.jetbrains.kotlin.js.backend.PhizdetsToStringGenerationVisitor;
 import org.jetbrains.kotlin.js.backend.ast.metadata.HasMetadata;
 import org.jetbrains.kotlin.js.util.TextOutputImpl;
+import phizdets.compiler.PhizdetscKt;
 
 public abstract class AbstractNode extends HasMetadata implements JsNode {
     private static long nextDebugTag = 0L;
     public String debugTag = "" + nextDebugTag++;
+
     {
-        if (debugTag.equals("127")) {
-//            "break on me".toString();
+        if (debugTag.equals("191")) {
+            "break on me".toString();
         }
     }
 
@@ -39,6 +41,11 @@ public abstract class AbstractNode extends HasMetadata implements JsNode {
 
     protected <T extends HasMetadata> T withMetadataFrom(T other) {
         this.copyMetadataFrom(other);
+        if (other instanceof AbstractNode) {
+            AbstractNode otherNode = (AbstractNode) other;
+            debugTag = otherNode.debugTag;
+            PhizdetscKt.setDeclarationDescriptor(this, PhizdetscKt.getDeclarationDescriptor(otherNode));
+        }
         //noinspection unchecked
         return (T) this;
     }

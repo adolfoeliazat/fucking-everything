@@ -4,3 +4,4 @@ node_modules
 /out
 /lib-gradle
 /.gradle
+/nb-php-playground/nbproject/private/
