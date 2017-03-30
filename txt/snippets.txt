@@ -40,5 +40,17 @@ Misc
 
     echo -ne '\e]0;Title\a'
 
+VirtualBox
+==========
+
+    Host IP as visible from guest: 10.0.2.2
+    DISPLAY=10.0.2.2:0 gnome-terminal
+
+
+
+
+
+
+
 
 

@@ -1,25 +1,324 @@
 <?php
 
-/*
-$a = array('foo' => null);
-$b =& $a['foo'];
-phi__dumpNameValueSequence('b', $b);
-exit();
-*/
+class PhiDot extends PhiExpression {
+    /**@var PhiExpression*/ private $qualifier;
+    /**@var string*/ private $name;
 
-phi__pushEnv();
+    /**
+     * @param PhiExpression $qualifier
+     * @param string $name
+     */
+    public function __construct($qualifier, $name) {
+        $this->qualifier = $qualifier;
+        $this->name = $name;
+    }
 
-phi__functionDeclaration('Error', array('message'), function () {
-    phi__binop('=', phi__dot(phi__this(), 'message'), phi__name('message'));
-});
+    /**
+     * @return PhiExpression
+     */
+    public function getQualifier() {
+        return $this->qualifier;
+    }
 
-function phi__dot($lhs, $name) {
-    return array('kind' => 'dot', 'lhs' => $lhs, 'name' => $name);
+    /**
+     * @return string
+     */
+    public function getName() {
+        return $this->name;
+    }
+
+    /**
+     * @return PhiValue
+     */
+    public function evaluate() {
+        Phi::imf("5b8b7a6f-a4bf-47ad-bbfc-36d540bc2e6d");
+    }
 }
 
-function phi__this() {
-    return array('kind' => 'this');
+class PhiThis extends PhiExpression {
+    /**
+     * @return PhiValue
+     */
+    public function evaluate() {
+        return Phi::getCurrentEnv()->getThisValue();
+    }
 }
+
+abstract class PhiExpression {
+    /**
+     * @return PhiValue
+     */
+    public abstract function evaluate();
+}
+
+class PhiFunction extends PhiValue {
+    /**@var PhiFunctionExpression*/ private $expr;
+
+    /**
+     * @param PhiFunctionExpression $expr
+     */
+    public function __construct(PhiFunctionExpression $expr) {
+        $this->expr = $expr;
+    }
+
+    /**
+     * @param PhiObject $receiver
+     * @param PhiValue[] $args
+     * @return PhiValue
+     */
+    public function invoke($receiver, $args) {
+        Phi::pushEnv();
+        Phi::getCurrentEnv()->setThisValue($receiver);
+        for ($i = 0; $i < count($args); ++$i) {
+            $name = $this->expr->getArgNames()[$i];
+            Phi::getCurrentEnv()->setVar($name, $args[$i]);
+        }
+
+        call_user_func($this->expr->getBody());
+    }
+
+    /**
+     * @return string
+     */
+    public function typeof() {
+        return 'function';
+    }
+}
+
+class PhiObject extends PhiValue {
+    /**@var PhiValue[]*/ private $fields = array();
+
+    /**
+     * @param string $name
+     * @return PhiValue
+     */
+    function getField($name) {
+        $value = @$this->fields[$name];
+        if ($value === null)
+            return new PhiUndefined();
+        else
+            return $value;
+    }
+
+    /**
+     * @param string $name
+     * @param PhiValue $value
+     */
+    function setField($name, $value) {
+        $this->fields[$name] = $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function typeof() {
+        return 'object';
+    }
+}
+
+class PhiFunctionExpression extends PhiExpression {
+    /**@var string*/ private $name;
+    /**@var string[]*/ private $argNames;
+    /**@var Closure*/ private $body;
+
+    /**
+     * @param string $name
+     * @param string[] $argNames
+     * @param Closure $body
+     */
+    public function __construct($name, $argNames, $body) {
+        $this->name = $name;
+        $this->argNames = $argNames;
+        $this->body = $body;
+    }
+
+    /**
+     * @return PhiFunction
+     */
+    public function evaluate() {
+        return new PhiFunction($this);
+    }
+
+    /**
+     * @return string
+     */
+    public function getName() {
+        return $this->name;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getArgNames() {
+        return $this->argNames;
+    }
+
+    /**
+     * @return Closure
+     */
+    public function getBody() {
+        return $this->body;
+    }
+}
+
+function phi__functionExpression($name, $argNames, $body) {
+    return new PhiFunctionExpression($name, $argNames, $body);
+//    return array(
+//        'debugDescription' => "Function `$name`",
+//        'debugBacktrace' => phi__backtrace(),
+//        'typeof' => 'function',
+//        'name' => $name,
+//        'argNames' => $argNames,
+//        'function' => $f
+//    );
+}
+
+abstract class PhiValue {
+    /**
+     * @return string
+     */
+    abstract public function typeof();
+}
+
+class PhiUndefined extends PhiValue {
+    /**
+     * @return string
+     */
+    public function typeof() {
+        return 'undefined';
+    }
+}
+
+class PhiEnv {
+    /**@var PhiEnv*/ private $parent;
+    /**@var PhiValue[]*/ private $vars = array();
+    /**@var PhiValue*/ private $thisValue;
+
+    /**
+     * @param PhiEnv $parent
+     */
+    function __construct($parent) {
+        $this->parent = $parent;
+    }
+
+    /**
+     * @param string $name
+     * @param PhiValue $value
+     * @return void
+     */
+    public function setVar($name, $value) {
+        $this->vars[$name] = $value;
+    }
+
+    /**
+     * @param string $name
+     * @return PhiValue
+     */
+    public function getVar($name) {
+        $value = @$this->vars[$name];
+        if ($value !== null) {
+            return $value;
+        } else {
+            if ($this->parent === null) {
+                Phi::bitch("Variable `$name` not found");
+            } else {
+                return $this->parent->getVar($name);
+            }
+        }
+    }
+
+    /**
+     * @return PhiEnv
+     */
+    public function getParent() {
+        return $this->parent;
+    }
+
+    /**
+     * @param PhiObject $thisValue
+     */
+    public function setThisValue($thisValue) {
+        $this->thisValue = $thisValue;
+    }
+
+    /**
+     * @return PhiValue
+     */
+    public function getThisValue() {
+        if ($this->thisValue === null)
+            Phi::bitch("`this` is not bound");
+        return $this->thisValue;
+    }
+
+    /**
+     * @param string $varName
+     * @param PhiValue $value
+     */
+    public function setExistingVarHereOrInParents($varName, $value) {
+        if (array_key_exists($varName, $this->vars)) {
+            $this->vars[$varName] = $value;
+        } else {
+            if ($this->parent === null) {
+                Phi::bitch("Assigning to non-existent variable `$varName`");
+            } else {
+                $this->parent->setExistingVarHereOrInParents($varName, $value);
+            }
+        }
+    }
+}
+
+function qwe() {
+}
+
+class Phi {
+    /**@var PhiEnv*/ private static $currentEnv;
+
+    public static function init() {
+        self::$currentEnv = new PhiEnv(null);
+    }
+
+    /**
+     * @return PhiEnv
+     */
+    public static function getCurrentEnv() {
+        return self::$currentEnv;
+    }
+
+    public static function pushEnv() {
+        self::$currentEnv = new PhiEnv(self::$currentEnv);
+    }
+
+    public static function popEnv() {
+        self::$currentEnv = self::$currentEnv->getParent();
+        if (self::$currentEnv === null)
+            Phi::wtf("0a0f0cfa-1ccf-4017-b97c-c064ad0b0015");
+    }
+
+    public static function imf($msg) {
+        throw new PhiIllegalStateException("Implement me, please, fuck you. $msg");
+    }
+
+    public static function wtf($msg) {
+        throw new PhiIllegalStateException("WTF: $msg");
+    }
+
+    public static function bitch($msg) {
+        throw new PhiIllegalStateException($msg);
+    }
+
+    public static function check($cond, $msg) {
+        if (!$cond) {
+            throw new PhiIllegalStateException($msg);
+        }
+    }
+
+}
+
+function phiFunctionDeclaration($name, $argNames, $body) {
+    $expr = new PhiFunctionExpression($name, $argNames, $body);
+    Phi::getCurrentEnv()->setVar($name, $expr->evaluate());
+}
+
 
 
 class PhiIllegalStateException extends Exception {
@@ -45,79 +344,8 @@ function phi__printBoolean($b) {
     else echo 'false';
 }
 
-function quickTest_1() {
-    try {
-        throw phi__new(phi__name('Error'), array(phi__stringLiteral("We are hosed, man...")));
-    } catch (Exception $e) {
-        if ($e instanceof PhiIllegalStateException)
-            throw $e;
-        phi__assertEquals("'We are hosed, man...'", $e->getMessage());
-    }
-}
-quickTest_1();
 
 
-function &phi__pushEnv() {
-    $newEnv = array('varCells' => array());
-    if (isset($GLOBALS['phi__currentEnv'])) {
-        $newEnv['parent'] =& $GLOBALS['phi__currentEnv'];
-    } else {
-        $newEnv['parent'] = null;
-    }
-    $GLOBALS['phi__currentEnv'] =& $newEnv;
-    return $newEnv;
-}
-
-function phi__popEnv() {
-    check(isset($GLOBALS['phi__currentEnv']), "65e61a69-46a5-4df0-abe6-45d39898bca0");
-    check(isset($GLOBALS['phi__currentEnv']['parent']), "47a8554a-1bf1-42ed-a627-dc98c3fbe65d");
-    $GLOBALS['phi__currentEnv'] =& $GLOBALS['phi__currentEnv']['parent'];
-}
-
-
-/*
-'kotlin' => array(
-                'typeof' => 'object',
-                'fields' => array()
-            )
-            */
-
-
-
-
-function phi__functionDeclaration($name, $argNames, $f) {
-    $cell = phi__makeCell();
-    $GLOBALS['phi__currentEnv']['varCells'][$name] =& $cell;
-    $cell['value'] = phi__functionExpression($name, $argNames, $f);
-    // phi__dump('env', $GLOBALS['phi__currentEnv']); exit();
-}
-
-function phi__functionExpression($name, $argNames, $f) {
-    return array(
-        'debugDescription' => "Function `$name`",
-        'debugBacktrace' => phi__backtraceString(),
-        'typeof' => 'function',
-        'name' => $name,
-        'argNames' => $argNames,
-        'function' => $f
-    );
-}
-
-
-function phi__imf($msg) {
-    throw new PhiIllegalStateException("Implement me, please, fuck you. $msg");
-}
-
-function phi__wtf($msg) {
-    throw new PhiIllegalStateException("WTF: $msg");
-}
-
-
-function phi__check($cond, $msg) {
-    if (!$cond) {
-        throw new PhiIllegalStateException($msg);
-    }
-}
 
 function phi__dumpNameValueSequence() {
     phi__println(phi__dumpNameValueSequenceToString(func_get_args()));
@@ -125,7 +353,7 @@ function phi__dumpNameValueSequence() {
 
 function phi__dumpNameValueSequenceToString($nameValueSequence, $opts = array()) {
     $count = count($nameValueSequence);
-    phi__check($count > 0 && $count % 2 === 0, "40c23506-2a94-468f-9f07-e32e1b318068    count = $count");
+    Phi::check($count > 0 && $count % 2 === 0, "40c23506-2a94-468f-9f07-e32e1b318068    count = $count");
 
     $res = '';
     for ($i = 0; $i < $count; $i += 2) {
@@ -143,8 +371,8 @@ function phi__dumpNameValueSequenceToString($nameValueSequence, $opts = array())
     return $res;
 }
 
-function phi__makeCallWithReceiver($receiver, $fPE, $args) {
-    // phi__dumpNameValueSequence('receiver', $receiver, 'fPE', $fPE, 'args', $args, 'env', $GLOBALS['phi__currentEnv']); exit();
+function phi__invokeWithReceiver(&$receiver, $fPE, $args) {
+    // phi__dumpFunctionEnterAndExit('phi__dumpFunctionEnterAndExit', 'receiver', $receiver, 'fPE', $fPE, 'args', $args, 'env', $GLOBALS['phi__currentEnv']); exit();
 
     $fCell = phi__findCell($fPE);
     // phi__dumpNameValueSequence('fCell', $fCell); exit();
@@ -153,9 +381,7 @@ function phi__makeCallWithReceiver($receiver, $fPE, $args) {
     phi__check(count($argNames) === count($args), "c099b7ef-ab67-4155-8b54-388357b3781a");
     $env =& phi__pushEnv();
     for ($i = 0; $i < count($argNames); ++$i) {
-        $cell =& phi__makeCell();
-        $cell['value'] =& $args[$i];
-        $env['varCells'][$argNames[$i]] =& $cell;
+        phi__setCell($argNames[$i], phi__evaluate($args[$i]));
     }
     $env['thisCell'] =& phi__makeCell();
     $res = call_user_func($f['function']);
@@ -163,8 +389,19 @@ function phi__makeCallWithReceiver($receiver, $fPE, $args) {
     return $res;
 }
 
+function& phi__currentEnv() {
+    return $GLOBALS['phi__currentEnv'];
+}
 
-function phi__backtraceString() {
+function phi__setCell($name, $value) {
+    phi__println("-- Setting cell `$name` value to " . var_export($value, true));
+    $cell = array();
+    phi__currentEnv()['varCells'][$name] =& $cell;
+    $cell['value'] = $value;
+}
+
+
+function phi__backtrace() {
     $bt = debug_backtrace();
     $res = array();
     for ($i = 0; $i < count($bt); ++$i) {
@@ -182,50 +419,150 @@ function phi__backtraceString() {
     return $res;
 }
 
-function& phi__new($ctor, $args) {
-    $inst = array(
-        'debugBacktrace' => phi__backtraceString(),
-        'typeof' => 'object',
-        'fields' => array()
-    );
-    phi__makeCallWithReceiver($inst, $ctor, $args);
-    return $inst;
-}
+class PhiNew extends PhiExpression {
+    /**@var PhiExpression*/ private $ctor;
+    /**@var PhiExpression[]*/ private $args;
 
-function phi__stringLiteral($s) {
-    return array('typeof' => 'string', 'value' => $s);
+    /**
+     * @param PhiExpression $ctor
+     * @param PhiExpression[] $args
+     */
+    public function __construct(PhiExpression $ctor, array $args) {
+        $this->ctor = $ctor;
+        $this->args = $args;
+    }
+
+    /**
+     * @return PhiValue
+     */
+    public function evaluate() {
+        // Example:
+        //     function Shit(a, b) {this.a = a; this.b = b}
+        //     new Shit(a, b)
+
+        $ctorValue = $this->ctor->evaluate();
+        if (!($ctorValue instanceof PhiFunction))
+            Phi::imf("d3b13f4a-b3d3-4b80-b9e0-45ac964f08f8");
+        $inst = new PhiObject();
+
+        $argValues = array();
+        foreach ($this->args as $arg)
+            array_push($argValues, $arg->evaluate());
+
+        $ctorValue->invoke($inst, $argValues);
+        return $inst;
+    }
 }
 
 function phi__println($x) {
     echo $x . "\n";
 }
 
-function phi__name($name) {
-    return array('kind' => 'name', 'name' => $name);
+function phi__printlnAndExit($x) {
+    phi__println($x);
+    exit();
 }
 
-function phi__typeof($x) {
-    return phi__stringLiteral($x['typeof']);
+class PhiBoolean extends PhiValue {
+    /**@var boolean*/ private $value;
+
+    /**
+     * PhiBoolean constructor.
+     * @param bool $value
+     */
+    public function __construct($value) {
+        $this->value = $value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isValue() {
+        return $this->value;
+    }
+
+    /**
+     * @return string
+     */
+    public function typeof() {
+        return 'boolean';
+    }
 }
 
-function phi__binop($op, $lhs, $rhs) {
-    if ($op === '===') {
-        if ($lhs['typeof'] === 'string' && $rhs['typeof'] === 'string') {
-            return array(
-                'typeof' => 'boolean',
-                'value' => $lhs['value'] === $rhs['value']
-            );
-        } else {
-            throw new Exception("8614085d-5212-46f6-9516-f256e02788b0    lhs->typeOf = {$lhs->typeOf}; rhs->typeOf = {$rhs->typeOf}");
+class PhiBinaryOperation extends PhiExpression {
+    /**@var string*/ private $op;
+    /**@var PhiExpression*/ private $lhs;
+    /**@var PhiExpression*/ private $rhs;
+
+    /**
+     * @param string $op
+     * @param PhiExpression $lhs
+     * @param PhiExpression $rhs
+     */
+    public function __construct($op, PhiExpression $lhs, PhiExpression $rhs) {
+        $this->op = $op;
+        $this->lhs = $lhs;
+        $this->rhs = $rhs;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOp() {
+        return $this->op;
+    }
+
+    /**
+     * @return PhiExpression
+     */
+    public function getLhs() {
+        return $this->lhs;
+    }
+
+    /**
+     * @return PhiExpression
+     */
+    public function getRhs() {
+        return $this->rhs;
+    }
+
+    /**
+     * @return PhiValue
+     */
+    public function evaluate() {
+        $rhsValue = $this->rhs->evaluate();
+        if ($this->op === '===') {
+            $lhsValue = $this->lhs->evaluate();
+            if ($lhsValue instanceof PhiString && $rhsValue instanceof PhiString) {
+                return new PhiBoolean($lhsValue->getValue() == $rhsValue->getValue());
+            } else {
+                $lhsValueClass = get_class($lhsValue);
+                $rhsValueClass = get_class($rhsValue);
+                Phi::wtf("8614085d-5212-46f6-9516-f256e02788b0    lhsValue is $lhsValueClass; rhsValue is $rhsValueClass");
+            }
         }
-    } else if ($op === '=') {
-        // Ex: a = b             phi__name('a') = phi__name('b')
-        // Ex: a.b = c()           phi__dot(phi__name('a'), 'b') = phi__call(...)
-        // Ex: a['b'] = c        phi__brackets(phi__name('a'), phi__name('b'))
-        $cell = phi__findCell($lhs);
-        $cell['value'] = phi__evaluate($rhs);
-    } else {
-        throw new Exception("6bb8ca7a-c00a-4f60-9930-211dba14c031    op = $op");
+        else if ($this->op === '=') {
+            if ($this->lhs instanceof PhiNameRef) {
+                // Ex: a = b
+                $varName = $this->lhs->getName();
+                Phi::getCurrentEnv()->setExistingVarHereOrInParents($varName, $rhsValue);
+            }
+            else if ($this->lhs instanceof PhiDot) {
+                // Ex: fucking(shit()).b = c
+                $object = $this->lhs->getQualifier()->evaluate();
+                if (!($object instanceof PhiObject))
+                    Phi::bitch("36107ced-0278-40c0-a2ba-3742aeb4330c");
+                $fieldName = $this->lhs->getName();
+                $object->setField($fieldName, $rhsValue);
+            }
+            // Ex: a['b'] = c
+            else {
+                Phi::wtf("a7b2e444-2530-4a2c-a3cf-eb821e3f440b");
+            }
+        }
+        else {
+            Phi::wtf("6bb8ca7a-c00a-4f60-9930-211dba14c031    op = {$this->op}");
+        }
     }
 }
 
@@ -234,13 +571,14 @@ function phi__dumpFunctionEnterAndExit() {
     $functionName = $args[0];
     $rest = array_slice($args, 1);
 
-    phi__println("Entering $functionName");
+    $location = phi__backtrace()[1];
+    phi__println("Entering $functionName    $location");
     echo call_user_func('phi__dumpNameValueSequenceToString', $rest, array('indent' => 4));
     exit();
 }
 
 function phi__dump($x) {
-    echo var_export($x, true);
+    echo var_export($x, true) . "\n";
 }
 
 function phi__dumpAndExit($x) {
@@ -248,56 +586,125 @@ function phi__dumpAndExit($x) {
     exit();
 }
 
-function phi__dumpNameValueSequenceAndExit($x) {
-    phi__dumpNameValueSequence($x);
+function phi__dumpNameValueSequenceAndExit() {
+    call_user_func_array('phi__dumpNameValueSequence', func_get_args());
     exit();
 }
 
-function phi__evaluate($pe) {
-    // phi__dumpFunctionEnterAndExit('phi__evaluate', 'pe', $pe, 'env', $GLOBALS['phi__currentEnv']);
+class PhiNameRef extends PhiExpression {
+    /**@var string*/ private $name;
+
+    /**
+     * PhiNameRef constructor.
+     * @param string $name
+     */
+    public function __construct($name) {
+        $this->name = $name;
+    }
+
+    /**
+     * @return PhiValue
+     */
+    public function evaluate() {
+        return Phi::getCurrentEnv()->getVar($this->name);
+    }
+
+    /**
+     * @return string
+     */
+    public function getName() {
+        return $this->name;
+    }
 }
 
-function phi__makeCell() {
-    return array('value' => null);
+class PhiStringLiteral extends PhiExpression {
+    /**@var string*/ private $value;
+
+    /**
+     * PhiNameRef constructor.
+     * @param string $value
+     */
+    public function __construct($value) {
+        $this->value = $value;
+    }
+
+    /**
+     * @return PhiValue
+     */
+    public function evaluate() {
+        return new PhiString($this->value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue() {
+        return $this->value;
+    }
 }
 
-function &phi__findCell($expr) {
-    if ($expr['kind'] === 'name') {
-        $name = $expr['name'];
-        $env =& $GLOBALS['phi__currentEnv'];
-        while (!is_null($env)) {
-            $cells =& $env['varCells'];
-            if (isset($cells[$name]))
-                return $cells[$name];
-            $env =& $env['parent'];
-        }
-        phi__wtf("e49e2fc1-8bbb-459f-831f-3eafee4edc69");
+class PhiString extends PhiValue {
+    /**@var string*/ private $value;
+
+    /**
+     * PhiString constructor.
+     * @param string $value
+     */
+    public function __construct($value) {
+        $this->value = $value;
     }
-    else if ($expr['kind'] === 'this') {
-        $env =& $GLOBALS['phi__currentEnv'];
-        $thisCell =& $env['thisCell'];
-        phi__check(isset($thisCell), "87f8bf17-63a3-4368-a471-85cbfce7b6a7");
-        return $thisCell;
+
+    /**
+     * @return string
+     */
+    public function getValue() {
+        return $this->value;
     }
-    else if ($expr['kind'] === 'dot') {
-        $objCell = phi__findCell($expr['lhs']);
-        $obj =& $objCell['value'];
-        $fieldName = $expr['name'];
-        $fields =& $obj['fields'];
-        if (isset($fields[$fieldName])) {
-            return $fields[$fieldName];
-        } else {
-            $fields[$fieldName] =& phi__makeCell();
-            return $fields[$fieldName];
-        }
-    }
-    else if ($expr['kind'] === 'brackets') {
-        phi__imf("de38b397-5ee5-46bc-ae0d-66067e099427");
-    }
-    else {
-        phi__wtf("ed923de8-f21a-44cd-b991-d8e3c03fa762    kind = {$expr['kind']}");
+
+    /**
+     * @return string
+     */
+    public function typeof() {
+        return 'string';
     }
 }
+
+/**
+ * @param PhiExpression $expr
+ */
+function phiExpressionStatement($expr) {
+    $expr->evaluate();
+}
+
+// ==================================== ENTRY ======================================
+
+Phi::init();
+
+phiFunctionDeclaration('Error', array('message'), function () {
+    phiExpressionStatement(
+        new PhiBinaryOperation('=',
+                               new PhiDot(new PhiThis(),
+                                          'message'),
+                               new PhiNameRef('message')));
+});
+
+function quickTest_1() {
+    try {
+        $expr = new PhiNew(new PhiNameRef('Error'),
+                           array(new PhiStringLiteral("We are hosed, man...")));
+        $value = $expr->evaluate();
+        phi__dumpNameValueSequenceAndExit('value', $value);
+        throw $value;
+        // throw phi__new(phi__name('Error'), array(phi__stringLiteral("We are hosed, man...")));
+    } catch (Exception $e) {
+        if ($e instanceof PhiIllegalStateException)
+            throw $e;
+        phi__assertEquals("'We are hosed, man...'", $e->getMessage());
+    }
+}
+quickTest_1();
+
+
 
 
 

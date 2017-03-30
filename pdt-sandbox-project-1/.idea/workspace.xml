@@ -20,11 +20,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="phi-gross-test-1.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="phi-gross-test-1.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../out/production/phi-gross-test-1/phi-gross-test-1.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
-              <caret line="0" column="3" lean-forward="false" selection-start-line="0" selection-start-column="3" selection-end-line="0" selection-end-column="3" />
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -40,11 +40,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="phi-gross-test-1.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="phi-gross-test-1.php" pinned="false" current-in-tab="true">
         <entry file="file://C:/opt/xampp/htdocs/GrossTestPhizdets/phi-gross-test-1/phi-gross-test-1.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="22">
-              <caret line="1" column="2" lean-forward="false" selection-start-line="1" selection-start-column="2" selection-end-line="1" selection-end-column="2" />
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -88,8 +88,8 @@
         <option value="C:/opt/xampp/htdocs/TryPhotlin/aps-back/aps-back.php" />
         <option value="$PROJECT_DIR$/../out/production/aps-back-php/aps-back-php.js" />
         <option value="C:/opt/xampp/htdocs/GrossTestPhizdets/phi-gross-test-1/phi-gross-test-1.php--tagged-gen" />
-        <option value="C:/opt/xampp/htdocs/GrossTestPhizdets/phi-gross-test-1/phi-gross-test-1.php" />
         <option value="$PROJECT_DIR$/../out/production/phi-gross-test-1/phi-gross-test-1.js" />
+        <option value="C:/opt/xampp/htdocs/GrossTestPhizdets/phi-gross-test-1/phi-gross-test-1.php" />
       </list>
     </option>
   </component>
@@ -148,7 +148,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.appearance" />
     <property name="settings.editor.splitter.proportion" value="0.2304038" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
@@ -698,18 +698,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/opt/xampp/htdocs/GrossTestPhizdets/phi-gross-test-1/phi-gross-test-1.php">
+    <entry file="file://$PROJECT_DIR$/../out/production/phi-gross-test-1/phi-gross-test-1.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="1" column="2" lean-forward="false" selection-start-line="1" selection-start-column="2" selection-end-line="1" selection-end-column="2" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../out/production/phi-gross-test-1/phi-gross-test-1.js">
+    <entry file="file://C:/opt/xampp/htdocs/GrossTestPhizdets/phi-gross-test-1/phi-gross-test-1.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="3" lean-forward="false" selection-start-line="0" selection-start-column="3" selection-end-line="0" selection-end-column="3" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>

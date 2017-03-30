@@ -356,6 +356,11 @@ fun phpify(program: JsProgram) {
         val shitToShit = mutableMapOf<Any, Any?>()
         var JsFunction.isFunctionDeclaration by AttachedShit<Boolean?>(shitToShit)
 
+        override fun endVisit(x: JsThrow, ctx: JsContext<JsNode>) {
+            super.endVisit(x, ctx)
+            ctx.replaceMe(JsThrow(JsInvocation(JsNameRef("phi__evaluate"), x.expression)))
+        }
+
         override fun endVisit(x: JsStringLiteral, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
             ctx.replaceMe(JsInvocation(JsNameRef("phi__stringLiteral"), x))
