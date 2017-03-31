@@ -358,12 +358,12 @@ fun phpify(program: JsProgram) {
 
         override fun endVisit(x: JsThrow, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
-            ctx.replaceMe(JsThrow(JsInvocation(JsNameRef("phi__evaluate"), x.expression)))
+            ctx.replaceMe(JsInvocation(JsNameRef("phiThrow"), x.expression).makeStmt())
         }
 
         override fun endVisit(x: JsStringLiteral, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
-            ctx.replaceMe(JsInvocation(JsNameRef("phi__stringLiteral"), x))
+            ctx.replaceMe(new("PhiStringLiteral", listOf(x)))
         }
 
         override fun endVisit(x: JsVars, ctx: JsContext<JsNode>) {
@@ -421,10 +421,26 @@ fun phpify(program: JsProgram) {
             ctx.replaceMe(JsInvocation(JsNameRef(shit), name, args, body))
         }
 
+        fun invocation(functionName: String, args: List<JsExpression>): JsInvocation {
+            return JsInvocation(JsNameRef(functionName), args)
+        }
+
+        fun new(ctor: String, args: List<JsExpression>): JsNew {
+            return new(JsNameRef(ctor), args)
+        }
+
+        override fun endVisit(x: JsIf, ctx: JsContext<JsNode>) {
+            super.endVisit(x, ctx)
+            val ifExpression = invocation("phiEvaluateToBoolean", listOf(x.ifExpression))
+            ctx.replaceMe(JsIf(ifExpression, x.thenStatement, x.elseStatement))
+        }
+
         override fun endVisit(x: JsBinaryOperation, ctx: JsContext<JsNode>) {
             super.visit(x, ctx)
-            ctx.replaceMe(JsInvocation(JsNameRef("phi__binop"), JsStringLiteral(x.operator.toString()), x.arg1, x.arg2))
+            ctx.replaceMe(new("PhiBinaryOperation", listOf(JsStringLiteral(x.operator.toString()), x.arg1, x.arg2)))
         }
+
+        private fun new(ctor: JsNameRef, args: List<JsExpression>) = JsNew(ctor, args)
 
         override fun endVisit(x: JsArrayAccess, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
@@ -438,35 +454,31 @@ fun phpify(program: JsProgram) {
 
         override fun endVisit(x: JsNew, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
-            val constructorExpression = x.constructorExpression
-            ctx.replaceMe(JsInvocation(JsNameRef("phi__new"), x.constructorExpression, JsInvocation(JsNameRef("array"), *x.arguments.toTypedArray())))
+            ctx.replaceMe(new("PhiNew", listOf(x.constructorExpression, invocation("array", x.arguments))))
         }
 
         override fun endVisit(x: JsNameRef, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
             val replacement = when {
                 x.qualifier == null -> {
-//                    if (x.ident == "echo") {
-//                        clog("eeeeeeeeeeee", x.debugTag)
-//                    }
                     val dd = x.declarationDescriptor
                     val shit = when {
-                        dd is SimpleFunctionDescriptor && dd.isExternal -> "phi__externalName"
-                        else -> "phi__name"
+                        dd is SimpleFunctionDescriptor && dd.isExternal -> "PhiExternalNameRef"
+                        else -> "PhiNameRef"
                     }
-                    JsInvocation(JsNameRef(shit), JsStringLiteral(x.ident))
+                    new(shit, listOf(JsStringLiteral(x.ident)))
                 }
-                else -> JsInvocation(JsNameRef("phi__dot"), x.qualifier, JsStringLiteral(x.ident))
+                else -> new("PhiDot", listOf(x.qualifier!!, JsStringLiteral(x.ident)))
             }
             ctx.replaceMe(replacement)
         }
 
         override fun endVisit(x: JsPrefixOperation, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
-            if (x.operator == JsUnaryOperator.TYPEOF) {
-                ctx.replaceMe(JsInvocation(JsNameRef("phi__typeof"), x.arg))
-            }
-//            ctx.replaceMe(JsNameRef("pizda"))
+//            if (x.operator == JsUnaryOperator.TYPEOF) {
+//                ctx.replaceMe(JsInvocation(JsNameRef("phi__typeof"), x.arg))
+//            }
+            ctx.replaceMe(new("PhiPrefixOperation", listOf(JsStringLiteral(x.operator.toString()), x.arg)))
         }
 
     }.accept(program)

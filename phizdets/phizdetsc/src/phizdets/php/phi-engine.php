@@ -333,10 +333,10 @@ class PhiAssertionError extends Exception {
     }
 }
 
-function phi__assertEquals($expectedExported, $actual) {
+function phiAssertEquals($expectedExported, $actual) {
     $actualExported = var_export($actual, true);
     if ($actualExported !== $expectedExported)
-        throw new PhiAssertionError("Expected: $expectedExported; Actual: $actualExported");
+        throw new PhiAssertionError("\nExpected: $expectedExported; \nActual: $actualExported");
 }
 
 function phi__printBoolean($b) {
@@ -348,7 +348,7 @@ function phi__printBoolean($b) {
 
 
 function phi__dumpNameValueSequence() {
-    phi__println(phi__dumpNameValueSequenceToString(func_get_args()));
+    phiPrintln(phi__dumpNameValueSequenceToString(func_get_args()));
 }
 
 function phi__dumpNameValueSequenceToString($nameValueSequence, $opts = array()) {
@@ -394,7 +394,7 @@ function& phi__currentEnv() {
 }
 
 function phi__setCell($name, $value) {
-    phi__println("-- Setting cell `$name` value to " . var_export($value, true));
+    phiPrintln("-- Setting cell `$name` value to " . var_export($value, true));
     $cell = array();
     phi__currentEnv()['varCells'][$name] =& $cell;
     $cell['value'] = $value;
@@ -454,12 +454,12 @@ class PhiNew extends PhiExpression {
     }
 }
 
-function phi__println($x) {
+function phiPrintln($x) {
     echo $x . "\n";
 }
 
 function phi__printlnAndExit($x) {
-    phi__println($x);
+    phiPrintln($x);
     exit();
 }
 
@@ -477,7 +477,7 @@ class PhiBoolean extends PhiValue {
     /**
      * @return bool
      */
-    public function isValue() {
+    public function getValue() {
         return $this->value;
     }
 
@@ -572,7 +572,7 @@ function phi__dumpFunctionEnterAndExit() {
     $rest = array_slice($args, 1);
 
     $location = phi__backtrace()[1];
-    phi__println("Entering $functionName    $location");
+    phiPrintln("Entering $functionName    $location");
     echo call_user_func('phi__dumpNameValueSequenceToString', $rest, array('indent' => 4));
     exit();
 }
@@ -676,11 +676,25 @@ function phiExpressionStatement($expr) {
     $expr->evaluate();
 }
 
+/**
+ * @param PhiExpression $expr
+ * @throws Exception
+ */
+function phiThrow($expr) {
+    /**@var PhiObject $phiValue*/
+    $phiValue = $expr->evaluate();
+    /**@var PhiString $messagePhiValue*/
+    $messagePhiValue = $phiValue->getField('message');
+    $exception = new Exception($messagePhiValue->getValue());
+    $exception->phiValue = $phiValue;
+    throw $exception;
+}
+
 // ==================================== ENTRY ======================================
 
 Phi::init();
 
-phiFunctionDeclaration('Error', array('message'), function () {
+phiFunctionDeclaration('Error', array('message'), function() {
     phiExpressionStatement(
         new PhiBinaryOperation('=',
                                new PhiDot(new PhiThis(),
@@ -688,22 +702,83 @@ phiFunctionDeclaration('Error', array('message'), function () {
                                new PhiNameRef('message')));
 });
 
-function quickTest_1() {
+function phiQuickTest_1() {
     try {
         $expr = new PhiNew(new PhiNameRef('Error'),
                            array(new PhiStringLiteral("We are hosed, man...")));
-        $value = $expr->evaluate();
-        phi__dumpNameValueSequenceAndExit('value', $value);
-        throw $value;
-        // throw phi__new(phi__name('Error'), array(phi__stringLiteral("We are hosed, man...")));
+        // $value = $expr->evaluate();
+        // phi__dumpNameValueSequenceAndExit('value', $value);
+        phiThrow($expr);
     } catch (Exception $e) {
         if ($e instanceof PhiIllegalStateException)
             throw $e;
-        phi__assertEquals("'We are hosed, man...'", $e->getMessage());
+        phiAssertEquals("'We are hosed, man...'", $e->getMessage());
     }
 }
-quickTest_1();
+phiQuickTest_1();
 
+/**
+ * @param PhiExpression $expr
+ * @return boolean
+ */
+function phiEvaluateToBoolean($expr) {
+    $phiValue = $expr->evaluate();
+    if (!($phiValue instanceof PhiBoolean))
+        Phi::bitch("0c8e6543-b05c-4852-a200-185ac3b36632");
+    return $phiValue->getValue();
+}
+
+class PhiPrefixOperation extends PhiExpression {
+    /**@var string*/ private $op;
+    /**@var PhiExpression*/ private $arg;
+
+    /**
+     * @param string $op
+     * @param PhiExpression $arg
+     */
+    public function __construct($op, $arg) {
+        $this->op = $op;
+        $this->arg = $arg;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOp() {
+        return $this->op;
+    }
+
+    /**
+     * @return PhiExpression
+     */
+    public function getArg() {
+        return $this->arg;
+    }
+
+    /**
+     * @return PhiValue
+     */
+    public function evaluate() {
+        if ($this->op === 'typeof') {
+            $argPhiValue = $this->arg->evaluate();
+            return new PhiString($argPhiValue->typeof());
+        }
+        else {
+            Phi::wtf("f88f33d3-2868-43d5-82b7-a1b8c20fc1cb");
+        }
+    }
+}
+
+function phiQuickTest_2() {
+    try {
+        if (phiEvaluateToBoolean(new PhiBinaryOperation('===', new PhiPrefixOperation('typeof', new PhiNameRef('kotlin')), new PhiStringLiteral('undefined')))) {
+            phiThrow(new PhiNew(new PhiNameRef('Error'), array(new PhiStringLiteral("Fuck you"))));
+        }
+    } catch (Exception $e) {
+        phiAssertEquals("'Variable `kotlin` not found'", $e->getMessage());
+    }
+}
+phiQuickTest_2();
 
 
 
