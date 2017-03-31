@@ -161,17 +161,17 @@ class PhiFunctionExpression extends PhiExpression {
     }
 }
 
-function phi__functionExpression($name, $argNames, $body) {
-    return new PhiFunctionExpression($name, $argNames, $body);
-//    return array(
-//        'debugDescription' => "Function `$name`",
-//        'debugBacktrace' => phi__backtrace(),
-//        'typeof' => 'function',
-//        'name' => $name,
-//        'argNames' => $argNames,
-//        'function' => $f
-//    );
-}
+//function phi__functionExpression($name, $argNames, $body) {
+//    return new PhiFunctionExpression($name, $argNames, $body);
+////    return array(
+////        'debugDescription' => "Function `$name`",
+////        'debugBacktrace' => phi__backtrace(),
+////        'typeof' => 'function',
+////        'name' => $name,
+////        'argNames' => $argNames,
+////        'function' => $f
+////    );
+//}
 
 abstract class PhiValue {
     /**
@@ -265,16 +265,44 @@ class PhiEnv {
             }
         }
     }
-}
 
-function qwe() {
+    /**
+     * @param String $varName
+     * @return boolean
+     */
+    public function hasVar($varName) {
+        if (array_key_exists($varName, $this->vars)) {
+            return true;
+        } else {
+            if ($this->parent === null) {
+                return false;
+            } else {
+                return $this->parent->hasVar($varName);
+            }
+        }
+    }
 }
 
 class Phi {
     /**@var PhiEnv*/ private static $currentEnv;
 
-    public static function init() {
+    public static function initEnv() {
         self::$currentEnv = new PhiEnv(null);
+
+        phiFunctionDeclaration('Error', array('message'), function() {
+            phiExpressionStatement(
+                new PhiBinaryOperation('=',
+                                       new PhiDot(new PhiThis(),
+                                                  'message'),
+                                       new PhiNameRef('message')));
+        });
+
+    }
+
+    public static function initStdlib() {
+        phiVars(array(array('kotlin', new PhiObjectLiteral(
+            array(
+            )))));
     }
 
     /**
@@ -673,6 +701,7 @@ class PhiString extends PhiValue {
  * @param PhiExpression $expr
  */
 function phiExpressionStatement($expr) {
+    // TODO:vgrechka Turn function expression to function declaration
     $expr->evaluate();
 }
 
@@ -689,33 +718,6 @@ function phiThrow($expr) {
     $exception->phiValue = $phiValue;
     throw $exception;
 }
-
-// ==================================== ENTRY ======================================
-
-Phi::init();
-
-phiFunctionDeclaration('Error', array('message'), function() {
-    phiExpressionStatement(
-        new PhiBinaryOperation('=',
-                               new PhiDot(new PhiThis(),
-                                          'message'),
-                               new PhiNameRef('message')));
-});
-
-function phiQuickTest_1() {
-    try {
-        $expr = new PhiNew(new PhiNameRef('Error'),
-                           array(new PhiStringLiteral("We are hosed, man...")));
-        // $value = $expr->evaluate();
-        // phi__dumpNameValueSequenceAndExit('value', $value);
-        phiThrow($expr);
-    } catch (Exception $e) {
-        if ($e instanceof PhiIllegalStateException)
-            throw $e;
-        phiAssertEquals("'We are hosed, man...'", $e->getMessage());
-    }
-}
-phiQuickTest_1();
 
 /**
  * @param PhiExpression $expr
@@ -760,8 +762,12 @@ class PhiPrefixOperation extends PhiExpression {
      */
     public function evaluate() {
         if ($this->op === 'typeof') {
-            $argPhiValue = $this->arg->evaluate();
-            return new PhiString($argPhiValue->typeof());
+            if ($this->arg instanceof PhiNameRef && !Phi::getCurrentEnv()->hasVar($this->arg->getName())) {
+                return new PhiString('undefined');
+            } else {
+                $argPhiValue = $this->arg->evaluate();
+                return new PhiString($argPhiValue->typeof());
+            }
         }
         else {
             Phi::wtf("f88f33d3-2868-43d5-82b7-a1b8c20fc1cb");
@@ -769,16 +775,284 @@ class PhiPrefixOperation extends PhiExpression {
     }
 }
 
-function phiQuickTest_2() {
+function phiFailWantingException() {
+    throw new PhiAssertionError("I want an exception");
+}
+
+function phiAssertException($expectedExportedMessage, $f) {
+    $gotException = false;
     try {
+        $f();
+    } catch (Exception $e) {
+        $gotException = true;
+        phiAssertEquals($expectedExportedMessage, $e->getMessage());
+    }
+    if (!$gotException)
+        phiFailWantingException();
+}
+
+class PhiBrackets extends PhiExpression {
+    /**@var PhiExpression*/ private $object;
+    /**@var PhiExpression*/ private $index;
+
+    /**
+     * @param PhiExpression $object
+     * @param PhiExpression $index
+     */
+    public function __construct(PhiExpression $object, PhiExpression $index) {
+        $this->object = $object;
+        $this->index = $index;
+    }
+
+    /**
+     * @return PhiExpression
+     */
+    public function getObject() {
+        return $this->object;
+    }
+
+    /**
+     * @return PhiExpression
+     */
+    public function getIndex() {
+        return $this->index;
+    }
+
+    /**
+     * @return PhiValue
+     */
+    public function evaluate() {
+        Phi::imf("7bef0ca5-7259-462b-9545-00f90f312918");
+    }
+}
+
+class PhiInvocation extends PhiExpression {
+    /**@var PhiExpression*/ private $callee;
+    /**@var array[PhiExpression]*/ private $args;
+
+    /**
+     * @param PhiExpression $callee
+     * @param array $args
+     */
+    public function __construct(PhiExpression $callee, array $args) {
+        $this->callee = $callee;
+        $this->args = $args;
+    }
+
+    /**
+     * @return PhiExpression
+     */
+    public function getCallee() {
+        return $this->callee;
+    }
+
+    /**
+     * @return array
+     */
+    public function getArgs() {
+        return $this->args;
+    }
+
+    /**
+     * @return PhiValue
+     */
+    public function evaluate() {
+        Phi::imf("74952c0e-859f-4a28-8b57-ca9633744542");
+    }
+}
+
+class PhiExternalNameRef extends PhiExpression {
+    /**@var string*/ private $name;
+
+    /**
+     * @param string $name
+     */
+    public function __construct($name) {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName() {
+        return $this->name;
+    }
+
+    /**
+     * @return PhiValue
+     */
+    public function evaluate() {
+        Phi::imf("9ef6218c-e6bd-4394-acdf-ca73a469b33c");
+    }
+}
+
+class PhiConditional extends PhiExpression {
+    /**@var PhiExpression*/ private $if;
+    /**@var PhiExpression*/ private $then;
+    /**@var PhiExpression*/ private $else;
+
+    /**
+     * @param PhiExpression $if
+     * @param PhiExpression $then
+     * @param PhiExpression $else
+     */
+    public function __construct(PhiExpression $if, PhiExpression $then, PhiExpression $else) {
+        $this->if = $if;
+        $this->then = $then;
+        $this->else = $else;
+    }
+
+    /**
+     * @return PhiExpression
+     */
+    public function getIf() {
+        return $this->if;
+    }
+
+    /**
+     * @return PhiExpression
+     */
+    public function getThen() {
+        return $this->then;
+    }
+
+    /**
+     * @return PhiExpression
+     */
+    public function getElse() {
+        return $this->else;
+    }
+
+    /**
+     * @return PhiValue
+     */
+    public function evaluate() {
+        Phi::imf("c45cf7e3-e4a3-4924-a3da-be43805b0f4b");
+    }
+}
+
+class PhiObjectLiteral extends PhiExpression {
+    /**@var array*/ private $keyValuePairs;
+
+    /**
+     * @param array $keyValuePairs
+     */
+    public function __construct(array $keyValuePairs) {
+        $this->keyValuePairs = $keyValuePairs;
+    }
+
+    /**
+     * @return array
+     */
+    public function getKeyValuePairs() {
+        return $this->keyValuePairs;
+    }
+
+    /**
+     * @return PhiValue
+     */
+    public function evaluate() {
+        Phi::imf("360d40af-538e-4f4b-bbcc-ff035a699938");
+    }
+}
+
+/**
+ * @param array $nameValuePairs
+ */
+function phiVars($nameValuePairs) {
+    foreach ($nameValuePairs as $pair) {
+        /**@var string $varName*/
+        $varName = $pair[0];
+        /**@var PhiExpression $expr*/
+        $expr = $pair[1];
+
+        Phi::getCurrentEnv()->setVar($varName, $expr->evaluate());
+    }
+}
+
+
+// ==================================== ENTRY ======================================
+
+
+Phi::initEnv();
+Phi::initStdlib();
+
+function phiQuickTest_1() {
+    Phi::initEnv();
+    phiAssertException("'We are hosed, man...'", function() {
+        $expr = new PhiNew(new PhiNameRef('Error'),
+                           array(new PhiStringLiteral("We are hosed, man...")));
+        phiThrow($expr);
+    });
+}
+phiQuickTest_1();
+
+function phiQuickTest_2() {
+    Phi::initEnv();
+    phiAssertException("'Fuck you'", function() {
         if (phiEvaluateToBoolean(new PhiBinaryOperation('===', new PhiPrefixOperation('typeof', new PhiNameRef('kotlin')), new PhiStringLiteral('undefined')))) {
             phiThrow(new PhiNew(new PhiNameRef('Error'), array(new PhiStringLiteral("Fuck you"))));
         }
-    } catch (Exception $e) {
-        phiAssertEquals("'Variable `kotlin` not found'", $e->getMessage());
-    }
+    });
 }
 phiQuickTest_2();
+
+function phiQuickTest_3() {
+    Phi::initEnv();
+    Phi::initStdlib();
+    if (phiEvaluateToBoolean(new PhiBinaryOperation('===', new PhiPrefixOperation('typeof', new PhiNameRef('kotlin')), new PhiStringLiteral('undefined')))) {
+        phiThrow(new PhiNew(new PhiNameRef('Error'), array(new PhiStringLiteral("Fuck you"))));
+    }
+}
+// phiQuickTest_3();
+
+
+
+
+
+
+
+
+
+if (phiEvaluateToBoolean(new PhiBinaryOperation('===', new PhiPrefixOperation('typeof', new PhiNameRef('kotlin')), new PhiStringLiteral('undefined')))) {
+    phiThrow(new PhiNew(new PhiNameRef('Error'), array(new PhiStringLiteral("Error loading module 'phi-gross-test-1'. Its dependency 'kotlin' was not found. Please, check whether 'kotlin' is loaded prior to 'phi-gross-test-1'."))));
+}
+phiExpressionStatement(new PhiBinaryOperation('=', new PhiBrackets(new PhiThis(), new PhiStringLiteral('phi-gross-test-1')), new PhiInvocation(new PhiFunctionExpression(null, array('_', 'Kotlin'), function () {
+    phiExpressionStatement(new PhiStringLiteral('use strict'));
+    phiExpressionStatement(new PhiFunctionExpression('Error_0', array('message'), function () {
+        phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiThis(), 'message'), new PhiNameRef('message')));
+    }));
+    phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('Error_0'), '$metadata$'), new PhiObjectLiteral(array(array(new PhiNameRef('kind'), new PhiDot(new PhiDot(new PhiNameRef('Kotlin'), 'Kind'), 'CLASS')), array(new PhiNameRef('simpleName'), new PhiStringLiteral('Error')), array(new PhiNameRef('interfaces'), array())))));
+    phiExpressionStatement(new PhiFunctionExpression('Shit', array('name', 'text'), function () {
+        phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiThis(), 'name'), new PhiNameRef('name')));
+        phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiThis(), 'text'), new PhiNameRef('text')));
+    }));
+    phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('Shit'), '$metadata$'), new PhiObjectLiteral(array(array(new PhiNameRef('kind'), new PhiDot(new PhiDot(new PhiNameRef('Kotlin'), 'Kind'), 'CLASS')), array(new PhiNameRef('simpleName'), new PhiStringLiteral('Shit')), array(new PhiNameRef('interfaces'), array())))));
+    phiExpressionStatement(new PhiFunctionExpression('main', array('args'), function () {
+        phiExpressionStatement(new PhiInvocation(new PhiNameRef('sayShit'), array(new PhiNew(new PhiNameRef('Shit'), array(new PhiStringLiteral('Archibald'), new PhiStringLiteral('Fuck you'))))));
+    }));
+    phiExpressionStatement(new PhiFunctionExpression('sayShit', array('shit'), function () {
+        phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef('echo'), array(new PhiBinaryOperation('+', new PhiBinaryOperation('+', new PhiBinaryOperation('+', new PhiBinaryOperation('+', new PhiStringLiteral('<b>'), new PhiDot(new PhiNameRef('shit'), 'text')), new PhiStringLiteral(', ')), new PhiDot(new PhiNameRef('shit'), 'name')), new PhiStringLiteral('<\/b>')))));
+    }));
+    phiVars(array(array('package$phi', new PhiBinaryOperation('||', new PhiDot(new PhiNameRef('_'), 'phi'), new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('_'), 'phi'), new PhiObjectLiteral(array()))))));
+    phiVars(array(array('package$gross', new PhiBinaryOperation('||', new PhiDot(new PhiNameRef('package$phi'), 'gross'), new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('package$phi'), 'gross'), new PhiObjectLiteral(array()))))));
+    phiVars(array(array('package$test', new PhiBinaryOperation('||', new PhiDot(new PhiNameRef('package$gross'), 'test'), new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('package$gross'), 'test'), new PhiObjectLiteral(array()))))));
+    phiVars(array(array('package$one', new PhiBinaryOperation('||', new PhiDot(new PhiNameRef('package$test'), 'one'), new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('package$test'), 'one'), new PhiObjectLiteral(array()))))));
+    phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('package$one'), 'Error'), new PhiNameRef('Error_0')));
+    phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('package$one'), 'Shit'), new PhiNameRef('Shit')));
+    phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('package$one'), 'main_kand9s$'), new PhiNameRef('main')));
+    phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef('Kotlin'), 'defineModule'), array(new PhiStringLiteral('phi-gross-test-1'), new PhiNameRef('_'))));
+    phiExpressionStatement(new PhiInvocation(new PhiNameRef('main'), array(array())));
+    return new PhiNameRef('_');
+}), array(new PhiConditional(new PhiBinaryOperation('===', new PhiPrefixOperation('typeof', new PhiBrackets(new PhiThis(), new PhiStringLiteral('phi-gross-test-1'))), new PhiStringLiteral('undefined')), new PhiObjectLiteral(array()), new PhiBrackets(new PhiThis(), new PhiStringLiteral('phi-gross-test-1'))), new PhiNameRef('kotlin')))));
+
+
+
+
+
+
+
+
 
 
 

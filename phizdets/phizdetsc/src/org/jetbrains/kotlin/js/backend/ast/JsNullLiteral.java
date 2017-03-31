@@ -5,7 +5,7 @@
 package org.jetbrains.kotlin.js.backend.ast;
 
 public final class JsNullLiteral extends JsLiteral.JsValueLiteral {
-    JsNullLiteral() {
+    public JsNullLiteral() {
     }
 
     @Override

@@ -354,7 +354,6 @@ class AttachedShit<T>(val shitToShit: MutableMap<Any, Any?>) : ReadWriteProperty
 fun phpify(program: JsProgram) {
     object : JsVisitorWithContextImpl() {
         val shitToShit = mutableMapOf<Any, Any?>()
-        var JsFunction.isFunctionDeclaration by AttachedShit<Boolean?>(shitToShit)
 
         override fun endVisit(x: JsThrow, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
@@ -371,7 +370,7 @@ fun phpify(program: JsProgram) {
             val shit = x.vars.map {
                 JsInvocation(JsNameRef("array"), JsStringLiteral(it.name.ident), it.initExpression)
             }
-            ctx.replaceMe(JsInvocation(JsNameRef("phi__vars"), JsInvocation(JsNameRef("array"), *shit.toTypedArray())).makeStmt())
+            ctx.replaceMe(JsInvocation(JsNameRef("phiVars"), JsInvocation(JsNameRef("array"), *shit.toTypedArray())).makeStmt())
         }
 
         override fun endVisit(x: JsArrayLiteral, ctx: JsContext<JsNode>) {
@@ -382,22 +381,24 @@ fun phpify(program: JsProgram) {
         override fun endVisit(x: JsObjectLiteral, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
             val args = x.propertyInitializers.map {
-                JsInvocation(JsNameRef("array"), it.labelExpr, it.valueExpr)
+                invocation("array", listOf(it.labelExpr, it.valueExpr))
             }
-            ctx.replaceMe(JsInvocation(JsNameRef("phi__objectLiteral"), JsInvocation(JsNameRef("array"), args)))
+            ctx.replaceMe(new("PhiObjectLiteral", listOf(invocation("array", args))))
         }
 
         override fun endVisit(x: JsInvocation, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
-            ctx.replaceMe(JsInvocation(JsNameRef("phi__call"), x.qualifier, *x.arguments.toTypedArray()))
+            ctx.replaceMe(new("PhiInvocation", listOf(x.qualifier, invocation("array", x.arguments))))
         }
 
-        override fun visit(x: JsExpressionStatement, ctx: JsContext<JsNode>): Boolean {
-            val expr = x.expression
-            if (expr is JsFunction) {
-                expr.isFunctionDeclaration = true
-            }
-            return super.visit(x, ctx)
+        override fun endVisit(x: JsConditional, ctx: JsContext<JsNode>) {
+            super.endVisit(x, ctx)
+            ctx.replaceMe(new("PhiConditional", listOf(x.testExpression, x.thenExpression, x.elseExpression)))
+        }
+
+        override fun endVisit(x: JsExpressionStatement, ctx: JsContext<JsNode>) {
+            super.endVisit(x, ctx)
+            ctx.replaceMe(invocation("phiExpressionStatement", listOf(x.expression)).makeStmt())
         }
 
         override fun endVisit(x: JsFunction, ctx: JsContext<JsNode>) {
@@ -410,15 +411,11 @@ fun phpify(program: JsProgram) {
             body.name = null
             body.parameters.clear()
             val name = when (x.name) {
-                null -> JsStringLiteral("--anonymous--")
+                null -> JsNullLiteral()
                 else -> JsStringLiteral(x.name.ident)
             }
 
-            val shit = when (x.isFunctionDeclaration) {
-                true -> "phi__functionDeclaration"
-                else -> "phi__functionExpression"
-            }
-            ctx.replaceMe(JsInvocation(JsNameRef(shit), name, args, body))
+            ctx.replaceMe(new("PhiFunctionExpression", listOf(name, args, body)))
         }
 
         fun invocation(functionName: String, args: List<JsExpression>): JsInvocation {
@@ -444,12 +441,12 @@ fun phpify(program: JsProgram) {
 
         override fun endVisit(x: JsArrayAccess, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
-            ctx.replaceMe(JsInvocation(JsNameRef("phi__brackets"), x.array, x.index))
+            ctx.replaceMe(new("PhiBrackets", listOf(x.array, x.index)))
         }
 
         override fun endVisit(x: JsLiteral.JsThisRef, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
-            ctx.replaceMe(JsInvocation(JsNameRef("phi__this")))
+            ctx.replaceMe(new("PhiThis", listOf()))
         }
 
         override fun endVisit(x: JsNew, ctx: JsContext<JsNode>) {
