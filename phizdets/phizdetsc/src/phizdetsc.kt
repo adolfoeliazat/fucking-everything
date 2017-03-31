@@ -375,7 +375,7 @@ fun phpify(program: JsProgram) {
 
         override fun endVisit(x: JsArrayLiteral, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
-            ctx.replaceMe(JsInvocation(JsNameRef("array"), x.expressions))
+            ctx.replaceMe(new("PhiArrayLiteral", listOf(invocation("array", x.expressions))))
         }
 
         override fun endVisit(x: JsObjectLiteral, ctx: JsContext<JsNode>) {
