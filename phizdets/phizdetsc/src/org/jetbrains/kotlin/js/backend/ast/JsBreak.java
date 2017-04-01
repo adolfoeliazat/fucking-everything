@@ -28,7 +28,11 @@ public final class JsBreak extends JsContinue {
     public void traverse(JsVisitorWithContext v, JsContext ctx) {
         if (v.visit(this, ctx)) {
             if (label != null){
-                label = v.accept(label);
+//                try {
+                    label = v.accept(label);
+//                } catch (Exception e) {
+//                    throw e;
+//                }
             }
         }
 

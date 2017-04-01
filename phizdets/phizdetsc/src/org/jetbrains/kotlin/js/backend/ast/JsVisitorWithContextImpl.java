@@ -81,6 +81,11 @@ public class JsVisitorWithContextImpl extends JsVisitorWithContext {
             assert next.isEmpty(): "addNext() was called before traverse()";
             this.nodes = nodes;
 
+            // @debug
+            if (this.nodes.stream().anyMatch(x -> x.toString().equals("ReadWriteProperty"))) {
+                "break on me".toString();
+            }
+
             for (index = 0; index < nodes.size(); index++) {
                 removed = false;
                 previous.clear();

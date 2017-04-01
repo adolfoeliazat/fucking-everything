@@ -393,10 +393,12 @@ class ClassTranslator private constructor(
             val type = supertypes[0]
             val supertypeDescriptor = getClassDescriptorForType(type)
             return if (!AnnotationsUtils.isNativeObject(supertypeDescriptor)) {
-                listOf(ReferenceTranslator.translateAsTypeReference(supertypeDescriptor, context()))
+                // @hack Changed to mutable
+                mutableListOf(ReferenceTranslator.translateAsTypeReference(supertypeDescriptor, context()))
             }
             else {
-                listOf()
+                // @hack Changed to mutable
+                mutableListOf()
             }
         }
 

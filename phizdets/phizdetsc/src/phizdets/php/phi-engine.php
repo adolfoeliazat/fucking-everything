@@ -1324,37 +1324,58 @@ Phi::initEnv();
 Phi::initStdlib();
 
 
+
 if (phiEvaluateToBoolean(new PhiBinaryOperation('===', new PhiPrefixOperation('typeof', new PhiNameRef('kotlin')), new PhiStringLiteral('undefined')))) {
     phiThrow(new PhiNew(new PhiNameRef('Error'), array(new PhiStringLiteral("Error loading module 'phi-gross-test-1'. Its dependency 'kotlin' was not found. Please, check whether 'kotlin' is loaded prior to 'phi-gross-test-1'."))));
 }
 phiExpressionStatement(new PhiBinaryOperation('=', new PhiBrackets(new PhiThis(), new PhiStringLiteral('phi-gross-test-1')), new PhiInvocation(new PhiFunctionExpression(null, array('_', 'Kotlin'), function () {
     phiExpressionStatement(new PhiStringLiteral('use strict'));
+    phiVars(array(array('IllegalStateException', new PhiDot(new PhiDot(new PhiNameRef('Kotlin'), 'kotlin'), 'IllegalStateException'))));
+    phiVars(array(array('ReadWriteProperty', new PhiDot(new PhiDot(new PhiDot(new PhiNameRef('Kotlin'), 'kotlin'), 'properties'), 'ReadWriteProperty'))));
+    phiExpressionStatement(new PhiFunctionExpression('main', array('args'), function () {
+        phiExpressionStatement(new PhiInvocation(new PhiNameRef('sayShit'), array(new PhiNew(new PhiNameRef('Shit'), array(new PhiStringLiteral('Archibald'), new PhiStringLiteral('Fuck you'))))));
+    }));
     phiExpressionStatement(new PhiFunctionExpression('Shit', array('name', 'text'), function () {
         phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiThis(), 'name'), new PhiNameRef('name')));
         phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiThis(), 'text'), new PhiNameRef('text')));
     }));
     phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('Shit'), '$metadata$'), new PhiObjectLiteral(array(array(new PhiNameRef('kind'), new PhiDot(new PhiDot(new PhiNameRef('Kotlin'), 'Kind'), 'CLASS')), array(new PhiNameRef('simpleName'), new PhiStringLiteral('Shit')), array(new PhiNameRef('interfaces'), new PhiArrayLiteral(array()))))));
-    phiExpressionStatement(new PhiFunctionExpression('main', array('args'), function () {
-        phiExpressionStatement(new PhiInvocation(new PhiNameRef('sayShit'), array(new PhiNew(new PhiNameRef('Shit'), array(new PhiStringLiteral('Archibald'), new PhiStringLiteral('Fuck you'))))));
-    }));
     phiExpressionStatement(new PhiFunctionExpression('sayShit', array('shit'), function () {
         phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef('phiPrint'), array(new PhiBinaryOperation('+', new PhiBinaryOperation('+', new PhiBinaryOperation('+', new PhiBinaryOperation('+', new PhiStringLiteral('<b>'), new PhiDot(new PhiNameRef('shit'), 'text')), new PhiStringLiteral(', ')), new PhiDot(new PhiNameRef('shit'), 'name')), new PhiStringLiteral('<\/b>')))));
     }));
+    phiExpressionStatement(new PhiFunctionExpression('notNullOnce', array(), function () {
+        return new PhiNew(new PhiNameRef('NotNullOnceVar'), array());
+    }));
+    phiExpressionStatement(new PhiFunctionExpression('NotNullOnceVar', array(), function () {
+        phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiThis(), 'value_0'), null));
+    }));
+    phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiDot(new PhiNameRef('NotNullOnceVar'), 'prototype'), 'getValue_lrcp0p$'), new PhiFunctionExpression(null, array('thisRef', 'property'), function () {
+        phiVars(array(array('tmp$', )));
+        phiExpressionStatement(new PhiBinaryOperation('=', new PhiNameRef('tmp$'), new PhiDot(new PhiThis(), 'value_0')));
+        if (phiEvaluateToBoolean(new PhiBinaryOperation('==', new PhiNameRef('tmp$'), null))) {
+            phiThrow(new PhiNew(new PhiNameRef('IllegalStateException'), array(new PhiBinaryOperation('+', new PhiBinaryOperation('+', new PhiStringLiteral('Property `'), new PhiDot(new PhiNameRef('property'), 'callableName')), new PhiStringLiteral('` should be initialized before get.')))));
+        }
+        return new PhiNameRef('tmp$');
+    })));
+    phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiDot(new PhiNameRef('NotNullOnceVar'), 'prototype'), 'setValue_9rddgb$'), new PhiFunctionExpression(null, array('thisRef', 'property', 'value'), function () {
+        if (phiEvaluateToBoolean(new PhiPrefixOperation('!', new PhiBinaryOperation('==', new PhiDot(new PhiThis(), 'value_0'), null)))) {
+            phiVars(array(array('message', new PhiBinaryOperation('+', new PhiBinaryOperation('+', new PhiStringLiteral('Property `'), new PhiDot(new PhiNameRef('property'), 'callableName')), new PhiStringLiteral('` should be assigned only once')))));
+            phiThrow(new PhiNew(new PhiDot(new PhiDot(new PhiNameRef('Kotlin'), 'kotlin'), 'IllegalStateException'), array(new PhiInvocation(new PhiDot(new PhiNameRef('message'), 'toString'), array()))));
+        }
+        phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiThis(), 'value_0'), new PhiNameRef('value')));
+    })));
+    phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('NotNullOnceVar'), '$metadata$'), new PhiObjectLiteral(array(array(new PhiNameRef('kind'), new PhiDot(new PhiDot(new PhiNameRef('Kotlin'), 'Kind'), 'CLASS')), array(new PhiNameRef('simpleName'), new PhiStringLiteral('NotNullOnceVar')), array(new PhiNameRef('interfaces'), new PhiArrayLiteral(array(new PhiNameRef('ReadWriteProperty'))))))));
     phiVars(array(array('package$phi', new PhiBinaryOperation('||', new PhiDot(new PhiNameRef('_'), 'phi'), new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('_'), 'phi'), new PhiObjectLiteral(array()))))));
     phiVars(array(array('package$gross', new PhiBinaryOperation('||', new PhiDot(new PhiNameRef('package$phi'), 'gross'), new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('package$phi'), 'gross'), new PhiObjectLiteral(array()))))));
     phiVars(array(array('package$test', new PhiBinaryOperation('||', new PhiDot(new PhiNameRef('package$gross'), 'test'), new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('package$gross'), 'test'), new PhiObjectLiteral(array()))))));
     phiVars(array(array('package$one', new PhiBinaryOperation('||', new PhiDot(new PhiNameRef('package$test'), 'one'), new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('package$test'), 'one'), new PhiObjectLiteral(array()))))));
-    phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('package$one'), 'Shit'), new PhiNameRef('Shit')));
     phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('package$one'), 'main_kand9s$'), new PhiNameRef('main')));
+    phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('package$one'), 'Shit'), new PhiNameRef('Shit')));
+    phiExpressionStatement(new PhiBinaryOperation('=', new PhiDot(new PhiNameRef('package$one'), 'notNullOnce_30y1fr$'), new PhiNameRef('notNullOnce')));
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef('Kotlin'), 'defineModule'), array(new PhiStringLiteral('phi-gross-test-1'), new PhiNameRef('_'))));
     phiExpressionStatement(new PhiInvocation(new PhiNameRef('main'), array(new PhiArrayLiteral(array()))));
     return new PhiNameRef('_');
 }), array(new PhiConditional(new PhiBinaryOperation('===', new PhiPrefixOperation('typeof', new PhiBrackets(new PhiThis(), new PhiStringLiteral('phi-gross-test-1'))), new PhiStringLiteral('undefined')), new PhiObjectLiteral(array()), new PhiBrackets(new PhiThis(), new PhiStringLiteral('phi-gross-test-1'))), new PhiNameRef('kotlin')))));
-
-
-
-
-
 
 
 

@@ -19,15 +19,18 @@ public final class JsNameRef extends JsExpression implements HasName {
 
     public JsNameRef(@NotNull JsName name) {
         this.name = name;
+        constructed();
     }
 
     public JsNameRef(@NotNull String ident) {
         this.ident = ident;
+        constructed();
     }
 
     public JsNameRef(@NotNull String ident, JsExpression qualifier) {
         this.ident = ident;
         this.qualifier = qualifier;
+        constructed();
     }
 
     public JsNameRef(@NotNull String ident, @NotNull String qualifier) {
@@ -37,6 +40,14 @@ public final class JsNameRef extends JsExpression implements HasName {
     public JsNameRef(@NotNull JsName name, JsExpression qualifier) {
         this.name = name;
         this.qualifier = qualifier;
+        constructed();
+    }
+
+    private void constructed() {
+        // @debug
+        if ("--ReadWriteProperty".equals(getIdent())) {
+            "break on me".toString();
+        }
     }
 
     @NotNull
