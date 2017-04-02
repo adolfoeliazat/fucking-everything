@@ -730,6 +730,11 @@ fun phpify2(program: JsProgram) {
             return JsStringLiteral("@@${nextDebugTag++}")
         }
 
+        override fun endVisit(x: JsReturn, ctx: JsContext<JsNode>) {
+            super.endVisit(x, ctx)
+            ctx.replaceMe(JsReturn(invocation("phiEvaluate", listOf(x.expression))))
+        }
+
         override fun endVisit(x: JsThrow, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
             ctx.replaceMe(JsInvocation(JsNameRef("phiThrow"), x.expression).makeStmt())
@@ -743,9 +748,10 @@ fun phpify2(program: JsProgram) {
         override fun endVisit(x: JsVars, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
             val shit = x.vars.map {
-                JsInvocation(JsNameRef("array"), JsStringLiteral(it.name.ident), it.initExpression)
+                JsInvocation(JsNameRef("array"), JsStringLiteral(it.name.ident), it.initExpression
+                    ?: new("PhiUnaryOperation", listOf(JsStringLiteral("prefix"), JsStringLiteral("void"), new("PhiNumberLiteral", listOf(JsStringLiteral("@@something"), program.getNumberLiteral(0))))))
             }
-            ctx.replaceMe(JsInvocation(JsNameRef("phiVars"), JsInvocation(JsNameRef("array"), *shit.toTypedArray())).makeStmt())
+            ctx.replaceMe(JsInvocation(JsNameRef("phiVars"), nextDebugTagLiteral(), JsInvocation(JsNameRef("array"), *shit.toTypedArray())).makeStmt())
         }
 
         override fun endVisit(x: JsArrayLiteral, ctx: JsContext<JsNode>) {

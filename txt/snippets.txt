@@ -45,7 +45,16 @@ VirtualBox
 
     Host IP as visible from guest: 10.0.2.2
     DISPLAY=10.0.2.2:0 gnome-terminal
+
+
+Linux
+=====
+
     ps aux --sort -rss    | head -n15
+
+    Install fonts
+        - Copy shit to ~/.fonts
+        $ sudo fc-cache -fv
 
 
 
