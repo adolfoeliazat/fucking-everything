@@ -9,7 +9,15 @@ fun main(args: Array<String>) {
 
 external fun phiPrint(x: String)
 
-class Shit(val name: String, val text: String)
+class Shit(val name: String, val text: String) {
+    fun sayIt() {
+        phiPrint("<b>$text, $name</b>")
+    }
+}
+
+fun qwe() {
+    Shit("Archibald", "fuck you").sayIt()
+}
 
 
 private fun sayShit(shit: Shit) {

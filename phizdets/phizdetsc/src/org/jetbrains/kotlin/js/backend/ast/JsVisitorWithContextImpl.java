@@ -83,7 +83,7 @@ public class JsVisitorWithContextImpl extends JsVisitorWithContext {
 
             // @debug
             if (this.nodes.stream().anyMatch(x -> x.toString().equals("ReadWriteProperty"))) {
-                "break on me".toString();
+//                "break on me".toString();
             }
 
             for (index = 0; index < nodes.size(); index++) {

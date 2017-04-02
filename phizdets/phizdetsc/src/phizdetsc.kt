@@ -237,7 +237,11 @@ object CompileStdlib {
             }
             is FunctionNode -> {
                 val body = mapBlock(nhe.body)
-                JsFunction(JsFunctionScope(jsProgram.rootScope, "boobs"), body, "boobs")
+                JsFunction(JsFunctionScope(jsProgram.rootScope, "boobs"), body, "boobs")-{o->
+                    for (nhParam in nhe.parameters) {
+                        o.parameters += JsParameter(jsProgram.scope.declareName(nhParam.name))
+                    }
+                }
             }
             is UnaryNode -> {
                 if (nhe.tokenType() == TokenType.NEW) {
@@ -346,6 +350,10 @@ object GrossTestPhizdets {
     val preventCompilationAndDeploying =
         false
 //        true
+
+    val preventRequest =
+//        false
+        true
 
     private val HTDOCS_OUT = "C:/opt/xampp/htdocs/GrossTestPhizdets/"
     private val APS_TMP = "C:/tmp/aps-tmp"
@@ -468,6 +476,10 @@ object GrossTestPhizdets {
                 copyFile(p.outFilePath, deploymentDir + "/${p.testName}.php")
                 copyFile(p.outFilePath + "--tagged-gen", deploymentDir + "/${p.testName}.php--tagged-gen")
                 copyFile(p.outRoot + "/phi-engine.php", deploymentDir + "/phi-engine.php")
+
+                val shit = File(deploymentDir + "/${p.testName}.php").readText()
+                File("E:/fegh/phizdets/phizdetsc/src/phizdets/php/fuck-around.php").writeText("<?php " + shit.substring(shit.indexOf(";")))
+
                 // @here
 //                copyFile("${p.outFilePath}--tagged", deploymentDir + "/${p.testName}.php--tagged")
 //                copyFile(p.phpSettingsSourceFilePath, deploymentDir + "/${p.phpSettingsFileName}")
@@ -489,47 +501,51 @@ object GrossTestPhizdets {
                         bitch("Cannot delete freaking $file")
                 }
 
-                val actualResponseJSON = HTTPClient.postJSON("http://localhost/GrossTestPhizdets/${p.testName}/${p.testName}.php?${entry.queryString}", adaptedRequestJSON)
-                val expectedResponseJSON = entry.responseJSON
-                val actualPreparedResponse = prepare(actualResponseJSON)
-                val expectedPreparedResponse = prepare(expectedResponseJSON)
-
-                val allLogFile = File("$deploymentLogDir/all.log")
-                if (allLogFile.exists()) {
-                    val text = allLogFile.readText()
-                    if (text.isNotBlank()) {
-                        printSectionTitle("ALL.LOG")
-                        clog(text)
-                    }
-                }
-
-                if (actualPreparedResponse.text == expectedPreparedResponse.text) {
-                    clog("Fine")
+                if (preventRequest) {
+                    clog("Skipping actual request")
                 } else {
-                    clog("Shit")
-                    // @here
-                    val expectedFilePath = "$apsTmp/expected-php-response.json"
-                    val actualFilePath = "$apsTmp/actual-php-response.json"
-                    File(expectedFilePath).writeText(expectedPreparedResponse.text)
-                    File(actualFilePath).writeText(actualPreparedResponse.text)
+                    val actualResponseJSON = HTTPClient.postJSON("http://localhost/GrossTestPhizdets/${p.testName}/${p.testName}.php?${entry.queryString}", adaptedRequestJSON)
+                    val expectedResponseJSON = entry.responseJSON
+                    val actualPreparedResponse = prepare(actualResponseJSON)
+                    val expectedPreparedResponse = prepare(expectedResponseJSON)
 
-                    val res = runProcessAndWait(listOf("git", "diff", "--color", actualFilePath, expectedFilePath), inheritIO = true)
-                    if (res.exitValue != 0) {
-                        clog("Diff shitted at us with code ${res.exitValue}")
+                    val allLogFile = File("$deploymentLogDir/all.log")
+                    if (allLogFile.exists()) {
+                        val text = allLogFile.readText()
+                        if (text.isNotBlank()) {
+                            printSectionTitle("ALL.LOG")
+                            clog(text)
+                        }
                     }
 
-                    if (!actualPreparedResponse.parsedOK) {
-                        val responseText = actualPreparedResponse.text
-                        printWrappedText("WRAPPED RESPONSE", responseText
-                            .replace("&gt;", ">")
-                            .replace("&lt;", "<")
-                            .replace("&amp;", "&"))
+                    if (actualPreparedResponse.text == expectedPreparedResponse.text) {
+                        clog("Fine")
+                    } else {
+                        clog("Shit")
+                        // @here
+                        val expectedFilePath = "$apsTmp/expected-php-response.json"
+                        val actualFilePath = "$apsTmp/actual-php-response.json"
+                        File(expectedFilePath).writeText(expectedPreparedResponse.text)
+                        File(actualFilePath).writeText(actualPreparedResponse.text)
 
-                        val message = PDTRemoteCommand_TestResult(rawResponseFromPHPScript = actualResponseJSON)
-                        sendTestResultToDevTools(message)
+                        val res = runProcessAndWait(listOf("git", "diff", "--color", actualFilePath, expectedFilePath), inheritIO = true)
+                        if (res.exitValue != 0) {
+                            clog("Diff shitted at us with code ${res.exitValue}")
+                        }
+
+                        if (!actualPreparedResponse.parsedOK) {
+                            val responseText = actualPreparedResponse.text
+                            printWrappedText("WRAPPED RESPONSE", responseText
+                                .replace("&gt;", ">")
+                                .replace("&lt;", "<")
+                                .replace("&amp;", "&"))
+
+                            val message = PDTRemoteCommand_TestResult(rawResponseFromPHPScript = actualResponseJSON)
+                            sendTestResultToDevTools(message)
+                        }
+
+                        exitProcess(1)
                     }
-
-                    exitProcess(1)
                 }
             }
         }
@@ -708,7 +724,11 @@ fun phpify1(program: JsProgram) {
 fun phpify2(program: JsProgram) {
     object : JsVisitorWithContextImpl() {
         val shitToShit = mutableMapOf<Any, Any?>()
+        var nextDebugTag = 1L
 
+        fun nextDebugTagLiteral(): JsExpression {
+            return JsStringLiteral("@@${nextDebugTag++}")
+        }
 
         override fun endVisit(x: JsThrow, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
@@ -738,7 +758,7 @@ fun phpify2(program: JsProgram) {
             val args = x.propertyInitializers.map {
                 invocation("array", listOf(it.labelExpr, it.valueExpr))
             }
-            ctx.replaceMe(new("PhiObjectLiteral", listOf(invocation("array", args))))
+            ctx.replaceMe(new("PhiObjectLiteral", listOf(nextDebugTagLiteral(), invocation("array", args))))
         }
 
         override fun endVisit(x: JsInvocation, ctx: JsContext<JsNode>) {
@@ -751,9 +771,18 @@ fun phpify2(program: JsProgram) {
             ctx.replaceMe(new("PhiConditional", listOf(x.testExpression, x.thenExpression, x.elseExpression)))
         }
 
+        var shitCounter = 0
         override fun endVisit(x: JsExpressionStatement, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
-            ctx.replaceMe(invocation("phiExpressionStatement", listOf(x.expression)).makeStmt())
+
+            ctx.replaceMe(invocation("\$GLOBALS['shit'] = ${++shitCounter}; phiExpressionStatement", listOf(x.expression)).makeStmt())
+
+//            ctx.replaceMe(JsBlock(
+//                JsNameRef("\$GLOBALS['shit'] = ${++shitCounter}").makeStmt(),
+//                invocation("phiExpressionStatement", listOf(x.expression)).makeStmt()
+//            ))
+
+//            ctx.replaceMe(invocation("phiExpressionStatement", listOf(x.expression)).makeStmt())
         }
 
         override fun endVisit(x: JsFunction, ctx: JsContext<JsNode>) {
@@ -789,7 +818,7 @@ fun phpify2(program: JsProgram) {
 
         override fun endVisit(x: JsBinaryOperation, ctx: JsContext<JsNode>) {
             super.visit(x, ctx)
-            ctx.replaceMe(new("PhiBinaryOperation", listOf(JsStringLiteral(x.operator.toString()), x.arg1, x.arg2)))
+            ctx.replaceMe(new("PhiBinaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral(x.operator.toString()), x.arg1, x.arg2)))
         }
 
         private fun new(ctor: JsNameRef, args: List<JsExpression>) = JsNew(ctor, args)
@@ -807,6 +836,16 @@ fun phpify2(program: JsProgram) {
         override fun endVisit(x: JsNew, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
             ctx.replaceMe(new("PhiNew", listOf(x.constructorExpression, invocation("array", x.arguments))))
+        }
+
+        override fun endVisit(x: JsNullLiteral, ctx: JsContext<JsNode>) {
+            super.endVisit(x, ctx)
+            ctx.replaceMe(new("PhiNullLiteral", listOf(nextDebugTagLiteral())))
+        }
+
+        override fun endVisit(x: JsNumberLiteral, ctx: JsContext<JsNode>) {
+            super.endVisit(x, ctx)
+            ctx.replaceMe(new("PhiNumberLiteral", listOf(nextDebugTagLiteral(), x)))
         }
 
         override fun endVisit(x: JsNameRef, ctx: JsContext<JsNode>) {
@@ -832,11 +871,24 @@ fun phpify2(program: JsProgram) {
 
         override fun endVisit(x: JsPrefixOperation, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
-//            if (x.operator == JsUnaryOperator.TYPEOF) {
-//                ctx.replaceMe(JsInvocation(JsNameRef("phi__typeof"), x.arg))
-//            }
-            ctx.replaceMe(new("PhiPrefixOperation", listOf(JsStringLiteral(x.operator.toString()), x.arg)))
+            ctx.replaceMe(new("PhiUnaryOperation", listOf(JsStringLiteral("prefix"), JsStringLiteral(x.operator.toString()), x.arg)))
         }
+
+        override fun endVisit(x: JsPostfixOperation, ctx: JsContext<JsNode>) {
+            super.endVisit(x, ctx)
+            ctx.replaceMe(new("PhiUnaryOperation", listOf(JsStringLiteral("postfix"), JsStringLiteral(x.operator.toString()), x.arg)))
+        }
+
+        override fun endVisit(x: JsCatch, ctx: JsContext<JsNode>) {
+            super.endVisit(x, ctx)
+
+            val ident = "Exception \$__phiException"
+            val catchBody = JsBlock()
+            catchBody.statements.add(JsNameRef("phiVars(array(array('${x.parameter.name.ident}', \$__phiException->phiValue)));").makeStmt())
+            catchBody.statements.addAll(x.body.statements)
+            ctx.replaceMe(JsCatch(x.scope, ident, catchBody))
+        }
+
 
     }.accept(program)
 }
