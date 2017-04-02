@@ -148,13 +148,16 @@ class PhiObject extends PhiValue {
 
 class PhiFunction extends PhiObject {
     /**@var PhiFunctionExpression*/ private $expr;
+    /**@var boolean vararg*/ private $vararg;
 
     /**
      * @param PhiFunctionExpression $expr
+     * @param array $opts
      */
-    public function __construct(PhiFunctionExpression $expr) {
+    public function __construct(PhiFunctionExpression $expr, $opts = array()) {
         parent::__construct();
         $this->expr = $expr;
+        $this->vararg = (boolean) @$opts['vararg'];
 
         { // me.__proto__ = Function.prototype
             $e = new PhiNameRef('Function');
@@ -174,10 +177,13 @@ class PhiFunction extends PhiObject {
      */
     public function invoke($receiver, $args) {
         Phi::pushEnv();
+        Phi::getCurrentEnv()->setFunctionArgs($args);
         Phi::getCurrentEnv()->setThisValue($receiver);
-        for ($i = 0; $i < count($args); ++$i) {
-            $name = $this->expr->getArgNames()[$i];
-            Phi::getCurrentEnv()->setVar($name, $args[$i]);
+        if (!$this->vararg) {
+            for ($i = 0; $i < count($args); ++$i) {
+                $name = $this->expr->getArgNames()[$i];
+                Phi::getCurrentEnv()->setVar($name, $args[$i]);
+            }
         }
         $res = call_user_func($this->expr->getBody());
         Phi::popEnv();
@@ -314,12 +320,30 @@ class PhiEnv {
     /**@var PhiEnv*/ private $parent;
     /**@var PhiValue[]*/ private $vars = array();
     /**@var PhiValue*/ private $thisValue;
+    /**@var PhiValue[]*/ private $functionArgs;
 
     /**
      * @param PhiEnv $parent
      */
     function __construct($parent) {
         $this->parent = $parent;
+    }
+
+    /**
+     * @param PhiValue[] $functionArgs
+     */
+    public function setFunctionArgs($functionArgs) {
+        $this->functionArgs = $functionArgs;
+    }
+
+    /**
+     * @return PhiValue[]
+     * @throws PhiIllegalStateException
+     */
+    public function getFunctionArgs() {
+        if ($this->functionArgs === null)
+            throw new PhiIllegalStateException("1f43259d-e1cd-4f78-a527-017aa01d80af");
+        return $this->functionArgs;
     }
 
     /**
@@ -433,6 +457,19 @@ class Phi {
         $Function = new PhiObject(array('proto' => $Function_prototype));
         $Function->setProperty('prototype', $Function_prototype);
         self::$currentEnv->setVar('Function', $Function);
+        $Function_prototype->setProperty('call', new PhiFunction(new PhiFunctionExpression('call', array(), function() {
+            $e = new PhiThis();
+            $thisFunction = $e->evaluate();
+            if (!($thisFunction instanceof PhiFunction))
+                throw new PhiIllegalStateException("f1bd87fd-9106-44a4-9a11-09c8c8932ba7");
+
+            $callArgs = Phi::getCurrentEnv()->getFunctionArgs();
+            $receiver = $callArgs[0];
+            if (!($receiver instanceof PhiObject))
+                throw new PhiIllegalStateException("26e3ff5f-5ddb-4ac9-a9a6-3bf0c36de8a3");
+            $args = array_slice($callArgs, 1);
+            $thisFunction->invoke($receiver, $args);
+        }), array('vararg' => true)));
 
         $Array = new PhiObject(array('proto' => $Function_prototype));
         $Array->setProperty('prototype', $Array_prototype);
@@ -1570,15 +1607,32 @@ function phiQuickTest_40() {
     Phi::initEnv();
     Phi::initStdlib();
 
-    $GLOBALS['shit'] = 6; phiExpressionStatement(new PhiFunctionExpression('Shit', array('name', 'text'), function () {
-        $GLOBALS['shit'] = 4; phiExpressionStatement(new PhiBinaryOperation('@@2', '=', new PhiDot(new PhiThis(), 'name'), new PhiNameRef('name')));
-        $GLOBALS['shit'] = 5; phiExpressionStatement(new PhiBinaryOperation('@@3', '=', new PhiDot(new PhiThis(), 'text'), new PhiNameRef('text')));
-    }));
-    $GLOBALS['shit'] = 8; phiExpressionStatement(new PhiBinaryOperation('@@8', '=', new PhiDot(new PhiDot(new PhiNameRef('Shit'), 'prototype'), 'sayIt'), new PhiFunctionExpression(null, array(), function () {
-        $GLOBALS['shit'] = 7; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef('phiPrint'), array(new PhiBinaryOperation('@@7', '+', new PhiBinaryOperation('@@6', '+', new PhiBinaryOperation('@@5', '+', new PhiBinaryOperation('@@4', '+', new PhiStringLiteral('<b>'), new PhiDot(new PhiThis(), 'text')), new PhiStringLiteral(', ')), new PhiDot(new PhiThis(), 'name')), new PhiStringLiteral('<\/b>')))));
-    })));
+    Phi::getCurrentEnv()->setVar("Kotlin", Phi::getCurrentEnv()->getVar("kotlin"));
 
-    phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNew(new PhiNameRef('Shit'), array(new PhiStringLiteral('Archibald'), new PhiStringLiteral('fuck you'))), 'sayIt'), array()));
+    $GLOBALS['shit'] = 10; phiExpressionStatement(new PhiFunctionExpression("ShitParent", array("a", "b"), function () {
+        $GLOBALS['shit'] = 7; phiExpressionStatement(new PhiBinaryOperation("@@4", "=", new PhiDot(new PhiThis(), "a"), new PhiNameRef("a")));
+        $GLOBALS['shit'] = 8; phiExpressionStatement(new PhiBinaryOperation("@@5", "=", new PhiDot(new PhiThis(), "b"), new PhiNameRef("b")));
+        $GLOBALS['shit'] = 9; phiExpressionStatement(new PhiBinaryOperation("@@6", "=", new PhiDot(new PhiThis(), "prelude"), new PhiStringLiteral("Now I'm really gonna say it...")));
+    }));
+    $GLOBALS['shit'] = 15; phiExpressionStatement(new PhiBinaryOperation("@@14", "=", new PhiDot(new PhiDot(new PhiNameRef("ShitParent"), "prototype"), "sayIt_61zpoe\$"), new PhiFunctionExpression(null, array("c"), function () {
+        $GLOBALS['shit'] = 11; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@8", "+", new PhiBinaryOperation("@@7", "+", new PhiStringLiteral("a = "), new PhiDot(new PhiThis(), "a")), new PhiStringLiteral("\n")))));
+        $GLOBALS['shit'] = 12; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@10", "+", new PhiBinaryOperation("@@9", "+", new PhiStringLiteral("b = "), new PhiDot(new PhiThis(), "b")), new PhiStringLiteral("\n")))));
+        $GLOBALS['shit'] = 13; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@12", "+", new PhiBinaryOperation("@@11", "+", new PhiStringLiteral("c = "), new PhiNameRef("c")), new PhiStringLiteral("\n")))));
+        $GLOBALS['shit'] = 14; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@13", "+", new PhiDot(new PhiThis(), "prelude"), new PhiStringLiteral("\n")))));
+    })));
+    $GLOBALS['shit'] = 16; phiExpressionStatement(new PhiBinaryOperation("@@16", "=", new PhiDot(new PhiNameRef("ShitParent"), "\$metadata\$"), new PhiObjectLiteral("@@15", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("ShitParent")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+    $GLOBALS['shit'] = 20; phiExpressionStatement(new PhiFunctionExpression("Shit", array("name", "text"), function () {
+        $GLOBALS['shit'] = 17; phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("ShitParent"), "call"), array(new PhiThis(), new PhiStringLiteral("fucking-a"), new PhiStringLiteral("fucking-b"))));
+        $GLOBALS['shit'] = 18; phiExpressionStatement(new PhiBinaryOperation("@@17", "=", new PhiDot(new PhiThis(), "name"), new PhiNameRef("name")));
+        $GLOBALS['shit'] = 19; phiExpressionStatement(new PhiBinaryOperation("@@18", "=", new PhiDot(new PhiThis(), "text"), new PhiNameRef("text")));
+    }));
+    $GLOBALS['shit'] = 23; phiExpressionStatement(new PhiBinaryOperation("@@24", "=", new PhiDot(new PhiDot(new PhiNameRef("Shit"), "prototype"), "sayIt_61zpoe\$"), new PhiFunctionExpression(null, array("c"), function () {
+        $GLOBALS['shit'] = 21; phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiDot(new PhiNameRef("ShitParent"), "prototype"), "sayIt_61zpoe\$"), "call"), array(new PhiThis(), new PhiStringLiteral("fucking-c"))));
+        $GLOBALS['shit'] = 22; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@23", "+", new PhiBinaryOperation("@@22", "+", new PhiBinaryOperation("@@21", "+", new PhiBinaryOperation("@@20", "+", new PhiBinaryOperation("@@19", "+", new PhiStringLiteral("<b>"), new PhiDot(new PhiThis(), "name")), new PhiStringLiteral(", ")), new PhiDot(new PhiThis(), "text")), new PhiNameRef("c")), new PhiStringLiteral("<\/b>")))));
+    })));
+    $GLOBALS['shit'] = 24; phiExpressionStatement(new PhiBinaryOperation("@@26", "=", new PhiDot(new PhiNameRef("Shit"), "\$metadata\$"), new PhiObjectLiteral("@@25", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Shit")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ShitParent"))))))));
+    $GLOBALS['shit'] = 25; phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNew(new PhiNameRef("Shit"), array(new PhiStringLiteral("Archibald"), new PhiStringLiteral("fuck you"))), "sayIt_61zpoe\$"), array(new PhiStringLiteral("!!!!!"))));
+
 }
 phiQuickTest_40();
 exit();

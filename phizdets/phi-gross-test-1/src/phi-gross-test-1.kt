@@ -9,15 +9,31 @@ fun main(args: Array<String>) {
 
 external fun phiPrint(x: String)
 
-class Shit(val name: String, val text: String) {
-    fun sayIt() {
-        phiPrint("<b>$text, $name</b>")
+fun aaaaaaaaaaa() {}
+
+open class ShitParent(val a: String, val b: String) {
+    var prelude = "Now I'm really gonna say it..."
+
+    open fun sayIt(c: String) {
+        phiPrint("a = $a\n")
+        phiPrint("b = $b\n")
+        phiPrint("c = $c\n")
+        phiPrint("$prelude\n")
+    }
+}
+
+class Shit(val name: String, val text: String) : ShitParent("fucking-a", "fucking-b") {
+    override fun sayIt(c: String) {
+        super.sayIt("fucking-c")
+        phiPrint("<b>$name, $text$c</b>")
     }
 }
 
 fun qwe() {
-    Shit("Archibald", "fuck you").sayIt()
+    Shit("Archibald", "fuck you").sayIt("!!!!!")
 }
+
+fun bbbbbbbbbbb() {}
 
 
 private fun sayShit(shit: Shit) {
