@@ -36,8 +36,8 @@ public class JsVisitorWithContextImpl extends JsVisitorWithContext {
     private final Stack<JsContext<JsStatement>> statementContexts = new Stack<JsContext<JsStatement>>();
 
     public class ListContext<T extends JsNode> extends JsContext<T> {
-        private List<T> nodes;
-        private int index;
+        public List<T> nodes;
+        public int index;
 
         // Those are reset in every iteration of traverse()
         private final List<T> previous = new SmartList<T>();

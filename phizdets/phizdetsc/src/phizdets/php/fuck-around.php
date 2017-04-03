@@ -2,52 +2,52 @@
   phiThrow(new PhiNew(new PhiNameRef("Error"), array(new PhiStringLiteral("Error loading module 'phi-gross-test-1'. Its dependency 'kotlin' was not found. Please, check whether 'kotlin' is loaded prior to 'phi-gross-test-1'."))));
 }
 $GLOBALS['shit'] = 47; phiExpressionStatement(new PhiBinaryOperation("@@76", "=", new PhiBrackets(new PhiThis(), new PhiStringLiteral("phi-gross-test-1")), new PhiInvocation(new PhiFunctionExpression(null, array("_", "Kotlin"), function () {
-  $GLOBALS['shit'] = 1; phiExpressionStatement(new PhiStringLiteral("use strict"));
-  phiVars("@@2", array(array("IllegalStateException", new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "kotlin"), "IllegalStateException"))));
-  phiVars("@@3", array(array("ReadWriteProperty", new PhiDot(new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "kotlin"), "properties"), "ReadWriteProperty"))));
-  $GLOBALS['shit'] = 2; phiExpressionStatement(new PhiBinaryOperation("@@4", "=", new PhiDot(new PhiNameRef("Shit"), "prototype"), new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "create"), array(new PhiDot(new PhiNameRef("ShitParent"), "prototype")))));
-  $GLOBALS['shit'] = 3; phiExpressionStatement(new PhiBinaryOperation("@@5", "=", new PhiDot(new PhiDot(new PhiNameRef("Shit"), "prototype"), "constructor"), new PhiNameRef("Shit")));
-  $GLOBALS['shit'] = 5; phiExpressionStatement(new PhiFunctionExpression("main", array("args"), function () {
-    $GLOBALS['shit'] = 4; phiExpressionStatement(new PhiInvocation(new PhiNameRef("sayShit"), array(new PhiNew(new PhiNameRef("Shit"), array(new PhiStringLiteral("Archibald"), new PhiStringLiteral("Fuck you"))))));
+  $GLOBALS['shit'] = 2; phiExpressionStatement(new PhiFunctionExpression("NotNullOnceVar", array(), function () {
+    $GLOBALS['shit'] = 1; phiExpressionStatement(new PhiBinaryOperation("@@3", "=", new PhiDot(new PhiThis(), "value_0"), new PhiNullLiteral("@@2")));
   }));
-  $GLOBALS['shit'] = 6; phiExpressionStatement(new PhiFunctionExpression("aaaaaaaaaaa", array(), function () {
-  }));
-  $GLOBALS['shit'] = 10; phiExpressionStatement(new PhiFunctionExpression("ShitParent", array("a", "b"), function () {
-    $GLOBALS['shit'] = 7; phiExpressionStatement(new PhiBinaryOperation("@@6", "=", new PhiDot(new PhiThis(), "a"), new PhiNameRef("a")));
-    $GLOBALS['shit'] = 8; phiExpressionStatement(new PhiBinaryOperation("@@7", "=", new PhiDot(new PhiThis(), "b"), new PhiNameRef("b")));
-    $GLOBALS['shit'] = 9; phiExpressionStatement(new PhiBinaryOperation("@@8", "=", new PhiDot(new PhiThis(), "prelude"), new PhiStringLiteral("Now I'm really gonna say it...")));
-  }));
-  $GLOBALS['shit'] = 15; phiExpressionStatement(new PhiBinaryOperation("@@16", "=", new PhiDot(new PhiDot(new PhiNameRef("ShitParent"), "prototype"), "sayIt_61zpoe\$"), new PhiFunctionExpression(null, array("c"), function () {
-    $GLOBALS['shit'] = 11; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@10", "+", new PhiBinaryOperation("@@9", "+", new PhiStringLiteral("a = "), new PhiDot(new PhiThis(), "a")), new PhiStringLiteral("\n")))));
-    $GLOBALS['shit'] = 12; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@12", "+", new PhiBinaryOperation("@@11", "+", new PhiStringLiteral("b = "), new PhiDot(new PhiThis(), "b")), new PhiStringLiteral("\n")))));
-    $GLOBALS['shit'] = 13; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@14", "+", new PhiBinaryOperation("@@13", "+", new PhiStringLiteral("c = "), new PhiNameRef("c")), new PhiStringLiteral("\n")))));
-    $GLOBALS['shit'] = 14; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@15", "+", new PhiDot(new PhiThis(), "prelude"), new PhiStringLiteral("\n")))));
-  })));
-  $GLOBALS['shit'] = 16; phiExpressionStatement(new PhiBinaryOperation("@@18", "=", new PhiDot(new PhiNameRef("ShitParent"), "\$metadata\$"), new PhiObjectLiteral("@@17", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("ShitParent")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  $GLOBALS['shit'] = 20; phiExpressionStatement(new PhiFunctionExpression("Shit", array("name", "text"), function () {
-    $GLOBALS['shit'] = 17; phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("ShitParent"), "call"), array(new PhiThis(), new PhiStringLiteral("fucking-a"), new PhiStringLiteral("fucking-b"))));
-    $GLOBALS['shit'] = 18; phiExpressionStatement(new PhiBinaryOperation("@@19", "=", new PhiDot(new PhiThis(), "name"), new PhiNameRef("name")));
-    $GLOBALS['shit'] = 19; phiExpressionStatement(new PhiBinaryOperation("@@20", "=", new PhiDot(new PhiThis(), "text"), new PhiNameRef("text")));
-  }));
-  $GLOBALS['shit'] = 23; phiExpressionStatement(new PhiBinaryOperation("@@26", "=", new PhiDot(new PhiDot(new PhiNameRef("Shit"), "prototype"), "sayIt_61zpoe\$"), new PhiFunctionExpression(null, array("c"), function () {
-    $GLOBALS['shit'] = 21; phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiDot(new PhiNameRef("ShitParent"), "prototype"), "sayIt_61zpoe\$"), "call"), array(new PhiThis(), new PhiStringLiteral("fucking-c"))));
-    $GLOBALS['shit'] = 22; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@25", "+", new PhiBinaryOperation("@@24", "+", new PhiBinaryOperation("@@23", "+", new PhiBinaryOperation("@@22", "+", new PhiBinaryOperation("@@21", "+", new PhiStringLiteral("<b>"), new PhiDot(new PhiThis(), "name")), new PhiStringLiteral(", ")), new PhiDot(new PhiThis(), "text")), new PhiNameRef("c")), new PhiStringLiteral("<\/b>")))));
-  })));
-  $GLOBALS['shit'] = 24; phiExpressionStatement(new PhiBinaryOperation("@@28", "=", new PhiDot(new PhiNameRef("Shit"), "\$metadata\$"), new PhiObjectLiteral("@@27", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Shit")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ShitParent"))))))));
-  $GLOBALS['shit'] = 26; phiExpressionStatement(new PhiFunctionExpression("qwe", array(), function () {
-    $GLOBALS['shit'] = 25; phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNew(new PhiNameRef("Shit"), array(new PhiStringLiteral("Archibald"), new PhiStringLiteral("fuck you"))), "sayIt_61zpoe\$"), array(new PhiStringLiteral("!!!!!"))));
-  }));
-  $GLOBALS['shit'] = 27; phiExpressionStatement(new PhiFunctionExpression("bbbbbbbbbbb", array(), function () {
-  }));
-  $GLOBALS['shit'] = 29; phiExpressionStatement(new PhiFunctionExpression("sayShit", array("shit"), function () {
-    $GLOBALS['shit'] = 28; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@32", "+", new PhiBinaryOperation("@@31", "+", new PhiBinaryOperation("@@30", "+", new PhiBinaryOperation("@@29", "+", new PhiStringLiteral("<b>"), new PhiDot(new PhiNameRef("shit"), "text")), new PhiStringLiteral(", ")), new PhiDot(new PhiNameRef("shit"), "name")), new PhiStringLiteral("<\/b>")))));
-  }));
-  $GLOBALS['shit'] = 30; phiExpressionStatement(new PhiFunctionExpression("notNullOnce", array(), function () {
+  $GLOBALS['shit'] = 3; phiExpressionStatement(new PhiFunctionExpression("notNullOnce", array(), function () {
     return phiEvaluate(new PhiNew(new PhiNameRef("NotNullOnceVar"), array()));
   }));
-  $GLOBALS['shit'] = 32; phiExpressionStatement(new PhiFunctionExpression("NotNullOnceVar", array(), function () {
-    $GLOBALS['shit'] = 31; phiExpressionStatement(new PhiBinaryOperation("@@34", "=", new PhiDot(new PhiThis(), "value_0"), new PhiNullLiteral("@@33")));
+  $GLOBALS['shit'] = 5; phiExpressionStatement(new PhiFunctionExpression("sayShit", array("shit"), function () {
+    $GLOBALS['shit'] = 4; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@7", "+", new PhiBinaryOperation("@@6", "+", new PhiBinaryOperation("@@5", "+", new PhiBinaryOperation("@@4", "+", new PhiStringLiteral("<b>"), new PhiDot(new PhiNameRef("shit"), "text")), new PhiStringLiteral(", ")), new PhiDot(new PhiNameRef("shit"), "name")), new PhiStringLiteral("<\/b>")))));
   }));
+  $GLOBALS['shit'] = 6; phiExpressionStatement(new PhiFunctionExpression("bbbbbbbbbbb", array(), function () {
+  }));
+  $GLOBALS['shit'] = 8; phiExpressionStatement(new PhiFunctionExpression("qwe", array(), function () {
+    $GLOBALS['shit'] = 7; phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNew(new PhiNameRef("Shit"), array(new PhiStringLiteral("Archibald"), new PhiStringLiteral("fuck you"))), "sayIt_61zpoe\$"), array(new PhiStringLiteral("!!!!!"))));
+  }));
+  $GLOBALS['shit'] = 12; phiExpressionStatement(new PhiFunctionExpression("Shit", array("name", "text"), function () {
+    $GLOBALS['shit'] = 9; phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("ShitParent"), "call"), array(new PhiThis(), new PhiStringLiteral("fucking-a"), new PhiStringLiteral("fucking-b"))));
+    $GLOBALS['shit'] = 10; phiExpressionStatement(new PhiBinaryOperation("@@8", "=", new PhiDot(new PhiThis(), "name"), new PhiNameRef("name")));
+    $GLOBALS['shit'] = 11; phiExpressionStatement(new PhiBinaryOperation("@@9", "=", new PhiDot(new PhiThis(), "text"), new PhiNameRef("text")));
+  }));
+  $GLOBALS['shit'] = 16; phiExpressionStatement(new PhiFunctionExpression("ShitParent", array("a", "b"), function () {
+    $GLOBALS['shit'] = 13; phiExpressionStatement(new PhiBinaryOperation("@@10", "=", new PhiDot(new PhiThis(), "a"), new PhiNameRef("a")));
+    $GLOBALS['shit'] = 14; phiExpressionStatement(new PhiBinaryOperation("@@11", "=", new PhiDot(new PhiThis(), "b"), new PhiNameRef("b")));
+    $GLOBALS['shit'] = 15; phiExpressionStatement(new PhiBinaryOperation("@@12", "=", new PhiDot(new PhiThis(), "prelude"), new PhiStringLiteral("Now I'm really gonna say it...")));
+  }));
+  $GLOBALS['shit'] = 17; phiExpressionStatement(new PhiFunctionExpression("aaaaaaaaaaa", array(), function () {
+  }));
+  $GLOBALS['shit'] = 19; phiExpressionStatement(new PhiFunctionExpression("main", array("args"), function () {
+    $GLOBALS['shit'] = 18; phiExpressionStatement(new PhiInvocation(new PhiNameRef("sayShit"), array(new PhiNew(new PhiNameRef("Shit"), array(new PhiStringLiteral("Archibald"), new PhiStringLiteral("Fuck you"))))));
+  }));
+  $GLOBALS['shit'] = 20; phiExpressionStatement(new PhiStringLiteral("use strict"));
+  phiVars("@@13", array(array("IllegalStateException", new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "kotlin"), "IllegalStateException"))));
+  phiVars("@@14", array(array("ReadWriteProperty", new PhiDot(new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "kotlin"), "properties"), "ReadWriteProperty"))));
+  $GLOBALS['shit'] = 21; phiExpressionStatement(new PhiBinaryOperation("@@15", "=", new PhiDot(new PhiNameRef("Shit"), "prototype"), new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "create"), array(new PhiDot(new PhiNameRef("ShitParent"), "prototype")))));
+  $GLOBALS['shit'] = 22; phiExpressionStatement(new PhiBinaryOperation("@@16", "=", new PhiDot(new PhiDot(new PhiNameRef("Shit"), "prototype"), "constructor"), new PhiNameRef("Shit")));
+  $GLOBALS['shit'] = 27; phiExpressionStatement(new PhiBinaryOperation("@@24", "=", new PhiDot(new PhiDot(new PhiNameRef("ShitParent"), "prototype"), "sayIt_61zpoe\$"), new PhiFunctionExpression(null, array("c"), function () {
+    $GLOBALS['shit'] = 23; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@18", "+", new PhiBinaryOperation("@@17", "+", new PhiStringLiteral("a = "), new PhiDot(new PhiThis(), "a")), new PhiStringLiteral("\n")))));
+    $GLOBALS['shit'] = 24; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@20", "+", new PhiBinaryOperation("@@19", "+", new PhiStringLiteral("b = "), new PhiDot(new PhiThis(), "b")), new PhiStringLiteral("\n")))));
+    $GLOBALS['shit'] = 25; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@22", "+", new PhiBinaryOperation("@@21", "+", new PhiStringLiteral("c = "), new PhiNameRef("c")), new PhiStringLiteral("\n")))));
+    $GLOBALS['shit'] = 26; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@23", "+", new PhiDot(new PhiThis(), "prelude"), new PhiStringLiteral("\n")))));
+  })));
+  $GLOBALS['shit'] = 28; phiExpressionStatement(new PhiBinaryOperation("@@26", "=", new PhiDot(new PhiNameRef("ShitParent"), "\$metadata\$"), new PhiObjectLiteral("@@25", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("ShitParent")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  $GLOBALS['shit'] = 31; phiExpressionStatement(new PhiBinaryOperation("@@32", "=", new PhiDot(new PhiDot(new PhiNameRef("Shit"), "prototype"), "sayIt_61zpoe\$"), new PhiFunctionExpression(null, array("c"), function () {
+    $GLOBALS['shit'] = 29; phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiDot(new PhiNameRef("ShitParent"), "prototype"), "sayIt_61zpoe\$"), "call"), array(new PhiThis(), new PhiStringLiteral("fucking-c"))));
+    $GLOBALS['shit'] = 30; phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("phiPrint"), array(new PhiBinaryOperation("@@31", "+", new PhiBinaryOperation("@@30", "+", new PhiBinaryOperation("@@29", "+", new PhiBinaryOperation("@@28", "+", new PhiBinaryOperation("@@27", "+", new PhiStringLiteral("<b>"), new PhiDot(new PhiThis(), "name")), new PhiStringLiteral(", ")), new PhiDot(new PhiThis(), "text")), new PhiNameRef("c")), new PhiStringLiteral("<\/b>")))));
+  })));
+  $GLOBALS['shit'] = 32; phiExpressionStatement(new PhiBinaryOperation("@@34", "=", new PhiDot(new PhiNameRef("Shit"), "\$metadata\$"), new PhiObjectLiteral("@@33", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Shit")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ShitParent"))))))));
   $GLOBALS['shit'] = 34; phiExpressionStatement(new PhiBinaryOperation("@@41", "=", new PhiDot(new PhiDot(new PhiNameRef("NotNullOnceVar"), "prototype"), "getValue_lrcp0p\$"), new PhiFunctionExpression(null, array("thisRef", "property"), function () {
     phiVars("@@35", array(array("tmp\$", new PhiUnaryOperation("prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     $GLOBALS['shit'] = 33; phiExpressionStatement(new PhiBinaryOperation("@@36", "=", new PhiNameRef("tmp\$"), new PhiDot(new PhiThis(), "value_0")));

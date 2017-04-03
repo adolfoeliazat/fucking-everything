@@ -36,13 +36,14 @@ import org.jetbrains.kotlin.progress.ProgressIndicatorAndCompilationCanceledStat
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.BindingTrace;
 import org.jetbrains.kotlin.resolve.diagnostics.Diagnostics;
+import phizdets.compiler.PhizdetscGlobal;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.jetbrains.kotlin.diagnostics.DiagnosticUtils.hasError;
 import static org.jetbrains.kotlin.js.translate.utils.ExpandIsCallsKt.expandIsCalls;
-import static phizdets.compiler.PhizdetscKt.phpify;
+import static phizdets.compiler.PhpifyKt.phpify;
 
 /**
  * An entry point of translator.
@@ -99,7 +100,6 @@ public final class K2JSTranslator {
 
         // @fuck2
         phpify(program);
-
 
         ProgressIndicatorAndCompilationCanceledStatus.checkCanceled();
 

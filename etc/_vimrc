@@ -6,7 +6,8 @@ set guicursor+=a:blinkon0
 "set guifont=Meslo_LG_S_DZ:h13:cRUSSIAN
 " set guifont=Consolas:h13:b:cRUSSIAN
 " set guifont=InputMono_Medium:h11:cRUSSIAN
-set guifont=InputMonoCondensed_Medium:h12:cRUSSIAN
+" set guifont=InputMonoCondensed_Medium:h12:cRUSSIAN
+set guifont=Iosevka:h12:b:cRUSSIAN
 "color default
 syn on
 
