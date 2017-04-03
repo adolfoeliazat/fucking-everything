@@ -37,6 +37,7 @@ val shitToShit = mutableMapOf<Any, Any?>()
 var JsNode.declarationDescriptor by AttachedShit<DeclarationDescriptor?>(shitToShit)
 
 object PhizdetscGlobal {
+    var debugTagPrefix = ""
     var testParams by notNull<GrossTestPhizdets.TestParams>()
 
     fun reportTranslationStage(num: Int, program: JsProgram) {
@@ -44,6 +45,14 @@ object PhizdetscGlobal {
         val taggedGenOutput = TextOutputImpl()
         program.accept(PhizdetsSourceGenerationVisitor(output, taggedGenOutput, /*sourceMapBuilder*/ null))
         File(testParams.outFilePath + "--$num").writeText(output.toString())
+    }
+}
+
+object PrepareFuckAroundPHP {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        CompileStdlib.main(arrayOf())
+        GrossTestPhizdets.main(arrayOf())
     }
 }
 
@@ -115,6 +124,7 @@ object GrossTestPhizdets {
     @JvmStatic
     fun main(_args: Array<String>) {
         clog("Tits :)")
+        PhizdetscGlobal.debugTagPrefix = ""
 
         val args = when {
             _args.isEmpty() -> arrayOf("requestResponseScenario", "phi-gross-test-1")
@@ -352,10 +362,12 @@ object GrossTestPhizdets {
 
         check(sourceFiles.isNotEmpty()) {"$errMsgCtx    946635ac-3ba8-471e-9ff1-12ff84de8361"}
         if (!preventCompilationAndDeploying) {
+            print("Compiling shit...")
             K2PhizdetsCompiler.main(
                 *sourceFiles.map {it.absolutePath}.toTypedArray(),
                 // "-no-stdlib",
                 "-output", p.outFilePath)
+            println(" OK, strange")
         }
 
         p.phpSettingsFileName = "${p.testName}-settings.php"

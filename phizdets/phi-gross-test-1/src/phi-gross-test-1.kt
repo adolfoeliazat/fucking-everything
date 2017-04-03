@@ -5,11 +5,33 @@ import kotlin.reflect.KProperty
 
 fun main(args: Array<String>) {
     sayShit(Shit("Archibald", "Fuck you"))
+    testCheck()
+    test1()
 }
 
-external fun phiPrint(x: String)
+fun testCheck() {
+    try {
+        check(false) {"pizda"}
+    } catch (e: dynamic) {
+        phiPrintln("Well...") // TODO:vgrechka Assert...
+    }
+}
 
-fun aaaaaaaaaaa() {}
+class test1 {
+    init {
+        Q.a = "pizda"
+        phiPrintln(Q.a)
+        Q.a = "pizda again"
+        phiPrintln(Q.a)
+    }
+
+    object Q {
+        var a by notNullOnce<String>()
+    }
+}
+
+
+external fun phiPrint(x: String)
 
 open class ShitParent(val a: String, val b: String) {
     var prelude = "Now I'm really gonna say it..."
@@ -29,15 +51,12 @@ class Shit(val name: String, val text: String) : ShitParent("fucking-a", "fuckin
     }
 }
 
-fun qwe() {
-    Shit("Archibald", "fuck you").sayIt("!!!!!")
+fun phiPrintln(x: String) {
+    phiPrint(x + "\n")
 }
 
-fun bbbbbbbbbbb() {}
-
-
 private fun sayShit(shit: Shit) {
-    phiPrint("<b>${shit.text}, ${shit.name}</b>")
+    phiPrintln("<b>${shit.text}, ${shit.name}</b>")
 }
 
 fun <T: Any> notNullOnce(): ReadWriteProperty<Any?, T> = NotNullOnceVar()

@@ -41,7 +41,8 @@ object CompileStdlib {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        clog("Compiling stdlib...")
+        print("Compiling stdlib...")
+        PhizdetscGlobal.debugTagPrefix = "s"
         val inFile = File(adaptedKotlinJSFilePath)
         val options = Options("nashorn")
         options.set("anon.functions", true)
@@ -81,7 +82,7 @@ object CompileStdlib {
             File(stdlibPHPFilePath).writeText(output.toString())
         }
 
-        clog("OK")
+        println(" OK, strange")
     }
 
     private fun fillBlock(jsBlock: JsBlock, nhBlock: Block) {

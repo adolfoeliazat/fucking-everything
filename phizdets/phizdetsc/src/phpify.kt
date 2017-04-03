@@ -84,7 +84,7 @@ fun phpify2(program: JsProgram) {
         var nextDebugTag = 1L
 
         fun nextDebugTagLiteral(): JsExpression {
-            return JsStringLiteral("@@${nextDebugTag++}")
+            return JsStringLiteral("@@${PhizdetscGlobal.debugTagPrefix}${nextDebugTag++}")
         }
 
         override fun endVisit(x: JsReturn, ctx: JsContext<JsNode>) {
@@ -106,7 +106,7 @@ fun phpify2(program: JsProgram) {
             super.endVisit(x, ctx)
             val shit = x.vars.map {
                 JsInvocation(JsNameRef("array"), JsStringLiteral(it.name.ident), it.initExpression
-                    ?: new("PhiUnaryOperation", listOf(JsStringLiteral("prefix"), JsStringLiteral("void"), new("PhiNumberLiteral", listOf(JsStringLiteral("@@something"), program.getNumberLiteral(0))))))
+                    ?: new("PhiUnaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral("prefix"), JsStringLiteral("void"), new("PhiNumberLiteral", listOf(JsStringLiteral("@@something"), program.getNumberLiteral(0))))))
             }
             ctx.replaceMe(JsInvocation(JsNameRef("phiVars"), nextDebugTagLiteral(), JsInvocation(JsNameRef("array"), *shit.toTypedArray())).makeStmt())
         }
@@ -206,6 +206,11 @@ fun phpify2(program: JsProgram) {
             ctx.replaceMe(new("PhiNullLiteral", listOf(nextDebugTagLiteral())))
         }
 
+        override fun endVisit(x: JsLiteral.JsBooleanLiteral, ctx: JsContext<JsNode>) {
+            super.endVisit(x, ctx)
+            ctx.replaceMe(new("PhiBooleanLiteral", listOf(nextDebugTagLiteral(), x)))
+        }
+
         override fun endVisit(x: JsNumberLiteral, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
             ctx.replaceMe(new("PhiNumberLiteral", listOf(nextDebugTagLiteral(), x)))
@@ -234,12 +239,12 @@ fun phpify2(program: JsProgram) {
 
         override fun endVisit(x: JsPrefixOperation, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
-            ctx.replaceMe(new("PhiUnaryOperation", listOf(JsStringLiteral("prefix"), JsStringLiteral(x.operator.toString()), x.arg)))
+            ctx.replaceMe(new("PhiUnaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral("prefix"), JsStringLiteral(x.operator.toString()), x.arg)))
         }
 
         override fun endVisit(x: JsPostfixOperation, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
-            ctx.replaceMe(new("PhiUnaryOperation", listOf(JsStringLiteral("postfix"), JsStringLiteral(x.operator.toString()), x.arg)))
+            ctx.replaceMe(new("PhiUnaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral("postfix"), JsStringLiteral(x.operator.toString()), x.arg)))
         }
 
         override fun endVisit(x: JsCatch, ctx: JsContext<JsNode>) {
