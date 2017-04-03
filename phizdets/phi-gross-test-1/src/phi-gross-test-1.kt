@@ -12,8 +12,14 @@ fun main(args: Array<String>) {
 fun testCheck() {
     try {
         check(false) {"pizda"}
-    } catch (e: dynamic) {
+    } catch (e: Throwable) {
         phiPrintln("Well...") // TODO:vgrechka Assert...
+    }
+
+    try {
+        check(false) {"pizda"}
+    } catch (e: IllegalStateException) {
+        phiPrintln("Well again...") // TODO:vgrechka Assert...
     }
 }
 

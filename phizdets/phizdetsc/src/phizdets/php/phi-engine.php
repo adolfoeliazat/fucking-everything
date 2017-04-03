@@ -952,6 +952,14 @@ class PhiBoolean extends PhiValue {
     public function isTruthy() {
         return $this->value;
     }
+
+    function __toString() {
+        if ($this->value)
+            $s = 'true';
+        else
+            $s = 'false';
+        return "PhiBoolean($s)";
+    }
 }
 
 class PhiBinaryOperation extends PhiExpression {
@@ -1015,6 +1023,9 @@ class PhiBinaryOperation extends PhiExpression {
         }
         else if ($lhsValue instanceof PhiUndefined || $rhsValue instanceof PhiUndefined) {
             return $lhsValue instanceof PhiUndefined && $rhsValue instanceof PhiUndefined;
+        }
+        else if ($lhsValue instanceof PhiObject && $rhsValue instanceof Phiobject) {
+            return $lhsValue === $rhsValue;
         }
         else {
             $lhsValueClass = get_class($lhsValue);
@@ -1149,6 +1160,28 @@ class PhiBinaryOperation extends PhiExpression {
                 return new PhiBoolean($res);
             else
                 throw new PhiIllegalStateException("3a1af0b3-0d2a-4263-8353-016c3b2e4d9c");
+        }
+        else if ($this->op === 'instanceof') {
+            $inst = $this->lhs->evaluate();
+            if (!($inst instanceof PhiObject))
+                return new PhiBoolean(false);
+
+            $ctor = $this->rhs->evaluate();
+            if (!($ctor instanceof PhiFunction))
+                throw new PhiIllegalStateException('709e6ffd-7a89-43f3-ad75-dd6e26b27ce0');
+
+            $prototype = $ctor->getProperty('prototype');
+            $proto = $inst->getProperty('__proto__');
+            while (!($proto instanceof PhiNull)) {
+                if ($proto === $prototype) {
+                    if (!($proto instanceof Phiobject))
+                        throw new PhiIllegalStateException('fa98c05e-874e-4e38-b05f-eb5a15e14c6a');
+                    return new PhiBoolean(true);
+                } else {
+                    $proto = $proto->getProperty('__proto__');
+                }
+            }
+            return new PhiBoolean(false);
         }
         else {
             throw new PhiIllegalStateException("op = {$this->op}    6bb8ca7a-c00a-4f60-9930-211dba14c031");
@@ -2094,6 +2127,33 @@ if (defined('PHI_RUN_QUICK_TESTS')) {
         phiPrintln(__FUNCTION__ . ': PASSED');
     }
     phiQuickTest_varsDontOverrideParentEnv();
+
+    function phiQuickTest_instanceof() {
+        // function F() {}
+        phiExpressionStatement(new PhiFunctionExpression('F', array(), function() {
+        }));
+
+        // var f = new F()
+        phiVars('@@', array(array('f', new PhiNew(new PhiNameRef('F'), array()))));
+
+        // true  EQ  f instanceof F
+        phiEvaluateAndAssertToStringEquals(
+            new PhiBoolean(true),
+            new PhiBinaryOperation('@@', 'instanceof',
+                new PhiNameRef('f'),
+                new PhiNameRef('F')));
+
+        // true  EQ  f instanceof Object
+        phiEvaluateAndAssertToStringEquals(
+            new PhiBoolean(true),
+            new PhiBinaryOperation('@@', 'instanceof',
+                new PhiNameRef('f'),
+                new PhiNameRef('Object')));
+
+
+        phiPrintln(__FUNCTION__ . ': PASSED');
+    }
+    phiQuickTest_instanceof();
 }
 
 

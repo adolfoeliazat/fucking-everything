@@ -84,8 +84,10 @@ fun phpify2(program: JsProgram) {
         var nextDebugTag = 1L
 
         fun nextDebugTagLiteral(): JsExpression {
-            return JsStringLiteral("@@${PhizdetscGlobal.debugTagPrefix}${nextDebugTag++}")
+            return JsStringLiteral(nextDebugTag())
         }
+
+        private fun nextDebugTag() = "@@${PhizdetscGlobal.debugTagPrefix}${nextDebugTag++}"
 
         override fun endVisit(x: JsReturn, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
@@ -252,7 +254,7 @@ fun phpify2(program: JsProgram) {
 
             val ident = "Exception \$__phiException"
             val catchBody = JsBlock()
-            catchBody.statements.add(JsNameRef("phiVars(array(array('${x.parameter.name.ident}', \$__phiException->phiValue)));").makeStmt())
+            catchBody.statements.add(JsNameRef("Phi::getCurrentEnv()->setVar('${x.parameter.name.ident}', \$__phiException->phiValue)").makeStmt())
             catchBody.statements.addAll(x.body.statements)
             ctx.replaceMe(JsCatch(x.scope, ident, catchBody))
         }
