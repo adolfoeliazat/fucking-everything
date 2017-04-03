@@ -9,11 +9,13 @@ fun main(args: Array<String>) {
     test1()
 }
 
+external fun phiBreakDebugger()
+
 fun testCheck() {
     try {
         check(false) {"pizda"}
     } catch (e: Throwable) {
-        phiPrintln("Well...") // TODO:vgrechka Assert...
+        phiPrintln(e.message) // TODO:vgrechka Assert...
     }
 
     try {
@@ -37,7 +39,7 @@ class test1 {
 }
 
 
-external fun phiPrint(x: String)
+external fun phiPrint(x: String?)
 
 open class ShitParent(val a: String, val b: String) {
     var prelude = "Now I'm really gonna say it..."
@@ -57,7 +59,7 @@ class Shit(val name: String, val text: String) : ShitParent("fucking-a", "fuckin
     }
 }
 
-fun phiPrintln(x: String) {
+fun phiPrintln(x: String?) {
     phiPrint(x + "\n")
 }
 

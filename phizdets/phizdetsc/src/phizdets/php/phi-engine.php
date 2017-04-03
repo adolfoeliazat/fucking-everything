@@ -114,7 +114,7 @@ class PhiObject extends PhiValue {
      * @throws PhiIllegalStateException
      */
     function getProperty($name, $opts = array()) {
-//        if ($name === 'y') {
+//        if ($name === 'message') {
 //            strval('break on me');
 //        }
 
@@ -128,13 +128,17 @@ class PhiObject extends PhiValue {
             if ($getter->isTruthy()) {
                 if (!($getter instanceof PhiFunction))
                     throw new PhiIllegalStateException("a88c164b-b4a9-4228-9b0a-faf92cc797cd");
-                return $getter->invoke($this, array());
+                if ($name === 'message')
+                    strval('break on me');
+                $receiver = @$opts['receiver'] ?: $this;
+                $res = $getter->invoke($receiver, array());
+                return $res;
             }
         }
 
         $proto = $this->fields['__proto__'];
         if ($proto instanceof PhiObject) {
-            return $proto->getProperty($name);
+            return $proto->getProperty($name, array('receiver' => @$opts['receiver'] ?: $this));
         } else if ($proto instanceof PhiNull) {
             if (@$opts['phpNullIfNotFound'])
                 return null;
@@ -522,7 +526,7 @@ class PhiEnv {
 }
 
 function fuck() {
-    count('fuck');
+    strval('break on me');
 }
 
 class Phi {
@@ -680,6 +684,7 @@ class Phi {
         phiExpressionStatement(
             new PhiFunctionExpression('Error', array('message'),
                 function() {
+//                    fuck();
                     if (Phi::getCurrentEnv()->hasVar('message')) {
                         phiExpressionStatement(
                             new PhiBinaryOperation(
@@ -1035,6 +1040,26 @@ class PhiBinaryOperation extends PhiExpression {
     }
 
     /**
+     * @return boolean
+     * @throws PhiIllegalStateException
+     */
+    function testEquality() {
+        $lhsValue = $this->lhs->evaluate();
+        $rhsValue = $this->rhs->evaluate();
+        if ($lhsValue instanceof PhiNull || $lhsValue instanceof PhiUndefined
+            || $rhsValue instanceof PhiNull || $rhsValue instanceof PhiUndefined)
+        {
+            return ($lhsValue instanceof PhiNull || $lhsValue instanceof PhiUndefined)
+                && ($rhsValue instanceof PhiNull || $rhsValue instanceof PhiUndefined);
+        }
+        else {
+            $lhsValueClass = get_class($lhsValue);
+            $rhsValueClass = get_class($rhsValue);
+            throw new PhiIllegalStateException("3aa9b7b3-2949-4c10-93e0-f9f6752f1cfa    lhsValue is $lhsValueClass; rhsValue is $rhsValueClass");
+        }
+    }
+
+    /**
      * @return PhiValue
      * @throws PhiIllegalStateException
      */
@@ -1046,20 +1071,10 @@ class PhiBinaryOperation extends PhiExpression {
             return new PhiBoolean(!$this->testReferenceEquality());
         }
         else if ($this->op === '==') {
-            $lhsValue = $this->lhs->evaluate();
-            $rhsValue = $this->rhs->evaluate();
-            if ($lhsValue instanceof PhiNull || $lhsValue instanceof PhiUndefined
-                || $rhsValue instanceof PhiNull || $rhsValue instanceof PhiUndefined)
-            {
-                return new PhiBoolean(
-                    ($lhsValue instanceof PhiNull || $lhsValue instanceof PhiUndefined)
-                    && ($rhsValue instanceof PhiNull || $rhsValue instanceof PhiUndefined));
-            }
-            else {
-                $lhsValueClass = get_class($lhsValue);
-                $rhsValueClass = get_class($rhsValue);
-                throw new PhiIllegalStateException("3aa9b7b3-2949-4c10-93e0-f9f6752f1cfa    lhsValue is $lhsValueClass; rhsValue is $rhsValueClass");
-            }
+            return new PhiBoolean($this->testEquality());
+        }
+        else if ($this->op === '!=') {
+            return new PhiBoolean(!$this->testEquality());
         }
         else if ($this->op === '=') {
             $rhsValue = $this->rhs->evaluate();
@@ -1414,10 +1429,9 @@ function phiThrow($expr) {
         throw new PhiIllegalStateException("d6b5d1bf-c9d9-4aa7-b9f9-420bd0124b1f");
 
     $messagePhiValue = $phiValue->getProperty('message');
-    if ($messagePhiValue instanceof PhiUndefined) {
-        // TODO:vgrechka XXX Devise something smarter...
-        $messagePhiValue = $phiValue->getProperty('message_ujvw20$_0');
-    }
+//    if ($messagePhiValue instanceof PhiUndefined) { // TODO:vgrechka @kill
+//        $messagePhiValue = $phiValue->getProperty('message_ujvw20$_0');
+//    }
 
     if ($messagePhiValue instanceof PhiString) {
         $exception = new Exception($messagePhiValue->getValue());
@@ -1692,8 +1706,23 @@ class PhiInvocation extends PhiExpression {
         }
 
         if (!($calleePhiValue instanceof PhiFunction)) {
-            $debugCalleeToString =
-                strval($this->callee);
+            // XXX KJS bug with adding `String` to `String?`
+            if ($calleePhiValue instanceof PhiUndefined
+                && $this->callee instanceof PhiNameRef
+                && $this->callee->getName() === 'plus'
+                && count($this->args) === 2)
+            {
+                $lhsValue = phiEvaluate($this->args[0]);
+                if ($lhsValue instanceof PhiNull || $lhsValue instanceof PhiUndefined)
+                    $lhsValue = new PhiString("null");
+                $rhsValue = phiEvaluate($this->args[1]);
+                if ($rhsValue instanceof PhiNull || $rhsValue instanceof PhiUndefined)
+                    $rhsValue = new PhiString("null");
+                if (!($lhsValue instanceof PhiString && $rhsValue instanceof PhiString))
+                    throw new PhiIllegalStateException("b92331f5-46cf-4dd8-857c-a504b8096119");
+
+                return new PhiString($lhsValue->getValue() . $rhsValue->getValue());
+            }
             throw new PhiIllegalStateException("f30e6af1-a2b9-4345-8922-51caa7ba7bcb");
         }
 
@@ -1945,7 +1974,9 @@ function phiEvaluateAndAssertToStringEquals($expectedPhiValue, PhiExpression $ex
         throw new PhiAssertionError("\nExpected: $exps\nActual: $acts\n");
 }
 
-
+function phiBreakDebugger() {
+    strval('break on me');
+}
 
 
 // ==================================== ENTRY ======================================
