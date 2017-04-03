@@ -76,7 +76,8 @@ abstract class TranslationResult protected constructor(val diagnostics: Diagnost
             val jsFile = SimpleOutputFile(sourceFiles, outputFile.name, prefix + codeAndDebugShit.code + postfix)
             val taggedGenFile = SimpleOutputFile(sourceFiles, outputFile.name + "--tagged-gen", prefix + codeAndDebugShit.taggedGen + postfix)
             val engineFile = SimpleOutputFile(sourceFiles, "phi-engine.php", javaClass.getResource("/phizdets/php/phi-engine.php").readText())
-            val outputFiles = arrayListOf<OutputFile>(jsFile, taggedGenFile, engineFile)
+            val stdlibFile = SimpleOutputFile(sourceFiles, "phizdets-stdlib.php", javaClass.getResource("/phizdets/php/phizdets-stdlib.php").readText())
+            val outputFiles = arrayListOf<OutputFile>(jsFile, taggedGenFile, engineFile, stdlibFile)
 
             if (config.configuration.getBoolean(JSConfigurationKeys.META_INFO)) {
                 val metaFileName = KotlinJavascriptMetadataUtils.replaceSuffix(outputFile.name)

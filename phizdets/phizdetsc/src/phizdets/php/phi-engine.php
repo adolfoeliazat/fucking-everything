@@ -1841,7 +1841,7 @@ function phiEvaluateAndAssertToStringEquals($expectedPhiValue, PhiExpression $ex
 // ==================================== ENTRY ======================================
 
 
-if (true) {
+if (defined('PHI_RUN_QUICK_TESTS')) {
     function phiQuickTest_1() {
         Phi::initEnv();
         phiAssertException("'We are hosed, man...'", function() {
@@ -2024,7 +2024,6 @@ Phi::initEnv();
 Phi::initStdlib();
 
 require_once 'phizdets-stdlib.php';
-require_once 'fuck-around.php';
 
 
 
