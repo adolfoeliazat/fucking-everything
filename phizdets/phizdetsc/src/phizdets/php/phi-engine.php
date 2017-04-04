@@ -36,7 +36,16 @@ class PhiDot extends PhiExpression {
 
         $object = $this->qualifier->evaluate();
         if (!($object instanceof PhiObject)) {
-            throw new PhiIllegalStateException("{$this->shitToName($this->qualifier)} is not an object    8db9f0c6-b900-4294-a0d9-5dfbc4ccad97");
+            if ($object instanceof PhiString) {
+                $String = phiEvaluate(new PhiNameRef('String'));
+                if (!($String instanceof PhiFunction))
+                    throw new PhiIllegalStateException('825979da-9e92-45f4-882a-f667d895f9ad');
+
+                $object = phiNew($String, array($object));
+            }
+            else {
+                throw new PhiIllegalStateException("{$this->shitToName($this->qualifier)} is not an object    8db9f0c6-b900-4294-a0d9-5dfbc4ccad97");
+            }
         }
 
         return $object->getProperty($this->name);
@@ -613,8 +622,7 @@ class Phi {
 
         $Object->setProperty('getOwnPropertyDescriptor', new PhiFunction(
             new PhiFunctionExpression(
-                'getOwnPropertyDescriptor',
-                array('obj', 'prop'),
+                'getOwnPropertyDescriptor', array('obj', 'prop'),
                 function() {
                     $obj = Phi::getCurrentEnv()->getVar('obj');
                     if (!($obj instanceof PhiObject))
@@ -627,9 +635,71 @@ class Phi {
                     return $obj->getOwnPropertyDescriptor($prop->getValue());
                 })));
 
+        $Object->setProperty('getPrototypeOf', new PhiFunction(
+            new PhiFunctionExpression(
+                'getPrototypeOf', array('x'),
+                function() {
+                    $x = Phi::getCurrentEnv()->getVar('x');
+                    if (!($x instanceof PhiObject))
+                        throw new PhiIllegalStateException("ba06df93-f674-4312-853d-6b059edb0ee2");
+
+                    return $x->getProperty("__proto__");
+                })));
+
         $Array = new PhiObject(array('proto' => $Function_prototype));
         $Array->setProperty('prototype', $Array_prototype);
         self::$currentEnv->setVar('Array', $Array);
+
+
+        { // String
+            phiExpressionStatement(new PhiFunctionExpression(
+                'String', array('value'),
+                function() {
+                    $value = Phi::getCurrentEnv()->getVar('value');
+                    if (!($value instanceof PhiString))
+                        throw new PhiIllegalStateException('1891e851-1265-416a-abde-49ec99fd00a4');
+
+                    $thiz = Phi::getCurrentEnv()->getThisValue();
+                    if (!($thiz instanceof PhiObject))
+                        throw new PhiIllegalStateException('0a559137-c3e7-4dfe-b5a2-c6a23125263b');
+
+                    // $thiz->setProperty('_value', $value);
+
+                    // To make `Kotlin.hashCode = function() {...}` happy
+                    $thiz->setProperty('hashCode', new PhiUndefined());
+
+                    $thiz->setProperty('length', new PhiNumber(mb_strlen($value->getValue(), 'UTF-8')));
+
+                    $thiz->setProperty('toString', phiEvaluate(new PhiFunctionExpression(
+                        'toString', array(),
+                        function() use ($value) {
+                            return $value;
+                        }
+                    )));
+
+                    $thiz->setProperty('charCodeAt', phiEvaluate(new PhiFunctionExpression(
+                        'charCodeAt', array('index'),
+                        function() use ($value) {
+                            $index = Phi::getCurrentEnv()->getVar('index');
+                            if (!($index instanceof PhiNumber))
+                                throw new PhiIllegalStateException('1891ec42f5ea8-f714-4d91-b277-1b076a6e39a6851-1265-416a-abde-49ec99fd00a4');
+
+                            $string = $value->getValue();
+                            $offset = $index->getValue();
+                            $len = mb_strlen($string, 'UTF-8');
+                            if ($offset < 0 || $offset > $len - 1)
+                                return new PhiNumber(NAN);
+
+                            $character = mb_substr($string, $offset, 1, 'UTF-8');
+                            list(, $ret) = unpack('S', mb_convert_encoding($character, 'UTF-16LE', 'UTF-8'));
+                            return new PhiNumber($ret);
+                        }
+                    )));
+                }
+            ));
+        }
+
+
 
         { // Invariants
             { // Object.prototype.__proto__ === null
@@ -700,9 +770,9 @@ class Phi {
     public static function initStdlib() {
         phiVars('@@initStdlib',
             array(
-                array('String', new PhiObjectLiteral('@@String', array(
-                    array(new PhiNameRef('prototype'), new PhiObjectLiteral('@@String.prototype', array()))
-                ))),
+//                array('String', new PhiObjectLiteral('@@String', array(
+//                    array(new PhiNameRef('prototype'), new PhiObjectLiteral('@@String.prototype', array()))
+//                ))),
 
                 array('Number', new PhiObjectLiteral('@@Number', array(
                     array(new PhiNameRef('prototype'), new PhiObjectLiteral('@@Number.prototype', array()))
@@ -899,18 +969,29 @@ class PhiNew extends PhiExpression {
         $ctorValue = $this->ctor->evaluate();
         if (!($ctorValue instanceof PhiFunction))
             throw new PhiIllegalStateException("d3b13f4a-b3d3-4b80-b9e0-45ac964f08f8");
-        $proto = $ctorValue->getProperty('prototype');
-        if (!($proto instanceof PhiObject))
-            throw new PhiIllegalStateException("aa9fbdd9-c5b0-4215-afc0-c2e9fbfb29a3");
-        $inst = new PhiObject(array('proto' => $proto));
 
         $argValues = array();
         foreach ($this->args as $arg)
             array_push($argValues, $arg->evaluate());
 
-        $ctorValue->invoke($inst, $argValues);
-        return $inst;
+        return phiNew($ctorValue, $argValues);
     }
+
+}
+
+/**
+ * @param PhiFunction $ctorValue
+ * @param PhiValue[] $argValues
+ * @return PhiObject
+ * @throws PhiIllegalStateException
+ */
+function phiNew($ctorValue, $argValues) {
+    $proto = $ctorValue->getProperty('prototype');
+    if (!($proto instanceof PhiObject))
+        throw new PhiIllegalStateException("aa9fbdd9-c5b0-4215-afc0-c2e9fbfb29a3");
+    $inst = new PhiObject(array('proto' => $proto));
+    $ctorValue->invoke($inst, $argValues);
+    return $inst;
 }
 
 function phiPrintln($x) {
@@ -1661,13 +1742,10 @@ class PhiInvocation extends PhiExpression {
             $receiverPhiValue = $this->callee->getQualifier()->evaluate();
 
             if ($receiverPhiValue instanceof PhiString) {
-                $method = $this->callee->getName();
-                if ($method === 'toString') {
-                    return $receiverPhiValue;
-                }
-                else {
-                    throw new PhiIllegalStateException("a3f1d935-1486-4c69-b37a-ee6a5c2388bd");
-                }
+                $String = phiEvaluate(new PhiNameRef('String'));
+                if (!($String instanceof PhiFunction))
+                    throw new PhiIllegalStateException('8737db737-d199-4b6c-b146-50aff19f729225979da-9e92-45f4-882a-f667d895f9ad');
+                $receiverPhiValue = phiNew($String, array($receiverPhiValue));
             }
             else if ($receiverPhiValue instanceof PhiNumber) {
                 $method = $this->callee->getName();
@@ -2193,6 +2271,42 @@ if (defined('PHI_RUN_QUICK_TESTS')) {
         phiPrintln(__FUNCTION__ . ': PASSED');
     }
     phiQuickTest_instanceof();
+
+    function phiQuickTest_littleString() {
+        // s = 'пизда 仝'
+        phiVars('@@', array(array('s', new PhiStringLiteral("пизда 仝"))));
+
+        // 7  EQ  s.length
+        phiEvaluateAndAssertToStringEquals(new Phinumber(7), new PhiDot(new PhiNameRef('s'), 'length'));
+
+        $checkCode = function($expected, $pos) {
+            phiEvaluateAndAssertToStringEquals(
+                new PhiNumber($expected),
+                new PhiInvocation(new PhiDot(new PhiNameRef('s'), 'charCodeAt'), array(new PhiNumberLiteral('@@',
+                    $pos))));
+        };
+
+        // 1087   EQ  s.charCodeAt(0)
+        $checkCode(1087, 0);
+        // 1080   EQ  s.charCodeAt(1)
+        $checkCode(1080, 1);
+        // 1079   EQ  s.charCodeAt(2)
+        $checkCode(1079, 2);
+        // 1076   EQ  s.charCodeAt(3)
+        $checkCode(1076, 3);
+        // 1072   EQ  s.charCodeAt(4)
+        $checkCode(1072, 4);
+        // 32     EQ  s.charCodeAt(5)
+        $checkCode(32, 5);
+        // 20189  EQ  s.charCodeAt(6)
+        $checkCode(20189, 6);
+        // NaN    EQ  s.charCodeAt(7)
+        $checkCode(NAN, 7);
+
+        phiPrintln(__FUNCTION__ . ': PASSED');
+    }
+    phiQuickTest_littleString();
+    exit();
 }
 
 Phi::initEnv();

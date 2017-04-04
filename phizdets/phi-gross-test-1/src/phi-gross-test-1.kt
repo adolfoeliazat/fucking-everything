@@ -11,11 +11,25 @@ fun main(args: Array<String>) {
 
 external fun phiBreakDebugger()
 
+fun assertTrue(b: Boolean, assertionID: String) {
+    if (!b) {
+        fail("assertTrue failed: $assertionID")
+    }
+}
+
 fun assertEquals(expected: Any?, actual: Any?, assertionID: String) {
     if (expected != actual) {
-        val line = "----------------------------------------------------------\n"
-        throw AssertionError("\n${line}assertEquals failed: $assertionID\nExpected: $expected\nActual: $actual\n$line")
+        fail("assertEquals failed: $assertionID\nExpected: $expected\nActual: $actual")
     }
+}
+
+private fun fail(msg: String) {
+    throw AssertionError(insideLines(msg))
+}
+
+private fun insideLines(s: String): String {
+    val line = "----------------------------------------------------------\n"
+    return "\n$line" + s + "\n$line"
 }
 
 //fun assertVarExportEquals(expected: String, actual: Any?, assertionID: String, log: Boolean = false) {
@@ -28,18 +42,27 @@ fun assertEquals(expected: Any?, actual: Any?, assertionID: String) {
 //}
 
 fun testCheck() {
-    assertEquals(6, 2 + 3, "69c46fb9-8dd6-4459-b3d3-96ac460c26ab")
+    run {
+        try {
+            check(false) {"vagina"}
+        } catch (e: Throwable) {
+            assertEquals("vagina", e.message, "4234fdd2-c2c3-4aad-bbe8-473dde979cd5")
 
-    try {
-        check(false) {"pizda"}
-    } catch (e: Throwable) {
-        phiPrintln(e.message) // TODO:vgrechka Assert...
+            val assertionID = "7f2510ff-4753-4ea3-8d39-dcfe63ea910a"
+            if (!(e is NullPointerException)) {
+                fail("assertException failed: $assertionID\nActual exception: ${e::class.simpleName}")
+            }
+
+            phiPrintln(e.message)
+        }
     }
 
-    try {
-        check(false) {"pizda"}
-    } catch (e: IllegalStateException) {
-        phiPrintln("Well again...") // TODO:vgrechka Assert...
+    run {
+        try {
+            check(false) {"boobs"}
+        } catch (e: IllegalStateException) {
+            phiPrintln("Well again...") // TODO:vgrechka Assert...
+        }
     }
 }
 
