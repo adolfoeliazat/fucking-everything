@@ -123,10 +123,6 @@ class PhiObject extends PhiValue {
      * @throws PhiIllegalStateException
      */
     function getProperty($name, $opts = array()) {
-//        if ($name === 'message') {
-//            strval('break on me');
-//        }
-
         if (array_key_exists($name, $this->fields)) {
             return $this->fields[$name];
         }
@@ -137,23 +133,36 @@ class PhiObject extends PhiValue {
             if ($getter->isTruthy()) {
                 if (!($getter instanceof PhiFunction))
                     throw new PhiIllegalStateException("a88c164b-b4a9-4228-9b0a-faf92cc797cd");
-//                if ($name === 'message')
-//                    strval('break on me');
                 $receiver = @$opts['receiver'] ?: $this;
                 $res = $getter->invoke($receiver, array());
                 return $res;
             }
         }
 
-        $proto = $this->fields['__proto__'];
-        if ($proto instanceof PhiObject) {
+        $proto = $this->getProto();
+        if ($proto != null) {
             return $proto->getProperty($name, array('receiver' => @$opts['receiver'] ?: $this));
-        } else if ($proto instanceof PhiNull) {
+        } else {
             if (@$opts['phpNullIfNotFound'])
                 return null;
             else
                 return new PhiUndefined();
-        } else {
+        }
+    }
+
+    /**
+     * @return PhiObject
+     * @throws PhiIllegalStateException
+     */
+    public function getProto() {
+        $proto = $this->fields['__proto__'];
+        if ($proto instanceof PhiObject) {
+            return $proto;
+        }
+        else if ($proto instanceof PhiNull) {
+            return null;
+        }
+        else {
             throw new PhiIllegalStateException("d9db15b4-22d9-4710-b0b8-98c1cc5f96a0");
         }
     }
@@ -167,7 +176,22 @@ class PhiObject extends PhiValue {
         if (gettype($name) !== 'string')
             throw new PhiIllegalStateException("0c2b2e01-6046-4e68-974b-d479cb1b1019");
 
-        // TODO:vgrechka Object.defineProperty
+        $obj = $this;
+        while ($obj != null) {
+            if (array_key_exists($name, $obj->props)) {
+                $prop = $obj->props[$name];
+                $setter = $prop->getProperty('set');
+                if ($setter->isTruthy()) {
+                    if (!($setter instanceof PhiFunction))
+                        throw new PhiIllegalStateException("e4823d52-c6cb-4294-8fd6-bc5e3ce73640");
+                    $setter->invoke($this, array($value));
+                    return;
+                }
+            }
+
+            $obj = $obj->getProto();
+        }
+
         $this->fields[$name] = $value;
     }
 

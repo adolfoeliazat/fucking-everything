@@ -83,6 +83,8 @@ fun phpify2(program: JsProgram) {
         val shitToShit = mutableMapOf<Any, Any?>()
         var nextDebugTag = 1L
 
+        var JsNode.skipTransformation by AttachedShit<Boolean?>(shitToShit)
+
         fun nextDebugTagLiteral(): JsExpression {
             return JsStringLiteral(nextDebugTag())
         }
@@ -193,7 +195,15 @@ fun phpify2(program: JsProgram) {
         }
 
         fun new(ctor: String, args: List<JsExpression>): JsNew {
-            return new(JsNameRef(ctor), args)
+            val ctorNameRef = JsNameRef(ctor)
+            ctorNameRef.skipTransformation = true
+            val new = new(ctorNameRef, args)
+            new.skipTransformation = true
+            new.debugTag = nextDebugTag()
+//            if (new.debugTag == "@@334") {
+//                "break on me"
+//            }
+            return new
         }
 
         override fun endVisit(x: JsIf, ctx: JsContext<JsNode>) {
@@ -207,7 +217,11 @@ fun phpify2(program: JsProgram) {
             ctx.replaceMe(new("PhiBinaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral(x.operator.toString()), x.arg1, x.arg2)))
         }
 
-        private fun new(ctor: JsNameRef, args: List<JsExpression>) = JsNew(ctor, args)
+        private fun new(ctor: JsNameRef, args: List<JsExpression>): JsNew {
+            return JsNew(ctor, args)-{o->
+                o.skipTransformation = true
+            }
+        }
 
         override fun endVisit(x: JsArrayAccess, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
@@ -221,6 +235,8 @@ fun phpify2(program: JsProgram) {
 
         override fun endVisit(x: JsNew, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
+            if (x.skipTransformation == true)
+                return
             ctx.replaceMe(new("PhiNew", listOf(x.constructorExpression, invocation("array", x.arguments))))
         }
 
@@ -241,6 +257,8 @@ fun phpify2(program: JsProgram) {
 
         override fun endVisit(x: JsNameRef, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
+            if (x.skipTransformation == true)
+                return
             val replacement = when {
                 x.qualifier == null -> {
                     val dd = x.declarationDescriptor
@@ -250,7 +268,9 @@ fun phpify2(program: JsProgram) {
                     }
                     new(shit, listOf(JsStringLiteral(x.ident)))
                 }
-                else -> new("PhiDot", listOf(x.qualifier!!, JsStringLiteral(x.ident)))
+                else -> {
+                    new("PhiDot", listOf(x.qualifier!!, JsStringLiteral(x.ident)))
+                }
             }
             try {
                 ctx.replaceMe(replacement)

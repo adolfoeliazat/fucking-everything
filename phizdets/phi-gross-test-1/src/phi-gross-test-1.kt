@@ -6,7 +6,7 @@ import kotlin.reflect.KProperty
 fun main(args: Array<String>) {
     sayShit(Shit("Archibald", "Fuck you"))
     testCheck()
-    test1()
+    testNotNullOnce()
 }
 
 external fun phiBreakDebugger()
@@ -61,16 +61,27 @@ fun testCheck() {
     phiPrintln("testCheck: PASSED")
 }
 
-class test1 {
-    init {
-        Q.a = "pizda"
-        phiPrintln(Q.a)
-        Q.a = "pizda again"
-        phiPrintln(Q.a)
-    }
-
+class testNotNullOnce {
     object Q {
         var a by notNullOnce<String>()
+    }
+
+    init {
+        assertException({it is IllegalStateException}, "Property `a` should be initialized before get.", "81060a82-59e8-4bbc-b733-501d71fdb169") {
+            phiPrintln("Q.a = " + Q.a)
+        }
+
+        Q.a = "pizda"
+        phiPrintln("Q.a = " + Q.a)
+        assertEquals("pizda", Q.a, "9181db8b-07ec-45e1-87fb-d738c2d235e3")
+
+        assertException({it is IllegalStateException}, "Property `a` should be assigned only once", "2be3d76a-cab1-4ae7-ad8e-3ac0a601bdd2") {
+            Q.a = "pizda again"
+        }
+        phiPrintln("Q.a = " + Q.a)
+        assertEquals("pizda", Q.a, "b55ae4d8-9ae2-40a5-b0a7-6dd71bf98bf1")
+
+        phiPrintln("testNotNullOnce: PASSED")
     }
 }
 
