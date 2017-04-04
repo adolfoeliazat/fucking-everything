@@ -128,8 +128,8 @@ class PhiObject extends PhiValue {
             if ($getter->isTruthy()) {
                 if (!($getter instanceof PhiFunction))
                     throw new PhiIllegalStateException("a88c164b-b4a9-4228-9b0a-faf92cc797cd");
-                if ($name === 'message')
-                    strval('break on me');
+//                if ($name === 'message')
+//                    strval('break on me');
                 $receiver = @$opts['receiver'] ?: $this;
                 $res = $getter->invoke($receiver, array());
                 return $res;
@@ -700,21 +700,6 @@ class Phi {
     public static function initStdlib() {
         phiVars('@@initStdlib',
             array(
-//                array('kotlin', new PhiObjectLiteral('@@kotlin', array(
-//                    // Kotlin.Kind = {CLASS:"class", INTERFACE:"interface", OBJECT:"object"};
-//                    array(new PhiNameRef('Kind'), new PhiObjectLiteral('@@Kind', array(
-//                        array(new PhiNameRef('CLASS'), new PhiStringLiteral('class')),
-//                        array(new PhiNameRef('INTERFACE'), new PhiStringLiteral('interface')),
-//                        array(new PhiNameRef('OBJECT'), new PhiStringLiteral('object')),
-//                    ))),
-//
-//                    // Kotlin.defineModule = function(id, declaration) {}
-//                    array(new PhiNameRef('defineModule'),
-//                        new PhiFunctionExpression('defineModule',
-//                                                  array('id', 'declaration'),
-//                            function() {})),
-//                ))),
-
                 array('String', new PhiObjectLiteral('@@String', array(
                     array(new PhiNameRef('prototype'), new PhiObjectLiteral('@@String.prototype', array()))
                 ))),
@@ -724,6 +709,14 @@ class Phi {
                 ))),
 
                 array('Math', new PhiObjectLiteral('@@Math', array(
+                ))),
+
+                array('Array', new PhiObjectLiteral('@@Array', array(
+                    array(new PhiNameRef('isArray'), new PhiFunctionExpression(
+                        'isArray', array('x'), function() {
+                            $x = Phi::getCurrentEnv()->getVar('x');
+                            return new PhiBoolean($x instanceof PhiArray);
+                    }))
                 ))),
             )
         );
@@ -1051,6 +1044,12 @@ class PhiBinaryOperation extends PhiExpression {
         {
             return ($lhsValue instanceof PhiNull || $lhsValue instanceof PhiUndefined)
                 && ($rhsValue instanceof PhiNull || $rhsValue instanceof PhiUndefined);
+        }
+        else if ($lhsValue instanceof PhiString && $rhsValue instanceof PhiString) {
+            return $lhsValue->getValue() === $rhsValue->getValue();
+        }
+        else if ($lhsValue instanceof PhiNumber && $rhsValue instanceof PhiNumber) {
+            return $lhsValue->getValue() === $rhsValue->getValue();
         }
         else {
             $lhsValueClass = get_class($lhsValue);
@@ -1670,6 +1669,15 @@ class PhiInvocation extends PhiExpression {
                     throw new PhiIllegalStateException("a3f1d935-1486-4c69-b37a-ee6a5c2388bd");
                 }
             }
+            else if ($receiverPhiValue instanceof PhiNumber) {
+                $method = $this->callee->getName();
+                if ($method === 'toString') {
+                    return new PhiString(strval($receiverPhiValue->getValue()));
+                }
+                else {
+                    throw new PhiIllegalStateException("540cfc5c-de23-42c5-99e7-189e9ffe66d8");
+                }
+            }
 
             if (!($receiverPhiValue instanceof PhiObject))
                 throw new PhiIllegalStateException("4720e481-3172-4ce3-b80c-0b8166126f0e");
@@ -2186,7 +2194,6 @@ if (defined('PHI_RUN_QUICK_TESTS')) {
     }
     phiQuickTest_instanceof();
 }
-
 
 Phi::initEnv();
 Phi::initStdlib();

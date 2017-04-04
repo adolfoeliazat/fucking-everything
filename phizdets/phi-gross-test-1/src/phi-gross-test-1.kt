@@ -11,7 +11,25 @@ fun main(args: Array<String>) {
 
 external fun phiBreakDebugger()
 
+fun assertEquals(expected: Any?, actual: Any?, assertionID: String) {
+    if (expected != actual) {
+        val line = "----------------------------------------------------------\n"
+        throw AssertionError("\n${line}assertEquals failed: $assertionID\nExpected: $expected\nActual: $actual\n$line")
+    }
+}
+
+//fun assertVarExportEquals(expected: String, actual: Any?, assertionID: String, log: Boolean = false) {
+//    val shit0 = var_export(actual, returnString = true)
+//    val shit = shit0.replace("\n  ", " ").replace("\n", "")
+//    if (log) {
+//        println("shit = $shit")
+//    }
+//    assertEquals(expected, shit, assertionID)
+//}
+
 fun testCheck() {
+    assertEquals(6, 2 + 3, "69c46fb9-8dd6-4459-b3d3-96ac460c26ab")
+
     try {
         check(false) {"pizda"}
     } catch (e: Throwable) {
