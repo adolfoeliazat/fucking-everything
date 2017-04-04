@@ -254,6 +254,11 @@ class PhiFunction extends PhiObject {
      * @return PhiValue
      */
     public function invoke($receiver, $args) {
+        $debugID = Phi::nextDebugID();
+//        if ($debugID === 1798) {
+//            strval('break on me');
+//        }
+
         $oldEnv = Phi::getCurrentEnv();
         $newEnv = new PhiEnv($this->definitionEnv);
         $newEnv->setFunctionArgs($args);
@@ -266,10 +271,12 @@ class PhiFunction extends PhiObject {
         }
         Phi::setCurrentEnv($newEnv);
 
-        $res = call_user_func($this->expr->getBody());
-
-        Phi::setCurrentEnv($oldEnv);
-        return $res;
+        try {
+            $res = call_user_func($this->expr->getBody());
+            return $res;
+        } finally {
+            Phi::setCurrentEnv($oldEnv);
+        }
     }
 
     /**
@@ -464,7 +471,6 @@ class PhiEnv {
             if ($this->parent === null) {
                 $value = Phi::$global->getProperty($name, array('phpNullIfNotFound' => true));
                 if ($value == null) {
-                    phiPrintln("Last shit: ${GLOBALS['shit']}");
                     throw new PhiIllegalStateException("Variable `$name` not found");
                 } else {
                     return $value;
@@ -545,9 +551,13 @@ class Phi {
     /**@var PhiObject*/ public static $Object_prototype;
     /**@var PhiObject*/ public static $Function_prototype;
     /**@var PhiExpression*/ public static $phiExpressionStatement_expr;
+    /**@var number*/ private static $nextDebugID;
+
+    public static function nextDebugID() {
+        return self::$nextDebugID++;
+    }
 
     public static function initEnv() {
-        $GLOBALS['shit'] = 'nothing';
         self::$currentEnv = new PhiEnv(null);
         self::$global = new PhiObject(array('proto' => new PhiNull()));
         self::$currentEnv->setThisValue(self::$global);
@@ -660,6 +670,13 @@ class Phi {
                         throw new PhiIllegalStateException('1891e851-1265-416a-abde-49ec99fd00a4');
 
                     $thiz = Phi::getCurrentEnv()->getThisValue();
+
+                    // Syntax: String('...') -- without `new`
+                    if ($thiz instanceof PhiUndefined) {
+                        // throw new PhiIllegalStateException('aaaaaaaaaa');
+                        $thiz = new PhiObject();
+                    }
+
                     if (!($thiz instanceof PhiObject))
                         throw new PhiIllegalStateException('0a559137-c3e7-4dfe-b5a2-c6a23125263b');
 
@@ -695,6 +712,8 @@ class Phi {
                             return new PhiNumber($ret);
                         }
                     )));
+
+                    return $thiz;
                 }
             ));
         }
@@ -1626,7 +1645,17 @@ class PhiUnaryOperation extends PhiExpression {
         }
         else if ($this->position == 'postfix') {
             if ($this->op === '++') {
-                throw new PhiIllegalStateException("implement       fe847e37-0995-4d26-8135-bc0d7394e504");
+                if (!($this->arg instanceof PhiNameRef))
+                    throw new PhiIllegalStateException('ec4aae29-4f1e-43be-9f4c-6c6b2fc5a590');
+                $varName = $this->arg->getName();
+
+                $currentValue = Phi::getCurrentEnv()->getVar($varName);
+                if (!($currentValue instanceof PhiNumber))
+                    throw new PhiIllegalStateException('071a8fe1-3c18-460b-ab00-69330f2ebdb3');
+
+                $res = new PhiNumber($currentValue->getValue());
+                Phi::getCurrentEnv()->setVar($varName, new PhiNumber($currentValue->getValue() + 1));
+                return $res;
             }
             else {
                 throw new PhiIllegalStateException("ffb361d9-7059-4418-a1ba-4d1127b806a5");
@@ -1736,6 +1765,10 @@ class PhiInvocation extends PhiExpression {
         /**@var PhiObject $receiverPhiValue*/
         /**@var PhiFunction $calleePhiValue*/
 
+//        if ($this->callee instanceof PhiNameRef && $this->callee->getName() === 'getStringHashCode') {
+//            strval('break on me');
+//        }
+
         if ($this->callee instanceof PhiDot) {
             // TODO:vgrechka @duplication 6fe21b9f-6bdb-446e-8186-801891740e1b
 
@@ -1754,6 +1787,18 @@ class PhiInvocation extends PhiExpression {
                 }
                 else {
                     throw new PhiIllegalStateException("540cfc5c-de23-42c5-99e7-189e9ffe66d8");
+                }
+            }
+            else if ($receiverPhiValue instanceof PhiBoolean) {
+                $method = $this->callee->getName();
+                if ($method === 'toString') {
+                    if ($receiverPhiValue->getValue())
+                        return new PhiString('true');
+                    else
+                        return new PhiString('false');
+                }
+                else {
+                    throw new PhiIllegalStateException("c3fa9fe1-2b3b-4bf5-8080-56e55bfc6290");
                 }
             }
 
@@ -2193,6 +2238,9 @@ if (defined('PHI_RUN_QUICK_TESTS')) {
     phiQuickTest_getOwnPropertyDescriptor();
 
     function phiQuickTest_functionDotCall() {
+        Phi::initEnv();
+        Phi::initStdlib();
+
         // function fuck(a, b) {return a + b}
         phiExpressionStatement(new PhiFunctionExpression('fuck', array('a', 'b'), function() {
             return phiEvaluate(new PhiBinaryOperation('@@', '+', new PhiNameRef('a'), new PhiNameRef('b')));
@@ -2219,6 +2267,9 @@ if (defined('PHI_RUN_QUICK_TESTS')) {
     phiQuickTest_functionDotCall();
 
     function phiQuickTest_varsDontOverrideParentEnv() {
+        Phi::initEnv();
+        Phi::initStdlib();
+
         // function f() {
         //     var x = 10;
         //     function g() {
@@ -2246,6 +2297,9 @@ if (defined('PHI_RUN_QUICK_TESTS')) {
     phiQuickTest_varsDontOverrideParentEnv();
 
     function phiQuickTest_instanceof() {
+        Phi::initEnv();
+        Phi::initStdlib();
+
         // function F() {}
         phiExpressionStatement(new PhiFunctionExpression('F', array(), function() {
         }));
@@ -2272,47 +2326,82 @@ if (defined('PHI_RUN_QUICK_TESTS')) {
     }
     phiQuickTest_instanceof();
 
-    function phiQuickTest_littleString() {
-        // s = 'пизда 仝'
-        phiVars('@@', array(array('s', new PhiStringLiteral("пизда 仝"))));
+    function phiQuickTest_string() {
+        $testShit = function($setUp) {
+            Phi::initEnv(); Phi::initStdlib();
+            $setUp();
 
-        // 7  EQ  s.length
-        phiEvaluateAndAssertToStringEquals(new Phinumber(7), new PhiDot(new PhiNameRef('s'), 'length'));
+            // 7  EQ  s.length
+            phiEvaluateAndAssertToStringEquals(new Phinumber(7), new PhiDot(new PhiNameRef('s'), 'length'));
 
-        $checkCode = function($expected, $pos) {
-            phiEvaluateAndAssertToStringEquals(
-                new PhiNumber($expected),
-                new PhiInvocation(new PhiDot(new PhiNameRef('s'), 'charCodeAt'), array(new PhiNumberLiteral('@@',
-                    $pos))));
+            $checkCode = function($expected, $pos) {
+                phiEvaluateAndAssertToStringEquals(
+                    new PhiNumber($expected),
+                    new PhiInvocation(new PhiDot(new PhiNameRef('s'), 'charCodeAt'), array(new PhiNumberLiteral('@@',
+                        $pos))));
+            };
+
+            // 1087   EQ  s.charCodeAt(0)
+            $checkCode(1087, 0);
+            // 1080   EQ  s.charCodeAt(1)
+            $checkCode(1080, 1);
+            // 1079   EQ  s.charCodeAt(2)
+            $checkCode(1079, 2);
+            // 1076   EQ  s.charCodeAt(3)
+            $checkCode(1076, 3);
+            // 1072   EQ  s.charCodeAt(4)
+            $checkCode(1072, 4);
+            // 32     EQ  s.charCodeAt(5)
+            $checkCode(32, 5);
+            // 20189  EQ  s.charCodeAt(6)
+            $checkCode(20189, 6);
+            // NaN    EQ  s.charCodeAt(7)
+            $checkCode(NAN, 7);
         };
 
-        // 1087   EQ  s.charCodeAt(0)
-        $checkCode(1087, 0);
-        // 1080   EQ  s.charCodeAt(1)
-        $checkCode(1080, 1);
-        // 1079   EQ  s.charCodeAt(2)
-        $checkCode(1079, 2);
-        // 1076   EQ  s.charCodeAt(3)
-        $checkCode(1076, 3);
-        // 1072   EQ  s.charCodeAt(4)
-        $checkCode(1072, 4);
-        // 32     EQ  s.charCodeAt(5)
-        $checkCode(32, 5);
-        // 20189  EQ  s.charCodeAt(6)
-        $checkCode(20189, 6);
-        // NaN    EQ  s.charCodeAt(7)
-        $checkCode(NAN, 7);
+        // var s = 'пизда 仝'
+        $testShit(function() {
+            phiVars('@@', array(array('s', new PhiStringLiteral("пизда 仝"))));
+        });
+
+        // var s = String('пизда 仝')
+        $testShit(function() {
+            phiVars('@@', array(array('s', new PhiInvocation(new PhiNameRef('String'), array(new PhiStringLiteral("пизда 仝"))))));
+        });
+
+        // var s = new String('пизда 仝')
+        $testShit(function() {
+            phiVars('@@', array(array('s', new PhiNew(new PhiNameRef('String'), array(new PhiStringLiteral("пизда 仝"))))));
+        });
 
         phiPrintln(__FUNCTION__ . ': PASSED');
     }
-    phiQuickTest_littleString();
-    exit();
+    phiQuickTest_string();
 }
 
 Phi::initEnv();
 Phi::initStdlib();
-
 require_once 'phizdets-stdlib.php';
+
+if (defined('PHI_RUN_QUICK_STDLIB_TESTS')) {
+    function phiQuickTest_getStringHashCode() {
+        $getHashCodeExpr = function($expr) {
+            return new PhiInvocation(new PhiDot(new PhiNameRef('kotlin'), 'hashCode'), array($expr));
+        };
+
+        phiEvaluateAndAssertToStringEquals(
+            new Phinumber(3065272),
+            $getHashCodeExpr(new PhiStringLiteral('cunt'))
+        );
+
+        // TODO:vgrechka In KJS it's 233157303, because `| 0` gives different results sometimes
+        phiEvaluateAndAssertToStringEquals(
+            new Phinumber(996665569975),
+            $getHashCodeExpr(new PhiStringLiteral('пизда 仝'))
+        );
+    }
+    phiQuickTest_getStringHashCode();
+}
 
 
 

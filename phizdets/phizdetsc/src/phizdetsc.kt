@@ -188,6 +188,7 @@ object GrossTestPhizdets {
                 copyFile(p.outFilePath, deploymentDir + "/${p.testName}.php")
 //                copyFile(p.outFilePath + "--tagged-gen", deploymentDir + "/${p.testName}.php--tagged-gen")
                 copyFile(p.outRoot + "/phi-engine.php", deploymentDir + "/phi-engine.php")
+                copyFile(CompileStdlib.stdlibPHPFilePath, p.outRoot + "/phizdets-stdlib.php")
                 copyFile(p.outRoot + "/phizdets-stdlib.php", deploymentDir + "/phizdets-stdlib.php")
 
                 val shit = File(deploymentDir + "/${p.testName}.php").readText()

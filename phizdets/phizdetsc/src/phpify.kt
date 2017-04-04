@@ -89,6 +89,25 @@ fun phpify2(program: JsProgram) {
 
         private fun nextDebugTag() = "@@${PhizdetscGlobal.debugTagPrefix}${nextDebugTag++}"
 
+        override fun endVisit(x: JsFor, ctx: JsContext<JsNode>) {
+            super.endVisit(x, ctx)
+            if (x.initVars != null) {
+                ctx.replaceMe(JsFor(x.initVars,
+                                    invocation("phiEvaluateToBoolean", listOf(x.condition)),
+                                    invocation("phiEvaluate", listOf(x.incrementExpression)),
+                                    x.body))
+            }
+            else if (x.initExpression != null) {
+                ctx.replaceMe(JsFor(x.initExpression,
+                                    invocation("phiEvaluateToBoolean", listOf(x.condition)),
+                                    invocation("phiEvaluate", listOf(x.incrementExpression)),
+                                    x.body))
+            }
+            else {
+                wtf("ec8fa1fa-f368-4416-9a6d-599e4db32fd9")
+            }
+        }
+
         override fun endVisit(x: JsReturn, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
             ctx.replaceMe(JsReturn(invocation("phiEvaluate", listOf(x.expression))))
@@ -140,7 +159,9 @@ fun phpify2(program: JsProgram) {
         override fun endVisit(x: JsExpressionStatement, ctx: JsContext<JsNode>) {
             super.endVisit(x, ctx)
 
-            ctx.replaceMe(invocation("\$GLOBALS['shit'] = ${++shitCounter}; phiExpressionStatement", listOf(x.expression)).makeStmt())
+            ctx.replaceMe(invocation("phiExpressionStatement", listOf(x.expression)).makeStmt())
+
+//            ctx.replaceMe(invocation("\$GLOBALS['shit'] = ${++shitCounter}; phiExpressionStatement", listOf(x.expression)).makeStmt())
 
 //            ctx.replaceMe(JsBlock(
 //                JsNameRef("\$GLOBALS['shit'] = ${++shitCounter}").makeStmt(),

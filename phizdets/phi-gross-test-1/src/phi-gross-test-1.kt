@@ -41,29 +41,24 @@ private fun insideLines(s: String): String {
 //    assertEquals(expected, shit, assertionID)
 //}
 
+fun assertException(testType: (Throwable) -> Boolean, expectedMessage: String, assertionID: String, block: () -> Unit) {
+    try {
+        block()
+    } catch (e: Throwable) {
+        val qwe = testType(e)
+        if (!qwe)
+            fail("assertException failed: $assertionID\nActual exception: ${e::class.simpleName}")
+        assertEquals(expectedMessage, e.message, "message-$assertionID")
+    }
+}
+
 fun testCheck() {
     run {
-        try {
+        assertException({it is IllegalStateException}, "vagina", "7f2510ff-4753-4ea3-8d39-dcfe63ea910a") {
             check(false) {"vagina"}
-        } catch (e: Throwable) {
-            assertEquals("vagina", e.message, "4234fdd2-c2c3-4aad-bbe8-473dde979cd5")
-
-            val assertionID = "7f2510ff-4753-4ea3-8d39-dcfe63ea910a"
-            if (!(e is NullPointerException)) {
-                fail("assertException failed: $assertionID\nActual exception: ${e::class.simpleName}")
-            }
-
-            phiPrintln(e.message)
         }
     }
-
-    run {
-        try {
-            check(false) {"boobs"}
-        } catch (e: IllegalStateException) {
-            phiPrintln("Well again...") // TODO:vgrechka Assert...
-        }
-    }
+    phiPrintln("testCheck: PASSED")
 }
 
 class test1 {
