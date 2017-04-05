@@ -72,6 +72,10 @@ class PhiThis extends PhiExpression {
     public function evaluate() {
         return Phi::getCurrentEnv()->getThisValue();
     }
+
+    function __toString() {
+        return 'this';
+    }
 }
 
 abstract class PhiExpression {
@@ -183,6 +187,10 @@ class PhiObject extends PhiValue {
     function setProperty($name, $value) {
         if (gettype($name) !== 'string')
             throw new PhiIllegalStateException("0c2b2e01-6046-4e68-974b-d479cb1b1019");
+
+        // @debug
+        if ($name === 'message')
+            strval('break on me');
 
         $obj = $this;
         while ($obj != null) {
@@ -298,9 +306,12 @@ class PhiFunction extends PhiObject {
         $newEnv->setFunctionArgs($args);
         $newEnv->setThisValue($receiver);
         if (!$this->vararg) {
+            $argNames = $this->expr->getArgNames();
+            for ($i = 0; $i < count($argNames); ++$i) {
+                $newEnv->setVar($argNames[$i], new PhiUndefined());
+            }
             for ($i = 0; $i < count($args); ++$i) {
-                $name = $this->expr->getArgNames()[$i];
-                $newEnv->setVar($name, $args[$i]);
+                $newEnv->setVar($argNames[$i], $args[$i]);
             }
         }
         Phi::setCurrentEnv($newEnv);
@@ -457,6 +468,17 @@ class PhiEnv {
      */
     function __construct($parent) {
         $this->parent = $parent;
+    }
+
+    function deepClone() {
+        $clone = new PhiEnv(null);
+        if ($this->parent !== null) {
+            $clone->parent = $this->parent->deepClone();
+        }
+        $clone->vars = $this->vars;
+        $clone->thisValue = $this->thisValue;
+        $clone->functionArgs = $this->functionArgs;
+        return $clone;
     }
 
     /**
@@ -842,11 +864,14 @@ class Phi {
                 function() {
 //                    fuck();
                     if (Phi::getCurrentEnv()->hasVar('message')) {
-                        phiExpressionStatement(
-                            new PhiBinaryOperation(
-                                '@@', '=',
-                                new PhiDot(new PhiThis(), 'message'),
-                                new PhiNameRef('message')));
+                        $message = Phi::getCurrentEnv()->getVar('message');
+                        if (!($message instanceof PhiUndefined)) {
+                            phiExpressionStatement(
+                                new PhiBinaryOperation(
+                                    '@@', '=',
+                                    new PhiDot(new PhiThis(), 'message'),
+                                    new PhiNameRef('message')));
+                        }
                     }
                 }
             )
@@ -1136,6 +1161,10 @@ class PhiBinaryOperation extends PhiExpression {
         $this->op = $op;
         $this->lhs = $lhs;
         $this->rhs = $rhs;
+    }
+
+    function __toString() {
+        return "{$this->lhs} {$this->op} {$this->rhs}";
     }
 
     /**
@@ -1569,6 +1598,9 @@ class PhiString extends PhiValue {
  * @param PhiExpression $expr
  */
 function phiExpressionStatement($expr) {
+    $debug_exprToString = strval($expr);
+    $debug_env = Phi::getCurrentEnv()->deepClone();
+
     Phi::$phiExpressionStatement_expr = $expr;
     if ($expr instanceof PhiFunctionExpression) {
         Phi::getCurrentEnv()->setVar($expr->getName(), $expr->evaluate());
@@ -1602,6 +1634,11 @@ function phiThrow($expr) {
     }
     $exception->phiValue = $phiValue;
     throw $exception;
+}
+
+// phiEvalMethodCall('message', 'toString')
+function phiEvalMethodCall($receiverName, $methodName) {
+    return phiEvaluate(new PhiInvocation(new PhiDot(new PhiNameRef($receiverName), $methodName), array()));
 }
 
 /**
@@ -1789,6 +1826,11 @@ class PhiBrackets extends PhiExpression {
     }
 }
 
+function phiExpressionArrayToString($arr) {
+    $arr = array_map(function($e) {return strval($e);}, $arr);
+    return implode(', ', $arr);
+}
+
 class PhiInvocation extends PhiExpression {
     /**@var PhiExpression*/ private $callee;
     /**@var PhiExpression[]*/ private $args;
@@ -1800,6 +1842,11 @@ class PhiInvocation extends PhiExpression {
     public function __construct(PhiExpression $callee, array $args) {
         $this->callee = $callee;
         $this->args = $args;
+    }
+
+    function __toString() {
+        $argsString = phiExpressionArrayToString($this->args);
+        return "{$this->callee}($argsString)";
     }
 
     /**

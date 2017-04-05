@@ -1,0 +1,34 @@
+- Files
+    - E:\fegh\phizdets\phizdetsc\src\phizdets\php\phizdets-stdlib.php--0
+    - E:\fegh\phizdets\phizdetsc\src\phizdets\php\phizdets-stdlib.php--1
+    - E:\fegh\phizdets\phizdetsc\src\phizdets\php\phizdets-stdlib.php
+    - E:\fegh\out\production\phi-gross-test-1\lib\kotlin.js
+
+    - E:\fegh\out\GrossTestPhizdets\phi-gross-test-1\phi-gross-test-1.php--0
+    - E:\fegh\out\GrossTestPhizdets\phi-gross-test-1\phi-gross-test-1.php--1
+    - E:\fegh\out\GrossTestPhizdets\phi-gross-test-1\phi-gross-test-1.php
+    - E:\fegh\out\production\phi-gross-test-1\phi-gross-test-1.js
+
+- Evaluate some shit in current environment
+      phiEvaluate(expr)    expr can be a piece of shit copied (and maybe edited) from generated PHP
+      phiEvalMethodCall('varname', 'methodname')
+
+- Go through frames, find places in fuck-around.php and phizdets-stdlib.php (don't open the latter)
+      - Spot phiExpressionStatement()s
+      - Go to same line in phi-gross-test-1.php--1 as in fuck-around.php
+
+- Break at place where specific object property is set. PhiObject...setProperty // @debug
+
+- Use PhiExpression->__toString()
+
+- Add variables that can be interesting during debugging, because it's not possible to evaluate arbitrary expression standing on a frame other than current one
+
+    Example:
+        function phiExpressionStatement($expr) {
+            $debug_exprToString = strval($expr);
+            $debug_env = Phi::getCurrentEnv()->deepClone();
+            .....
+        }
+
+
+

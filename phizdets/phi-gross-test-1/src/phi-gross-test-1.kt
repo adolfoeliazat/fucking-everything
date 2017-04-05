@@ -7,6 +7,13 @@ fun main(args: Array<String>) {
     sayShit(Shit("Archibald", "Fuck you"))
     runTest(TestCheck())
     runTest(TestNotNullOnce())
+    runTest(TestPrint())
+}
+
+class TestPrint : Test {
+    override fun runTest() {
+//        println("aaaaaaaaaaaaaaaaaaaaaa")
+    }
 }
 
 external fun phiBreakDebugger()
