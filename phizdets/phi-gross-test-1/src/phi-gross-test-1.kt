@@ -12,7 +12,7 @@ fun main(args: Array<String>) {
 
 class TestPrint : Test {
     override fun runTest() {
-//        println("aaaaaaaaaaaaaaaaaaaaaa")
+        println("aaaaaaaaaaaaaaaaaaaaaa")
     }
 }
 

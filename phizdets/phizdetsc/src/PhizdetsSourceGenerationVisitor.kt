@@ -75,7 +75,7 @@ class PhizdetsSourceGenerationVisitor(out: TextOutput, taggedGenOut: TextOutput,
     override fun visitProgram(program: JsProgram) {
         // @fuck1
 
-        p.print("<?php require_once('phi-engine.php'); ")
+        p.print("<?php require_once('phi-engine.php'); @define('PHI_KILL_LONG_LOOPS', true); ")
 
         program.acceptChildren(this)
         sourceMapBuilder?.addLink()

@@ -66,8 +66,10 @@ object CompileStdlib {
             File("$stdlibPHPFilePath--0").writeText(output.toString())
         }
 
+        val phpifier = Phpifier(jsProgram)
+
         run {
-            phpify1(jsProgram)
+            phpifier.stage1()
             val output = TextOutputImpl()
             val taggedGenOutput = TextOutputImpl()
             jsProgram.accept(PhizdetsSourceGenerationVisitor(output, taggedGenOutput, /*sourceMapBuilder*/ null))
@@ -75,7 +77,7 @@ object CompileStdlib {
         }
 
         run {
-            phpify2(jsProgram)
+            phpifier.stage2()
             val output = TextOutputImpl()
             val taggedGenOutput = TextOutputImpl()
             jsProgram.accept(PhizdetsSourceGenerationVisitor(output, taggedGenOutput, /*sourceMapBuilder*/ null))

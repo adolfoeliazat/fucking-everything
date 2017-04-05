@@ -3310,7 +3310,9 @@ Kotlin.isCharSequence = function(value) {
     this.outputStream = outputStream;
   }
   NodeJsOutput.prototype.print_s8jyv4$ = function(message) {
-    return this.outputStream.write(message);
+    // @hack
+    phi__print(message)
+    // return this.outputStream.write(message);
   };
   NodeJsOutput.$metadata$ = {kind:Kotlin.Kind.CLASS, simpleName:"NodeJsOutput", interfaces:[BaseOutput]};
   function OutputToConsoleLog() {
@@ -33588,8 +33590,13 @@ Kotlin.isCharSequence = function(value) {
   package$kotlin.Triple = Triple;
   package$kotlin.toList_z6mquf$ = toList_13;
   var tmp$;
-  var isNode = typeof process !== "undefined" && (process.versions && !!process.versions.node);
-  output = isNode ? new NodeJsOutput(process.stdout) : new BufferedOutputToConsoleLog;
+
+  // @hack
+  var isNode = true
+  output = new NodeJsOutput('fucking output')
+  // var isNode = typeof process !== "undefined" && (process.versions && !!process.versions.node);
+  // output = isNode ? new NodeJsOutput(process.stdout) : new BufferedOutputToConsoleLog;
+
   UNDECIDED = new Any;
   RESUMED = new Any;
   INT_MAX_POWER_OF_TWO = (IntCompanionObject.MAX_VALUE / 2 | 0) + 1 | 0;

@@ -1,4 +1,4 @@
-<?php require_once('phi-engine.php'); (function (root, factory) {
+<?php require_once('phi-engine.php'); @define('PHI_KILL_LONG_LOOPS', true); (function (root, factory) {
   if (typeof define === "function" && define.amd) {
     define("kotlin", ["exports"], factory);
   }
@@ -16200,7 +16200,7 @@
     };
     BaseOutput.$metadata$ = {kind: Kotlin.Kind.CLASS, simpleName: "BaseOutput", interfaces: []};
     NodeJsOutput.prototype.print_s8jyv4$ = function (message) {
-      return this.outputStream.write(message);
+      phi__print(message);
     };
     NodeJsOutput.$metadata$ = {kind: Kotlin.Kind.CLASS, simpleName: "NodeJsOutput", interfaces: [BaseOutput]};
     OutputToConsoleLog.prototype.print_s8jyv4$ = function (message) {
@@ -34539,8 +34539,8 @@
     package$kotlin.Triple = Triple;
     package$kotlin.toList_z6mquf$ = toList_13;
     var tmp$;
-    var isNode = typeof process !== "undefined" && (process.versions && !!process.versions.node);
-    output = isNode ? new NodeJsOutput(process.stdout) : new BufferedOutputToConsoleLog();
+    var isNode = true;
+    output = new NodeJsOutput("fucking output");
     UNDECIDED = new Any();
     RESUMED = new Any();
     INT_MAX_POWER_OF_TWO = (IntCompanionObject.MAX_VALUE / 2.0 | 0.0) + 1.0 | 0.0;

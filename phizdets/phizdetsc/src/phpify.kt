@@ -34,134 +34,206 @@ import org.jetbrains.kotlin.js.sourceMap.PhizdetsSourceGenerationVisitor
 import org.jetbrains.kotlin.js.util.TextOutputImpl
 
 fun phpify(program: JsProgram) {
+    val phpifier = Phpifier(program)
     PhizdetscGlobal.reportTranslationStage(0, program)
-    phpify1(program)
+    phpifier.stage1()
     PhizdetscGlobal.reportTranslationStage(1, program)
-    phpify2(program)
+    phpifier.stage2()
     PhizdetscGlobal.reportTranslationStage(2, program)
 }
 
-fun phpify1(program: JsProgram) {
-    object : JsVisitorWithContextImpl() {
-        override fun endVisit(x: JsExpressionStatement, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
+class Phpifier(val program: JsProgram) {
+    var nextDebugTag = 1L
 
-            if (x.expression is JsFunction) { // Hoist function declarations
-                // XXX Dirty stuff, but who gives a fuck?
-                val listContext = ctx as ListContext<JsNode>
-                val node = listContext.nodes.removeAt(listContext.index)
-                listContext.nodes.add(0, node)
+    val shitToShit = mutableMapOf<Any, Any?>()
+    var JsNode.skipTransformation by AttachedShit<Boolean?>(shitToShit)
+
+    fun nextDebugTagLiteral(): JsExpression {
+        return JsStringLiteral(nextDebugTag())
+    }
+
+    private fun nextDebugTag() = "@@" + nextDebugTagWithoutAts()
+
+    private fun nextDebugTagWithoutAts() = "${PhizdetscGlobal.debugTagPrefix}${nextDebugTag++}"
+
+    private fun literalCodeStatement(code: String): JsStatement {
+        val nameRef = JsNameRef(code)
+        nameRef.skipTransformation = true
+        val statement = nameRef.makeStmt()
+        statement.skipTransformation = true
+        return statement
+    }
+
+    inner class LoopKillingStuff {
+        val loopID = nextDebugTagWithoutAts()
+        val loopCounterVar = "\$__phi__loopCounter_$loopID"
+
+        fun addShitBeforeLoop(ctx: JsContext<JsNode>) {
+            ctx.addPrevious(literalCodeStatement("$loopCounterVar = 0;"))
+        }
+
+        fun transformBody(originalBody: JsStatement): JsBlock {
+            val fuck = literalCodeStatement(
+                "if (defined('PHI_KILL_LONG_LOOPS')) {" +
+                    "    if (++$loopCounterVar === 1000) { phiKillLongLoop(); };" +
+                    "}")
+
+            return JsBlock(mutableListOf<JsStatement>()-{o->
+                o += fuck
+                o += originalBody
+            })
+        }
+    }
+
+    fun stage1() {
+        object : JsVisitorWithContextImpl() {
+
+            override fun endVisit(x: JsFor, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+
+                val loopKillingStuff = LoopKillingStuff()
+                loopKillingStuff.addShitBeforeLoop(ctx)
+                val newBody = loopKillingStuff.transformBody(x.body)
+
+                if (x.initVars != null) {
+                    ctx.replaceMe(JsFor(x.initVars, x.condition, x.incrementExpression, newBody))
+                }
+                else if (x.initExpression != null) {
+                    ctx.replaceMe(JsFor(x.initExpression, x.condition, x.incrementExpression, newBody))
+                }
+                else {
+                    wtf("73acff0c-8fbe-466a-8e2b-b2c40e86795d")
+                }
             }
-        }
 
-        override fun endVisit(x: JsLabel, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            ctx.replaceMe(JsBlock(
-                JsStringLiteral("Here was label ${x.name.ident}").makeStmt(),
-                x.statement,
-                JsNameRef("${escapeIdent(x.name.ident)}:").makeStmt()
-            ))
-        }
+            override fun endVisit(x: JsWhile, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
 
-        override fun visit(x: JsBreak, ctx: JsContext<JsNode>): Boolean {
-            super.endVisit(x, ctx)
-            if (x.label != null) {
-                ctx.replaceMe(JsNameRef("goto ${escapeIdent(x.label.ident)}").makeStmt())
-                return false
+                val loopKillingStuff = LoopKillingStuff()
+                loopKillingStuff.addShitBeforeLoop(ctx)
+                val newBody = loopKillingStuff.transformBody(x.body)
+
+                ctx.replaceMe(JsWhile(x.condition, newBody))
             }
-            return true
-        }
 
-        private fun escapeIdent(ident: String): String {
-            return ident.replace("$", "_usd_")
-        }
-    }.accept(program)
-}
+            override fun endVisit(x: JsExpressionStatement, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
 
-fun phpify2(program: JsProgram) {
-    object : JsVisitorWithContextImpl() {
-        val shitToShit = mutableMapOf<Any, Any?>()
-        var nextDebugTag = 1L
-
-        var JsNode.skipTransformation by AttachedShit<Boolean?>(shitToShit)
-
-        fun nextDebugTagLiteral(): JsExpression {
-            return JsStringLiteral(nextDebugTag())
-        }
-
-        private fun nextDebugTag() = "@@${PhizdetscGlobal.debugTagPrefix}${nextDebugTag++}"
-
-        override fun endVisit(x: JsFor, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            if (x.initVars != null) {
-                ctx.replaceMe(JsFor(x.initVars,
-                                    invocation("phiEvaluateToBoolean", listOf(x.condition)),
-                                    invocation("phiEvaluate", listOf(x.incrementExpression)),
-                                    x.body))
+                if (x.expression is JsFunction) { // Hoist function declarations
+                    // XXX Dirty stuff, but who gives a fuck?
+                    val listContext = ctx as ListContext<JsNode>
+                    val node = listContext.nodes.removeAt(listContext.index)
+                    listContext.nodes.add(0, node)
+                }
             }
-            else if (x.initExpression != null) {
-                ctx.replaceMe(JsFor(x.initExpression,
-                                    invocation("phiEvaluateToBoolean", listOf(x.condition)),
-                                    invocation("phiEvaluate", listOf(x.incrementExpression)),
-                                    x.body))
+
+            override fun endVisit(x: JsLabel, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                ctx.replaceMe(JsBlock(
+                    JsStringLiteral("Here was label ${x.name.ident}").makeStmt(),
+                    x.statement,
+                    literalCodeStatement("${escapeIdent(x.name.ident)}:")
+                ))
             }
-            else {
-                wtf("ec8fa1fa-f368-4416-9a6d-599e4db32fd9")
+
+            override fun visit(x: JsBreak, ctx: JsContext<JsNode>): Boolean {
+                super.endVisit(x, ctx)
+                if (x.label != null) {
+                    ctx.replaceMe(literalCodeStatement("goto ${escapeIdent(x.label.ident)}"))
+                    return false
+                }
+                return true
             }
-        }
 
-        override fun endVisit(x: JsReturn, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            ctx.replaceMe(JsReturn(invocation("phiEvaluate", listOf(x.expression))))
-        }
-
-        override fun endVisit(x: JsThrow, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            ctx.replaceMe(JsInvocation(JsNameRef("phiThrow"), x.expression).makeStmt())
-        }
-
-        override fun endVisit(x: JsStringLiteral, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            ctx.replaceMe(new("PhiStringLiteral", listOf(x)))
-        }
-
-        override fun endVisit(x: JsVars, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            val shit = x.vars.map {
-                JsInvocation(JsNameRef("array"), JsStringLiteral(it.name.ident), it.initExpression
-                    ?: new("PhiUnaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral("prefix"), JsStringLiteral("void"), new("PhiNumberLiteral", listOf(JsStringLiteral("@@something"), program.getNumberLiteral(0))))))
+            private fun escapeIdent(ident: String): String {
+                return ident.replace("$", "_usd_")
             }
-            ctx.replaceMe(JsInvocation(JsNameRef("phiVars"), nextDebugTagLiteral(), JsInvocation(JsNameRef("array"), *shit.toTypedArray())).makeStmt())
-        }
+        }.accept(program)
+    }
 
-        override fun endVisit(x: JsArrayLiteral, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            ctx.replaceMe(new("PhiArrayLiteral", listOf(invocation("array", x.expressions))))
-        }
+    fun stage2() {
+        object : JsVisitorWithContextImpl() {
+            override fun endVisit(x: JsWhile, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
 
-        override fun endVisit(x: JsObjectLiteral, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            val args = x.propertyInitializers.map {
-                invocation("array", listOf(it.labelExpr, it.valueExpr))
+                ctx.replaceMe(JsWhile(invocation("phiEvaluateToBoolean", listOf(x.condition)),
+                                      x.body))
             }
-            ctx.replaceMe(new("PhiObjectLiteral", listOf(nextDebugTagLiteral(), invocation("array", args))))
-        }
 
-        override fun endVisit(x: JsInvocation, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            ctx.replaceMe(new("PhiInvocation", listOf(x.qualifier, invocation("array", x.arguments))))
-        }
+            override fun endVisit(x: JsFor, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
 
-        override fun endVisit(x: JsConditional, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            ctx.replaceMe(new("PhiConditional", listOf(x.testExpression, x.thenExpression, x.elseExpression)))
-        }
+                if (x.initVars != null) {
+                    ctx.replaceMe(JsFor(x.initVars,
+                                        invocation("phiEvaluateToBoolean", listOf(x.condition)),
+                                        invocation("phiEvaluate", listOf(x.incrementExpression)),
+                                        x.body))
+                }
+                else if (x.initExpression != null) {
+                    ctx.replaceMe(JsFor(x.initExpression,
+                                        invocation("phiEvaluateToBoolean", listOf(x.condition)),
+                                        invocation("phiEvaluate", listOf(x.incrementExpression)),
+                                        x.body))
+                }
+                else {
+                    wtf("ec8fa1fa-f368-4416-9a6d-599e4db32fd9")
+                }
+            }
 
-        var shitCounter = 0
-        override fun endVisit(x: JsExpressionStatement, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
+            override fun endVisit(x: JsReturn, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                ctx.replaceMe(JsReturn(invocation("phiEvaluate", listOf(x.expression))))
+            }
 
-            ctx.replaceMe(invocation("phiExpressionStatement", listOf(x.expression)).makeStmt())
+            override fun endVisit(x: JsThrow, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                ctx.replaceMe(JsInvocation(JsNameRef("phiThrow"), x.expression).makeStmt())
+            }
+
+            override fun endVisit(x: JsStringLiteral, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                ctx.replaceMe(new("PhiStringLiteral", listOf(x)))
+            }
+
+            override fun endVisit(x: JsVars, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                val shit = x.vars.map {
+                    JsInvocation(JsNameRef("array"), JsStringLiteral(it.name.ident), it.initExpression
+                        ?: new("PhiUnaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral("prefix"), JsStringLiteral("void"), new("PhiNumberLiteral", listOf(JsStringLiteral("@@something"), program.getNumberLiteral(0))))))
+                }
+                ctx.replaceMe(JsInvocation(JsNameRef("phiVars"), nextDebugTagLiteral(), JsInvocation(JsNameRef("array"), *shit.toTypedArray())).makeStmt())
+            }
+
+            override fun endVisit(x: JsArrayLiteral, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                ctx.replaceMe(new("PhiArrayLiteral", listOf(invocation("array", x.expressions))))
+            }
+
+            override fun endVisit(x: JsObjectLiteral, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                val args = x.propertyInitializers.map {
+                    invocation("array", listOf(it.labelExpr, it.valueExpr))
+                }
+                ctx.replaceMe(new("PhiObjectLiteral", listOf(nextDebugTagLiteral(), invocation("array", args))))
+            }
+
+            override fun endVisit(x: JsInvocation, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                ctx.replaceMe(new("PhiInvocation", listOf(x.qualifier, invocation("array", x.arguments))))
+            }
+
+            override fun endVisit(x: JsConditional, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                ctx.replaceMe(new("PhiConditional", listOf(x.testExpression, x.thenExpression, x.elseExpression)))
+            }
+
+            var shitCounter = 0
+            override fun endVisit(x: JsExpressionStatement, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                if (x.skipTransformation == true)
+                    return
+
+                ctx.replaceMe(invocation("phiExpressionStatement", listOf(x.expression)).makeStmt())
 
 //            ctx.replaceMe(invocation("\$GLOBALS['shit'] = ${++shitCounter}; phiExpressionStatement", listOf(x.expression)).makeStmt())
 
@@ -171,136 +243,138 @@ fun phpify2(program: JsProgram) {
 //            ))
 
 //            ctx.replaceMe(invocation("phiExpressionStatement", listOf(x.expression)).makeStmt())
-        }
-
-        override fun endVisit(x: JsFunction, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            val argNames = mutableListOf<JsExpression>()
-            for (p in x.parameters)
-                argNames += JsStringLiteral(p.name.ident)
-            val args = JsInvocation(JsNameRef("array"), argNames)
-            val body = x.deepCopy()
-            body.name = null
-            body.parameters.clear()
-            val name = when (x.name) {
-                null -> JsNullLiteral()
-                else -> JsStringLiteral(x.name.ident)
             }
 
-            ctx.replaceMe(new("PhiFunctionExpression", listOf(name, args, body)))
-        }
+            override fun endVisit(x: JsFunction, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                val argNames = mutableListOf<JsExpression>()
+                for (p in x.parameters)
+                    argNames += JsStringLiteral(p.name.ident)
+                val args = JsInvocation(JsNameRef("array"), argNames)
+                val body = x.deepCopy()
+                body.name = null
+                body.parameters.clear()
+                val name = when (x.name) {
+                    null -> JsNullLiteral()
+                    else -> JsStringLiteral(x.name.ident)
+                }
 
-        fun invocation(functionName: String, args: List<JsExpression>): JsInvocation {
-            return JsInvocation(JsNameRef(functionName), args)
-        }
+                ctx.replaceMe(new("PhiFunctionExpression", listOf(name, args, body)))
+            }
 
-        fun new(ctor: String, args: List<JsExpression>): JsNew {
-            val ctorNameRef = JsNameRef(ctor)
-            ctorNameRef.skipTransformation = true
-            val new = new(ctorNameRef, args)
-            new.skipTransformation = true
-            new.debugTag = nextDebugTag()
+            fun invocation(functionName: String, args: List<JsExpression>): JsInvocation {
+                return JsInvocation(JsNameRef(functionName), args)
+            }
+
+            fun new(ctor: String, args: List<JsExpression>): JsNew {
+                val ctorNameRef = JsNameRef(ctor)
+                ctorNameRef.skipTransformation = true
+                val new = new(ctorNameRef, args)
+                new.skipTransformation = true
+                new.debugTag = nextDebugTag()
 //            if (new.debugTag == "@@334") {
 //                "break on me"
 //            }
-            return new
-        }
-
-        override fun endVisit(x: JsIf, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            val ifExpression = invocation("phiEvaluateToBoolean", listOf(x.ifExpression))
-            ctx.replaceMe(JsIf(ifExpression, x.thenStatement, x.elseStatement))
-        }
-
-        override fun endVisit(x: JsBinaryOperation, ctx: JsContext<JsNode>) {
-            super.visit(x, ctx)
-            ctx.replaceMe(new("PhiBinaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral(x.operator.toString()), x.arg1, x.arg2)))
-        }
-
-        private fun new(ctor: JsNameRef, args: List<JsExpression>): JsNew {
-            return JsNew(ctor, args)-{o->
-                o.skipTransformation = true
+                return new
             }
-        }
 
-        override fun endVisit(x: JsArrayAccess, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            ctx.replaceMe(new("PhiBrackets", listOf(x.array, x.index)))
-        }
+            override fun endVisit(x: JsIf, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                val ifExpression = invocation("phiEvaluateToBoolean", listOf(x.ifExpression))
+                ctx.replaceMe(JsIf(ifExpression, x.thenStatement, x.elseStatement))
+            }
 
-        override fun endVisit(x: JsLiteral.JsThisRef, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            ctx.replaceMe(new("PhiThis", listOf()))
-        }
+            override fun endVisit(x: JsBinaryOperation, ctx: JsContext<JsNode>) {
+                super.visit(x, ctx)
+                ctx.replaceMe(new("PhiBinaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral(x.operator.toString()), x.arg1, x.arg2)))
+            }
 
-        override fun endVisit(x: JsNew, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            if (x.skipTransformation == true)
-                return
-            ctx.replaceMe(new("PhiNew", listOf(x.constructorExpression, invocation("array", x.arguments))))
-        }
+            private fun new(ctor: JsNameRef, args: List<JsExpression>): JsNew {
+                return JsNew(ctor, args)-{o->
+                    o.skipTransformation = true
+                }
+            }
 
-        override fun endVisit(x: JsNullLiteral, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            ctx.replaceMe(new("PhiNullLiteral", listOf(nextDebugTagLiteral())))
-        }
+            override fun endVisit(x: JsArrayAccess, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                ctx.replaceMe(new("PhiBrackets", listOf(x.array, x.index)))
+            }
 
-        override fun endVisit(x: JsLiteral.JsBooleanLiteral, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            ctx.replaceMe(new("PhiBooleanLiteral", listOf(nextDebugTagLiteral(), x)))
-        }
+            override fun endVisit(x: JsLiteral.JsThisRef, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                ctx.replaceMe(new("PhiThis", listOf()))
+            }
 
-        override fun endVisit(x: JsNumberLiteral, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            ctx.replaceMe(new("PhiNumberLiteral", listOf(nextDebugTagLiteral(), x)))
-        }
+            override fun endVisit(x: JsNew, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                if (x.skipTransformation == true)
+                    return
+                ctx.replaceMe(new("PhiNew", listOf(x.constructorExpression, invocation("array", x.arguments))))
+            }
 
-        override fun endVisit(x: JsNameRef, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            if (x.skipTransformation == true)
-                return
-            val replacement = when {
-                x.qualifier == null -> {
-                    val dd = x.declarationDescriptor
-                    val shit = when {
-                        dd is SimpleFunctionDescriptor && dd.isExternal -> "PhiExternalNameRef"
-                        else -> "PhiNameRef"
+            override fun endVisit(x: JsNullLiteral, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                ctx.replaceMe(new("PhiNullLiteral", listOf(nextDebugTagLiteral())))
+            }
+
+            override fun endVisit(x: JsLiteral.JsBooleanLiteral, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                ctx.replaceMe(new("PhiBooleanLiteral", listOf(nextDebugTagLiteral(), x)))
+            }
+
+            override fun endVisit(x: JsNumberLiteral, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                ctx.replaceMe(new("PhiNumberLiteral", listOf(nextDebugTagLiteral(), x)))
+            }
+
+            override fun endVisit(x: JsNameRef, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                if (x.skipTransformation == true)
+                    return
+                val replacement = when {
+                    x.qualifier == null -> {
+                        val dd = x.declarationDescriptor
+                        val shit = when {
+                            dd is SimpleFunctionDescriptor && dd.isExternal -> "PhiExternalNameRef"
+                            else -> "PhiNameRef"
+                        }
+                        new(shit, listOf(JsStringLiteral(x.ident)))
                     }
-                    new(shit, listOf(JsStringLiteral(x.ident)))
+                    else -> {
+                        new("PhiDot", listOf(x.qualifier!!, JsStringLiteral(x.ident)))
+                    }
                 }
-                else -> {
-                    new("PhiDot", listOf(x.qualifier!!, JsStringLiteral(x.ident)))
+                try {
+                    ctx.replaceMe(replacement)
+                } catch(e: Exception) {
+                    "break on me"
+                    throw e
                 }
             }
-            try {
-                ctx.replaceMe(replacement)
-            } catch(e: Exception) {
-                "break on me"
-                throw e
+
+            override fun endVisit(x: JsPrefixOperation, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                ctx.replaceMe(new("PhiUnaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral("prefix"), JsStringLiteral(x.operator.toString()), x.arg)))
             }
-        }
 
-        override fun endVisit(x: JsPrefixOperation, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            ctx.replaceMe(new("PhiUnaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral("prefix"), JsStringLiteral(x.operator.toString()), x.arg)))
-        }
+            override fun endVisit(x: JsPostfixOperation, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                ctx.replaceMe(new("PhiUnaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral("postfix"), JsStringLiteral(x.operator.toString()), x.arg)))
+            }
 
-        override fun endVisit(x: JsPostfixOperation, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-            ctx.replaceMe(new("PhiUnaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral("postfix"), JsStringLiteral(x.operator.toString()), x.arg)))
-        }
+            override fun endVisit(x: JsCatch, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
 
-        override fun endVisit(x: JsCatch, ctx: JsContext<JsNode>) {
-            super.endVisit(x, ctx)
-
-            val ident = "Exception \$__phiException"
-            val catchBody = JsBlock()
-            catchBody.statements.add(JsNameRef("Phi::getCurrentEnv()->setVar('${x.parameter.name.ident}', \$__phiException->phiValue)").makeStmt())
-            catchBody.statements.addAll(x.body.statements)
-            ctx.replaceMe(JsCatch(x.scope, ident, catchBody))
-        }
+                val ident = "Exception \$__phiException"
+                val catchBody = JsBlock()
+                catchBody.statements.add(JsNameRef("Phi::getCurrentEnv()->setVar('${x.parameter.name.ident}', \$__phiException->phiValue)").makeStmt())
+                catchBody.statements.addAll(x.body.statements)
+                ctx.replaceMe(JsCatch(x.scope, ident, catchBody))
+            }
 
 
-    }.accept(program)
+        }.accept(program)
+    }
 }
+
 

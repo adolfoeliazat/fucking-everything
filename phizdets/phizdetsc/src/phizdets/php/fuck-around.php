@@ -1,4 +1,4 @@
-<?php ; if (phiEvaluateToBoolean(new PhiBinaryOperation("@@5", "===", new PhiUnaryOperation("@@2", "prefix", "typeof", new PhiNameRef("kotlin")), new PhiStringLiteral("undefined")))) {
+<?php ; @define('PHI_KILL_LONG_LOOPS', true); if (phiEvaluateToBoolean(new PhiBinaryOperation("@@5", "===", new PhiUnaryOperation("@@2", "prefix", "typeof", new PhiNameRef("kotlin")), new PhiStringLiteral("undefined")))) {
   phiThrow(new PhiNew(new PhiNameRef("Error"), array(new PhiStringLiteral("Error loading module 'phi-gross-test-1'. Its dependency 'kotlin' was not found. Please, check whether 'kotlin' is loaded prior to 'phi-gross-test-1'."))));
 }
 phiExpressionStatement(new PhiBinaryOperation("@@850", "=", new PhiBrackets(new PhiThis(), new PhiStringLiteral("phi-gross-test-1")), new PhiInvocation(new PhiFunctionExpression(null, array("_", "Kotlin"), function () {
