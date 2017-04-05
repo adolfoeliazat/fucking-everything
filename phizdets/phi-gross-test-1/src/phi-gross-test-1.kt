@@ -5,8 +5,8 @@ import kotlin.reflect.KProperty
 
 fun main(args: Array<String>) {
     sayShit(Shit("Archibald", "Fuck you"))
-    testCheck()
-    testNotNullOnce()
+    runTest(TestCheck())
+    runTest(TestNotNullOnce())
 }
 
 external fun phiBreakDebugger()
@@ -52,21 +52,29 @@ fun assertException(testType: (Throwable) -> Boolean, expectedMessage: String, a
     }
 }
 
-fun testCheck() {
-    run {
+interface Test {
+    fun runTest()
+}
+
+fun runTest(test: Test) {
+    test.runTest()
+    phiPrintln("${test::class.simpleName}: PASSED")
+}
+
+class TestCheck : Test {
+    override fun runTest() {
         assertException({it is IllegalStateException}, "vagina", "7f2510ff-4753-4ea3-8d39-dcfe63ea910a") {
             check(false) {"vagina"}
         }
     }
-    phiPrintln("testCheck: PASSED")
 }
 
-class testNotNullOnce {
+class TestNotNullOnce : Test {
     object Q {
         var a by notNullOnce<String>()
     }
 
-    init {
+    override fun runTest() {
         assertException({it is IllegalStateException}, "Property `a` should be initialized before get.", "81060a82-59e8-4bbc-b733-501d71fdb169") {
             phiPrintln("Q.a = " + Q.a)
         }
@@ -80,8 +88,6 @@ class testNotNullOnce {
         }
         phiPrintln("Q.a = " + Q.a)
         assertEquals("pizda", Q.a, "b55ae4d8-9ae2-40a5-b0a7-6dd71bf98bf1")
-
-        phiPrintln("testNotNullOnce: PASSED")
     }
 }
 

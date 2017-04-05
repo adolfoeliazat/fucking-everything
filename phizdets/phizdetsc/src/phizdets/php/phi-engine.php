@@ -101,7 +101,15 @@ class PhiObject extends PhiValue {
             $proto = $opts['proto'];
         }
 
+//        /**@var PhiValue $constructor*/
+//        if (!array_key_exists('constructor', $opts)) {
+//            $constructor = Phi::$Object;
+//        } else {
+//            $constructor = $opts['constructor'];
+//        }
+
         $this->fields['__proto__'] = $proto;
+//        $this->fields['constructor'] = $constructor;
     }
 
 //    /**
@@ -268,7 +276,9 @@ class PhiFunction extends PhiObject {
         }
 
         { // me.prototype = {}
-            $this->fields['prototype'] = new PhiObject();
+            $prototype = new PhiObject();
+            $prototype->fields['constructor'] = $this;
+            $this->fields['prototype'] = $prototype;
         }
     }
 
@@ -473,7 +483,7 @@ class PhiEnv {
      */
     public function setVar($name, $value) {
 // @debug
-//        if ($name === 'Function') {
+//        if ($name === 'Array') {
 //            count('break on me');
 //        }
         $this->vars[$name] = $value;
@@ -573,7 +583,10 @@ class Phi {
     /**@var PhiEnv*/ private static $currentEnv;
     /**@var PhiObject*/ public static $global;
     /**@var PhiObject*/ public static $Object_prototype;
+    /**@var PhiFunction*/ public static $Object;
     /**@var PhiObject*/ public static $Function_prototype;
+    /**@var PhiObject*/ public static $Array_prototype;
+    /**@var PhiObject*/ public static $Array;
     /**@var PhiExpression*/ public static $phiExpressionStatement_expr;
     /**@var number*/ private static $nextDebugID;
 
@@ -593,10 +606,13 @@ class Phi {
         $Function_prototype = new PhiObject(array('proto' => $Object_prototype));
         self::$Function_prototype = $Function_prototype;
         $Array_prototype = new PhiObject(array('proto' => $Object_prototype));
+        self::$Array_prototype = $Array_prototype;
 
         $Object = new PhiFunction(new PhiFunctionExpression('Object', array(), function() {}));
+        self::$Object = $Object;
 //        $Object = new PhiObject(array('proto' => $Function_prototype));
         $Object->setProperty('prototype', $Object_prototype);
+        $Object_prototype->setProperty('constructor', $Object);
         self::$currentEnv->setVar('Object', $Object);
 
         $Function = new PhiObject(array('proto' => $Function_prototype));
@@ -622,67 +638,94 @@ class Phi {
             return $thisFunction->invoke($receiver, $args);
         }), array('vararg' => true)));
 
-        $Object->setProperty('defineProperty', new PhiFunction(
-            new PhiFunctionExpression(
-                'defineProperty',
-                array('obj', 'prop', 'descriptor'),
-                function() {
-                    $obj = Phi::getCurrentEnv()->getVar('obj');
-                    if (!($obj instanceof PhiObject))
-                        throw new PhiIllegalStateException("c2c26a66-b8f0-4e24-aeab-f6f11a6eed9c");
+//        { // ---------------------- Object.prototype.* ---------------------
+//
+//            $descr = new PhiObject();
+//            $descr->setProperty('get', new PhiFunction(new PhiFunctionExpression('get-constructor', array(), function() {
+//                $thiz = Phi::getCurrentEnv()->getThisValue();
+//                if (!($thiz instanceof PhiObject))
+//                    throw new PhiIllegalStateException('c699617f-2d08-4f33-bf56-438bd7312f85');
+//
+//
+//            })));
+//        }
 
-                    $prop = Phi::getCurrentEnv()->getVar('prop');
-                    if (!($prop instanceof PhiString))
-                        throw new PhiIllegalStateException("f30171f1-3e51-4cf9-848a-ff19d4c7d197");
+        { // ---------------------- Object.* ---------------------
 
-                    $descriptor = Phi::getCurrentEnv()->getVar('descriptor');
-                    if (!($descriptor instanceof PhiObject))
-                        throw new PhiIllegalStateException("9156fc1b-daaf-492f-822e-07da868471bc");
+            $Object->setProperty('defineProperty', new PhiFunction(
+                new PhiFunctionExpression(
+                    'defineProperty',
+                    array('obj', 'prop', 'descriptor'),
+                    function() {
+                        $obj = Phi::getCurrentEnv()->getVar('obj');
+                        if (!($obj instanceof PhiObject))
+                            throw new PhiIllegalStateException("c2c26a66-b8f0-4e24-aeab-f6f11a6eed9c");
 
-                    $obj->defineProperty($prop->getValue(), $descriptor);
-                })));
+                        $prop = Phi::getCurrentEnv()->getVar('prop');
+                        if (!($prop instanceof PhiString))
+                            throw new PhiIllegalStateException("f30171f1-3e51-4cf9-848a-ff19d4c7d197");
 
-        $Object->setProperty('create', new PhiFunction(
-            new PhiFunctionExpression(
-                'create',
-                array('proto'),
-                function() {
-                    $proto = Phi::getCurrentEnv()->getVar('proto');
-                    if (!($proto instanceof PhiObject || $proto instanceof PhiNull))
-                        throw new PhiIllegalStateException("14d297f3-8690-44f2-89ca-36ae809c5637");
+                        $descriptor = Phi::getCurrentEnv()->getVar('descriptor');
+                        if (!($descriptor instanceof PhiObject))
+                            throw new PhiIllegalStateException("9156fc1b-daaf-492f-822e-07da868471bc");
 
-                    return new PhiObject(array('proto' => $proto));
-                })));
+                        $obj->defineProperty($prop->getValue(), $descriptor);
+                    })));
 
-        $Object->setProperty('getOwnPropertyDescriptor', new PhiFunction(
-            new PhiFunctionExpression(
-                'getOwnPropertyDescriptor', array('obj', 'prop'),
-                function() {
-                    $obj = Phi::getCurrentEnv()->getVar('obj');
-                    if (!($obj instanceof PhiObject))
-                        throw new PhiIllegalStateException("2e66da9d-bc59-44a8-86f1-d25ec59ffbfc");
+            $Object->setProperty('create', new PhiFunction(
+                new PhiFunctionExpression(
+                    'create',
+                    array('proto'),
+                    function() {
+                        $proto = Phi::getCurrentEnv()->getVar('proto');
+                        if (!($proto instanceof PhiObject || $proto instanceof PhiNull))
+                            throw new PhiIllegalStateException("14d297f3-8690-44f2-89ca-36ae809c5637");
 
-                    $prop = Phi::getCurrentEnv()->getVar('prop');
-                    if (!($prop instanceof PhiString))
-                        throw new PhiIllegalStateException("eb91d3f2-09b6-4382-b4c2-84c244990bd3");
+                        return new PhiObject(array('proto' => $proto));
+                    })));
 
-                    return $obj->getOwnPropertyDescriptor($prop->getValue());
-                })));
+            $Object->setProperty('getOwnPropertyDescriptor', new PhiFunction(
+                new PhiFunctionExpression(
+                    'getOwnPropertyDescriptor', array('obj', 'prop'),
+                    function() {
+                        $obj = Phi::getCurrentEnv()->getVar('obj');
+                        if (!($obj instanceof PhiObject))
+                            throw new PhiIllegalStateException("2e66da9d-bc59-44a8-86f1-d25ec59ffbfc");
 
-        $Object->setProperty('getPrototypeOf', new PhiFunction(
-            new PhiFunctionExpression(
-                'getPrototypeOf', array('x'),
-                function() {
-                    $x = Phi::getCurrentEnv()->getVar('x');
-                    if (!($x instanceof PhiObject))
-                        throw new PhiIllegalStateException("ba06df93-f674-4312-853d-6b059edb0ee2");
+                        $prop = Phi::getCurrentEnv()->getVar('prop');
+                        if (!($prop instanceof PhiString))
+                            throw new PhiIllegalStateException("eb91d3f2-09b6-4382-b4c2-84c244990bd3");
 
-                    return $x->getProperty("__proto__");
-                })));
+                        return $obj->getOwnPropertyDescriptor($prop->getValue());
+                    })));
+
+            $Object->setProperty('getPrototypeOf', new PhiFunction(
+                new PhiFunctionExpression(
+                    'getPrototypeOf', array('x'),
+                    function() {
+                        $x = Phi::getCurrentEnv()->getVar('x');
+                        if (!($x instanceof PhiObject))
+                            throw new PhiIllegalStateException("ba06df93-f674-4312-853d-6b059edb0ee2");
+
+                        return $x->getProperty("__proto__");
+                    })));
+        }
+
 
         $Array = new PhiObject(array('proto' => $Function_prototype));
+        self::$Array = $Array;
         $Array->setProperty('prototype', $Array_prototype);
+        $Array_prototype->setProperty('constructor', $Array);
         self::$currentEnv->setVar('Array', $Array);
+
+        { //----------------------- Array.* ------------------------
+
+            $Array->setProperty('isArray', new PhiFunction(new PhiFunctionExpression(
+                'isArray', array('x'), function() {
+                $x = Phi::getCurrentEnv()->getVar('x');
+                return new PhiBoolean($x instanceof PhiArray);
+            })));
+        }
 
 
         { // String
@@ -822,14 +865,6 @@ class Phi {
                 ))),
 
                 array('Math', new PhiObjectLiteral('@@Math', array(
-                ))),
-
-                array('Array', new PhiObjectLiteral('@@Array', array(
-                    array(new PhiNameRef('isArray'), new PhiFunctionExpression(
-                        'isArray', array('x'), function() {
-                            $x = Phi::getCurrentEnv()->getVar('x');
-                            return new PhiBoolean($x instanceof PhiArray);
-                    }))
                 ))),
             )
         );
@@ -1032,7 +1067,7 @@ function phiNew($ctorValue, $argValues) {
     $proto = $ctorValue->getProperty('prototype');
     if (!($proto instanceof PhiObject))
         throw new PhiIllegalStateException("aa9fbdd9-c5b0-4215-afc0-c2e9fbfb29a3");
-    $inst = new PhiObject(array('proto' => $proto));
+    $inst = new PhiObject(array('proto' => $proto/*, 'constructor' => $ctorValue*/));
     $ctorValue->invoke($inst, $argValues);
     return $inst;
 }
@@ -2057,6 +2092,11 @@ class PhiArray extends PhiObject {
             $e = new PhiDot($e, 'prototype');
             $this->fields['__proto__'] = $e->evaluate();
         }
+
+//        { // me.constructor = Array
+//            $e = new PhiNameRef('Array');
+//            $this->fields['constructor'] = $e->evaluate();
+//        }
     }
 
     /**
@@ -2129,7 +2169,7 @@ function phiEvaluateAndAssertToStringEquals($expectedPhiValue, PhiExpression $ex
         throw new PhiAssertionError("\nExpected: $exps\nActual: $acts\n");
 }
 
-function phiBreakDebugger() {
+function phiBreakDebugger($shit) {
     strval('break on me');
 }
 
@@ -2401,6 +2441,79 @@ if (defined('PHI_RUN_QUICK_TESTS')) {
         phiPrintln(__FUNCTION__ . ': PASSED');
     }
     phiQuickTest_string();
+
+    function phiQuickTest_constructor() {
+        Phi::initEnv(); Phi::initStdlib();
+
+        // var x = {}
+        phiVars('@@', array(array('x', new PhiObjectLiteral('@@', array()))));
+
+        // true  EQ  x.constructor === Object
+        phiEvaluateAndAssertToStringEquals(
+            new PhiBoolean(true),
+            new PhiBinaryOperation('@@', '===',
+                new PhiDot(new PhiNameRef('x'), 'constructor'),
+                new PhiNameRef('Object')));
+
+        // true  EQ  Object.prototype.constructor === Object
+        phiEvaluateAndAssertToStringEquals(
+            new PhiBoolean(true),
+            new PhiBinaryOperation('@@', '===',
+                new PhiDot(new PhiDot(new PhiNameRef('Object'), 'prototype'), 'constructor'),
+                new PhiNameRef('Object')));
+
+        // var arr = []
+        phiVars('@@', array(array('arr', new PhiArrayLiteral(array()))));
+
+        // true  EQ  arr.constructor === Array
+        phiEvaluateAndAssertToStringEquals(
+            new PhiBoolean(true),
+            new PhiBinaryOperation('@@', '===',
+                new PhiDot(new PhiNameRef('arr'), 'constructor'),
+                new PhiNameRef('Array')));
+
+        // true  EQ  Array.prototype.constructor === Array
+        phiEvaluateAndAssertToStringEquals(
+            new PhiBoolean(true),
+            new PhiBinaryOperation('@@', '===',
+                new PhiDot(new PhiDot(new PhiNameRef('Array'), 'prototype'), 'constructor'),
+                new PhiNameRef('Array')));
+
+        // function C() {}
+        phiExpressionStatement(new PhiFunctionExpression('C', array(), function() {
+        }));
+
+        // var c = new C()
+        phiVars('@@', array(array('c', new PhiNew(new PhiNameRef('C'), array()))));
+
+        // true  EQ  c.constructor === C
+        phiEvaluateAndAssertToStringEquals(
+            new PhiBoolean(true),
+            new PhiBinaryOperation('@@', '===',
+                new PhiDot(new PhiNameRef('c'), 'constructor'),
+                new PhiNameRef('C')));
+
+        // true  EQ  Object.getPrototypeOf(c) === C.prototype
+        phiEvaluateAndAssertToStringEquals(
+            new PhiBoolean(true),
+            new PhiBinaryOperation('@@', '===',
+                new PhiInvocation(new PhiDot(new PhiNameRef('Object'), 'getPrototypeOf'), array(new PhiNameRef('c'))),
+                new PhiDot(new PhiNameRef('C'), 'prototype')));
+
+        // true  EQ  Object.getPrototypeOf(c).constructor === C
+        phiEvaluateAndAssertToStringEquals(
+            new PhiBoolean(true),
+            new PhiBinaryOperation('@@', '===',
+                new PhiDot(
+                    new PhiInvocation(
+                        new PhiDot(new PhiNameRef('Object'), 'getPrototypeOf'),
+                        array(new PhiNameRef('c'))),
+                    'constructor'),
+                new PhiNameRef('C')));
+
+        phiPrintln(__FUNCTION__ . ': PASSED');
+    }
+    phiQuickTest_constructor();
 }
 
 Phi::initEnv();
