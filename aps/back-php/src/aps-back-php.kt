@@ -1,10 +1,23 @@
 package aps.back
 
-import photlin.*
 import aps.*
 
 object apsphp {
     var myFuckingDir by notNull<String>()
+}
+
+annotation class PHPDumpBodyToContainer
+
+fun require_once(path: String) {
+    imf("119e3083-946c-428e-b380-037bb6fcb537")
+}
+
+fun error_log(vararg xs: Any?) {
+    imf("f258787a-ee6d-4b9f-b544-1653fc299bf1")
+}
+
+fun <T> eval(code: String): T {
+    imf("5b4295a4-9059-47af-96fc-736e5921dc09")
 }
 
 @PHPDumpBodyToContainer fun apsback_makeRequires() {

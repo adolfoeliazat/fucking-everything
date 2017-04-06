@@ -1,10 +1,6 @@
 package aps
 
 import aps.back.*
-import photlin.PHPDumpBodyToContainer
-import photlin.assertEquals
-import photlin.assertVarExportEquals
-import photlin.count
 
 val sharedPlatform = object : XSharedPlatform {
     override fun currentTimeMillis(): Long {
@@ -89,6 +85,25 @@ fun CharSequence.split(delim: String): List<String> {
     return explode(delim, this.toString()).toList()
 }
 
+fun var_export(x: Any?, returnString: Boolean = false): String {
+    imf("3a451072-7b8d-4cc1-b577-a2e8fc1a670b")
+}
+
+fun assertEquals(expected: Any?, actual: Any?, assertionID: String) {
+    if (expected != actual) {
+        throw AssertionError("assertEquals $assertionID: expected = $expected; actual = $actual")
+    }
+}
+
+fun assertVarExportEquals(expected: String, actual: Any?, assertionID: String, log: Boolean = false) {
+    val shit0 = var_export(actual, returnString = true)
+    val shit = shit0.replace("\n  ", " ").replace("\n", "")
+    if (log) {
+        println("shit = $shit")
+    }
+    assertEquals(expected, shit, assertionID)
+}
+
 @PHPDumpBodyToContainer
 fun quickTest_CharSequence_split() {
     val list = "fuck:shit:bitch".split(":")
@@ -118,6 +133,10 @@ fun <T> Array<out T>.toMutableList(): MutableList<T> {
 }
 
 external fun <T> array_push(arr: Array<T>, x: T)
+
+fun count(x: Any?): Int {
+    imf("d9562ae7-8b00-4b67-a881-43d299cbcf89")
+}
 
 class LameList<T> : MutableList<T> {
     private val items = arrayOf<T>()

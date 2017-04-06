@@ -47,25 +47,55 @@ object CurrentTestFiddling {
 
 }
 
-class TestParams {
-    var root by notNull<String>()
-    var srcRoot by notNull<String>()
-    var outRoot by notNull<String>()
-    var testName by notNull<String>()
-    var outFilePath by notNull<String>()
-    var phpSettingsSourceFile by notNull<File>()
-    var phpSettingsFileName by notNull<String>()
-    var phpSettingsSourceFilePath by notNull<String>()
+object PhizdetsTestingGlobal {
+
 }
 
-class Boobs(val p: TestParams) {
-//    init {die(p.testName)}
+object JerkAPSBackPHP {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        Boobs(TestParams(
+            testName = "aps-back",
+            sourceFiles = listOf(
+                File("E:/fegh/aps/back-php/src/aps-back-php.kt"),
+                File("E:/fegh/aps/back-php/src/shared-php-impl.kt"),
+                File("E:/fegh/aps/back-php/src/shared-back-php-impl.kt"),
+                File("E:/fegh/aps/back-php/shared--junction/src/xplatf-shared-1.kt"),
+                File("E:/fegh/aps/back-php/shared-back--junction/src/xentities.kt"),
+                File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-1.kt"),
+                File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-2.kt"),
+                File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-shared-impl-1.kt")
+            )
+        )).goBananas()
+    }
+}
+
+
+class TestParams(
+    val testName: String,
+    val sourceFiles: List<File>
+)
+
+class Boobs(val testParams: TestParams) {
     private val HTDOCS_OUT = "C:/opt/xampp/htdocs/phi-tests/"
     private val APS_TMP = "C:/tmp/aps-tmp"
     private val PHP_SCRIPT_LOG_DIR = "C:/opt/xampp/htdocs/phi-tests/log"
+    private val PHOTLINC_OUT_ROOT = "E:\\fegh\\out\\phi-tests"
 
-    fun requestResponseScenario() {
-        compileAndStuff(p) {
+    var outFilePath by notNull<String>()
+    val outRoot = "$PHOTLINC_OUT_ROOT\\${testParams.testName}"
+
+    fun goBananas() {
+        PhizdetscGlobal.reportTranslationStage = {num: Int, program: JsProgram ->
+            val output = TextOutputImpl()
+            val taggedGenOutput = TextOutputImpl()
+            program.accept(PhizdetsSourceGenerationVisitor(output, taggedGenOutput, /*sourceMapBuilder*/ null))
+            val file = File(outFilePath + "--$num")
+            file.parentFile.mkdirs()
+            file.writeText(output.toString())
+        }
+
+        compileAndStuff(testParams) {
             val om = ObjectMapper()
 
             class PrepareResult(val text: String, val parsedOK: Boolean)
@@ -86,15 +116,15 @@ class Boobs(val p: TestParams) {
                 }
             }
 
-            val deploymentDir = "$HTDOCS_OUT${p.testName}"
+            val deploymentDir = "$HTDOCS_OUT${testParams.testName}"
             if (!CurrentTestFiddling.preventCompilationAndDeploying) {
-                copyFile(p.outFilePath, deploymentDir + "/${p.testName}.php")
+                copyFile(outFilePath, deploymentDir + "/${testParams.testName}.php")
 //                copyFile(p.outFilePath + "--tagged-gen", deploymentDir + "/${p.testName}.php--tagged-gen")
-                copyFile(p.outRoot + "/phi-engine.php", deploymentDir + "/phi-engine.php")
-                copyFile(CompileStdlib.stdlibPHPFilePath, p.outRoot + "/phizdets-stdlib.php")
-                copyFile(p.outRoot + "/phizdets-stdlib.php", deploymentDir + "/phizdets-stdlib.php")
+                copyFile(outRoot + "/phi-engine.php", deploymentDir + "/phi-engine.php")
+                copyFile(CompileStdlib.stdlibPHPFilePath, outRoot + "/phizdets-stdlib.php")
+                copyFile(outRoot + "/phizdets-stdlib.php", deploymentDir + "/phizdets-stdlib.php")
 
-                val shit = File(deploymentDir + "/${p.testName}.php").readText()
+                val shit = File(deploymentDir + "/${testParams.testName}.php").readText()
                 File("E:/fegh/phizdets/phizdetsc/src/phizdets/php/fuck-around.php").writeText("<?php " + shit.substring(shit.indexOf(";")))
 
                 // @here
@@ -123,7 +153,7 @@ class Boobs(val p: TestParams) {
                 if (CurrentTestFiddling.preventRequest) {
                     clog("Skipping actual request")
                 } else {
-                    val actualResponseJSON = HTTPClient.postJSON("http://localhost/phi-tests/${p.testName}/${p.testName}.php?${entry.queryString}", adaptedRequestJSON)
+                    val actualResponseJSON = HTTPClient.postJSON("http://localhost/phi-tests/${testParams.testName}/${testParams.testName}.php?${entry.queryString}", adaptedRequestJSON)
                     val expectedResponseJSON = entry.responseJSON
                     val actualPreparedResponse = prepare(actualResponseJSON)
                     val expectedPreparedResponse = prepare(expectedResponseJSON)
@@ -170,21 +200,15 @@ class Boobs(val p: TestParams) {
         }
     }
 
-    private fun compileAndStuff(p: TestParams, doStuffAfterCompilation: () -> Unit) {
-        p.outFilePath = "${p.outRoot}\\${p.testName}.php" // XXX Generated module name corresponds to file name
-        val errMsgCtx = "testName = `${p.testName}`"
+    private fun compileAndStuff(testParams: TestParams, doStuffAfterCompilation: () -> Unit) {
+        outFilePath = "$outRoot\\${testParams.testName}.php" // XXX Generated module name corresponds to file name
+        val errMsgCtx = "testName = `${testParams.testName}`"
 
 //        val srcDir = File(p.srcRoot)
 
-        fun filesFrom(dirPath: String): List<File> {
-            val dir = File(dirPath)
-            check(dir.isDirectory) {"$errMsgCtx    bea2f16f-20e7-43f7-8535-4be029c415c3"}
-            return dir.listFiles {_, name -> name.endsWith(".kt")}.toList()
-        }
-
         // @here
         val sourceFiles =
-            filesFrom(p.srcRoot) /*+
+            testParams.sourceFiles /*+
                 filesFrom("$APS_BACK_PHP_ROOT/photlin-stdlib--junction/src") +
                 filesFrom("$APS_BACK_PHP_ROOT/shared--junction/src") +
                 filesFrom("$APS_BACK_PHP_ROOT/shared-back--junction/src")*/
@@ -195,17 +219,11 @@ class Boobs(val p: TestParams) {
             K2PhizdetsCompiler.main(
                 *sourceFiles.map {it.absolutePath}.toTypedArray(),
                 // "-no-stdlib",
-                "-output", p.outFilePath)
+                "-output", outFilePath)
             println(" OK, strange")
         }
 
-        p.phpSettingsFileName = "${p.testName}-settings.php"
-        p.phpSettingsSourceFilePath = "${p.srcRoot}/${p.phpSettingsFileName}"
-        p.phpSettingsSourceFile = File(p.phpSettingsSourceFilePath)
-        if (p.phpSettingsSourceFile.exists()) {
-            File("${p.outRoot}/${p.testName}-settings.php").writeText(p.phpSettingsSourceFile.readText())
-        }
-        val outFile = File(p.outFilePath)
+        val outFile = File(outFilePath)
         outFile.writeText(outFile.readText())
         run(doStuffAfterCompilation)
     }
@@ -214,7 +232,6 @@ class Boobs(val p: TestParams) {
 object GrossTestPhizdets {
     private val PHP_INTERP = "C:\\opt\\xampp\\php\\php.exe"
     private val APS_BACK_PHP_ROOT = "E:\\fegh\\aps\\back-php"
-    private val PHOTLINC_OUT_ROOT = "E:\\fegh\\out\\phi-tests"
 
     @Ser @XmlRootElement @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(propOrder = arrayOf("php", "stdout", "stderr", "exitCode"))
@@ -257,31 +274,22 @@ object GrossTestPhizdets {
         }.toMutableList()
 
         val cmd = args.removeAt(0)
-        val p = TestParams()
-
-        PhizdetscGlobal.reportTranslationStage = {num: Int, program: JsProgram ->
-            val output = TextOutputImpl()
-            val taggedGenOutput = TextOutputImpl()
-            program.accept(PhizdetsSourceGenerationVisitor(output, taggedGenOutput, /*sourceMapBuilder*/ null))
-            val file = File(p.outFilePath + "--$num")
-            file.parentFile.mkdirs()
-            file.writeText(output.toString())
-        }
-
-        p.testName = args.removeAt(0)
-        // @here
-        p.root = "E:/fegh/phizdets/phi-gross-test-1"
-        p.srcRoot = "${p.root}\\src"
-        p.outRoot = "$PHOTLINC_OUT_ROOT\\${p.testName}"
+        val testName = args.removeAt(0)
+        val root = "E:/fegh/phizdets/phi-gross-test-1"
+        val srcRoot = "$root\\src"
+        val p = TestParams(
+            testName = testName,
+            sourceFiles = filesFrom(srcRoot)
+        )
 
         when (cmd) {
-            "harden" -> {
-                clog("Hardening results of ${p.testName}")
-                val actualXML = File("${p.outRoot}/${p.testName}-actual.xml").readText()
-                File("${p.srcRoot}/${p.testName}-expected.xml").writeText(actualXML)
-            }
+//            "harden" -> {
+//                clog("Hardening results of ${p.testName}")
+//                val actualXML = File("${p.outRoot}/${p.testName}-actual.xml").readText()
+//                File("${p.srcRoot}/${p.testName}-expected.xml").writeText(actualXML)
+//            }
 //            "justRun" -> justRun(p)
-            "requestResponseScenario" -> Boobs(p).requestResponseScenario()
+            "requestResponseScenario" -> Boobs(p).goBananas()
             else -> wtf("cmd = $cmd    1743afc0-066f-4196-869d-cf33e199c5ab")
         }
 
@@ -345,13 +353,6 @@ object PrepareFuckAroundPHP {
     }
 }
 
-object JerkAPSBackPHP {
-    @JvmStatic
-    fun main(args: Array<String>) {
-        println("What?")
-    }
-}
-
 fun copyFile(from: String, to: String) {
     val toFile = File(to)
     toFile.parentFile.mkdirs()
@@ -400,6 +401,12 @@ private fun sendTestResultToDevTools(req: PDTRemoteCommand_TestResult) {
         ObjectMapper().writeValueAsString(req))
     println(" " + rawResponse)
     //clog("Response: $rawResponse")
+}
+
+fun filesFrom(dirPath: String): List<File> {
+    val dir = File(dirPath)
+    check(dir.isDirectory) {"bea2f16f-20e7-43f7-8535-4be029c415c3"}
+    return dir.listFiles {_, name -> name.endsWith(".kt")}.toList()
 }
 
 
