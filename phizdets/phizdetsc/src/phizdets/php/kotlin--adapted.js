@@ -215,11 +215,16 @@ function getStringHashCode(str) {
 }
 Kotlin.identityHashCode = getObjectHashCode;
 Kotlin.Long = function(low, high) {
+  // @hack
+  this._stringValue = phi__Long_lowHighToString(low, high)
+  return
+
   this.low_ = low | 0;
   this.high_ = high | 0;
 };
 Kotlin.Long.IntCache_ = {};
 Kotlin.Long.fromInt = function(value) {
+  phi__imf('Kotlin.Long.fromInt')
   if (-128 <= value && value < 128) {
     var cachedObj = Kotlin.Long.IntCache_[value];
     if (cachedObj) {
@@ -233,6 +238,7 @@ Kotlin.Long.fromInt = function(value) {
   return obj;
 };
 Kotlin.Long.fromNumber = function(value) {
+  phi__imf('Kotlin.Long.fromNumber')
   if (isNaN(value) || !isFinite(value)) {
     return Kotlin.Long.ZERO;
   } else {
@@ -252,9 +258,11 @@ Kotlin.Long.fromNumber = function(value) {
   }
 };
 Kotlin.Long.fromBits = function(lowBits, highBits) {
+  phi__imf('Kotlin.Long.fromBits')
   return new Kotlin.Long(lowBits, highBits);
 };
 Kotlin.Long.fromString = function(str, opt_radix) {
+  phi__imf('Kotlin.Long.fromString')
   if (str.length == 0) {
     throw Error("number format error: empty string");
   }
@@ -284,29 +292,34 @@ Kotlin.Long.fromString = function(str, opt_radix) {
   }
   return result;
 };
-Kotlin.Long.TWO_PWR_16_DBL_ = 1 << 16;
-Kotlin.Long.TWO_PWR_24_DBL_ = 1 << 24;
-Kotlin.Long.TWO_PWR_32_DBL_ = Kotlin.Long.TWO_PWR_16_DBL_ * Kotlin.Long.TWO_PWR_16_DBL_;
-Kotlin.Long.TWO_PWR_31_DBL_ = Kotlin.Long.TWO_PWR_32_DBL_ / 2;
-Kotlin.Long.TWO_PWR_48_DBL_ = Kotlin.Long.TWO_PWR_32_DBL_ * Kotlin.Long.TWO_PWR_16_DBL_;
-Kotlin.Long.TWO_PWR_64_DBL_ = Kotlin.Long.TWO_PWR_32_DBL_ * Kotlin.Long.TWO_PWR_32_DBL_;
-Kotlin.Long.TWO_PWR_63_DBL_ = Kotlin.Long.TWO_PWR_64_DBL_ / 2;
-Kotlin.Long.ZERO = Kotlin.Long.fromInt(0);
-Kotlin.Long.ONE = Kotlin.Long.fromInt(1);
-Kotlin.Long.NEG_ONE = Kotlin.Long.fromInt(-1);
-Kotlin.Long.MAX_VALUE = Kotlin.Long.fromBits(4294967295 | 0, 2147483647 | 0);
-Kotlin.Long.MIN_VALUE = Kotlin.Long.fromBits(0, 2147483648 | 0);
-Kotlin.Long.TWO_PWR_24_ = Kotlin.Long.fromInt(1 << 24);
+//Kotlin.Long.TWO_PWR_16_DBL_ = 1 << 16;
+//Kotlin.Long.TWO_PWR_24_DBL_ = 1 << 24;
+//Kotlin.Long.TWO_PWR_32_DBL_ = Kotlin.Long.TWO_PWR_16_DBL_ * Kotlin.Long.TWO_PWR_16_DBL_;
+//Kotlin.Long.TWO_PWR_31_DBL_ = Kotlin.Long.TWO_PWR_32_DBL_ / 2;
+//Kotlin.Long.TWO_PWR_48_DBL_ = Kotlin.Long.TWO_PWR_32_DBL_ * Kotlin.Long.TWO_PWR_16_DBL_;
+//Kotlin.Long.TWO_PWR_64_DBL_ = Kotlin.Long.TWO_PWR_32_DBL_ * Kotlin.Long.TWO_PWR_32_DBL_;
+//Kotlin.Long.TWO_PWR_63_DBL_ = Kotlin.Long.TWO_PWR_64_DBL_ / 2;
+//Kotlin.Long.ZERO = Kotlin.Long.fromInt(0);
+//Kotlin.Long.ONE = Kotlin.Long.fromInt(1);
+//Kotlin.Long.NEG_ONE = Kotlin.Long.fromInt(-1);
+//Kotlin.Long.MAX_VALUE = Kotlin.Long.fromBits(4294967295 | 0, 2147483647 | 0);
+//Kotlin.Long.MIN_VALUE = Kotlin.Long.fromBits(0, 2147483648 | 0);
+//Kotlin.Long.TWO_PWR_24_ = Kotlin.Long.fromInt(1 << 24);
 Kotlin.Long.prototype.toInt = function() {
+  phi__imf('Kotlin.Long.toInt')
   return this.low_;
 };
 Kotlin.Long.prototype.toNumber = function() {
+  phi__imf('Kotlin.Long.toNumber')
   return this.high_ * Kotlin.Long.TWO_PWR_32_DBL_ + this.getLowBitsUnsigned();
 };
 Kotlin.Long.prototype.hashCode = function() {
+  phi__imf('Kotlin.Long.hashCode')
   return this.high_ ^ this.low_;
 };
 Kotlin.Long.prototype.toString = function(opt_radix) {
+  return this._stringValue
+
   var radix = opt_radix || 10;
   if (radix < 2 || 36 < radix) {
     throw Error("radix out of range: " + radix);
@@ -343,15 +356,19 @@ Kotlin.Long.prototype.toString = function(opt_radix) {
   }
 };
 Kotlin.Long.prototype.getHighBits = function() {
+  phi__imf('Kotlin.Long.getHighBits')
   return this.high_;
 };
 Kotlin.Long.prototype.getLowBits = function() {
+  phi__imf('Kotlin.Long.getLowBits')
   return this.low_;
 };
 Kotlin.Long.prototype.getLowBitsUnsigned = function() {
+  phi__imf('Kotlin.Long.getLowBitsUnsigned')
   return this.low_ >= 0 ? this.low_ : Kotlin.Long.TWO_PWR_32_DBL_ + this.low_;
 };
 Kotlin.Long.prototype.getNumBitsAbs = function() {
+  phi__imf('Kotlin.Long.getNumBitsAbs')
   if (this.isNegative()) {
     if (this.equalsLong(Kotlin.Long.MIN_VALUE)) {
       return 64;
@@ -369,12 +386,15 @@ Kotlin.Long.prototype.getNumBitsAbs = function() {
   }
 };
 Kotlin.Long.prototype.isZero = function() {
+  phi__imf('Kotlin.Long.isZero')
   return this.high_ == 0 && this.low_ == 0;
 };
 Kotlin.Long.prototype.isNegative = function() {
+  phi__imf('Kotlin.Long.isNegative')
   return this.high_ < 0;
 };
 Kotlin.Long.prototype.isOdd = function() {
+  phi__imf('Kotlin.Long.isOdd')
   return (this.low_ & 1) == 1;
 };
 Kotlin.Long.prototype.equalsLong = function(other) {
@@ -396,6 +416,7 @@ Kotlin.Long.prototype.greaterThanOrEqual = function(other) {
   return this.compare(other) >= 0;
 };
 Kotlin.Long.prototype.compare = function(other) {
+  phi__imf('Kotlin.Long.compare')
   if (this.equalsLong(other)) {
     return 0;
   }
@@ -414,6 +435,7 @@ Kotlin.Long.prototype.compare = function(other) {
   }
 };
 Kotlin.Long.prototype.negate = function() {
+  phi__imf('Kotlin.Long.negate')
   if (this.equalsLong(Kotlin.Long.MIN_VALUE)) {
     return Kotlin.Long.MIN_VALUE;
   } else {
@@ -421,6 +443,8 @@ Kotlin.Long.prototype.negate = function() {
   }
 };
 Kotlin.Long.prototype.add = function(other) {
+  return phi__Long_add(this._stringValue, other._stringValue)
+
   var a48 = this.high_ >>> 16;
   var a32 = this.high_ & 65535;
   var a16 = this.low_ >>> 16;
@@ -444,9 +468,11 @@ Kotlin.Long.prototype.add = function(other) {
   return Kotlin.Long.fromBits(c16 << 16 | c00, c48 << 16 | c32);
 };
 Kotlin.Long.prototype.subtract = function(other) {
+  phi__imf('Kotlin.Long.subtract')
   return this.add(other.negate());
 };
 Kotlin.Long.prototype.multiply = function(other) {
+  phi__imf('Kotlin.Long.multiply')
   if (this.isZero()) {
     return Kotlin.Long.ZERO;
   } else {
@@ -507,6 +533,7 @@ Kotlin.Long.prototype.multiply = function(other) {
   return Kotlin.Long.fromBits(c16 << 16 | c00, c48 << 16 | c32);
 };
 Kotlin.Long.prototype.div = function(other) {
+  phi__imf('Kotlin.Long.div')
   if (other.isZero()) {
     throw Error("division by zero");
   } else {
@@ -570,21 +597,27 @@ Kotlin.Long.prototype.div = function(other) {
   return res;
 };
 Kotlin.Long.prototype.modulo = function(other) {
+  phi__imf('Kotlin.Long.modulo')
   return this.subtract(this.div(other).multiply(other));
 };
 Kotlin.Long.prototype.not = function() {
+  phi__imf('Kotlin.Long.not')
   return Kotlin.Long.fromBits(~this.low_, ~this.high_);
 };
 Kotlin.Long.prototype.and = function(other) {
+  phi__imf('Kotlin.Long.add')
   return Kotlin.Long.fromBits(this.low_ & other.low_, this.high_ & other.high_);
 };
 Kotlin.Long.prototype.or = function(other) {
+  phi__imf('Kotlin.Long.or')
   return Kotlin.Long.fromBits(this.low_ | other.low_, this.high_ | other.high_);
 };
 Kotlin.Long.prototype.xor = function(other) {
+  phi__imf('Kotlin.Long.xor')
   return Kotlin.Long.fromBits(this.low_ ^ other.low_, this.high_ ^ other.high_);
 };
 Kotlin.Long.prototype.shiftLeft = function(numBits) {
+  phi__imf('Kotlin.Long.shiftLeft')
   numBits &= 63;
   if (numBits == 0) {
     return this;
@@ -599,6 +632,7 @@ Kotlin.Long.prototype.shiftLeft = function(numBits) {
   }
 };
 Kotlin.Long.prototype.shiftRight = function(numBits) {
+  phi__imf('Kotlin.Long.shiftRight')
   numBits &= 63;
   if (numBits == 0) {
     return this;
@@ -613,6 +647,7 @@ Kotlin.Long.prototype.shiftRight = function(numBits) {
   }
 };
 Kotlin.Long.prototype.shiftRightUnsigned = function(numBits) {
+  phi__imf('Kotlin.Long.shiftRightUnsigned')
   numBits &= 63;
   if (numBits == 0) {
     return this;
@@ -635,20 +670,25 @@ Kotlin.Long.prototype.equals = function(other) {
 };
 Kotlin.Long.prototype.compareTo_11rb$ = Kotlin.Long.prototype.compare;
 Kotlin.Long.prototype.inc = function() {
+  phi__imf('Kotlin.Long.inc')
   return this.add(Kotlin.Long.ONE);
 };
 Kotlin.Long.prototype.dec = function() {
+  phi__imf('Kotlin.Long.dec')
   return this.add(Kotlin.Long.NEG_ONE);
 };
 Kotlin.Long.prototype.valueOf = function() {
+  phi__imf('Kotlin.Long.valueOf')
   return this.toNumber();
 };
 Kotlin.Long.prototype.unaryPlus = function() {
+  phi__imf('Kotlin.Long.unaryPlus')
   return this;
 };
 Kotlin.Long.prototype.unaryMinus = Kotlin.Long.prototype.negate;
 Kotlin.Long.prototype.inv = Kotlin.Long.prototype.not;
 Kotlin.Long.prototype.rangeTo = function(other) {
+  phi__imf('Kotlin.Long.rangeTo')
   return new Kotlin.kotlin.ranges.LongRange(this, other);
 };
 Kotlin.defineModule = function(id, declaration) {

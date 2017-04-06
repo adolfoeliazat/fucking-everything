@@ -8,11 +8,37 @@ fun main(args: Array<String>) {
     runTest(TestCheck())
     runTest(TestNotNullOnce())
     runTest(TestPrint())
+    runTest(TestLong())
+}
+
+class TestLong : Test {
+    override fun runTest() {
+        val a = 922337203685477580L
+        val b = 92233720368547758L
+        val c = 1014570924054025338L
+        val n = -1014577784054025338L
+        println("a = $a"); assertEquals("922337203685477580", a.toString(), "4bed3e4b-e165-474b-9e8d-aa933e0438f5")
+        println("b = $b"); assertEquals("92233720368547758", b.toString(), "b40b9861-85bf-43c5-a28c-f96cfbbbcd3e")
+        println("c = $c"); assertEquals("1014570924054025338", c.toString(), "dee46c9d-940b-48ff-aa78-b58a9aa49540")
+        println("n = $n"); assertEquals("-1014577784054025338", n.toString(), "8e0f7bec-18a5-40b0-8548-b194f2aca50a")
+
+        // TODO:vgrechka Test Long operations when they will be actually needed
+//        // `returnSame` prevents addition at compile time
+//        val d = returnSame(a) + returnSame(b)
+//        println("d = $d"); assertEquals("1014570924054025338", c.toString(), "eab10b00-677e-4bda-ba4f-495c510af1c2")
+//
+//        assertEquals(returnSame(a), returnSame(a), "c1086796-bcf7-4055-8d7f-c4538a61d33e")
+    }
+
+    fun returnSame(x: Long) = x
 }
 
 class TestPrint : Test {
     override fun runTest() {
-        println("aaaaaaaaaaaaaaaaaaaaaa")
+        print("fuck shit")
+        println(" bitch")
+        println(123)
+        println(true)
     }
 }
 

@@ -75,7 +75,7 @@ class Phpifier(val program: JsProgram) {
         fun transformBody(originalBody: JsStatement): JsBlock {
             val fuck = literalCodeStatement(
                 "if (defined('PHI_KILL_LONG_LOOPS')) {" +
-                    "    if (++$loopCounterVar === 1000) { phiKillLongLoop(); };" +
+                    "    if (++$loopCounterVar === 100) { phiKillLongLoop(); };" +
                     "}")
 
             return JsBlock(mutableListOf<JsStatement>()-{o->
@@ -182,7 +182,7 @@ class Phpifier(val program: JsProgram) {
 
             override fun endVisit(x: JsReturn, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
-                ctx.replaceMe(JsReturn(invocation("phiEvaluate", listOf(x.expression))))
+                ctx.replaceMe(JsReturn(invocation("phiEvaluate", listOf(x.expression ?: void0()))))
             }
 
             override fun endVisit(x: JsThrow, ctx: JsContext<JsNode>) {
@@ -199,10 +199,12 @@ class Phpifier(val program: JsProgram) {
                 super.endVisit(x, ctx)
                 val shit = x.vars.map {
                     JsInvocation(JsNameRef("array"), JsStringLiteral(it.name.ident), it.initExpression
-                        ?: new("PhiUnaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral("prefix"), JsStringLiteral("void"), new("PhiNumberLiteral", listOf(JsStringLiteral("@@something"), program.getNumberLiteral(0))))))
+                        ?: void0())
                 }
                 ctx.replaceMe(JsInvocation(JsNameRef("phiVars"), nextDebugTagLiteral(), JsInvocation(JsNameRef("array"), *shit.toTypedArray())).makeStmt())
             }
+
+            private fun void0() = new("PhiUnaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral("prefix"), JsStringLiteral("void"), new("PhiNumberLiteral", listOf(JsStringLiteral("@@something"), program.getNumberLiteral(0)))))
 
             override fun endVisit(x: JsArrayLiteral, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)

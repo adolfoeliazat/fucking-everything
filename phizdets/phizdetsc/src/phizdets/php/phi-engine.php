@@ -91,8 +91,8 @@ abstract class PhiExpression {
 
 
 class PhiObject extends PhiValue {
-    /**@var PhiValue[]*/ protected $fields = array();
-    /**@var PhiObject[]*/ protected $props = array();
+    /**@var PhiValue[]*/ public $fields = array();
+    /**@var PhiObject[]*/ public $props = array();
 
     /**
      * @param array $opts
@@ -189,7 +189,7 @@ class PhiObject extends PhiValue {
             throw new PhiIllegalStateException("0c2b2e01-6046-4e68-974b-d479cb1b1019");
 
 // @debug
-//        if ($name === 'message')
+//        if ($name === 'fromNumber')
 //            strval('break on me');
 
         $obj = $this;
@@ -896,6 +896,81 @@ class Phi {
     }
 
     public static function initStdlib() {
+        $Math = phiEvaluate(new PhiObjectLiteral('@@Math', array(
+            array(new PhiNameRef('pow'), new PhiFunctionExpression('Math.pow',
+                array('base', 'exp'),
+                function () {
+                    $base = Phi::getCurrentEnv()->getVar('base');
+                    if (!($base instanceof PhiNumber))
+                        throw new PhiIllegalStateException("45388131-7830-4c14-92f0-f47eccd8602f");
+                    $exp = Phi::getCurrentEnv()->getVar('exp');
+                    if (!($exp instanceof PhiNumber))
+                        throw new PhiIllegalStateException("28c7351d-93db-4a20-a377-f88082e55e1d");
+
+                    return new PhiNumber(pow($base->getValue(), $exp->getValue()));
+                }
+            )),
+
+            array(new PhiNameRef('max'), new PhiFunctionExpression('Math.max',
+                array('a', 'b'),
+                function () {
+                    $a = Phi::getCurrentEnv()->getVar('a');
+                    if (!($a instanceof PhiNumber))
+                        throw new PhiIllegalStateException("911a1c4d-c246-4395-92d3-c19e4b6c1f95");
+                    $b = Phi::getCurrentEnv()->getVar('b');
+                    if (!($b instanceof PhiNumber))
+                        throw new PhiIllegalStateException("fa002681-0bc8-4296-97a0-faa7bf60a504");
+
+                    return new PhiNumber(max($a->getValue(), $b->getValue()));
+                }
+            )),
+
+            array(new PhiNameRef('floor'), new PhiFunctionExpression('Math.floor',
+                array('a'),
+                function () {
+                    $a = Phi::getCurrentEnv()->getVar('a');
+                    if (!($a instanceof PhiNumber))
+                        throw new PhiIllegalStateException("0cde899c-1d57-44f5-b545-417c1fd88a9b");
+
+                    return new PhiNumber(floor($a->getValue()));
+                }
+            )),
+
+            array(new PhiNameRef('ceil'), new PhiFunctionExpression('Math.ceil',
+                array('a'),
+                function () {
+                    $a = Phi::getCurrentEnv()->getVar('a');
+                    if (!($a instanceof PhiNumber))
+                        throw new PhiIllegalStateException("41e23017-bae9-4530-99d0-e617d7069ca8");
+
+                    return new PhiNumber(ceil($a->getValue()));
+                }
+            )),
+
+            array(new PhiNameRef('log'), new PhiFunctionExpression('Math.log',
+                array('a'),
+                function () {
+                    $a = Phi::getCurrentEnv()->getVar('a');
+                    if (!($a instanceof PhiNumber))
+                        throw new PhiIllegalStateException("960d3eab-aa8f-439e-b78f-afb7f9857753");
+
+                    return new PhiNumber(log($a->getValue()));
+                }
+            )),
+        )));
+        if (!($Math instanceof PhiObject))
+            throw new PhiIllegalStateException("d7207aaa-75ad-49be-a735-90e5b3796a10");
+        Phi::getCurrentEnv()->setVar('Math', $Math);
+
+        { // Math.LN2
+            $descr = new PhiObject();
+            $descr->setProperty('get', new Phifunction(new PhiFunctionExpression('get-LN2', array(), function() {
+                return new PhiNumber(log(2));
+            })));
+            $Math->defineProperty('LN2', $descr);
+        }
+
+
         phiVars('@@initStdlib',
             array(
 //                array('String', new PhiObjectLiteral('@@String', array(
@@ -905,19 +980,90 @@ class Phi {
                 array('Number', new PhiObjectLiteral('@@Number', array(
                     array(new PhiNameRef('prototype'), new PhiObjectLiteral('@@Number.prototype', array()))
                 ))),
-
-                array('Math', new PhiObjectLiteral('@@Math', array(
-                ))),
             )
         );
 
         phiExpressionStatement(new PhiFunctionExpression('phi__print', array('x'), function() {
             $x = Phi::getCurrentEnv()->getVar('x');
             if (!($x instanceof PhiString))
-                throw new PhiIllegalStateException("aceb983b-f03b-4f77-96f7-34f6f75c378d");
+                $x = phiEvaluate(new PhiInvocation(new PhiDot(new PhiNameRef('x'), 'toString'), array()));
 
             echo $x->getValue();
         }));
+
+        phiExpressionStatement(new PhiFunctionExpression('phi__Long_lowHighToString', array('low', 'high'), function() {
+            $low = Phi::getCurrentEnv()->getVar('low');
+            if (!($low instanceof PhiNumber))
+                throw new PhiIllegalStateException("d8b675de-74ec-4c18-ad48-2f7c6517aad5");
+            $low = $low->getValue();
+            $high = Phi::getCurrentEnv()->getVar('high');
+            if (!($high instanceof PhiNumber))
+                throw new PhiIllegalStateException("e7860d54-e5e5-4af2-8bda-8d8dff45c531");
+            $high = $high->getValue();
+
+            $longBits = phiS32ToBits($high) . phiS32ToBits($low);
+            // phiPrintln("Long bits: $longBits");
+
+            $isNegative = $longBits[0] === '1';
+            if ($isNegative) {
+                for ($i = 0; $i < 64; ++$i) {
+                    $longBits[$i] = $longBits[$i] === '0' ? '1' : '0';
+                }
+                // phiPrintln("Negated: $longBits");
+                for ($i = 63; $i >= 0; --$i) {
+                    if ($longBits[$i] === '0') {
+                        $longBits[$i] = '1';
+                        break;
+                    } else {
+                        $longBits[$i] = '0';
+                    }
+                }
+                // phiPrintln("+1: $longBits");
+            }
+
+            $long = '0';
+            for ($i = 0; $i < 64; ++$i) {
+                if ($longBits[$i] === '1') {
+                    $exp = 63 - $i;
+                    $long = bcadd($long, bcpow('2', strval($exp)));
+                }
+            }
+            if ($isNegative)
+                $long = "-$long";
+
+            return new PhiString($long);
+        }));
+
+        phiExpressionStatement(new PhiFunctionExpression('phi__imf', array('message'), function() {
+            $message = Phi::getCurrentEnv()->getVar('message');
+            if (!($message instanceof PhiString))
+                throw new PhiIllegalStateException("4996d7c6-8df8-43b1-ac63-3c923f562f7d");
+
+            throw new PhiUnsupportedOperationException($message->getValue());
+        }));
+
+        phiExpressionStatement(new PhiFunctionExpression('phi__exit', array(), function() {
+            echo "\n\nBLOODY EXIT -- FUCK YOU EVERYONE :)\n\n";
+            exit();
+        }));
+
+        phiExpressionStatement(new PhiFunctionExpression('isNaN', array('x'), function() {
+            $x = Phi::getCurrentEnv()->getVar('x');
+            if (!($x instanceof PhiNumber))
+                throw new PhiIllegalStateException("b0eb23e2-a28c-4aff-91a6-f1de6a382174");
+
+            return new PhiBoolean(is_nan($x->getValue()));
+        }));
+
+        phiExpressionStatement(new PhiFunctionExpression('isFinite', array('x'), function() {
+            $x = Phi::getCurrentEnv()->getVar('x');
+            if (!($x instanceof PhiNumber))
+                throw new PhiIllegalStateException("ab4bf12b-2cdd-4cb2-9b6b-bafa715693da");
+
+            return new PhiBoolean(is_finite($x->getValue()));
+        }));
+
+        // isNaN isFinite
     }
 
     /**
@@ -997,9 +1143,13 @@ class Phi {
     }
 }
 
-
-
 class PhiIllegalStateException extends Exception {
+    function __construct($message) {
+        parent::__construct($message);
+    }
+}
+
+class PhiUnsupportedOperationException extends Exception {
     function __construct($message) {
         parent::__construct($message);
     }
@@ -1171,7 +1321,7 @@ class PhiBoolean extends PhiValue {
 
 /**
  * @param PhiValue $inst
- * @param PhiFunction $ctor
+ * @param PhiValue $ctor
  * @return bool
  * @throws PhiIllegalStateException
  */
@@ -1388,7 +1538,7 @@ class PhiBinaryOperation extends PhiExpression {
                 throw new PhiIllegalStateException("d79e06d2-dcc0-4d51-a73a-0585c168e404");
             }
         }
-        else if (in_array($this->op, array('<<', '*', '/', '<=', '<', '>', '|', '-', '&', '%', '>='))) {
+        else if (in_array($this->op, array('<<', '*', '/', '<=', '<', '>', '|', '-', '&', '%', '>=', '>>>'))) {
             $lhsPhiValue = $this->lhs->evaluate();
             $rhsPhiValue = $this->rhs->evaluate();
             if (!($lhsPhiValue instanceof PhiNumber) || !($rhsPhiValue instanceof PhiNumber))
@@ -1416,9 +1566,18 @@ class PhiBinaryOperation extends PhiExpression {
             } else if ($this->op === '&') {
                 $res = $lhsValue & $rhsValue;
             } else if ($this->op === '%') {
-                $res = $lhsValue % $rhsValue;
+                $res = fmod($lhsValue, $rhsValue);
+//                try {
+//                    phiPrint("--- {$lhsValue} % {$rhsValue}");
+//                    $res = $lhsValue % $rhsValue;
+//                    phiPrintln(" = $res");
+//                } catch (Exception $e) {
+//                    phiPrintln("--- PIZDETS: {$e->getMessage()}");
+//                }
             } else if ($this->op === '>=') {
                 $res = $lhsValue >= $rhsValue;
+            } else if ($this->op = '>>>') {
+                $res = ( $lhsValue >> $rhsValue) & (PHP_INT_MAX >> ($rhsValue -1));
             } else {
                 throw new PhiIllegalStateException("f41f9846-7e55-46bb-b9d2-829eb4ab3ed3");
             }
@@ -1436,25 +1595,40 @@ class PhiBinaryOperation extends PhiExpression {
             return new PhiBoolean(phiIsInstanceOf($inst, $ctor));
         }
         else if ($this->op === '+=') {
-            if (!($this->lhs instanceof PhiNameRef))
-                throw new PhiIllegalStateException("6a13ea99-fa61-4b07-96dd-e59a640e8bef");
-            $varName = $this->lhs->getName();
-
-            $currentValue = Phi::getCurrentEnv()->getVar($varName);
-            if (!($currentValue instanceof PhiNumber))
-                throw new PhiIllegalStateException("320b9acf-4f54-4ebf-84c6-429a45607769");
-
-            $delta = phiEvaluate($this->rhs);
-            if (!($delta instanceof PhiNumber))
-                throw new PhiIllegalStateException("4c5ca9a3-cd5a-4f6c-936c-c2a9ca090f55");
-
-            $res = new PhiNumber($currentValue->getValue() + $delta->getValue());
-            Phi::getCurrentEnv()->setVar($varName, $res);
-            return $res;
+            return $this->numberShitAndAssign(function($a, $b) {return $a + $b;});
+        }
+        else if ($this->op === '-=') {
+            return $this->numberShitAndAssign(function($a, $b) {return $a - $b;});
+        }
+        else if ($this->op === '&=') {
+            return $this->numberShitAndAssign(function($a, $b) {return $a & $b;});
         }
         else {
             throw new PhiIllegalStateException("op = {$this->op}    6bb8ca7a-c00a-4f60-9930-211dba14c031");
         }
+    }
+
+    /**
+     * @param callable $shit
+     * @return PhiNumber
+     * @throws PhiIllegalStateException
+     */
+    private function numberShitAndAssign($shit) {
+        if (!($this->lhs instanceof PhiNameRef))
+            throw new PhiIllegalStateException("6a13ea99-fa61-4b07-96dd-e59a640e8bef");
+        $varName = $this->lhs->getName();
+
+        $currentValue = Phi::getCurrentEnv()->getVar($varName);
+        if (!($currentValue instanceof PhiNumber))
+            throw new PhiIllegalStateException("320b9acf-4f54-4ebf-84c6-429a45607769");
+
+        $arg = phiEvaluate($this->rhs);
+        if (!($arg instanceof PhiNumber))
+            throw new PhiIllegalStateException("4c5ca9a3-cd5a-4f6c-936c-c2a9ca090f55");
+
+        $res = new PhiNumber($shit($currentValue->getValue(), $arg->getValue()));
+        Phi::getCurrentEnv()->setVar($varName, $res);
+        return $res;
     }
 }
 
@@ -1813,6 +1987,12 @@ class PhiUnaryOperation extends PhiExpression {
                     throw new PhiIllegalStateException("9d2c372a-68a9-43fd-a94d-085e803c72b7");
                 return new PhiBoolean(!$argPhiValue->getValue());
             }
+            else if ($this->op === '~') {
+                $argPhiValue = $this->arg->evaluate();
+                if (!($argPhiValue instanceof PhiNumber))
+                    throw new PhiIllegalStateException("dcf78f0d-2f14-466f-9d52-1c161755f313");
+                return new PhiNumber(~$argPhiValue->getValue());
+            }
             else {
                 throw new PhiIllegalStateException("op = {$this->op}    f88f33d3-2868-43d5-82b7-a1b8c20fc1cb");
             }
@@ -1946,6 +2126,9 @@ class PhiInvocation extends PhiExpression {
      * @throws PhiIllegalStateException
      */
     public function evaluate() {
+        $debug_callee = strval($this->callee);
+        $debug_env = Phi::getCurrentEnv()->deepClone();
+
         /**@var PhiObject $receiverPhiValue*/
         /**@var PhiFunction $calleePhiValue*/
 
@@ -2299,10 +2482,77 @@ function phiKillLongLoop() {
     throw new Exception("Killing long loop");
 }
 
+function phiDumpShit1() {
+    $thiz = Phi::getCurrentEnv()->getThisValue();
+    phiPrintln(
+        'this.low_ = ' . $thiz->fields['low_']->getValue() . '; ' .
+        'this.high_ = ' . $thiz->fields['high_']->getValue());
+}
+
+function phiDumpShit2() {
+    $approx = Phi::getCurrentEnv()->getVar('approx');
+    $approxRes = Phi::getCurrentEnv()->getVar('approxRes');
+    $approxRem = Phi::getCurrentEnv()->getVar('approxRem');
+    $other = Phi::getCurrentEnv()->getVar('other');
+    $rem = Phi::getCurrentEnv()->getVar('rem');
+    phiPrintln(
+        'approx = ' . $approx->getValue() . '; ' .
+
+        'approxRes.low_ = ' . $approxRes->fields['low_']->getValue() . '; ' .
+        'approxRes.high_ = ' . $approxRes->fields['high_']->getValue() . '; ' .
+
+        'approxRem.low_ = ' . $approxRem->fields['low_']->getValue() . '; ' .
+        'approxRem.high_ = ' . $approxRem->fields['high_']->getValue() . '; ' .
+
+        'rem.low_ = ' . $rem->fields['low_']->getValue() . '; ' .
+        'rem.high_ = ' . $rem->fields['high_']->getValue() . '; ' .
+
+        'other.low_ = ' . $other->fields['low_']->getValue() . '; ' .
+        'other.high_ = ' . $other->fields['high_']->getValue() . '; '
+    );
+}
+
+function phiDumpShit3() {
+    $fuck = phiEvaluate(new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Long"), "TWO_PWR_63_DBL_"));
+    phiPrintln('');
+}
+
 function phiBreakDebugger($shit) {
     strval('break on me');
 }
 
+function phiS32ToBits($x) {
+    $isNegative = $x < 0;
+    if ($isNegative)
+        $x = -$x;
+
+    $bits = base_convert(strval($x), 10, 2);
+    if (strlen($bits) > 32)
+        throw new PhiIllegalStateException("83fb6b93-b954-4564-9216-af3af3245d65");
+    $bits = str_repeat('0', 32 - strlen($bits)) . $bits;
+
+    if ($isNegative)
+        $bits = phiNegateAndAddOne($bits);
+
+    return $bits;
+}
+
+function phiNegateAndAddOne($bits) {
+    for ($i = 0; $i < strlen($bits); ++$i) {
+        $bits[$i] = $bits[$i] === '0' ? '1' : '0';
+    }
+    // phiPrintln("Negated: $bits");
+    for ($i = strlen($bits) - 1; $i >= 0; --$i) {
+        if ($bits[$i] === '0') {
+            $bits[$i] = '1';
+            break;
+        } else {
+            $bits[$i] = '0';
+        }
+    }
+    // phiPrintln("+1: $bits");
+    return $bits;
+}
 
 // ==================================== ENTRY ======================================
 
