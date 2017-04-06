@@ -3,6 +3,11 @@ package phizdets
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.common.cache.CacheBuilder
+import com.google.common.cache.CacheLoader
+import com.google.common.cache.LoadingCache
+import com.google.debugging.sourcemap.SourceMapConsumerFactory
+import com.google.debugging.sourcemap.SourceMapping
 import org.jetbrains.kotlin.cli.js.K2PhizdetsCompiler
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.SimpleFunctionDescriptor
@@ -178,6 +183,51 @@ class Boobs(val testParams: TestParams) {
                         File(expectedFilePath).writeText(expectedPreparedResponse.text)
                         File(actualFilePath).writeText(actualPreparedResponse.text)
 
+                        run { // Map stack trace
+                            val s = actualPreparedResponse.text
+                            var readingStackLines = false
+                            val stackLines = mutableListOf<MapPhizdetsStack.StackLine>()
+                            s.lines().forEach {line->
+                                if (readingStackLines) {
+                                    val mr = Regex("(#\\d+) (.*)").matchEntire(line)
+                                    if (mr != null) {
+                                        val itemNumber = mr.groupValues[1]
+                                        val rest = mr.groupValues[2]
+                                        val mr2 = Regex("(.*?\\.php)\\((\\d+)\\): (.*)").matchEntire(rest)
+                                        if (mr2 != null) {
+                                            val path = mr2.groupValues[1]
+                                            val line = mr2.groupValues[2].toInt()
+                                            val description = mr2.groupValues[3]
+                                            stackLines += MapPhizdetsStack.StackLine(prefix = "", resource = path, line = line, column = 1)
+                                        }
+                                    } else {
+                                        return@forEach
+                                    }
+                                } else {
+                                    if (line == "Stack trace:") {
+                                        readingStackLines = true
+                                    }
+                                }
+                            }
+
+                            if (stackLines.isNotEmpty()) {
+                                clog("\n------------------- FUCKING STACK -------------------\n")
+                                stackLines.forEach {
+                                    val fuck = MapPhizdetsStack.mapFuckingLine(
+                                        it,
+                                        getMapPath = {resource ->
+                                            when (resource) {
+                                                "C:\\opt\\xampp\\htdocs\\phi-tests\\aps-back\\aps-back.php" -> MapPhizdetsStack.MapPath.Just("E:/fegh/out/phi-tests/aps-back/aps-back.php.map")
+                                                else -> MapPhizdetsStack.MapPath.Skip()
+                                            }
+                                        }
+                                    )
+                                    clog(fuck ?: "[Some obscure shit]")
+                                }
+                                clog()
+                            }
+                        }
+
                         val res = runProcessAndWait(listOf("git", "diff", "--color", actualFilePath, expectedFilePath), inheritIO = true)
                         if (res.exitValue != 0) {
                             clog("Diff shitted at us with code ${res.exitValue}")
@@ -219,6 +269,7 @@ class Boobs(val testParams: TestParams) {
             print("Compiling shit...")
             K2PhizdetsCompiler.main(
                 *sourceFiles.map {it.absolutePath}.toTypedArray(),
+                "-source-map",
                 // "-no-stdlib",
                 "-output", outFilePath)
             println(" OK, strange")
@@ -408,6 +459,154 @@ fun filesFrom(dirPath: String): List<File> {
     val dir = File(dirPath)
     check(dir.isDirectory) {"bea2f16f-20e7-43f7-8535-4be029c415c3"}
     return dir.listFiles {_, name -> name.endsWith(".kt")}.toList()
+}
+
+object MapPhizdetsStack {
+    private val mappingCache =
+        /*if (CACHE_MAPPINGS_BETWEEN_REQUESTS) sharedMappingCache
+        else*/ makeMappingCache()
+
+    class StackLine(val prefix: String, val resource: String, val line: Int, val column: Int)
+
+    sealed class MapPath {
+        class Just(val path: String) : MapPath()
+        class Skip : MapPath()
+        class Bitch : MapPath()
+    }
+
+    private class Skip(reason: String) : Exception(reason)
+    private class Verbatim(reason: String) : Exception(reason)
+
+    fun mapFuckingLine(stackLine: StackLine, getMapPath: (resource: String) -> MapPath): String? {
+        if (stackLine.line == 1) throw Skip("Ignoring line 1, as it's probably __awaiter() or some other junk")
+
+        val fuck = getMapPath(stackLine.resource)
+        val mapPath = when (fuck) {
+            is MapPath.Skip -> return null
+            is MapPath.Bitch -> throw Verbatim("No map file for ${stackLine.resource}")
+            is MapPath.Just -> fuck.path
+        }
+
+        val sourceMapping = mappingCache[mapPath]
+
+        val orig = sourceMapping.getMappingForLine(stackLine.line, stackLine.column)
+            ?: throw Verbatim("No mapping for line")
+
+        var longPath = orig.originalFile
+        var shortPath = orig.originalFile
+        if (longPath.startsWith("file://")) {
+            longPath = normalizePath(shortPath.substring("file://".length))
+            shortPath = when {
+            //                        longPath.startsWith(NORMAL_APS_HOME) -> "APS" + longPath.substring(NORMAL_APS_HOME.length)
+            //                        longPath.startsWith(NORMAL_KOMMON_HOME) -> "KOMMON" + longPath.substring(NORMAL_KOMMON_HOME.length)
+                else -> shortPath
+            }
+        }
+
+        var marginNotes = mutableListOf<String>()
+        try {
+            val line = File(longPath).readLines()[orig.lineNumber - 1]
+            if (line.contains(Regex("\\so\\."))) marginNotes.add("o.")
+            Regex("\\bassert(\\w|\\d|_)*").find(line)?.let {marginNotes.add(it.value)}
+            when {
+                line.contains("\"\"\"") -> marginNotes.add("\"\"\"")
+                line.contains("\"") -> marginNotes.add("\"")
+            }
+        } catch (e: Exception) {
+        }
+
+        val result = "${stackLine.prefix} ($shortPath:${orig.lineNumber}:${orig.columnPosition})" +
+            nbsp.repeat(5) + marginNotes.joinToString(nbsp.repeat(3))
+        return result
+    }
+
+    fun goBananas(rawStack: String): String {
+        val noisy = false
+
+        // Ex:    at Object.die_61zpoe$ (http://aps-ua-writer.local:3022/into-kommon-js-enhanced.js:32:17)
+        // Ex:    at http://aps-ua-writer.local:3022/front-enhanced.js:12225:48
+        // Ex:    at Generator.next (<anonymous>)
+        // Ex:    at __awaiter (http://aps-ua-writer.local:3022/into-kommon-js-enhanced.js:1:138)
+
+//        val NORMAL_APS_HOME = normalizePath(const.file.APS_HOME)
+//        val NORMAL_KOMMON_HOME = normalizePath(KOMMON_HOME)
+
+
+        val resultLines = mutableListOf<String>()
+
+        for (mangledLine in rawStack.lines()) {
+
+            try {
+                if (!mangledLine.startsWith("    at ")) throw Verbatim("Doesn't start with [at]")
+
+                val mr = Regex("(.*?)\\(?(https?://.*):(\\d+):(\\d+)\\)?").matchEntire(mangledLine)
+                    ?: run {
+                    if (mangledLine.contains("at Generator.next")) throw Skip("Useless junk")
+                    throw Verbatim("Unrecognized")
+                }
+                if (noisy) dwarnStriking("Recognized: \n" + inspectMatchResult(mr))
+
+                val stackLine = run {
+                    val (prefix, resource, lineString, columnString) = mr.destructured
+                    val (line, column) =
+                        try {Pair(lineString.toInt(), columnString.toInt())}
+                        catch (e: NumberFormatException) {throw Verbatim("Bad line or column number")}
+                    StackLine(prefix, resource, line, column)
+                }
+
+                val result = mapFuckingLine(stackLine, getMapPath = {resource->
+                    when {
+                    //                    resource.contains("/front-enhanced.js") -> "${const.file.APS_HOME}/front/out/front.js.map"
+                    //                    resource.contains("/into-kommon-js-enhanced.js") -> "$KOMMON_HOME/js/out/into-kommon-js.js.map"
+                        resource.contains("pizda") -> MapPath.Just("pizda.map")
+                        else -> MapPath.Bitch()
+                    }
+                })
+                if (result != null)
+                    resultLines.add(result)
+            }
+            catch (e: Skip) {
+                if (noisy) dwarnStriking("Skip: ${e.message}: $mangledLine")
+            }
+            catch (e: Verbatim) {
+                if (noisy) dwarnStriking("Verbatim: ${e.message}: $mangledLine")
+                resultLines.add(
+                    if (mangledLine.startsWith("    at ")) mangledLine.replaceRange(0, 1, when {
+                        mangledLine.contains("kotlin") -> "K" // Standard library
+                        else -> "?"
+                    })
+                    else mangledLine
+                )
+            }
+        }
+
+        return resultLines.joinToString("\n")
+    }
+
+
+    private fun makeMappingCache(): LoadingCache<String, SourceMapping> {
+        return CacheBuilder.newBuilder().build(object:CacheLoader<String, SourceMapping>() {
+            override fun load(mapPath: String): SourceMapping {
+                return SourceMapConsumerFactory.parse(File(mapPath).readText())
+            }
+        })
+    }
+
+    inline fun dwarnStriking(vararg xs: Any?) = dwarn("\n\n", "**********", *xs, "\n")
+
+    fun dwarn(vararg xs: Any?) = clog(xs.joinToString(" "))
+
+    fun inspectMatchResult(mr: MatchResult): String =
+        mr.groups.mapIndexed {i, g -> "Group $i: ${g?.value}"}.joinToString("\n")
+
+    val nbsp: String = "" + 0xa0.toChar()
+
+    fun normalizePath(junky: String): String {
+        val path = File(junky).toPath()
+        var normal = path.normalize().toString()
+        if (normal.matches(Regex("\\w:(\\\\|/).*"))) normal = normal[0].toLowerCase() + normal.substring(1)
+        return normal
+    }
 }
 
 

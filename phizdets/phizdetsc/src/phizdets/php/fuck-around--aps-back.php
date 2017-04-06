@@ -8291,3 +8291,5 @@ array(new PhiNameRef("get"), new PhiNameRef("DB_getInstance")))
   return phiEvaluate(new PhiNameRef("_"));
 }), array(new PhiConditional(new PhiBinaryOperation("@@32541", "===", new PhiUnaryOperation("@@32538", "prefix", "typeof", new PhiBrackets(new PhiThis(), new PhiStringLiteral("aps-back"))), new PhiStringLiteral("undefined")), new PhiObjectLiteral("@@32543", array()
 ), new PhiBrackets(new PhiThis(), new PhiStringLiteral("aps-back"))), new PhiNameRef("kotlin")))));
+
+//@ sourceMappingURL=aps-back.php.map

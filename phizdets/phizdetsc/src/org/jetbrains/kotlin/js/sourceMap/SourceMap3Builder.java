@@ -58,7 +58,8 @@ public class SourceMap3Builder implements SourceMapBuilder {
 
     @Override
     public File getOutFile() {
-        return new File(generatedFile.getParentFile(), generatedFile.getName() + ".map");
+        File file = new File(generatedFile.getParentFile(), generatedFile.getName() + ".map");
+        return file;
     }
 
     @Override

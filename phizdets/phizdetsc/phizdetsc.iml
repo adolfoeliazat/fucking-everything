@@ -8,7 +8,15 @@
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="kotlin-jvm" level="project" />
-    <orderEntry type="module" module-name="idea-backdoor-client" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../lib-gradle/guava-21.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="module" module-name="shared-jvm" />
     <orderEntry type="module-library">
       <library>
@@ -65,5 +73,17 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="photlin-dev-tools" />
+    <orderEntry type="module" module-name="idea-backdoor-client" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../lib-gradle/closure-compiler-v20170218.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../lib-gradle/closure-compiler-v20170218.jar!/OSGI-OPT/src" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>

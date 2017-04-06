@@ -33,7 +33,7 @@
       <file leaf-file-name="kotlin.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../out/production/phi-gross-test-1/lib/kotlin.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="100">
+            <state relative-caret-position="85050">
               <caret line="3402" column="4" lean-forward="false" selection-start-line="3402" selection-start-column="4" selection-end-line="3402" selection-end-column="4" />
               <folding />
             </state>
@@ -43,8 +43,8 @@
       <file leaf-file-name="kotlin--adapted.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../phizdets/phizdetsc/src/phizdets/php/kotlin--adapted.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="25322" column="49" lean-forward="false" selection-start-line="25322" selection-start-column="49" selection-end-line="25322" selection-end-column="49" />
+            <state relative-caret-position="25">
+              <caret line="25322" column="29" lean-forward="false" selection-start-line="25322" selection-start-column="29" selection-end-line="25322" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -53,28 +53,8 @@
       <file leaf-file-name="phizdets-stdlib.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../out/phizdets/phizdets-stdlib.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
+            <state relative-caret-position="282075">
               <caret line="11283" column="6" lean-forward="false" selection-start-line="11283" selection-start-column="6" selection-end-line="11283" selection-end-column="6" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="phi-gross-test-1.php" pinned="false" current-in-tab="false">
-        <entry file="file://C:/opt/xampp/htdocs/GrossTestPhizdets/phi-gross-test-1/phi-gross-test-1.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1075">
-              <caret line="43" column="45" lean-forward="false" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="phi-gross-test-1.php--tagged-gen" pinned="false" current-in-tab="false">
-        <entry file="file://C:/opt/xampp/htdocs/GrossTestPhizdets/phi-gross-test-1/phi-gross-test-1.php--tagged-gen">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="18" column="26" lean-forward="false" selection-start-line="18" selection-start-column="26" selection-end-line="18" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -649,14 +629,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/opt/xampp/htdocs/GrossTestPhizdets/phi-gross-test-1/phi-gross-test-1.php--tagged-gen">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="18" column="26" lean-forward="false" selection-start-line="18" selection-start-column="26" selection-end-line="18" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/GrossTestPhizdets/phi-gross-test-1/phi-gross-test-1.php--tagged-gen" />
     <entry file="file://$PROJECT_DIR$/../out/production/phi-gross-test-1/phi-gross-test-1.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1075">
@@ -665,18 +638,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/opt/xampp/htdocs/GrossTestPhizdets/phi-gross-test-1/phi-gross-test-1.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1075">
-          <caret line="43" column="45" lean-forward="false" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://C:/opt/xampp/htdocs/GrossTestPhizdets/phi-gross-test-1/phi-gross-test-1.php" />
     <entry file="file://$PROJECT_DIR$/../out/phizdets/phizdets-stdlib.js" />
     <entry file="file://$PROJECT_DIR$/../out/phizdets/phizdets-stdlib.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
+        <state relative-caret-position="282075">
           <caret line="11283" column="6" lean-forward="false" selection-start-line="11283" selection-start-column="6" selection-end-line="11283" selection-end-column="6" />
           <folding />
         </state>
@@ -684,7 +650,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../out/production/phi-gross-test-1/lib/kotlin.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
+        <state relative-caret-position="85050">
           <caret line="3402" column="4" lean-forward="false" selection-start-line="3402" selection-start-column="4" selection-end-line="3402" selection-end-column="4" />
           <folding />
         </state>
@@ -692,8 +658,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../phizdets/phizdetsc/src/phizdets/php/kotlin--adapted.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25322" column="49" lean-forward="false" selection-start-line="25322" selection-start-column="49" selection-end-line="25322" selection-end-column="49" />
+        <state relative-caret-position="25">
+          <caret line="25322" column="29" lean-forward="false" selection-start-line="25322" selection-start-column="29" selection-end-line="25322" selection-end-column="29" />
           <folding />
         </state>
       </provider>

@@ -18,6 +18,8 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.7'
     compile 'org.eclipse.jetty.aggregate:jetty-all:9.4.3.v20170317'
     compile 'org.jetbrains.kotlin:kotlin-compiler:1.1.0'
+    compile 'com.google.guava:guava:21.0'
+    compile 'com.google.javascript:closure-compiler:v20170218'
 }
 
 task importDeps(type: Copy) {
