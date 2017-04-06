@@ -437,12 +437,16 @@ open class PhizdetsToStringGenerationVisitor(val out: TextOutput, val taggedGenO
     }
 
     override fun visitInvocation(invocation: JsInvocation) {
+        if (invocation.insertFuckingNewlineBeforeMe)
+            p.print("\n")
         printDebugTag(invocation)
         printPair(invocation, invocation.qualifier)
 
         leftParen()
         printExpressions(invocation.arguments)
         rightParen()
+        if (invocation.insertFuckingNewlineAfterMe)
+            p.print("\n")
     }
 
     override fun visitLabel(x: JsLabel) {
@@ -818,7 +822,7 @@ open class PhizdetsToStringGenerationVisitor(val out: TextOutput, val taggedGenO
                         semi()
                     }
                     val needsFuckingNewline = when (statement) {
-                        is AbstractNode -> statement.needsFuckingNewline
+                        is AbstractNode -> statement.statementNeedsFuckingNewline
                         else -> false
                     }
                     if (needsFuckingNewline) {

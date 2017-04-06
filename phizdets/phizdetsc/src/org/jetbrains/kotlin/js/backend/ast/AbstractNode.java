@@ -16,7 +16,6 @@
 
 package org.jetbrains.kotlin.js.backend.ast;
 
-import org.jetbrains.kotlin.js.backend.JsToStringGenerationVisitor;
 import org.jetbrains.kotlin.js.backend.PhizdetsToStringGenerationVisitor;
 import org.jetbrains.kotlin.js.backend.ast.metadata.HasMetadata;
 import org.jetbrains.kotlin.js.util.TextOutputImpl;
@@ -25,7 +24,9 @@ import phizdets.compiler.PhizdetscKt;
 public abstract class AbstractNode extends HasMetadata implements JsNode {
     private static long nextDebugTag = 0L;
     public String debugTag = "" + nextDebugTag++;
-    public boolean needsFuckingNewline = true;
+    public boolean statementNeedsFuckingNewline = true;
+    public boolean insertFuckingNewlineBeforeMe = false;
+    public boolean insertFuckingNewlineAfterMe = false;
 
     {
         if (debugTag.equals("191")) {
@@ -45,7 +46,9 @@ public abstract class AbstractNode extends HasMetadata implements JsNode {
         if (other instanceof AbstractNode) {
             AbstractNode otherNode = (AbstractNode) other;
             debugTag = otherNode.debugTag;
-            needsFuckingNewline = otherNode.needsFuckingNewline;
+            statementNeedsFuckingNewline = otherNode.statementNeedsFuckingNewline;
+            insertFuckingNewlineBeforeMe = otherNode.insertFuckingNewlineBeforeMe;
+            insertFuckingNewlineAfterMe = otherNode.insertFuckingNewlineAfterMe;
             PhizdetscKt.setDeclarationDescriptor(this, PhizdetscKt.getDeclarationDescriptor(otherNode));
         }
         //noinspection unchecked

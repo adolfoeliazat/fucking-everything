@@ -195,6 +195,8 @@ class Phpifier(val program: JsProgram) {
                 ctx.replaceMe(new("PhiStringLiteral", listOf(x)))
             }
 
+            private fun void0() = new("PhiUnaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral("prefix"), JsStringLiteral("void"), new("PhiNumberLiteral", listOf(JsStringLiteral("@@something"), program.getNumberLiteral(0)))))
+
             override fun endVisit(x: JsVars, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
                 val shit = x.vars.map {
@@ -204,7 +206,6 @@ class Phpifier(val program: JsProgram) {
                 ctx.replaceMe(JsInvocation(JsNameRef("phiVars"), nextDebugTagLiteral(), JsInvocation(JsNameRef("array"), *shit.toTypedArray())).makeStmt())
             }
 
-            private fun void0() = new("PhiUnaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral("prefix"), JsStringLiteral("void"), new("PhiNumberLiteral", listOf(JsStringLiteral("@@something"), program.getNumberLiteral(0)))))
 
             override fun endVisit(x: JsArrayLiteral, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
@@ -214,9 +215,15 @@ class Phpifier(val program: JsProgram) {
             override fun endVisit(x: JsObjectLiteral, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
                 val args = x.propertyInitializers.map {
-                    invocation("array", listOf(it.labelExpr, it.valueExpr))
+                    invocation("array", listOf(it.labelExpr, it.valueExpr))-{o->
+                        o.insertFuckingNewlineBeforeMe = true
+                    }
                 }
-                ctx.replaceMe(new("PhiObjectLiteral", listOf(nextDebugTagLiteral(), invocation("array", args))))
+                ctx.replaceMe(new("PhiObjectLiteral", listOf(
+                    nextDebugTagLiteral(),
+                    invocation("array", args)-{o->
+                        o.insertFuckingNewlineAfterMe = true
+                    })))
             }
 
             override fun endVisit(x: JsInvocation, ctx: JsContext<JsNode>) {
@@ -370,7 +377,7 @@ class Phpifier(val program: JsProgram) {
                 val ident = "Exception \$__phiException"
                 val catchBody = JsBlock()
                 catchBody.statements.add(JsNameRef("Phi::getCurrentEnv()->setVar('${x.parameter.name.ident}', \$__phiException->phiValue)").makeStmt()-{o->
-                    (o as AbstractNode).needsFuckingNewline = false
+                    (o as AbstractNode).statementNeedsFuckingNewline = false
                 })
                 catchBody.statements.addAll(x.body.statements)
                 ctx.replaceMe(JsCatch(x.scope, ident, catchBody))

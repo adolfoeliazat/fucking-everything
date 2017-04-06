@@ -2554,6 +2554,11 @@ function phiNegateAndAddOne($bits) {
     return $bits;
 }
 
+function phiEval($code) {
+    return eval($code);
+}
+
+
 // ==================================== ENTRY ======================================
 
 

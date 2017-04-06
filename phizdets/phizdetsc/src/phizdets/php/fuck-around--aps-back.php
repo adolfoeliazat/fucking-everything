@@ -4259,19 +4259,34 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@14126", "=", new PhiDot(new PhiDot(new PhiNameRef("DB\$DatabaseEngine"), "prototype"), "constructor"), new PhiNameRef("DB\$DatabaseEngine")));
   phiExpressionStatement(new PhiBinaryOperation("@@14135", "=", new PhiDot(new PhiNameRef("ServeRecreateTestDatabaseSchema"), "prototype"), new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "create"), array(new PhiDot(new PhiNameRef("BitchyProcedure"), "prototype")))));
   phiExpressionStatement(new PhiBinaryOperation("@@14141", "=", new PhiDot(new PhiDot(new PhiNameRef("ServeRecreateTestDatabaseSchema"), "prototype"), "constructor"), new PhiNameRef("ServeRecreateTestDatabaseSchema")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("apsphp"), "prototype"), new PhiStringLiteral("myFuckingDir"), new PhiObjectLiteral("@@14170", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("apsphp"), "prototype"), new PhiStringLiteral("myFuckingDir"), new PhiObjectLiteral("@@14170", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "myFuckingDir\$delegate"), "getValue_lrcp0p\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("myFuckingDir"))))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("myFuckingDir"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("myFuckingDir"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "myFuckingDir\$delegate"), "setValue_9rddgb\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("myFuckingDir"))), new PhiNameRef("myFuckingDir"))));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@14185", "=", new PhiDot(new PhiNameRef("apsphp"), "\$metadata\$"), new PhiObjectLiteral("@@14183", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("apsphp")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@14185", "=", new PhiDot(new PhiNameRef("apsphp"), "\$metadata\$"), new PhiObjectLiteral("@@14183", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("apsphp")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@14189", array(array("apsphp_instance", new PhiNullLiteral("@@14187"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@14203", "=", new PhiDot(new PhiNameRef("PHPDumpBodyToContainer"), "\$metadata\$"), new PhiObjectLiteral("@@14201", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHPDumpBodyToContainer")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@14203", "=", new PhiDot(new PhiNameRef("PHPDumpBodyToContainer"), "\$metadata\$"), new PhiObjectLiteral("@@14201", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHPDumpBodyToContainer")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@14246", "=", new PhiDot(new PhiDot(new PhiNameRef("phplog"), "prototype"), "info_yhszz7\$"), new PhiFunctionExpression(null, array("xs"), function () {
     phiVars("@@14229", array(array("shit", new PhiInvocation(new PhiNameRef("joinToString"), array(new PhiNameRef("xs"), new PhiStringLiteral(" "), new PhiUnaryOperation("@@14213", "prefix", "void", new PhiNumberLiteral("@@14211", 0)), new PhiUnaryOperation("@@14217", "prefix", "void", new PhiNumberLiteral("@@14215", 0)), new PhiUnaryOperation("@@14221", "prefix", "void", new PhiNumberLiteral("@@14219", 0)), new PhiUnaryOperation("@@14225", "prefix", "void", new PhiNumberLiteral("@@14223", 0)), new PhiNameRef("phplog\$info\$lambda"))))));
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("error_log"), array(new PhiArrayLiteral(array(new PhiBinaryOperation("@@14233", "+", new PhiNameRef("shit"), new PhiStringLiteral("\n")), new PhiNumberLiteral("@@14235", 3), new PhiBinaryOperation("@@14241", "+", new PhiDot(new PhiInvocation(new PhiNameRef("apsphp_getInstance"), array()), "myFuckingDir"), new PhiStringLiteral("/../log/all.log")))))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@14260", "=", new PhiDot(new PhiNameRef("phplog"), "\$metadata\$"), new PhiObjectLiteral("@@14258", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("phplog")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@14260", "=", new PhiDot(new PhiNameRef("phplog"), "\$metadata\$"), new PhiObjectLiteral("@@14258", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("phplog")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@14264", array(array("phplog_instance", new PhiNullLiteral("@@14262"))));
   phiExpressionStatement(new PhiBinaryOperation("@@14272", "=", new PhiDot(new PhiDot(new PhiNameRef("sharedPlatform\$ObjectLiteral"), "prototype"), "currentTimeMillis"), new PhiFunctionExpression(null, array(), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("4edaf379-ad6a-4d11-a4d2-3fffb8372576"))));
@@ -4279,11 +4294,26 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@14281", "=", new PhiDot(new PhiDot(new PhiNameRef("sharedPlatform\$ObjectLiteral"), "prototype"), "getenv_61zpoe\$"), new PhiFunctionExpression(null, array("name"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("001706a0-c7a6-4fbf-b57f-f0069cfff08b"))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@14294", "=", new PhiDot(new PhiNameRef("sharedPlatform\$ObjectLiteral"), "\$metadata\$"), new PhiObjectLiteral("@@14292", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("XSharedPlatform"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@14294", "=", new PhiDot(new PhiNameRef("sharedPlatform\$ObjectLiteral"), "\$metadata\$"), new PhiObjectLiteral("@@14292", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("XSharedPlatform")))))
+)));
   phiVars("@@14299", array(array("sharedPlatform", new PhiUnaryOperation("@@14296", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@14312", "=", new PhiDot(new PhiNameRef("Pipiska"), "\$metadata\$"), new PhiObjectLiteral("@@14310", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Pipiska")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@14326", "=", new PhiDot(new PhiNameRef("Pizda\$Clitoris"), "\$metadata\$"), new PhiObjectLiteral("@@14324", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Clitoris")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@14340", "=", new PhiDot(new PhiNameRef("Pizda"), "\$metadata\$"), new PhiObjectLiteral("@@14338", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Pizda")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@14312", "=", new PhiDot(new PhiNameRef("Pipiska"), "\$metadata\$"), new PhiObjectLiteral("@@14310", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Pipiska")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@14326", "=", new PhiDot(new PhiNameRef("Pizda\$Clitoris"), "\$metadata\$"), new PhiObjectLiteral("@@14324", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Clitoris")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@14340", "=", new PhiDot(new PhiNameRef("Pizda"), "\$metadata\$"), new PhiObjectLiteral("@@14338", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Pizda")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@14349", "=", new PhiDot(new PhiDot(new PhiNameRef("mutableSetOf\$ObjectLiteral"), "prototype"), "add_11rb\$"), new PhiFunctionExpression(null, array("element"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("71ba5a03-b3b9-4f12-9827-b8f44d541cdc"))));
   })));
@@ -4305,9 +4335,11 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@14403", "=", new PhiDot(new PhiDot(new PhiNameRef("mutableSetOf\$ObjectLiteral"), "prototype"), "retainAll_brywnq\$"), new PhiFunctionExpression(null, array("elements"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("81bf5195-a235-480d-a3c2-0344d92e7995"))));
   })));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("mutableSetOf\$ObjectLiteral"), "prototype"), new PhiStringLiteral("size"), new PhiObjectLiteral("@@14415", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("mutableSetOf\$ObjectLiteral"), "prototype"), new PhiStringLiteral("size"), new PhiObjectLiteral("@@14415", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("9b6fe4d9-a03d-4429-9972-d7ecb5f5b08d"))));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@14425", "=", new PhiDot(new PhiDot(new PhiNameRef("mutableSetOf\$ObjectLiteral"), "prototype"), "contains_11rb\$"), new PhiFunctionExpression(null, array("element"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("c11d1bf4-5d23-4baa-bb34-d6da7a4be23e"))));
   })));
@@ -4317,13 +4349,18 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@14443", "=", new PhiDot(new PhiDot(new PhiNameRef("mutableSetOf\$ObjectLiteral"), "prototype"), "isEmpty"), new PhiFunctionExpression(null, array(), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("0c15d948-b154-444f-9a56-b92654402efd"))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@14456", "=", new PhiDot(new PhiNameRef("mutableSetOf\$ObjectLiteral"), "\$metadata\$"), new PhiObjectLiteral("@@14454", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("MutableSet"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@14456", "=", new PhiDot(new PhiNameRef("mutableSetOf\$ObjectLiteral"), "\$metadata\$"), new PhiObjectLiteral("@@14454", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("MutableSet")))))
+)));
   phiVars("@@14468", array(array("map", new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "defineInlineFunction"), array(new PhiStringLiteral("aps-back.aps.map_dvm6j0\$"), new PhiFunctionExpression(null, array("\$receiver", "transform"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiNameRef("_"), "aps"), "imf_61zpoe\$"), array(new PhiStringLiteral("7692fed3-d51c-4de7-95d9-6b9f23019c29"))));
   }))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("LameList"), "prototype"), new PhiStringLiteral("size"), new PhiObjectLiteral("@@14480", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("LameList"), "prototype"), new PhiStringLiteral("size"), new PhiObjectLiteral("@@14480", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("count"), array(new PhiDot(new PhiThis(), "items_0"))));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@14490", "=", new PhiDot(new PhiDot(new PhiNameRef("LameList"), "prototype"), "contains_11rb\$"), new PhiFunctionExpression(null, array("element"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("aae8d310-7b52-4940-8536-8b296d321d85"))));
   })));
@@ -4386,60 +4423,131 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@14667", "=", new PhiDot(new PhiDot(new PhiNameRef("LameList"), "prototype"), "subList_vux9f0\$"), new PhiFunctionExpression(null, array("fromIndex", "toIndex"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("a2cf6445-99c9-4c5f-8487-bdd4a193d931"))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@14682", "=", new PhiDot(new PhiNameRef("LameList"), "\$metadata\$"), new PhiObjectLiteral("@@14680", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("LameList")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("MutableList"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@14682", "=", new PhiDot(new PhiNameRef("LameList"), "\$metadata\$"), new PhiObjectLiteral("@@14680", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("LameList")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("MutableList")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@14693", "=", new PhiDot(new PhiDot(new PhiNameRef("PHP_ThreadLocal"), "prototype"), "set_11rb\$"), new PhiFunctionExpression(null, array("newValue"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@14690", "=", new PhiDot(new PhiThis(), "value_0"), new PhiNameRef("newValue")));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@14707", "=", new PhiDot(new PhiNameRef("PHP_ThreadLocal"), "\$metadata\$"), new PhiObjectLiteral("@@14705", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_ThreadLocal")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@14722", "=", new PhiDot(new PhiNameRef("PHP_ServletException"), "\$metadata\$"), new PhiObjectLiteral("@@14720", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_ServletException")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Exception"))))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("PHP_HttpServletRequest"), "prototype"), new PhiStringLiteral("characterEncoding"), new PhiObjectLiteral("@@14739", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiBinaryOperation("@@14707", "=", new PhiDot(new PhiNameRef("PHP_ThreadLocal"), "\$metadata\$"), new PhiObjectLiteral("@@14705", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_ThreadLocal")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@14722", "=", new PhiDot(new PhiNameRef("PHP_ServletException"), "\$metadata\$"), new PhiObjectLiteral("@@14720", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_ServletException")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Exception")))))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("PHP_HttpServletRequest"), "prototype"), new PhiStringLiteral("characterEncoding"), new PhiObjectLiteral("@@14739", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("d81d0a76-3609-4ce3-b0ce-a96ee4e19e50"))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("value"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("value"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("31fbdf22-7d70-4693-bca5-a194d246de72"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("PHP_HttpServletRequest"), "prototype"), new PhiStringLiteral("reader"), new PhiObjectLiteral("@@14752", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("PHP_HttpServletRequest"), "prototype"), new PhiStringLiteral("reader"), new PhiObjectLiteral("@@14752", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("3a69f489-d254-4aab-a321-a1a0d39713b8"))));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@14767", "=", new PhiDot(new PhiNameRef("PHP_HttpServletRequest\$Reader"), "\$metadata\$"), new PhiObjectLiteral("@@14765", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Reader")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("PHP_HttpServletRequest"), "prototype"), new PhiStringLiteral("pathInfo"), new PhiObjectLiteral("@@14779", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@14767", "=", new PhiDot(new PhiNameRef("PHP_HttpServletRequest\$Reader"), "\$metadata\$"), new PhiObjectLiteral("@@14765", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Reader")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("PHP_HttpServletRequest"), "prototype"), new PhiStringLiteral("pathInfo"), new PhiObjectLiteral("@@14779", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("561c681d-8cfe-44ee-afae-1da09189ef78"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("PHP_HttpServletRequest"), "prototype"), new PhiStringLiteral("queryString"), new PhiObjectLiteral("@@14792", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("PHP_HttpServletRequest"), "prototype"), new PhiStringLiteral("queryString"), new PhiObjectLiteral("@@14792", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("phiEval"), array(new PhiStringLiteral("return \$_SERVER['QUERY_STRING'];"))));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@14807", "=", new PhiDot(new PhiNameRef("PHP_HttpServletRequest"), "\$metadata\$"), new PhiObjectLiteral("@@14805", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_HttpServletRequest")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@14821", "=", new PhiDot(new PhiNameRef("PHP_HttpServletResponse\$Companion"), "\$metadata\$"), new PhiObjectLiteral("@@14819", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Companion")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@14807", "=", new PhiDot(new PhiNameRef("PHP_HttpServletRequest"), "\$metadata\$"), new PhiObjectLiteral("@@14805", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_HttpServletRequest")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@14821", "=", new PhiDot(new PhiNameRef("PHP_HttpServletResponse\$Companion"), "\$metadata\$"), new PhiObjectLiteral("@@14819", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Companion")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@14825", array(array("PHP_HttpServletResponse\$Companion_instance", new PhiNullLiteral("@@14823"))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("PHP_HttpServletResponse"), "prototype"), new PhiStringLiteral("contentType"), new PhiObjectLiteral("@@14841", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("PHP_HttpServletResponse"), "prototype"), new PhiStringLiteral("contentType"), new PhiObjectLiteral("@@14841", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("3a14d9b1-5118-4f15-8e59-8d0c2a7634d6"))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("value"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("value"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("78a5c5eb-bf55-4dec-b8c7-af6fb10894f1"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("PHP_HttpServletResponse"), "prototype"), new PhiStringLiteral("writer"), new PhiObjectLiteral("@@14854", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("PHP_HttpServletResponse"), "prototype"), new PhiStringLiteral("writer"), new PhiObjectLiteral("@@14854", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("ad50f428-2fe5-4eb4-b676-98b7128bbae3"))));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@14869", "=", new PhiDot(new PhiNameRef("PHP_HttpServletResponse\$Writer"), "\$metadata\$"), new PhiObjectLiteral("@@14867", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Writer")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("PHP_HttpServletResponse"), "prototype"), new PhiStringLiteral("status"), new PhiObjectLiteral("@@14886", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@14869", "=", new PhiDot(new PhiNameRef("PHP_HttpServletResponse\$Writer"), "\$metadata\$"), new PhiObjectLiteral("@@14867", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Writer")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("PHP_HttpServletResponse"), "prototype"), new PhiStringLiteral("status"), new PhiObjectLiteral("@@14886", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("93f1db06-5aa5-4609-8d06-7ddebfbb3612"))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("value"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("value"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("b49d85f3-5745-40e8-89fd-5927f744bb30"))));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@14902", "=", new PhiDot(new PhiDot(new PhiNameRef("PHP_HttpServletResponse"), "prototype"), "addHeader_puj7f4\$"), new PhiFunctionExpression(null, array("name", "value"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiExternalNameRef("header"), array(new PhiBinaryOperation("@@14898", "+", new PhiBinaryOperation("@@14895", "+", new PhiNameRef("name"), new PhiStringLiteral(": ")), new PhiNameRef("value")))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@14916", "=", new PhiDot(new PhiNameRef("PHP_HttpServletResponse"), "\$metadata\$"), new PhiObjectLiteral("@@14914", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_HttpServletResponse")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@14916", "=", new PhiDot(new PhiNameRef("PHP_HttpServletResponse"), "\$metadata\$"), new PhiObjectLiteral("@@14914", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_HttpServletResponse")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@14925", "=", new PhiDot(new PhiDot(new PhiNameRef("PHP_DataSource"), "prototype"), "close"), new PhiFunctionExpression(null, array(), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("e738c4a5-8529-4d45-8227-f3df72bc5c31"))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@14939", "=", new PhiDot(new PhiNameRef("PHP_DataSource"), "\$metadata\$"), new PhiObjectLiteral("@@14937", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_DataSource")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@14954", "=", new PhiDot(new PhiNameRef("PHP_Scope"), "\$metadata\$"), new PhiObjectLiteral("@@14952", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Scope")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@14969", "=", new PhiDot(new PhiNameRef("PHP_Component"), "\$metadata\$"), new PhiObjectLiteral("@@14967", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Component")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@14983", "=", new PhiDot(new PhiNameRef("PHP_BeanDefinition\$Companion"), "\$metadata\$"), new PhiObjectLiteral("@@14981", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Companion")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@14939", "=", new PhiDot(new PhiNameRef("PHP_DataSource"), "\$metadata\$"), new PhiObjectLiteral("@@14937", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_DataSource")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@14954", "=", new PhiDot(new PhiNameRef("PHP_Scope"), "\$metadata\$"), new PhiObjectLiteral("@@14952", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Scope")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@14969", "=", new PhiDot(new PhiNameRef("PHP_Component"), "\$metadata\$"), new PhiObjectLiteral("@@14967", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Component")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@14983", "=", new PhiDot(new PhiNameRef("PHP_BeanDefinition\$Companion"), "\$metadata\$"), new PhiObjectLiteral("@@14981", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Companion")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@14987", array(array("PHP_BeanDefinition\$Companion_instance", new PhiNullLiteral("@@14985"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15000", "=", new PhiDot(new PhiNameRef("PHP_BeanDefinition"), "\$metadata\$"), new PhiObjectLiteral("@@14998", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_BeanDefinition")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("log"), new PhiObjectLiteral("@@15011", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiBinaryOperation("@@15000", "=", new PhiDot(new PhiNameRef("PHP_BeanDefinition"), "\$metadata\$"), new PhiObjectLiteral("@@14998", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_BeanDefinition")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("log"), new PhiObjectLiteral("@@15011", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "log_3n168q\$_0"));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@15021", "=", new PhiDot(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), "makeServant_61zpoe\$"), new PhiFunctionExpression(null, array("procedureName"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("15b54189-8f6f-4077-a3a3-b54b214fd23f"))));
   })));
@@ -4458,39 +4566,61 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@15066", "=", new PhiDot(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), "hashPassword_61zpoe\$"), new PhiFunctionExpression(null, array("clearText"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("cd0e3c93-885a-44da-97dd-a27a50524485"))));
   })));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("userRepo"), new PhiObjectLiteral("@@15078", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("userRepo"), new PhiObjectLiteral("@@15078", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("4407362e-e680-4428-8895-0610b4387d02"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("userTokenRepo"), new PhiObjectLiteral("@@15091", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("userTokenRepo"), new PhiObjectLiteral("@@15091", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("26e27a93-3629-4b6a-99ed-e78fcbe34dd7"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("userParamsHistoryItemRepo"), new PhiObjectLiteral("@@15104", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("userParamsHistoryItemRepo"), new PhiObjectLiteral("@@15104", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("b218bb24-a063-4d73-bfa9-8cf0576e97ef"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("uaOrderRepo"), new PhiObjectLiteral("@@15117", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("uaOrderRepo"), new PhiObjectLiteral("@@15117", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("e61037f8-c86f-4302-b975-2eee2325d6d6"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("uaOrderFileRepo"), new PhiObjectLiteral("@@15130", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("uaOrderFileRepo"), new PhiObjectLiteral("@@15130", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("e5987681-0fd4-462f-bad6-84f09b1bdc8a"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("uaDocumentCategoryRepo"), new PhiObjectLiteral("@@15143", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("uaDocumentCategoryRepo"), new PhiObjectLiteral("@@15143", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("6a39f4b8-a677-49bc-8370-de8778e2aba4"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("userTimesDocumentCategoryRepo"), new PhiObjectLiteral("@@15156", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("userTimesDocumentCategoryRepo"), new PhiObjectLiteral("@@15156", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("8f610afc-3ffc-4fd7-97b3-3e9c30878ecd"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("userParamsHistoryItemTimesDocumentCategoryRepo"), new PhiObjectLiteral("@@15169", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("userParamsHistoryItemTimesDocumentCategoryRepo"), new PhiObjectLiteral("@@15169", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("0008f7e4-e9ab-41ab-b210-81d0b90bf437"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("bidRepo"), new PhiObjectLiteral("@@15182", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("bidRepo"), new PhiObjectLiteral("@@15182", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("b9b83c63-ac6b-4e21-b88f-1ee972d11501"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("requestGlobus"), new PhiObjectLiteral("@@15195", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("requestGlobus"), new PhiObjectLiteral("@@15195", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("a714ef49-e3a7-48f1-8f12-c4efa1e859a6"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("debugLog"), new PhiObjectLiteral("@@15208", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("debugLog"), new PhiObjectLiteral("@@15208", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("d63b32ee-94cf-4777-9e44-2133102acd0a"))));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@15218", "=", new PhiDot(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), "getServeObjectRequestFunction_za3rmp\$"), new PhiFunctionExpression(null, array("params"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("812eea57-ef5a-4694-8707-a430d0533526"))));
   })));
@@ -4506,12 +4636,16 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@15254", "=", new PhiDot(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), "highlightRanges_kwv3np\$"), new PhiFunctionExpression(null, array("text_0", "searchWords"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("dec07828-b259-46c9-8192-2374ff069057"))));
   })));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("hackyObjectMapper"), new PhiObjectLiteral("@@15266", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("hackyObjectMapper"), new PhiObjectLiteral("@@15266", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("70245e8a-3883-4d5c-b148-5dcbdfc6850b"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("shittyObjectMapper"), new PhiObjectLiteral("@@15279", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "prototype"), new PhiStringLiteral("shittyObjectMapper"), new PhiObjectLiteral("@@15279", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("cfed105b-5fb9-4e50-a570-65d4a325eb1c"))));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@15292", "=", new PhiDot(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral\$log\$ObjectLiteral"), "prototype"), "info_61zpoe\$"), new PhiFunctionExpression(null, array("s"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiInvocation(new PhiNameRef("phplog_getInstance"), array()), "info_yhszz7\$"), array(new PhiArrayLiteral(array(new PhiNameRef("s"))))));
   })));
@@ -4521,62 +4655,200 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@15310", "=", new PhiDot(new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral\$log\$ObjectLiteral"), "prototype"), "section_61zpoe\$"), new PhiFunctionExpression(null, array("s"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("e1456463-02c4-4a7a-8771-42ce63b12fd1"))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@15323", "=", new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral\$log\$ObjectLiteral"), "\$metadata\$"), new PhiObjectLiteral("@@15321", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_Logger"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15336", "=", new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "\$metadata\$"), new PhiObjectLiteral("@@15334", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("XBackPlatform"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@15323", "=", new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral\$log\$ObjectLiteral"), "\$metadata\$"), new PhiObjectLiteral("@@15321", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_Logger")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15336", "=", new PhiDot(new PhiNameRef("backPlatform\$ObjectLiteral"), "\$metadata\$"), new PhiObjectLiteral("@@15334", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("XBackPlatform")))))
+)));
   phiVars("@@15341", array(array("backPlatform", new PhiUnaryOperation("@@15338", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15355", "=", new PhiDot(new PhiNameRef("PHP_XmlRootElement"), "\$metadata\$"), new PhiObjectLiteral("@@15353", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_XmlRootElement")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15370", "=", new PhiDot(new PhiNameRef("PHP_XmlElement"), "\$metadata\$"), new PhiObjectLiteral("@@15368", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_XmlElement")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15385", "=", new PhiDot(new PhiNameRef("PHP_XmlAccessorType"), "\$metadata\$"), new PhiObjectLiteral("@@15383", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_XmlAccessorType")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@15355", "=", new PhiDot(new PhiNameRef("PHP_XmlRootElement"), "\$metadata\$"), new PhiObjectLiteral("@@15353", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_XmlRootElement")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15370", "=", new PhiDot(new PhiNameRef("PHP_XmlElement"), "\$metadata\$"), new PhiObjectLiteral("@@15368", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_XmlElement")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15385", "=", new PhiDot(new PhiNameRef("PHP_XmlAccessorType"), "\$metadata\$"), new PhiObjectLiteral("@@15383", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_XmlAccessorType")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
   phiVars("@@15390", array(array("PHP_XmlAccessType\$FIELD_instance", new PhiUnaryOperation("@@15387", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15404", "=", new PhiDot(new PhiNameRef("PHP_XmlAccessType"), "\$metadata\$"), new PhiObjectLiteral("@@15402", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_XmlAccessType")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@15404", "=", new PhiDot(new PhiNameRef("PHP_XmlAccessType"), "\$metadata\$"), new PhiObjectLiteral("@@15402", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_XmlAccessType")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@15409", "=", new PhiDot(new PhiNameRef("PHP_XmlAccessType"), "values"), new PhiNameRef("PHP_XmlAccessType\$values")));
   phiExpressionStatement(new PhiBinaryOperation("@@15414", "=", new PhiDot(new PhiNameRef("PHP_XmlAccessType"), "valueOf_61zpoe\$"), new PhiNameRef("PHP_XmlAccessType\$valueOf")));
   phiExpressionStatement(new PhiBinaryOperation("@@15421", "=", new PhiDot(new PhiDot(new PhiNameRef("PHP_Collections"), "prototype"), "synchronizedList_zfnyf4\$"), new PhiFunctionExpression(null, array("list"), function () {
     return phiEvaluate(new PhiNameRef("list"));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@15435", "=", new PhiDot(new PhiNameRef("PHP_Collections"), "\$metadata\$"), new PhiObjectLiteral("@@15433", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Collections")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@15435", "=", new PhiDot(new PhiNameRef("PHP_Collections"), "\$metadata\$"), new PhiObjectLiteral("@@15433", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Collections")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@15439", array(array("PHP_Collections_instance", new PhiNullLiteral("@@15437"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15452", "=", new PhiDot(new PhiNameRef("PHP_Date"), "\$metadata\$"), new PhiObjectLiteral("@@15450", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Date")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15466", "=", new PhiDot(new PhiNameRef("PHP_Logger"), "\$metadata\$"), new PhiObjectLiteral("@@15464", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Logger")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15480", "=", new PhiDot(new PhiNameRef("PHP_Serializable"), "\$metadata\$"), new PhiObjectLiteral("@@15478", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Serializable")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15495", "=", new PhiDot(new PhiNameRef("PHP_JsonIgnoreProperties"), "\$metadata\$"), new PhiObjectLiteral("@@15493", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_JsonIgnoreProperties")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15510", "=", new PhiDot(new PhiNameRef("PHP_Transient"), "\$metadata\$"), new PhiObjectLiteral("@@15508", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Transient")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15524", "=", new PhiDot(new PhiNameRef("PHP_SharedSessionContractImplementor"), "\$metadata\$"), new PhiObjectLiteral("@@15522", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_SharedSessionContractImplementor")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15538", "=", new PhiDot(new PhiNameRef("PHP_Timestamp"), "\$metadata\$"), new PhiObjectLiteral("@@15536", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Timestamp")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@15452", "=", new PhiDot(new PhiNameRef("PHP_Date"), "\$metadata\$"), new PhiObjectLiteral("@@15450", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Date")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15466", "=", new PhiDot(new PhiNameRef("PHP_Logger"), "\$metadata\$"), new PhiObjectLiteral("@@15464", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Logger")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15480", "=", new PhiDot(new PhiNameRef("PHP_Serializable"), "\$metadata\$"), new PhiObjectLiteral("@@15478", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Serializable")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15495", "=", new PhiDot(new PhiNameRef("PHP_JsonIgnoreProperties"), "\$metadata\$"), new PhiObjectLiteral("@@15493", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_JsonIgnoreProperties")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15510", "=", new PhiDot(new PhiNameRef("PHP_Transient"), "\$metadata\$"), new PhiObjectLiteral("@@15508", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Transient")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15524", "=", new PhiDot(new PhiNameRef("PHP_SharedSessionContractImplementor"), "\$metadata\$"), new PhiObjectLiteral("@@15522", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_SharedSessionContractImplementor")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15538", "=", new PhiDot(new PhiNameRef("PHP_Timestamp"), "\$metadata\$"), new PhiObjectLiteral("@@15536", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Timestamp")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@15543", array(array("PHP_FetchType\$LAZY_instance", new PhiUnaryOperation("@@15540", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@15547", array(array("PHP_FetchType\$EAGER_instance", new PhiUnaryOperation("@@15544", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15561", "=", new PhiDot(new PhiNameRef("PHP_FetchType"), "\$metadata\$"), new PhiObjectLiteral("@@15559", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_FetchType")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@15561", "=", new PhiDot(new PhiNameRef("PHP_FetchType"), "\$metadata\$"), new PhiObjectLiteral("@@15559", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_FetchType")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@15566", "=", new PhiDot(new PhiNameRef("PHP_FetchType"), "values"), new PhiNameRef("PHP_FetchType\$values")));
   phiExpressionStatement(new PhiBinaryOperation("@@15571", "=", new PhiDot(new PhiNameRef("PHP_FetchType"), "valueOf_61zpoe\$"), new PhiNameRef("PHP_FetchType\$valueOf")));
   phiVars("@@15576", array(array("PHP_CascadeType\$ALL_instance", new PhiUnaryOperation("@@15573", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15590", "=", new PhiDot(new PhiNameRef("PHP_CascadeType"), "\$metadata\$"), new PhiObjectLiteral("@@15588", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_CascadeType")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@15590", "=", new PhiDot(new PhiNameRef("PHP_CascadeType"), "\$metadata\$"), new PhiObjectLiteral("@@15588", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_CascadeType")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@15595", "=", new PhiDot(new PhiNameRef("PHP_CascadeType"), "values"), new PhiNameRef("PHP_CascadeType\$values")));
   phiExpressionStatement(new PhiBinaryOperation("@@15600", "=", new PhiDot(new PhiNameRef("PHP_CascadeType"), "valueOf_61zpoe\$"), new PhiNameRef("PHP_CascadeType\$valueOf")));
-  phiExpressionStatement(new PhiBinaryOperation("@@15615", "=", new PhiDot(new PhiNameRef("PHP_Index"), "\$metadata\$"), new PhiObjectLiteral("@@15613", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Index")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15630", "=", new PhiDot(new PhiNameRef("PHP_Embeddable"), "\$metadata\$"), new PhiObjectLiteral("@@15628", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Embeddable")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15645", "=", new PhiDot(new PhiNameRef("PHP_PreUpdate"), "\$metadata\$"), new PhiObjectLiteral("@@15643", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_PreUpdate")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@15615", "=", new PhiDot(new PhiNameRef("PHP_Index"), "\$metadata\$"), new PhiObjectLiteral("@@15613", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Index")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15630", "=", new PhiDot(new PhiNameRef("PHP_Embeddable"), "\$metadata\$"), new PhiObjectLiteral("@@15628", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Embeddable")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15645", "=", new PhiDot(new PhiNameRef("PHP_PreUpdate"), "\$metadata\$"), new PhiObjectLiteral("@@15643", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_PreUpdate")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
   phiVars("@@15650", array(array("PHP_GenerationType\$IDENTITY_instance", new PhiUnaryOperation("@@15647", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15664", "=", new PhiDot(new PhiNameRef("PHP_GenerationType"), "\$metadata\$"), new PhiObjectLiteral("@@15662", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_GenerationType")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@15664", "=", new PhiDot(new PhiNameRef("PHP_GenerationType"), "\$metadata\$"), new PhiObjectLiteral("@@15662", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_GenerationType")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@15669", "=", new PhiDot(new PhiNameRef("PHP_GenerationType"), "values"), new PhiNameRef("PHP_GenerationType\$values")));
   phiExpressionStatement(new PhiBinaryOperation("@@15674", "=", new PhiDot(new PhiNameRef("PHP_GenerationType"), "valueOf_61zpoe\$"), new PhiNameRef("PHP_GenerationType\$valueOf")));
-  phiExpressionStatement(new PhiBinaryOperation("@@15689", "=", new PhiDot(new PhiNameRef("PHP_GeneratedValue"), "\$metadata\$"), new PhiObjectLiteral("@@15687", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_GeneratedValue")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15704", "=", new PhiDot(new PhiNameRef("PHP_Id"), "\$metadata\$"), new PhiObjectLiteral("@@15702", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Id")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15719", "=", new PhiDot(new PhiNameRef("PHP_MappedSuperclass"), "\$metadata\$"), new PhiObjectLiteral("@@15717", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_MappedSuperclass")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15734", "=", new PhiDot(new PhiNameRef("PHP_Entity"), "\$metadata\$"), new PhiObjectLiteral("@@15732", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Entity")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15749", "=", new PhiDot(new PhiNameRef("PHP_Table"), "\$metadata\$"), new PhiObjectLiteral("@@15747", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Table")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15764", "=", new PhiDot(new PhiNameRef("PHP_Embedded"), "\$metadata\$"), new PhiObjectLiteral("@@15762", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Embedded")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15779", "=", new PhiDot(new PhiNameRef("PHP_OneToMany"), "\$metadata\$"), new PhiObjectLiteral("@@15777", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_OneToMany")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15794", "=", new PhiDot(new PhiNameRef("PHP_Column"), "\$metadata\$"), new PhiObjectLiteral("@@15792", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Column")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15809", "=", new PhiDot(new PhiNameRef("PHP_Enumerated"), "\$metadata\$"), new PhiObjectLiteral("@@15807", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Enumerated")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@15689", "=", new PhiDot(new PhiNameRef("PHP_GeneratedValue"), "\$metadata\$"), new PhiObjectLiteral("@@15687", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_GeneratedValue")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15704", "=", new PhiDot(new PhiNameRef("PHP_Id"), "\$metadata\$"), new PhiObjectLiteral("@@15702", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Id")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15719", "=", new PhiDot(new PhiNameRef("PHP_MappedSuperclass"), "\$metadata\$"), new PhiObjectLiteral("@@15717", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_MappedSuperclass")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15734", "=", new PhiDot(new PhiNameRef("PHP_Entity"), "\$metadata\$"), new PhiObjectLiteral("@@15732", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Entity")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15749", "=", new PhiDot(new PhiNameRef("PHP_Table"), "\$metadata\$"), new PhiObjectLiteral("@@15747", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Table")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15764", "=", new PhiDot(new PhiNameRef("PHP_Embedded"), "\$metadata\$"), new PhiObjectLiteral("@@15762", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Embedded")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15779", "=", new PhiDot(new PhiNameRef("PHP_OneToMany"), "\$metadata\$"), new PhiObjectLiteral("@@15777", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_OneToMany")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15794", "=", new PhiDot(new PhiNameRef("PHP_Column"), "\$metadata\$"), new PhiObjectLiteral("@@15792", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Column")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15809", "=", new PhiDot(new PhiNameRef("PHP_Enumerated"), "\$metadata\$"), new PhiObjectLiteral("@@15807", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_Enumerated")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
   phiVars("@@15814", array(array("PHP_EnumType\$STRING_instance", new PhiUnaryOperation("@@15811", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15828", "=", new PhiDot(new PhiNameRef("PHP_EnumType"), "\$metadata\$"), new PhiObjectLiteral("@@15826", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_EnumType")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@15828", "=", new PhiDot(new PhiNameRef("PHP_EnumType"), "\$metadata\$"), new PhiObjectLiteral("@@15826", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_EnumType")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@15833", "=", new PhiDot(new PhiNameRef("PHP_EnumType"), "values"), new PhiNameRef("PHP_EnumType\$values")));
   phiExpressionStatement(new PhiBinaryOperation("@@15838", "=", new PhiDot(new PhiNameRef("PHP_EnumType"), "valueOf_61zpoe\$"), new PhiNameRef("PHP_EnumType\$valueOf")));
-  phiExpressionStatement(new PhiBinaryOperation("@@15853", "=", new PhiDot(new PhiNameRef("PHP_ManyToOne"), "\$metadata\$"), new PhiObjectLiteral("@@15851", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_ManyToOne")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15867", "=", new PhiDot(new PhiNameRef("PHP_CrudRepository"), "\$metadata\$"), new PhiObjectLiteral("@@15865", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_CrudRepository")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15882", "=", new PhiDot(new PhiNameRef("PHP_GenericGenerator"), "\$metadata\$"), new PhiObjectLiteral("@@15880", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_GenericGenerator")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15896", "=", new PhiDot(new PhiNameRef("XSharedPlatform"), "\$metadata\$"), new PhiObjectLiteral("@@15894", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("XSharedPlatform")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15911", "=", new PhiDot(new PhiNameRef("Dummy"), "\$metadata\$"), new PhiObjectLiteral("@@15909", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Dummy")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@15853", "=", new PhiDot(new PhiNameRef("PHP_ManyToOne"), "\$metadata\$"), new PhiObjectLiteral("@@15851", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_ManyToOne")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15867", "=", new PhiDot(new PhiNameRef("PHP_CrudRepository"), "\$metadata\$"), new PhiObjectLiteral("@@15865", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_CrudRepository")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15882", "=", new PhiDot(new PhiNameRef("PHP_GenericGenerator"), "\$metadata\$"), new PhiObjectLiteral("@@15880", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_GenericGenerator")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15896", "=", new PhiDot(new PhiNameRef("XSharedPlatform"), "\$metadata\$"), new PhiObjectLiteral("@@15894", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("XSharedPlatform")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15911", "=", new PhiDot(new PhiNameRef("Dummy"), "\$metadata\$"), new PhiObjectLiteral("@@15909", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Dummy")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
   phiVars("@@15916", array(array("exhaustive", new PhiUnaryOperation("@@15913", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@15927", array(array("ifOrEmpty", new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "defineInlineFunction"), array(new PhiStringLiteral("aps-back.aps.ifOrEmpty_87ejdh\$"), new PhiFunctionExpression(null, array("test", "block"), function () {
     return phiEvaluate(new PhiConditional(new PhiNameRef("test"), new PhiInvocation(new PhiNameRef("block"), array()), new PhiStringLiteral("")));
@@ -4584,18 +4856,32 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiVars("@@15936", array(array("letu", new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "defineInlineFunction"), array(new PhiStringLiteral("aps-back.aps.letu_9bxh2u\$"), new PhiFunctionExpression(null, array("\$receiver", "block"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("block"), array(new PhiNameRef("\$receiver"))));
   }))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15949", "=", new PhiDot(new PhiNameRef("FieldError"), "\$metadata\$"), new PhiObjectLiteral("@@15947", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("FieldError")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15963", "=", new PhiDot(new PhiNameRef("CommonResponseFields"), "\$metadata\$"), new PhiObjectLiteral("@@15961", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("CommonResponseFields")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@15977", "=", new PhiDot(new PhiNameRef("UNINITIALIZED_VALUE"), "\$metadata\$"), new PhiObjectLiteral("@@15975", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UNINITIALIZED_VALUE")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@15949", "=", new PhiDot(new PhiNameRef("FieldError"), "\$metadata\$"), new PhiObjectLiteral("@@15947", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("FieldError")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15963", "=", new PhiDot(new PhiNameRef("CommonResponseFields"), "\$metadata\$"), new PhiObjectLiteral("@@15961", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("CommonResponseFields")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@15977", "=", new PhiDot(new PhiNameRef("UNINITIALIZED_VALUE"), "\$metadata\$"), new PhiObjectLiteral("@@15975", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UNINITIALIZED_VALUE")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@15981", array(array("UNINITIALIZED_VALUE_instance", new PhiNullLiteral("@@15979"))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UnsafeLazyImpl"), "prototype"), new PhiStringLiteral("value"), new PhiObjectLiteral("@@16048", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UnsafeLazyImpl"), "prototype"), new PhiStringLiteral("value"), new PhiObjectLiteral("@@16048", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     phiVars("@@15994", array(array("tmp\$", new PhiUnaryOperation("@@15988", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_0", new PhiUnaryOperation("@@15991", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     if (phiEvaluateToBoolean(new PhiBinaryOperation("@@15999", "===", new PhiDot(new PhiThis(), "_value_0"), new PhiInvocation(new PhiNameRef("UNINITIALIZED_VALUE_getInstance"), array())))) {
       phiExpressionStatement(new PhiBinaryOperation("@@16018", "=", new PhiDot(new PhiThis(), "_value_0"), new PhiInvocation(new PhiConditional(new PhiBinaryOperation("@@16010", "!=", new PhiBinaryOperation("@@16006", "=", new PhiNameRef("tmp\$"), new PhiDot(new PhiThis(), "initializer_0")), new PhiNullLiteral("@@16008")), new PhiNameRef("tmp\$"), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "throwNPE"), array())), array())));
       phiExpressionStatement(new PhiBinaryOperation("@@16024", "=", new PhiDot(new PhiThis(), "initializer_0"), new PhiNullLiteral("@@16022")));
     }
     return phiEvaluate(new PhiConditional(new PhiBinaryOperation("@@16040", "||", new PhiBinaryOperation("@@16033", "==", new PhiBinaryOperation("@@16029", "=", new PhiNameRef("tmp\$_0"), new PhiDot(new PhiThis(), "_value_0")), new PhiNullLiteral("@@16031")), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "isType"), array(new PhiNameRef("tmp\$_0"), new PhiNameRef("Any")))), new PhiNameRef("tmp\$_0"), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "throwCCE"), array())));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@16061", "=", new PhiDot(new PhiDot(new PhiNameRef("UnsafeLazyImpl"), "prototype"), "isInitialized"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiBinaryOperation("@@16058", "!==", new PhiDot(new PhiThis(), "_value_0"), new PhiInvocation(new PhiNameRef("UNINITIALIZED_VALUE_getInstance"), array())));
   })));
@@ -4605,25 +4891,43 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@16087", "=", new PhiDot(new PhiDot(new PhiNameRef("UnsafeLazyImpl"), "prototype"), "writeReplace_0"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiNew(new PhiNameRef("InitializedLazyImpl"), array(new PhiDot(new PhiThis(), "value"))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@16102", "=", new PhiDot(new PhiNameRef("UnsafeLazyImpl"), "\$metadata\$"), new PhiObjectLiteral("@@16100", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UnsafeLazyImpl")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Lazy"))))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("InitializedLazyImpl"), "prototype"), new PhiStringLiteral("value"), new PhiObjectLiteral("@@16113", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiBinaryOperation("@@16102", "=", new PhiDot(new PhiNameRef("UnsafeLazyImpl"), "\$metadata\$"), new PhiObjectLiteral("@@16100", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UnsafeLazyImpl")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Lazy")))))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("InitializedLazyImpl"), "prototype"), new PhiStringLiteral("value"), new PhiObjectLiteral("@@16113", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "value_bmoy0s\$_0"));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@16122", "=", new PhiDot(new PhiDot(new PhiNameRef("InitializedLazyImpl"), "prototype"), "isInitialized"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiBooleanLiteral("@@16119", true));
   })));
   phiExpressionStatement(new PhiBinaryOperation("@@16133", "=", new PhiDot(new PhiDot(new PhiNameRef("InitializedLazyImpl"), "prototype"), "toString"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "toString"), array(new PhiDot(new PhiThis(), "value"))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@16148", "=", new PhiDot(new PhiNameRef("InitializedLazyImpl"), "\$metadata\$"), new PhiObjectLiteral("@@16146", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("InitializedLazyImpl")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Lazy"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16148", "=", new PhiDot(new PhiNameRef("InitializedLazyImpl"), "\$metadata\$"), new PhiObjectLiteral("@@16146", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("InitializedLazyImpl")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Lazy")))))
+)));
   phiVars("@@16167", array(array("check", new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "defineInlineFunction"), array(new PhiStringLiteral("aps-back.aps.check_6taknv\$"), new PhiFunctionExpression(null, array("value"), function () {
     if (phiEvaluateToBoolean(new PhiUnaryOperation("@@16154", "prefix", "!", new PhiNameRef("value")))) {
       phiVars("@@16157", array(array("message", new PhiStringLiteral("Check failed."))));
       phiThrow(new PhiNew(new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "kotlin"), "IllegalStateException"), array(new PhiInvocation(new PhiDot(new PhiNameRef("message"), "toString"), array()))));
     }
   }))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16180", "=", new PhiDot(new PhiNameRef("ReadOnlyProperty"), "\$metadata\$"), new PhiObjectLiteral("@@16178", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("ReadOnlyProperty")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16194", "=", new PhiDot(new PhiNameRef("ReadWriteProperty"), "\$metadata\$"), new PhiObjectLiteral("@@16192", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("ReadWriteProperty")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16180", "=", new PhiDot(new PhiNameRef("ReadOnlyProperty"), "\$metadata\$"), new PhiObjectLiteral("@@16178", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("ReadOnlyProperty")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@16194", "=", new PhiDot(new PhiNameRef("ReadWriteProperty"), "\$metadata\$"), new PhiObjectLiteral("@@16192", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("ReadWriteProperty")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@16225", "=", new PhiDot(new PhiDot(new PhiNameRef("NotNullVar"), "prototype"), "getValue_lrcp0p\$"), new PhiFunctionExpression(null, array("thisRef", "property"), function () {
     phiVars("@@16202", array(array("tmp\$", new PhiUnaryOperation("@@16199", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     phiExpressionStatement(new PhiBinaryOperation("@@16206", "=", new PhiNameRef("tmp\$"), new PhiDot(new PhiThis(), "value_0")));
@@ -4635,7 +4939,11 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@16236", "=", new PhiDot(new PhiDot(new PhiNameRef("NotNullVar"), "prototype"), "setValue_9rddgb\$"), new PhiFunctionExpression(null, array("thisRef", "property", "value"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@16233", "=", new PhiDot(new PhiThis(), "value_0"), new PhiNameRef("value")));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@16251", "=", new PhiDot(new PhiNameRef("NotNullVar"), "\$metadata\$"), new PhiObjectLiteral("@@16249", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("NotNullVar")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ReadWriteProperty"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16251", "=", new PhiDot(new PhiNameRef("NotNullVar"), "\$metadata\$"), new PhiObjectLiteral("@@16249", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("NotNullVar")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ReadWriteProperty")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@16282", "=", new PhiDot(new PhiDot(new PhiNameRef("NotNullOnceVar"), "prototype"), "getValue_lrcp0p\$"), new PhiFunctionExpression(null, array("thisRef", "property"), function () {
     phiVars("@@16259", array(array("tmp\$", new PhiUnaryOperation("@@16256", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     phiExpressionStatement(new PhiBinaryOperation("@@16263", "=", new PhiNameRef("tmp\$"), new PhiDot(new PhiThis(), "value_0")));
@@ -4651,120 +4959,261 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
     }
     phiExpressionStatement(new PhiBinaryOperation("@@16314", "=", new PhiDot(new PhiThis(), "value_0"), new PhiNameRef("value")));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@16332", "=", new PhiDot(new PhiNameRef("NotNullOnceVar"), "\$metadata\$"), new PhiObjectLiteral("@@16330", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("NotNullOnceVar")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ReadWriteProperty"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16346", "=", new PhiDot(new PhiNameRef("CommonRequestFields"), "\$metadata\$"), new PhiObjectLiteral("@@16344", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("CommonRequestFields")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16332", "=", new PhiDot(new PhiNameRef("NotNullOnceVar"), "\$metadata\$"), new PhiObjectLiteral("@@16330", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("NotNullOnceVar")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ReadWriteProperty")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@16346", "=", new PhiDot(new PhiNameRef("CommonRequestFields"), "\$metadata\$"), new PhiObjectLiteral("@@16344", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("CommonRequestFields")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@16351", array(array("UserKind\$CUSTOMER_instance", new PhiUnaryOperation("@@16348", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@16355", array(array("UserKind\$WRITER_instance", new PhiUnaryOperation("@@16352", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@16359", array(array("UserKind\$ADMIN_instance", new PhiUnaryOperation("@@16356", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16373", "=", new PhiDot(new PhiNameRef("UserKind"), "\$metadata\$"), new PhiObjectLiteral("@@16371", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserKind")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16373", "=", new PhiDot(new PhiNameRef("UserKind"), "\$metadata\$"), new PhiObjectLiteral("@@16371", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserKind")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@16378", "=", new PhiDot(new PhiNameRef("UserKind"), "values"), new PhiNameRef("UserKind\$values")));
   phiExpressionStatement(new PhiBinaryOperation("@@16383", "=", new PhiDot(new PhiNameRef("UserKind"), "valueOf_61zpoe\$"), new PhiNameRef("UserKind\$valueOf")));
   phiVars("@@16388", array(array("ClientKind\$UA_CUSTOMER_instance", new PhiUnaryOperation("@@16385", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@16392", array(array("ClientKind\$UA_WRITER_instance", new PhiUnaryOperation("@@16389", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16406", "=", new PhiDot(new PhiNameRef("ClientKind"), "\$metadata\$"), new PhiObjectLiteral("@@16404", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("ClientKind")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16406", "=", new PhiDot(new PhiNameRef("ClientKind"), "\$metadata\$"), new PhiObjectLiteral("@@16404", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("ClientKind")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@16411", "=", new PhiDot(new PhiNameRef("ClientKind"), "values"), new PhiNameRef("ClientKind\$values")));
   phiExpressionStatement(new PhiBinaryOperation("@@16416", "=", new PhiDot(new PhiNameRef("ClientKind"), "valueOf_61zpoe\$"), new PhiNameRef("ClientKind\$valueOf")));
-  phiExpressionStatement(new PhiBinaryOperation("@@16431", "=", new PhiDot(new PhiNameRef("WideClientKind\$User"), "\$metadata\$"), new PhiObjectLiteral("@@16429", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("User")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("WideClientKind"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16446", "=", new PhiDot(new PhiNameRef("WideClientKind\$Test"), "\$metadata\$"), new PhiObjectLiteral("@@16444", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Test")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("WideClientKind"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16460", "=", new PhiDot(new PhiNameRef("WideClientKind"), "\$metadata\$"), new PhiObjectLiteral("@@16458", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("WideClientKind")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16431", "=", new PhiDot(new PhiNameRef("WideClientKind\$User"), "\$metadata\$"), new PhiObjectLiteral("@@16429", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("User")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("WideClientKind")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@16446", "=", new PhiDot(new PhiNameRef("WideClientKind\$Test"), "\$metadata\$"), new PhiObjectLiteral("@@16444", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Test")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("WideClientKind")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@16460", "=", new PhiDot(new PhiNameRef("WideClientKind"), "\$metadata\$"), new PhiObjectLiteral("@@16458", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("WideClientKind")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@16465", array(array("Language\$EN_instance", new PhiUnaryOperation("@@16462", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@16469", array(array("Language\$UA_instance", new PhiUnaryOperation("@@16466", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16483", "=", new PhiDot(new PhiNameRef("Language"), "\$metadata\$"), new PhiObjectLiteral("@@16481", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Language")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16483", "=", new PhiDot(new PhiNameRef("Language"), "\$metadata\$"), new PhiObjectLiteral("@@16481", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Language")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@16488", "=", new PhiDot(new PhiNameRef("Language"), "values"), new PhiNameRef("Language\$values")));
   phiExpressionStatement(new PhiBinaryOperation("@@16493", "=", new PhiDot(new PhiNameRef("Language"), "valueOf_61zpoe\$"), new PhiNameRef("Language\$valueOf")));
-  phiExpressionStatement(new PhiBinaryOperation("@@16507", "=", new PhiDot(new PhiNameRef("const\$text\$symbols"), "\$metadata\$"), new PhiObjectLiteral("@@16505", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("symbols")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16507", "=", new PhiDot(new PhiNameRef("const\$text\$symbols"), "\$metadata\$"), new PhiObjectLiteral("@@16505", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("symbols")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@16511", array(array("const\$text\$symbols_instance", new PhiNullLiteral("@@16509"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16524", "=", new PhiDot(new PhiNameRef("const\$text\$shebang"), "\$metadata\$"), new PhiObjectLiteral("@@16522", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("shebang")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16524", "=", new PhiDot(new PhiNameRef("const\$text\$shebang"), "\$metadata\$"), new PhiObjectLiteral("@@16522", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("shebang")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@16528", array(array("const\$text\$shebang_instance", new PhiNullLiteral("@@16526"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16541", "=", new PhiDot(new PhiNameRef("const\$text"), "\$metadata\$"), new PhiObjectLiteral("@@16539", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("text")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16541", "=", new PhiDot(new PhiNameRef("const\$text"), "\$metadata\$"), new PhiObjectLiteral("@@16539", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("text")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@16545", array(array("const\$text_instance", new PhiNullLiteral("@@16543"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16558", "=", new PhiDot(new PhiNameRef("const\$msg"), "\$metadata\$"), new PhiObjectLiteral("@@16556", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("msg")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16558", "=", new PhiDot(new PhiNameRef("const\$msg"), "\$metadata\$"), new PhiObjectLiteral("@@16556", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("msg")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@16562", array(array("const\$msg_instance", new PhiNullLiteral("@@16560"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16575", "=", new PhiDot(new PhiNameRef("const\$orderArea"), "\$metadata\$"), new PhiObjectLiteral("@@16573", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("orderArea")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16575", "=", new PhiDot(new PhiNameRef("const\$orderArea"), "\$metadata\$"), new PhiObjectLiteral("@@16573", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("orderArea")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@16579", array(array("const\$orderArea_instance", new PhiNullLiteral("@@16577"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16592", "=", new PhiDot(new PhiNameRef("const\$windowMessage"), "\$metadata\$"), new PhiObjectLiteral("@@16590", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("windowMessage")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16592", "=", new PhiDot(new PhiNameRef("const\$windowMessage"), "\$metadata\$"), new PhiObjectLiteral("@@16590", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("windowMessage")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@16596", array(array("const\$windowMessage_instance", new PhiNullLiteral("@@16594"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16609", "=", new PhiDot(new PhiNameRef("const\$urlq\$test"), "\$metadata\$"), new PhiObjectLiteral("@@16607", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("test")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16609", "=", new PhiDot(new PhiNameRef("const\$urlq\$test"), "\$metadata\$"), new PhiObjectLiteral("@@16607", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("test")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@16613", array(array("const\$urlq\$test_instance", new PhiNullLiteral("@@16611"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16626", "=", new PhiDot(new PhiNameRef("const\$urlq"), "\$metadata\$"), new PhiObjectLiteral("@@16624", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("urlq")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16626", "=", new PhiDot(new PhiNameRef("const\$urlq"), "\$metadata\$"), new PhiObjectLiteral("@@16624", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("urlq")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@16630", array(array("const\$urlq_instance", new PhiNullLiteral("@@16628"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16643", "=", new PhiDot(new PhiNameRef("const\$elementID"), "\$metadata\$"), new PhiObjectLiteral("@@16641", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("elementID")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16643", "=", new PhiDot(new PhiNameRef("const\$elementID"), "\$metadata\$"), new PhiObjectLiteral("@@16641", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("elementID")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@16647", array(array("const\$elementID_instance", new PhiNullLiteral("@@16645"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16660", "=", new PhiDot(new PhiNameRef("const\$productName"), "\$metadata\$"), new PhiObjectLiteral("@@16658", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("productName")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16660", "=", new PhiDot(new PhiNameRef("const\$productName"), "\$metadata\$"), new PhiObjectLiteral("@@16658", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("productName")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@16664", array(array("const\$productName_instance", new PhiNullLiteral("@@16662"))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$file"), "prototype"), new PhiStringLiteral("APS_HOME"), new PhiObjectLiteral("@@16692", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$file"), "prototype"), new PhiStringLiteral("APS_HOME"), new PhiObjectLiteral("@@16692", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     phiVars("@@16674", array(array("tmp\$", new PhiUnaryOperation("@@16671", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     return phiEvaluate(new PhiConditional(new PhiBinaryOperation("@@16684", "!=", new PhiBinaryOperation("@@16680", "=", new PhiNameRef("tmp\$"), new PhiInvocation(new PhiDot(new PhiNameRef("sharedPlatform"), "getenv_61zpoe\$"), array(new PhiStringLiteral("APS_HOME")))), new PhiNullLiteral("@@16682")), new PhiNameRef("tmp\$"), new PhiInvocation(new PhiNameRef("die"), array(new PhiStringLiteral("I want APS_HOME environment variable")))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$file"), "prototype"), new PhiStringLiteral("GENERATOR_BAK_DIR"), new PhiObjectLiteral("@@16703", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$file"), "prototype"), new PhiStringLiteral("GENERATOR_BAK_DIR"), new PhiObjectLiteral("@@16703", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiStringLiteral("c:/tmp/aps-bak"));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$file"), "prototype"), new PhiStringLiteral("TMPDIR"), new PhiObjectLiteral("@@16733", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$file"), "prototype"), new PhiStringLiteral("TMPDIR"), new PhiObjectLiteral("@@16733", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     phiVars("@@16715", array(array("tmp\$", new PhiUnaryOperation("@@16712", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     return phiEvaluate(new PhiConditional(new PhiBinaryOperation("@@16725", "!=", new PhiBinaryOperation("@@16721", "=", new PhiNameRef("tmp\$"), new PhiInvocation(new PhiDot(new PhiNameRef("sharedPlatform"), "getenv_61zpoe\$"), array(new PhiStringLiteral("TMPDIR")))), new PhiNullLiteral("@@16723")), new PhiNameRef("tmp\$"), new PhiInvocation(new PhiNameRef("die"), array(new PhiStringLiteral("I want TMPDIR environment variable")))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$file"), "prototype"), new PhiStringLiteral("APS_CLOUD_BACK_HOST"), new PhiObjectLiteral("@@16763", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$file"), "prototype"), new PhiStringLiteral("APS_CLOUD_BACK_HOST"), new PhiObjectLiteral("@@16763", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     phiVars("@@16745", array(array("tmp\$", new PhiUnaryOperation("@@16742", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     return phiEvaluate(new PhiConditional(new PhiBinaryOperation("@@16755", "!=", new PhiBinaryOperation("@@16751", "=", new PhiNameRef("tmp\$"), new PhiInvocation(new PhiDot(new PhiNameRef("sharedPlatform"), "getenv_61zpoe\$"), array(new PhiStringLiteral("APS_CLOUD_BACK_HOST")))), new PhiNullLiteral("@@16753")), new PhiNameRef("tmp\$"), new PhiInvocation(new PhiNameRef("die"), array(new PhiStringLiteral("I want APS_CLOUD_BACK_HOST environment variable")))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$file"), "prototype"), new PhiStringLiteral("APS_TEMP"), new PhiObjectLiteral("@@16774", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$file"), "prototype"), new PhiStringLiteral("APS_TEMP"), new PhiObjectLiteral("@@16774", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiStringLiteral("c:/tmp/aps-tmp"));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$file"), "prototype"), new PhiStringLiteral("testFiles"), new PhiObjectLiteral("@@16789", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$file"), "prototype"), new PhiStringLiteral("testFiles"), new PhiObjectLiteral("@@16789", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiBinaryOperation("@@16786", "+", new PhiDot(new PhiThis(), "APS_HOME"), new PhiStringLiteral("/back/testfiles")));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16804", "=", new PhiDot(new PhiNameRef("const\$file"), "\$metadata\$"), new PhiObjectLiteral("@@16802", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("file")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16804", "=", new PhiDot(new PhiNameRef("const\$file"), "\$metadata\$"), new PhiObjectLiteral("@@16802", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("file")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@16808", array(array("const\$file_instance", new PhiNullLiteral("@@16806"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16821", "=", new PhiDot(new PhiNameRef("const\$userID"), "\$metadata\$"), new PhiObjectLiteral("@@16819", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("userID")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16821", "=", new PhiDot(new PhiNameRef("const\$userID"), "\$metadata\$"), new PhiObjectLiteral("@@16819", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("userID")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@16825", array(array("const\$userID_instance", new PhiNullLiteral("@@16823"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16838", "=", new PhiDot(new PhiNameRef("const\$uaDocumentCategoryID"), "\$metadata\$"), new PhiObjectLiteral("@@16836", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("uaDocumentCategoryID")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16838", "=", new PhiDot(new PhiNameRef("const\$uaDocumentCategoryID"), "\$metadata\$"), new PhiObjectLiteral("@@16836", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("uaDocumentCategoryID")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@16842", array(array("const\$uaDocumentCategoryID_instance", new PhiNullLiteral("@@16840"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16855", "=", new PhiDot(new PhiNameRef("const_0"), "\$metadata\$"), new PhiObjectLiteral("@@16853", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("const")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16855", "=", new PhiDot(new PhiNameRef("const_0"), "\$metadata\$"), new PhiObjectLiteral("@@16853", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("const")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@16859", array(array("const_instance", new PhiNullLiteral("@@16857"))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("FormResponse"), "prototype"), new PhiStringLiteral("backendVersion"), new PhiObjectLiteral("@@16876", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("FormResponse"), "prototype"), new PhiStringLiteral("backendVersion"), new PhiObjectLiteral("@@16876", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "backendVersion_5vk1u3\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("backendVersion"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("backendVersion"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@16873", "=", new PhiDot(new PhiThis(), "backendVersion_5vk1u3\$_0"), new PhiNameRef("backendVersion")));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16892", "=", new PhiDot(new PhiNameRef("FormResponse\$Hunky"), "\$metadata\$"), new PhiObjectLiteral("@@16890", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Hunky")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("FormResponse"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16907", "=", new PhiDot(new PhiNameRef("FormResponse\$Shitty"), "\$metadata\$"), new PhiObjectLiteral("@@16905", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Shitty")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("FormResponse"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@16922", "=", new PhiDot(new PhiNameRef("FormResponse"), "\$metadata\$"), new PhiObjectLiteral("@@16920", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("FormResponse")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("CommonResponseFields"))))))));
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@16892", "=", new PhiDot(new PhiNameRef("FormResponse\$Hunky"), "\$metadata\$"), new PhiObjectLiteral("@@16890", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Hunky")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("FormResponse")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@16907", "=", new PhiDot(new PhiNameRef("FormResponse\$Shitty"), "\$metadata\$"), new PhiObjectLiteral("@@16905", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Shitty")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("FormResponse")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@16922", "=", new PhiDot(new PhiNameRef("FormResponse"), "\$metadata\$"), new PhiObjectLiteral("@@16920", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("FormResponse")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("CommonResponseFields")))))
+)));
   phiVars("@@16933", array(array("minus", new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "defineInlineFunction"), array(new PhiStringLiteral("aps-back.aps.minus_96jf0l\$"), new PhiFunctionExpression(null, array("\$receiver", "f"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("f"), array(new PhiNameRef("\$receiver"))));
     return phiEvaluate(new PhiNameRef("\$receiver"));
   }))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserRTO"), "prototype"), new PhiStringLiteral("id"), new PhiObjectLiteral("@@16950", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserRTO"), "prototype"), new PhiStringLiteral("id"), new PhiObjectLiteral("@@16950", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "id_rn2lxe\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("id"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("id"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@16947", "=", new PhiDot(new PhiThis(), "id_rn2lxe\$_0"), new PhiNameRef("id")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserRTO"), "prototype"), new PhiStringLiteral("title"), new PhiObjectLiteral("@@16969", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserRTO"), "prototype"), new PhiStringLiteral("title"), new PhiObjectLiteral("@@16969", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "title_rn2lxe\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("title"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("title"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@16966", "=", new PhiDot(new PhiThis(), "title_rn2lxe\$_0"), new PhiNameRef("title")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserRTO"), "prototype"), new PhiStringLiteral("titleHighlightRanges"), new PhiObjectLiteral("@@16988", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserRTO"), "prototype"), new PhiStringLiteral("titleHighlightRanges"), new PhiObjectLiteral("@@16988", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "titleHighlightRanges_rn2lxe\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("titleHighlightRanges"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("titleHighlightRanges"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@16985", "=", new PhiDot(new PhiThis(), "titleHighlightRanges_rn2lxe\$_0"), new PhiNameRef("titleHighlightRanges")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserRTO"), "prototype"), new PhiStringLiteral("adminNotes"), new PhiObjectLiteral("@@17007", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserRTO"), "prototype"), new PhiStringLiteral("adminNotes"), new PhiObjectLiteral("@@17007", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "adminNotes_rn2lxe\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotes"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotes"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@17004", "=", new PhiDot(new PhiThis(), "adminNotes_rn2lxe\$_0"), new PhiNameRef("adminNotes")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserRTO"), "prototype"), new PhiStringLiteral("adminNotesHighlightRanges"), new PhiObjectLiteral("@@17026", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserRTO"), "prototype"), new PhiStringLiteral("adminNotesHighlightRanges"), new PhiObjectLiteral("@@17026", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "adminNotesHighlightRanges_rn2lxe\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotesHighlightRanges"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotesHighlightRanges"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@17023", "=", new PhiDot(new PhiThis(), "adminNotesHighlightRanges_rn2lxe\$_0"), new PhiNameRef("adminNotesHighlightRanges")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserRTO"), "prototype"), new PhiStringLiteral("editable"), new PhiObjectLiteral("@@17045", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserRTO"), "prototype"), new PhiStringLiteral("editable"), new PhiObjectLiteral("@@17045", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "editable_rn2lxe\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("editable"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("editable"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@17042", "=", new PhiDot(new PhiThis(), "editable_rn2lxe\$_0"), new PhiNameRef("editable")));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@17063", "=", new PhiDot(new PhiNameRef("UserRTO"), "\$metadata\$"), new PhiObjectLiteral("@@17061", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserRTO")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("TabithaEntityRTO"), new PhiNameRef("MelindaItemRTO"), new PhiNameRef("RTOWithAdminNotes"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@17077", "=", new PhiDot(new PhiNameRef("PieceOfShitDownload"), "\$metadata\$"), new PhiObjectLiteral("@@17075", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PieceOfShitDownload")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@17063", "=", new PhiDot(new PhiNameRef("UserRTO"), "\$metadata\$"), new PhiObjectLiteral("@@17061", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserRTO")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("TabithaEntityRTO"), new PhiNameRef("MelindaItemRTO"), new PhiNameRef("RTOWithAdminNotes")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@17077", "=", new PhiDot(new PhiNameRef("PieceOfShitDownload"), "\$metadata\$"), new PhiObjectLiteral("@@17075", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("PieceOfShitDownload")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@17085", "=", new PhiDot(new PhiDot(new PhiNameRef("PieceOfShitDownload"), "prototype"), "component1"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "id"));
   })));
@@ -4794,18 +5243,36 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@17367", "=", new PhiDot(new PhiDot(new PhiNameRef("PieceOfShitDownload"), "prototype"), "equals"), new PhiFunctionExpression(null, array("other"), function () {
     return phiEvaluate(new PhiBinaryOperation("@@17364", "||", new PhiBinaryOperation("@@17301", "===", new PhiThis(), new PhiNameRef("other")), new PhiBinaryOperation("@@17362", "&&", new PhiBinaryOperation("@@17306", "!==", new PhiNameRef("other"), new PhiNullLiteral("@@17304")), new PhiBinaryOperation("@@17360", "&&", new PhiBinaryOperation("@@17312", "===", new PhiUnaryOperation("@@17309", "prefix", "typeof", new PhiNameRef("other")), new PhiStringLiteral("object")), new PhiBinaryOperation("@@17358", "&&", new PhiBinaryOperation("@@17322", "===", new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "getPrototypeOf"), array(new PhiThis())), new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "getPrototypeOf"), array(new PhiNameRef("other")))), new PhiBinaryOperation("@@17356", "&&", new PhiBinaryOperation("@@17347", "&&", new PhiBinaryOperation("@@17338", "&&", new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "id"), new PhiDot(new PhiNameRef("other"), "id"))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "name"), new PhiDot(new PhiNameRef("other"), "name")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "forbidden"), new PhiDot(new PhiNameRef("other"), "forbidden")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "sha1"), new PhiDot(new PhiNameRef("other"), "sha1")))))))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@17382", "=", new PhiDot(new PhiNameRef("NoArgCtor"), "\$metadata\$"), new PhiObjectLiteral("@@17380", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("NoArgCtor")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@17397", "=", new PhiDot(new PhiNameRef("AllOpen"), "\$metadata\$"), new PhiObjectLiteral("@@17395", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("AllOpen")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@17412", "=", new PhiDot(new PhiNameRef("Ser"), "\$metadata\$"), new PhiObjectLiteral("@@17410", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Ser")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserState"), "prototype"), new PhiStringLiteral("title"), new PhiObjectLiteral("@@17423", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiBinaryOperation("@@17382", "=", new PhiDot(new PhiNameRef("NoArgCtor"), "\$metadata\$"), new PhiObjectLiteral("@@17380", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("NoArgCtor")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@17397", "=", new PhiDot(new PhiNameRef("AllOpen"), "\$metadata\$"), new PhiObjectLiteral("@@17395", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("AllOpen")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@17412", "=", new PhiDot(new PhiNameRef("Ser"), "\$metadata\$"), new PhiObjectLiteral("@@17410", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Ser")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserState"), "prototype"), new PhiStringLiteral("title"), new PhiObjectLiteral("@@17423", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "title_1ohduq\$_0"));
-  })))))));
+  })))
+))));
   phiVars("@@17429", array(array("UserState\$COOL_instance", new PhiUnaryOperation("@@17426", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@17433", array(array("UserState\$PROFILE_PENDING_instance", new PhiUnaryOperation("@@17430", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@17437", array(array("UserState\$PROFILE_APPROVAL_PENDING_instance", new PhiUnaryOperation("@@17434", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@17441", array(array("UserState\$PROFILE_REJECTED_instance", new PhiUnaryOperation("@@17438", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@17445", array(array("UserState\$BANNED_instance", new PhiUnaryOperation("@@17442", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@17460", "=", new PhiDot(new PhiNameRef("UserState"), "\$metadata\$"), new PhiObjectLiteral("@@17458", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserState")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Titled"), new PhiNameRef("Enum"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@17460", "=", new PhiDot(new PhiNameRef("UserState"), "\$metadata\$"), new PhiObjectLiteral("@@17458", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserState")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Titled"), new PhiNameRef("Enum")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@17465", "=", new PhiDot(new PhiNameRef("UserState"), "values"), new PhiNameRef("UserState\$values")));
   phiExpressionStatement(new PhiBinaryOperation("@@17470", "=", new PhiDot(new PhiNameRef("UserState"), "valueOf_61zpoe\$"), new PhiNameRef("UserState\$valueOf")));
   phiVars("@@17475", array(array("Color\$BLACK_instance", new PhiUnaryOperation("@@17472", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
@@ -5072,41 +5539,81 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@18522", "=", new PhiDot(new PhiDot(new PhiNameRef("Color"), "prototype"), "toString"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "string"));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@18537", "=", new PhiDot(new PhiNameRef("Color"), "\$metadata\$"), new PhiObjectLiteral("@@18535", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Color")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@18537", "=", new PhiDot(new PhiNameRef("Color"), "\$metadata\$"), new PhiObjectLiteral("@@18535", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Color")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@18542", "=", new PhiDot(new PhiNameRef("Color"), "values"), new PhiNameRef("Color\$values")));
   phiExpressionStatement(new PhiBinaryOperation("@@18547", "=", new PhiDot(new PhiNameRef("Color"), "valueOf_61zpoe\$"), new PhiNameRef("Color\$valueOf")));
-  phiExpressionStatement(new PhiBinaryOperation("@@18561", "=", new PhiDot(new PhiNameRef("Titled"), "\$metadata\$"), new PhiObjectLiteral("@@18559", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Titled")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@18575", "=", new PhiDot(new PhiNameRef("emojis\$tw"), "\$metadata\$"), new PhiObjectLiteral("@@18573", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("tw")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@18561", "=", new PhiDot(new PhiNameRef("Titled"), "\$metadata\$"), new PhiObjectLiteral("@@18559", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Titled")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@18575", "=", new PhiDot(new PhiNameRef("emojis\$tw"), "\$metadata\$"), new PhiObjectLiteral("@@18573", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("tw")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@18579", array(array("emojis\$tw_instance", new PhiNullLiteral("@@18577"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@18592", "=", new PhiDot(new PhiNameRef("emojis\$one"), "\$metadata\$"), new PhiObjectLiteral("@@18590", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("one")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@18592", "=", new PhiDot(new PhiNameRef("emojis\$one"), "\$metadata\$"), new PhiObjectLiteral("@@18590", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("one")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@18596", array(array("emojis\$one_instance", new PhiNullLiteral("@@18594"))));
-  phiExpressionStatement(new PhiBinaryOperation("@@18609", "=", new PhiDot(new PhiNameRef("emojis"), "\$metadata\$"), new PhiObjectLiteral("@@18607", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("emojis")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@18609", "=", new PhiDot(new PhiNameRef("emojis"), "\$metadata\$"), new PhiObjectLiteral("@@18607", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("emojis")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@18613", array(array("emojis_instance", new PhiNullLiteral("@@18611"))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserParamsHistoryItemRTO"), "prototype"), new PhiStringLiteral("createdAt"), new PhiObjectLiteral("@@18623", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserParamsHistoryItemRTO"), "prototype"), new PhiStringLiteral("createdAt"), new PhiObjectLiteral("@@18623", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "createdAt_4ka60p\$_0"));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserParamsHistoryItemRTO"), "prototype"), new PhiStringLiteral("requester"), new PhiObjectLiteral("@@18635", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserParamsHistoryItemRTO"), "prototype"), new PhiStringLiteral("requester"), new PhiObjectLiteral("@@18635", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "requester_4ka60p\$_0"));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserParamsHistoryItemRTO"), "prototype"), new PhiStringLiteral("thenRequester"), new PhiObjectLiteral("@@18647", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserParamsHistoryItemRTO"), "prototype"), new PhiStringLiteral("thenRequester"), new PhiObjectLiteral("@@18647", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "thenRequester_4ka60p\$_0"));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserParamsHistoryItemRTO"), "prototype"), new PhiStringLiteral("id"), new PhiObjectLiteral("@@18659", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserParamsHistoryItemRTO"), "prototype"), new PhiStringLiteral("id"), new PhiObjectLiteral("@@18659", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "id_4ka60p\$_0"));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserParamsHistoryItemRTO"), "prototype"), new PhiStringLiteral("title"), new PhiObjectLiteral("@@18671", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserParamsHistoryItemRTO"), "prototype"), new PhiStringLiteral("title"), new PhiObjectLiteral("@@18671", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "title_4ka60p\$_0"));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserParamsHistoryItemRTO"), "prototype"), new PhiStringLiteral("editable"), new PhiObjectLiteral("@@18683", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserParamsHistoryItemRTO"), "prototype"), new PhiStringLiteral("editable"), new PhiObjectLiteral("@@18683", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "editable_4ka60p\$_0"));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserParamsHistoryItemRTO"), "prototype"), new PhiStringLiteral("titleHighlightRanges"), new PhiObjectLiteral("@@18695", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserParamsHistoryItemRTO"), "prototype"), new PhiStringLiteral("titleHighlightRanges"), new PhiObjectLiteral("@@18695", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "titleHighlightRanges_4ka60p\$_0"));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@18712", "=", new PhiDot(new PhiNameRef("UserParamsHistoryItemRTO"), "\$metadata\$"), new PhiObjectLiteral("@@18710", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserParamsHistoryItemRTO")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("HistoryItemRTOFields"), new PhiNameRef("MelindaItemRTO"))))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UADocumentType"), "prototype"), new PhiStringLiteral("title"), new PhiObjectLiteral("@@18723", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@18712", "=", new PhiDot(new PhiNameRef("UserParamsHistoryItemRTO"), "\$metadata\$"), new PhiObjectLiteral("@@18710", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserParamsHistoryItemRTO")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("HistoryItemRTOFields"), new PhiNameRef("MelindaItemRTO")))))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UADocumentType"), "prototype"), new PhiStringLiteral("title"), new PhiObjectLiteral("@@18723", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "title_uoqne7\$_0"));
-  })))))));
+  })))
+))));
   phiVars("@@18729", array(array("UADocumentType\$ABSTRACT_instance", new PhiUnaryOperation("@@18726", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@18733", array(array("UADocumentType\$COURSE_instance", new PhiUnaryOperation("@@18730", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@18737", array(array("UADocumentType\$GRADUATION_instance", new PhiUnaryOperation("@@18734", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
@@ -5118,12 +5625,18 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiVars("@@18761", array(array("UADocumentType\$ESSAY_instance", new PhiUnaryOperation("@@18758", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@18765", array(array("UADocumentType\$PRACTICE_instance", new PhiUnaryOperation("@@18762", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@18769", array(array("UADocumentType\$OTHER_instance", new PhiUnaryOperation("@@18766", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@18784", "=", new PhiDot(new PhiNameRef("UADocumentType"), "\$metadata\$"), new PhiObjectLiteral("@@18782", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UADocumentType")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Titled"), new PhiNameRef("Enum"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@18784", "=", new PhiDot(new PhiNameRef("UADocumentType"), "\$metadata\$"), new PhiObjectLiteral("@@18782", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UADocumentType")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Titled"), new PhiNameRef("Enum")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@18789", "=", new PhiDot(new PhiNameRef("UADocumentType"), "values"), new PhiNameRef("UADocumentType\$values")));
   phiExpressionStatement(new PhiBinaryOperation("@@18794", "=", new PhiDot(new PhiNameRef("UADocumentType"), "valueOf_61zpoe\$"), new PhiNameRef("UADocumentType\$valueOf")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderState"), "prototype"), new PhiStringLiteral("title"), new PhiObjectLiteral("@@18805", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderState"), "prototype"), new PhiStringLiteral("title"), new PhiObjectLiteral("@@18805", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "title_89h64h\$_0"));
-  })))))));
+  })))
+))));
   phiVars("@@18811", array(array("UAOrderState\$CREATED_instance", new PhiUnaryOperation("@@18808", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@18815", array(array("UAOrderState\$CUSTOMER_DRAFT_instance", new PhiUnaryOperation("@@18812", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@18819", array(array("UAOrderState\$LOOKING_WRITERS_instance", new PhiUnaryOperation("@@18816", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
@@ -5133,75 +5646,139 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiVars("@@18835", array(array("UAOrderState\$WAITING_ADMIN_APPROVAL_instance", new PhiUnaryOperation("@@18832", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@18839", array(array("UAOrderState\$RETURNED_TO_CUSTOMER_FOR_FIXING_instance", new PhiUnaryOperation("@@18836", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@18843", array(array("UAOrderState\$IN_STORE_instance", new PhiUnaryOperation("@@18840", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@18858", "=", new PhiDot(new PhiNameRef("UAOrderState"), "\$metadata\$"), new PhiObjectLiteral("@@18856", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrderState")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Titled"), new PhiNameRef("Enum"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@18858", "=", new PhiDot(new PhiNameRef("UAOrderState"), "\$metadata\$"), new PhiObjectLiteral("@@18856", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrderState")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Titled"), new PhiNameRef("Enum")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@18863", "=", new PhiDot(new PhiNameRef("UAOrderState"), "values"), new PhiNameRef("UAOrderState\$values")));
   phiExpressionStatement(new PhiBinaryOperation("@@18868", "=", new PhiDot(new PhiNameRef("UAOrderState"), "valueOf_61zpoe\$"), new PhiNameRef("UAOrderState\$valueOf")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderRTO"), "prototype"), new PhiStringLiteral("id"), new PhiObjectLiteral("@@18886", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderRTO"), "prototype"), new PhiStringLiteral("id"), new PhiObjectLiteral("@@18886", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "id_g9o25h\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("id"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("id"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@18883", "=", new PhiDot(new PhiThis(), "id_g9o25h\$_0"), new PhiNameRef("id")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderRTO"), "prototype"), new PhiStringLiteral("title"), new PhiObjectLiteral("@@18905", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderRTO"), "prototype"), new PhiStringLiteral("title"), new PhiObjectLiteral("@@18905", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "title_g9o25h\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("title"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("title"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@18902", "=", new PhiDot(new PhiThis(), "title_g9o25h\$_0"), new PhiNameRef("title")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderRTO"), "prototype"), new PhiStringLiteral("editable"), new PhiObjectLiteral("@@18924", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderRTO"), "prototype"), new PhiStringLiteral("editable"), new PhiObjectLiteral("@@18924", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "editable_g9o25h\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("editable"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("editable"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@18921", "=", new PhiDot(new PhiThis(), "editable_g9o25h\$_0"), new PhiNameRef("editable")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderRTO"), "prototype"), new PhiStringLiteral("titleHighlightRanges"), new PhiObjectLiteral("@@18943", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderRTO"), "prototype"), new PhiStringLiteral("titleHighlightRanges"), new PhiObjectLiteral("@@18943", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "titleHighlightRanges_g9o25h\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("titleHighlightRanges"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("titleHighlightRanges"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@18940", "=", new PhiDot(new PhiThis(), "titleHighlightRanges_g9o25h\$_0"), new PhiNameRef("titleHighlightRanges")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderRTO"), "prototype"), new PhiStringLiteral("adminNotes"), new PhiObjectLiteral("@@18962", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderRTO"), "prototype"), new PhiStringLiteral("adminNotes"), new PhiObjectLiteral("@@18962", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "adminNotes_g9o25h\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotes"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotes"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@18959", "=", new PhiDot(new PhiThis(), "adminNotes_g9o25h\$_0"), new PhiNameRef("adminNotes")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderRTO"), "prototype"), new PhiStringLiteral("adminNotesHighlightRanges"), new PhiObjectLiteral("@@18981", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderRTO"), "prototype"), new PhiStringLiteral("adminNotesHighlightRanges"), new PhiObjectLiteral("@@18981", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "adminNotesHighlightRanges_g9o25h\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotesHighlightRanges"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotesHighlightRanges"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@18978", "=", new PhiDot(new PhiThis(), "adminNotesHighlightRanges_g9o25h\$_0"), new PhiNameRef("adminNotesHighlightRanges")));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@18999", "=", new PhiDot(new PhiNameRef("UAOrderRTO"), "\$metadata\$"), new PhiObjectLiteral("@@18997", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrderRTO")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("TabithaEntityRTO"), new PhiNameRef("RTOWithAdminNotes"), new PhiNameRef("MelindaItemRTO"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@19013", "=", new PhiDot(new PhiNameRef("ValueAndWhetherMineRTO"), "\$metadata\$"), new PhiObjectLiteral("@@19011", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("ValueAndWhetherMineRTO")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@19027", "=", new PhiDot(new PhiNameRef("BidsSummaryRTO"), "\$metadata\$"), new PhiObjectLiteral("@@19025", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("BidsSummaryRTO")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFileRTO"), "prototype"), new PhiStringLiteral("id"), new PhiObjectLiteral("@@19045", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@18999", "=", new PhiDot(new PhiNameRef("UAOrderRTO"), "\$metadata\$"), new PhiObjectLiteral("@@18997", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrderRTO")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("TabithaEntityRTO"), new PhiNameRef("RTOWithAdminNotes"), new PhiNameRef("MelindaItemRTO")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@19013", "=", new PhiDot(new PhiNameRef("ValueAndWhetherMineRTO"), "\$metadata\$"), new PhiObjectLiteral("@@19011", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("ValueAndWhetherMineRTO")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@19027", "=", new PhiDot(new PhiNameRef("BidsSummaryRTO"), "\$metadata\$"), new PhiObjectLiteral("@@19025", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("BidsSummaryRTO")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFileRTO"), "prototype"), new PhiStringLiteral("id"), new PhiObjectLiteral("@@19045", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "id_ml2vlt\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("id"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("id"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@19042", "=", new PhiDot(new PhiThis(), "id_ml2vlt\$_0"), new PhiNameRef("id")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFileRTO"), "prototype"), new PhiStringLiteral("editable"), new PhiObjectLiteral("@@19064", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFileRTO"), "prototype"), new PhiStringLiteral("editable"), new PhiObjectLiteral("@@19064", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "editable_ml2vlt\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("editable"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("editable"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@19061", "=", new PhiDot(new PhiThis(), "editable_ml2vlt\$_0"), new PhiNameRef("editable")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFileRTO"), "prototype"), new PhiStringLiteral("title"), new PhiObjectLiteral("@@19083", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFileRTO"), "prototype"), new PhiStringLiteral("title"), new PhiObjectLiteral("@@19083", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "title_ml2vlt\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("title"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("title"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@19080", "=", new PhiDot(new PhiThis(), "title_ml2vlt\$_0"), new PhiNameRef("title")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFileRTO"), "prototype"), new PhiStringLiteral("titleHighlightRanges"), new PhiObjectLiteral("@@19102", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFileRTO"), "prototype"), new PhiStringLiteral("titleHighlightRanges"), new PhiObjectLiteral("@@19102", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "titleHighlightRanges_ml2vlt\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("titleHighlightRanges"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("titleHighlightRanges"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@19099", "=", new PhiDot(new PhiThis(), "titleHighlightRanges_ml2vlt\$_0"), new PhiNameRef("titleHighlightRanges")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFileRTO"), "prototype"), new PhiStringLiteral("adminNotes"), new PhiObjectLiteral("@@19121", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFileRTO"), "prototype"), new PhiStringLiteral("adminNotes"), new PhiObjectLiteral("@@19121", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "adminNotes_ml2vlt\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotes"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotes"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@19118", "=", new PhiDot(new PhiThis(), "adminNotes_ml2vlt\$_0"), new PhiNameRef("adminNotes")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFileRTO"), "prototype"), new PhiStringLiteral("adminNotesHighlightRanges"), new PhiObjectLiteral("@@19140", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFileRTO"), "prototype"), new PhiStringLiteral("adminNotesHighlightRanges"), new PhiObjectLiteral("@@19140", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "adminNotesHighlightRanges_ml2vlt\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotesHighlightRanges"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotesHighlightRanges"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@19137", "=", new PhiDot(new PhiThis(), "adminNotesHighlightRanges_ml2vlt\$_0"), new PhiNameRef("adminNotesHighlightRanges")));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@19157", "=", new PhiDot(new PhiNameRef("UAOrderFileRTO"), "\$metadata\$"), new PhiObjectLiteral("@@19155", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrderFileRTO")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("RTOWithAdminNotes"), new PhiNameRef("MelindaItemRTO"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@19171", "=", new PhiDot(new PhiNameRef("TabithaEntityRTO"), "\$metadata\$"), new PhiObjectLiteral("@@19169", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("TabithaEntityRTO")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@19185", "=", new PhiDot(new PhiNameRef("IntRangeRTO"), "\$metadata\$"), new PhiObjectLiteral("@@19183", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("IntRangeRTO")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@19157", "=", new PhiDot(new PhiNameRef("UAOrderFileRTO"), "\$metadata\$"), new PhiObjectLiteral("@@19155", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrderFileRTO")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("RTOWithAdminNotes"), new PhiNameRef("MelindaItemRTO")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@19171", "=", new PhiDot(new PhiNameRef("TabithaEntityRTO"), "\$metadata\$"), new PhiObjectLiteral("@@19169", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("TabithaEntityRTO")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@19185", "=", new PhiDot(new PhiNameRef("IntRangeRTO"), "\$metadata\$"), new PhiObjectLiteral("@@19183", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("IntRangeRTO")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@19193", "=", new PhiDot(new PhiDot(new PhiNameRef("IntRangeRTO"), "prototype"), "component1"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "start"));
   })));
@@ -5223,60 +5800,121 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@19361", "=", new PhiDot(new PhiDot(new PhiNameRef("IntRangeRTO"), "prototype"), "equals"), new PhiFunctionExpression(null, array("other"), function () {
     return phiEvaluate(new PhiBinaryOperation("@@19358", "||", new PhiBinaryOperation("@@19313", "===", new PhiThis(), new PhiNameRef("other")), new PhiBinaryOperation("@@19356", "&&", new PhiBinaryOperation("@@19318", "!==", new PhiNameRef("other"), new PhiNullLiteral("@@19316")), new PhiBinaryOperation("@@19354", "&&", new PhiBinaryOperation("@@19324", "===", new PhiUnaryOperation("@@19321", "prefix", "typeof", new PhiNameRef("other")), new PhiStringLiteral("object")), new PhiBinaryOperation("@@19352", "&&", new PhiBinaryOperation("@@19334", "===", new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "getPrototypeOf"), array(new PhiThis())), new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "getPrototypeOf"), array(new PhiNameRef("other")))), new PhiBinaryOperation("@@19350", "&&", new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "start"), new PhiDot(new PhiNameRef("other"), "start"))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "endInclusive"), new PhiDot(new PhiNameRef("other"), "endInclusive")))))))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@19375", "=", new PhiDot(new PhiNameRef("MelindaItemRTO"), "\$metadata\$"), new PhiObjectLiteral("@@19373", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("MelindaItemRTO")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@19389", "=", new PhiDot(new PhiNameRef("RTOWithAdminNotes"), "\$metadata\$"), new PhiObjectLiteral("@@19387", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("RTOWithAdminNotes")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@19403", "=", new PhiDot(new PhiNameRef("HistoryItemRTOFields"), "\$metadata\$"), new PhiObjectLiteral("@@19401", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("HistoryItemRTOFields")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@19417", "=", new PhiDot(new PhiNameRef("UADocumentCategoryRTO"), "\$metadata\$"), new PhiObjectLiteral("@@19415", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UADocumentCategoryRTO")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("BidRTO"), "prototype"), new PhiStringLiteral("id"), new PhiObjectLiteral("@@19435", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiBinaryOperation("@@19375", "=", new PhiDot(new PhiNameRef("MelindaItemRTO"), "\$metadata\$"), new PhiObjectLiteral("@@19373", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("MelindaItemRTO")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@19389", "=", new PhiDot(new PhiNameRef("RTOWithAdminNotes"), "\$metadata\$"), new PhiObjectLiteral("@@19387", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("RTOWithAdminNotes")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@19403", "=", new PhiDot(new PhiNameRef("HistoryItemRTOFields"), "\$metadata\$"), new PhiObjectLiteral("@@19401", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("HistoryItemRTOFields")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@19417", "=", new PhiDot(new PhiNameRef("UADocumentCategoryRTO"), "\$metadata\$"), new PhiObjectLiteral("@@19415", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UADocumentCategoryRTO")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("BidRTO"), "prototype"), new PhiStringLiteral("id"), new PhiObjectLiteral("@@19435", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "id_5i0o2o\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("id"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("id"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@19432", "=", new PhiDot(new PhiThis(), "id_5i0o2o\$_0"), new PhiNameRef("id")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("BidRTO"), "prototype"), new PhiStringLiteral("title"), new PhiObjectLiteral("@@19454", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("BidRTO"), "prototype"), new PhiStringLiteral("title"), new PhiObjectLiteral("@@19454", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "title_5i0o2o\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("title"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("title"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@19451", "=", new PhiDot(new PhiThis(), "title_5i0o2o\$_0"), new PhiNameRef("title")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("BidRTO"), "prototype"), new PhiStringLiteral("editable"), new PhiObjectLiteral("@@19473", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("BidRTO"), "prototype"), new PhiStringLiteral("editable"), new PhiObjectLiteral("@@19473", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "editable_5i0o2o\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("editable"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("editable"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@19470", "=", new PhiDot(new PhiThis(), "editable_5i0o2o\$_0"), new PhiNameRef("editable")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("BidRTO"), "prototype"), new PhiStringLiteral("titleHighlightRanges"), new PhiObjectLiteral("@@19492", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("BidRTO"), "prototype"), new PhiStringLiteral("titleHighlightRanges"), new PhiObjectLiteral("@@19492", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "titleHighlightRanges_5i0o2o\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("titleHighlightRanges"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("titleHighlightRanges"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@19489", "=", new PhiDot(new PhiThis(), "titleHighlightRanges_5i0o2o\$_0"), new PhiNameRef("titleHighlightRanges")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("BidRTO"), "prototype"), new PhiStringLiteral("adminNotes"), new PhiObjectLiteral("@@19511", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("BidRTO"), "prototype"), new PhiStringLiteral("adminNotes"), new PhiObjectLiteral("@@19511", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "adminNotes_5i0o2o\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotes"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotes"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@19508", "=", new PhiDot(new PhiThis(), "adminNotes_5i0o2o\$_0"), new PhiNameRef("adminNotes")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("BidRTO"), "prototype"), new PhiStringLiteral("adminNotesHighlightRanges"), new PhiObjectLiteral("@@19530", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("BidRTO"), "prototype"), new PhiStringLiteral("adminNotesHighlightRanges"), new PhiObjectLiteral("@@19530", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "adminNotesHighlightRanges_5i0o2o\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotesHighlightRanges"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotesHighlightRanges"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@19527", "=", new PhiDot(new PhiThis(), "adminNotesHighlightRanges_5i0o2o\$_0"), new PhiNameRef("adminNotesHighlightRanges")));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@19547", "=", new PhiDot(new PhiNameRef("BidRTO"), "\$metadata\$"), new PhiObjectLiteral("@@19545", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("BidRTO")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("RTOWithAdminNotes"), new PhiNameRef("MelindaItemRTO"))))))));
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@19547", "=", new PhiDot(new PhiNameRef("BidRTO"), "\$metadata\$"), new PhiObjectLiteral("@@19545", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("BidRTO")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("RTOWithAdminNotes"), new PhiNameRef("MelindaItemRTO")))))
+)));
   phiVars("@@19552", array(array("UserRole\$SUPPORT_instance", new PhiUnaryOperation("@@19549", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@19566", "=", new PhiDot(new PhiNameRef("UserRole"), "\$metadata\$"), new PhiObjectLiteral("@@19564", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserRole")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@19566", "=", new PhiDot(new PhiNameRef("UserRole"), "\$metadata\$"), new PhiObjectLiteral("@@19564", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserRole")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@19571", "=", new PhiDot(new PhiNameRef("UserRole"), "values"), new PhiNameRef("UserRole\$values")));
   phiExpressionStatement(new PhiBinaryOperation("@@19576", "=", new PhiDot(new PhiNameRef("UserRole"), "valueOf_61zpoe\$"), new PhiNameRef("UserRole\$valueOf")));
-  phiExpressionStatement(new PhiBinaryOperation("@@19591", "=", new PhiDot(new PhiNameRef("RecreateTestDatabaseSchemaRequest"), "\$metadata\$"), new PhiObjectLiteral("@@19589", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("RecreateTestDatabaseSchemaRequest")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("RequestMatumba"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@19606", "=", new PhiDot(new PhiNameRef("GenericResponse"), "\$metadata\$"), new PhiObjectLiteral("@@19604", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("GenericResponse")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("CommonResponseFieldsImpl"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@19591", "=", new PhiDot(new PhiNameRef("RecreateTestDatabaseSchemaRequest"), "\$metadata\$"), new PhiObjectLiteral("@@19589", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("RecreateTestDatabaseSchemaRequest")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("RequestMatumba")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@19606", "=", new PhiDot(new PhiNameRef("GenericResponse"), "\$metadata\$"), new PhiObjectLiteral("@@19604", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("GenericResponse")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("CommonResponseFieldsImpl")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@19615", "=", new PhiDot(new PhiDot(new PhiNameRef("relazy"), "prototype"), "getValue_n5byny\$"), new PhiFunctionExpression(null, array("thisRef", "property"), function () {
     return phiEvaluate(new PhiDot(new PhiDot(new PhiThis(), "backing_0"), "value"));
   })));
   phiExpressionStatement(new PhiBinaryOperation("@@19629", "=", new PhiDot(new PhiDot(new PhiNameRef("relazy"), "prototype"), "reset"), new PhiFunctionExpression(null, array(), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@19626", "=", new PhiDot(new PhiThis(), "backing_0"), new PhiInvocation(new PhiNameRef("lazy"), array(new PhiDot(new PhiThis(), "initializer")))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@19643", "=", new PhiDot(new PhiNameRef("relazy"), "\$metadata\$"), new PhiObjectLiteral("@@19641", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("relazy")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("CommonResponseFieldsImpl"), "prototype"), new PhiStringLiteral("backendVersion"), new PhiObjectLiteral("@@19661", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiBinaryOperation("@@19643", "=", new PhiDot(new PhiNameRef("relazy"), "\$metadata\$"), new PhiObjectLiteral("@@19641", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("relazy")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("CommonResponseFieldsImpl"), "prototype"), new PhiStringLiteral("backendVersion"), new PhiObjectLiteral("@@19661", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "backendVersion_2iylqj\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("backendVersion"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("backendVersion"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@19658", "=", new PhiDot(new PhiThis(), "backendVersion_2iylqj\$_0"), new PhiNameRef("backendVersion")));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@19677", "=", new PhiDot(new PhiNameRef("CommonResponseFieldsImpl"), "\$metadata\$"), new PhiObjectLiteral("@@19675", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("CommonResponseFieldsImpl")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("CommonResponseFields"))))))));
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@19677", "=", new PhiDot(new PhiNameRef("CommonResponseFieldsImpl"), "\$metadata\$"), new PhiObjectLiteral("@@19675", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("CommonResponseFieldsImpl")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("CommonResponseFields")))))
+)));
   phiVars("@@19682", array(array("MAX_INDEXED_STRING", new PhiUnaryOperation("@@19679", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@19686", array(array("MAX_BLOB", new PhiUnaryOperation("@@19683", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiExpressionStatement(new PhiBinaryOperation("@@19709", "=", new PhiDot(new PhiDot(new PhiNameRef("ClitoralEntity0"), "prototype"), "preFuckingUpdate"), new PhiFunctionExpression(null, array(), function () {
@@ -5286,7 +5924,11 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
       }
     }
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@19723", "=", new PhiDot(new PhiNameRef("ClitoralEntity0"), "\$metadata\$"), new PhiObjectLiteral("@@19721", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("ClitoralEntity0")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@19723", "=", new PhiDot(new PhiNameRef("ClitoralEntity0"), "\$metadata\$"), new PhiObjectLiteral("@@19721", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("ClitoralEntity0")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@19780", "=", new PhiDot(new PhiDot(new PhiNameRef("IdentityIfNotSetGeneratorLogic"), "prototype"), "generate_s8jyv4\$"), new PhiFunctionExpression(null, array("obj"), function () {
     phiVars("@@19734", array(array("tmp\$", new PhiUnaryOperation("@@19728", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_0", new PhiUnaryOperation("@@19731", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     phiVars("@@19748", array(array("entity", new PhiConditional(new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "isType"), array(new PhiBinaryOperation("@@19739", "=", new PhiNameRef("tmp\$"), new PhiNameRef("obj")), new PhiNameRef("ClitoralEntity0"))), new PhiNameRef("tmp\$"), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "throwCCE"), array())))));
@@ -5300,15 +5942,27 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
       phiExpressionStatement(new PhiBinaryOperation("@@19776", "=", new PhiNameRef("tmp\$_0"), new PhiNullLiteral("@@19774")));
     return phiEvaluate(new PhiNameRef("tmp\$_0"));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@19794", "=", new PhiDot(new PhiNameRef("IdentityIfNotSetGeneratorLogic"), "\$metadata\$"), new PhiObjectLiteral("@@19792", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("IdentityIfNotSetGeneratorLogic")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@19794", "=", new PhiDot(new PhiNameRef("IdentityIfNotSetGeneratorLogic"), "\$metadata\$"), new PhiObjectLiteral("@@19792", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("IdentityIfNotSetGeneratorLogic")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@19807", "=", new PhiDot(new PhiDot(new PhiNameRef("ClitoralEntity"), "prototype"), "touch"), new PhiFunctionExpression(null, array(), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@19804", "=", new PhiDot(new PhiThis(), "updatedAt"), new PhiDot(new PhiDot(new PhiNameRef("backPlatform"), "requestGlobus"), "stamp")));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@19822", "=", new PhiDot(new PhiNameRef("ClitoralEntity"), "\$metadata\$"), new PhiObjectLiteral("@@19820", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("ClitoralEntity")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ClitoralEntity0"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@19822", "=", new PhiDot(new PhiNameRef("ClitoralEntity"), "\$metadata\$"), new PhiObjectLiteral("@@19820", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("ClitoralEntity")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ClitoralEntity0")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@19835", "=", new PhiDot(new PhiDot(new PhiNameRef("CommonFields"), "prototype"), "touch"), new PhiFunctionExpression(null, array(), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@19832", "=", new PhiDot(new PhiThis(), "updatedAt"), new PhiDot(new PhiDot(new PhiNameRef("backPlatform"), "requestGlobus"), "stamp")));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@19849", "=", new PhiDot(new PhiNameRef("CommonFields"), "\$metadata\$"), new PhiObjectLiteral("@@19847", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("CommonFields")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@19849", "=", new PhiDot(new PhiNameRef("CommonFields"), "\$metadata\$"), new PhiObjectLiteral("@@19847", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("CommonFields")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@19857", "=", new PhiDot(new PhiDot(new PhiNameRef("CommonFields"), "prototype"), "component1"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "createdAt"));
   })));
@@ -5334,10 +5988,12 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@20082", "=", new PhiDot(new PhiDot(new PhiNameRef("CommonFields"), "prototype"), "equals"), new PhiFunctionExpression(null, array("other"), function () {
     return phiEvaluate(new PhiBinaryOperation("@@20079", "||", new PhiBinaryOperation("@@20025", "===", new PhiThis(), new PhiNameRef("other")), new PhiBinaryOperation("@@20077", "&&", new PhiBinaryOperation("@@20030", "!==", new PhiNameRef("other"), new PhiNullLiteral("@@20028")), new PhiBinaryOperation("@@20075", "&&", new PhiBinaryOperation("@@20036", "===", new PhiUnaryOperation("@@20033", "prefix", "typeof", new PhiNameRef("other")), new PhiStringLiteral("object")), new PhiBinaryOperation("@@20073", "&&", new PhiBinaryOperation("@@20046", "===", new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "getPrototypeOf"), array(new PhiThis())), new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "getPrototypeOf"), array(new PhiNameRef("other")))), new PhiBinaryOperation("@@20071", "&&", new PhiBinaryOperation("@@20062", "&&", new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "createdAt"), new PhiDot(new PhiNameRef("other"), "createdAt"))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "updatedAt"), new PhiDot(new PhiNameRef("other"), "updatedAt")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "deleted"), new PhiDot(new PhiNameRef("other"), "deleted")))))))));
   })));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("User"), "prototype"), new PhiStringLiteral("idBang"), new PhiObjectLiteral("@@20109", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("User"), "prototype"), new PhiStringLiteral("idBang"), new PhiObjectLiteral("@@20109", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     phiVars("@@20093", array(array("tmp\$", new PhiUnaryOperation("@@20090", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     return phiEvaluate(new PhiConditional(new PhiBinaryOperation("@@20101", "!=", new PhiBinaryOperation("@@20097", "=", new PhiNameRef("tmp\$"), new PhiDot(new PhiThis(), "id")), new PhiNullLiteral("@@20099")), new PhiNameRef("tmp\$"), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "throwNPE"), array())));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@20137", "=", new PhiDot(new PhiDot(new PhiNameRef("User"), "prototype"), "toRTO_mhpeer\$"), new PhiFunctionExpression(null, array("searchWords"), function () {
     phiVars("@@20117", array(array("tmp\$", new PhiDot(new PhiThis(), "idBang"))));
     phiVars("@@20120", array(array("tmp\$_0", new PhiDot(new PhiThis(), "user"))));
@@ -5345,13 +6001,24 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiNameRef("_"), "aps"), "imf_61zpoe\$"), array(new PhiStringLiteral("7692fed3-d51c-4de7-95d9-6b9f23019c29"))));
     return phiEvaluate(new PhiInvocation(new PhiNameRef("userLikeToRTO"), array(new PhiNameRef("tmp\$"), new PhiNameRef("tmp\$_0"), new PhiNameRef("map\$result"), new PhiNameRef("searchWords"))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@20153", "=", new PhiDot(new PhiNameRef("User"), "\$metadata\$"), new PhiObjectLiteral("@@20151", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("User")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ClitoralEntity0"), new PhiNameRef("MeganItem"))))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserFields"), "prototype"), new PhiStringLiteral("adminNotes"), new PhiObjectLiteral("@@20171", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiBinaryOperation("@@20153", "=", new PhiDot(new PhiNameRef("User"), "\$metadata\$"), new PhiObjectLiteral("@@20151", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("User")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ClitoralEntity0"), new PhiNameRef("MeganItem")))))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserFields"), "prototype"), new PhiStringLiteral("adminNotes"), new PhiObjectLiteral("@@20171", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "adminNotes_xyzpkp\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotes"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotes"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@20168", "=", new PhiDot(new PhiThis(), "adminNotes_xyzpkp\$_0"), new PhiNameRef("adminNotes")));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@20187", "=", new PhiDot(new PhiNameRef("UserFields"), "\$metadata\$"), new PhiObjectLiteral("@@20185", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserFields")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("FieldsWithAdminNotes"))))))));
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@20187", "=", new PhiDot(new PhiNameRef("UserFields"), "\$metadata\$"), new PhiObjectLiteral("@@20185", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserFields")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("FieldsWithAdminNotes")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@20195", "=", new PhiDot(new PhiDot(new PhiNameRef("UserFields"), "prototype"), "component1"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "common"));
   })));
@@ -5421,16 +6088,42 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@21047", "=", new PhiDot(new PhiDot(new PhiNameRef("UserFields"), "prototype"), "equals"), new PhiFunctionExpression(null, array("other"), function () {
     return phiEvaluate(new PhiBinaryOperation("@@21044", "||", new PhiBinaryOperation("@@20891", "===", new PhiThis(), new PhiNameRef("other")), new PhiBinaryOperation("@@21042", "&&", new PhiBinaryOperation("@@20896", "!==", new PhiNameRef("other"), new PhiNullLiteral("@@20894")), new PhiBinaryOperation("@@21040", "&&", new PhiBinaryOperation("@@20902", "===", new PhiUnaryOperation("@@20899", "prefix", "typeof", new PhiNameRef("other")), new PhiStringLiteral("object")), new PhiBinaryOperation("@@21038", "&&", new PhiBinaryOperation("@@20912", "===", new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "getPrototypeOf"), array(new PhiThis())), new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "getPrototypeOf"), array(new PhiNameRef("other")))), new PhiBinaryOperation("@@21036", "&&", new PhiBinaryOperation("@@21027", "&&", new PhiBinaryOperation("@@21018", "&&", new PhiBinaryOperation("@@21009", "&&", new PhiBinaryOperation("@@21000", "&&", new PhiBinaryOperation("@@20991", "&&", new PhiBinaryOperation("@@20982", "&&", new PhiBinaryOperation("@@20973", "&&", new PhiBinaryOperation("@@20964", "&&", new PhiBinaryOperation("@@20955", "&&", new PhiBinaryOperation("@@20946", "&&", new PhiBinaryOperation("@@20937", "&&", new PhiBinaryOperation("@@20928", "&&", new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "common"), new PhiDot(new PhiNameRef("other"), "common"))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "firstName"), new PhiDot(new PhiNameRef("other"), "firstName")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "email"), new PhiDot(new PhiNameRef("other"), "email")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "lastName"), new PhiDot(new PhiNameRef("other"), "lastName")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "passwordHash"), new PhiDot(new PhiNameRef("other"), "passwordHash")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "profilePhone"), new PhiDot(new PhiNameRef("other"), "profilePhone")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "kind"), new PhiDot(new PhiNameRef("other"), "kind")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "state"), new PhiDot(new PhiNameRef("other"), "state")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "adminNotes"), new PhiDot(new PhiNameRef("other"), "adminNotes")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "profileUpdatedAt"), new PhiDot(new PhiNameRef("other"), "profileUpdatedAt")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "aboutMe"), new PhiDot(new PhiNameRef("other"), "aboutMe")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "profileRejectionReason"), new PhiDot(new PhiNameRef("other"), "profileRejectionReason")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "banReason"), new PhiDot(new PhiNameRef("other"), "banReason")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "subscribedToAllCategories"), new PhiDot(new PhiNameRef("other"), "subscribedToAllCategories")))))))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@21062", "=", new PhiDot(new PhiNameRef("UserRepository"), "\$metadata\$"), new PhiObjectLiteral("@@21060", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserRepository")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@21077", "=", new PhiDot(new PhiNameRef("UserTimesDocumentCategory"), "\$metadata\$"), new PhiObjectLiteral("@@21075", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserTimesDocumentCategory")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ClitoralEntity0"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@21092", "=", new PhiDot(new PhiNameRef("UserTimesDocumentCategoryRepository"), "\$metadata\$"), new PhiObjectLiteral("@@21090", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserTimesDocumentCategoryRepository")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@21107", "=", new PhiDot(new PhiNameRef("UserParamsHistoryItemTimesDocumentCategory"), "\$metadata\$"), new PhiObjectLiteral("@@21105", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserParamsHistoryItemTimesDocumentCategory")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ClitoralEntity0"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@21122", "=", new PhiDot(new PhiNameRef("UserParamsHistoryItemTimesDocumentCategoryRepository"), "\$metadata\$"), new PhiObjectLiteral("@@21120", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserParamsHistoryItemTimesDocumentCategoryRepository")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@21136", "=", new PhiDot(new PhiNameRef("HistoryFields"), "\$metadata\$"), new PhiObjectLiteral("@@21134", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("HistoryFields")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserParamsHistoryItem"), "prototype"), new PhiStringLiteral("idBang"), new PhiObjectLiteral("@@21163", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiBinaryOperation("@@21062", "=", new PhiDot(new PhiNameRef("UserRepository"), "\$metadata\$"), new PhiObjectLiteral("@@21060", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserRepository")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@21077", "=", new PhiDot(new PhiNameRef("UserTimesDocumentCategory"), "\$metadata\$"), new PhiObjectLiteral("@@21075", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserTimesDocumentCategory")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ClitoralEntity0")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@21092", "=", new PhiDot(new PhiNameRef("UserTimesDocumentCategoryRepository"), "\$metadata\$"), new PhiObjectLiteral("@@21090", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserTimesDocumentCategoryRepository")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@21107", "=", new PhiDot(new PhiNameRef("UserParamsHistoryItemTimesDocumentCategory"), "\$metadata\$"), new PhiObjectLiteral("@@21105", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserParamsHistoryItemTimesDocumentCategory")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ClitoralEntity0")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@21122", "=", new PhiDot(new PhiNameRef("UserParamsHistoryItemTimesDocumentCategoryRepository"), "\$metadata\$"), new PhiObjectLiteral("@@21120", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserParamsHistoryItemTimesDocumentCategoryRepository")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@21136", "=", new PhiDot(new PhiNameRef("HistoryFields"), "\$metadata\$"), new PhiObjectLiteral("@@21134", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("HistoryFields")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UserParamsHistoryItem"), "prototype"), new PhiStringLiteral("idBang"), new PhiObjectLiteral("@@21163", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     phiVars("@@21147", array(array("tmp\$", new PhiUnaryOperation("@@21144", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     return phiEvaluate(new PhiConditional(new PhiBinaryOperation("@@21155", "!=", new PhiBinaryOperation("@@21151", "=", new PhiNameRef("tmp\$"), new PhiDot(new PhiThis(), "id")), new PhiNullLiteral("@@21153")), new PhiNameRef("tmp\$"), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "throwNPE"), array())));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@21261", "=", new PhiDot(new PhiDot(new PhiNameRef("UserParamsHistoryItem"), "prototype"), "toRTO_mhpeer\$"), new PhiFunctionExpression(null, array("searchWords"), function () {
     phiVars("@@21175", array(array("tmp\$_0", new PhiUnaryOperation("@@21169", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$", new PhiUnaryOperation("@@21172", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     phiVars("@@21179", array(array("entityID", new PhiDot(new PhiDot(new PhiThis(), "history"), "entityID"))));
@@ -5442,15 +6135,34 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiNameRef("_"), "aps"), "imf_61zpoe\$"), array(new PhiStringLiteral("7692fed3-d51c-4de7-95d9-6b9f23019c29"))));
     return phiEvaluate(new PhiNew(new PhiNameRef("UserParamsHistoryItemRTO"), array(new PhiInvocation(new PhiNameRef("userLikeToRTO"), array(new PhiNameRef("entityID"), new PhiNameRef("tmp\$_1"), new PhiNameRef("map\$result"), new PhiNameRef("searchWords"))), new PhiNameRef("tmp\$_0"), new PhiDot(new PhiDot(new PhiDot(new PhiThis(), "history"), "createdAt"), "time"), new PhiInvocation(new PhiDot(new PhiNameRef("changer"), "toRTO_mhpeer\$"), array(new PhiInvocation(new PhiNameRef("listOf"), array(new PhiArrayLiteral(array()))))), new PhiInvocation(new PhiNameRef("userLikeToRTO"), array(new PhiConditional(new PhiBinaryOperation("@@21232", "!=", new PhiBinaryOperation("@@21228", "=", new PhiNameRef("tmp\$"), new PhiDot(new PhiNameRef("changer"), "id")), new PhiNullLiteral("@@21230")), new PhiNameRef("tmp\$"), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "throwNPE"), array())), new PhiDot(new PhiDot(new PhiThis(), "history"), "thenRequester"), new PhiInvocation(new PhiNameRef("listOf"), array(new PhiArrayLiteral(array()))), new PhiInvocation(new PhiNameRef("listOf"), array(new PhiArrayLiteral(array()))))), new PhiDot(new PhiThis(), "idBang"), new PhiNameRef("title"), new PhiBooleanLiteral("@@21252", false), new PhiInvocation(new PhiDot(new PhiNameRef("backPlatform"), "highlightRanges_kwv3np\$"), array(new PhiNameRef("title"), new PhiNameRef("searchWords"))))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@21277", "=", new PhiDot(new PhiNameRef("UserParamsHistoryItem"), "\$metadata\$"), new PhiObjectLiteral("@@21275", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserParamsHistoryItem")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("MeganItem"), new PhiNameRef("ClitoralEntity0"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@21292", "=", new PhiDot(new PhiNameRef("UserParamsHistoryItemRepository"), "\$metadata\$"), new PhiObjectLiteral("@@21290", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserParamsHistoryItemRepository")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@21306", "=", new PhiDot(new PhiNameRef("FieldsWithAdminNotes"), "\$metadata\$"), new PhiObjectLiteral("@@21304", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("FieldsWithAdminNotes")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFields"), "prototype"), new PhiStringLiteral("adminNotes"), new PhiObjectLiteral("@@21324", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiBinaryOperation("@@21277", "=", new PhiDot(new PhiNameRef("UserParamsHistoryItem"), "\$metadata\$"), new PhiObjectLiteral("@@21275", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserParamsHistoryItem")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("MeganItem"), new PhiNameRef("ClitoralEntity0")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@21292", "=", new PhiDot(new PhiNameRef("UserParamsHistoryItemRepository"), "\$metadata\$"), new PhiObjectLiteral("@@21290", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserParamsHistoryItemRepository")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@21306", "=", new PhiDot(new PhiNameRef("FieldsWithAdminNotes"), "\$metadata\$"), new PhiObjectLiteral("@@21304", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("FieldsWithAdminNotes")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFields"), "prototype"), new PhiStringLiteral("adminNotes"), new PhiObjectLiteral("@@21324", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "adminNotes_mq4ds4\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotes"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotes"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@21321", "=", new PhiDot(new PhiThis(), "adminNotes_mq4ds4\$_0"), new PhiNameRef("adminNotes")));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@21340", "=", new PhiDot(new PhiNameRef("UAOrderFields"), "\$metadata\$"), new PhiObjectLiteral("@@21338", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrderFields")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("FieldsWithAdminNotes"))))))));
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@21340", "=", new PhiDot(new PhiNameRef("UAOrderFields"), "\$metadata\$"), new PhiObjectLiteral("@@21338", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrderFields")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("FieldsWithAdminNotes")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@21348", "=", new PhiDot(new PhiDot(new PhiNameRef("UAOrderFields"), "prototype"), "component1"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "common"));
   })));
@@ -5552,10 +6264,12 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@22656", "=", new PhiDot(new PhiDot(new PhiNameRef("UAOrderFields"), "prototype"), "equals"), new PhiFunctionExpression(null, array("other"), function () {
     return phiEvaluate(new PhiBinaryOperation("@@22653", "||", new PhiBinaryOperation("@@22428", "===", new PhiThis(), new PhiNameRef("other")), new PhiBinaryOperation("@@22651", "&&", new PhiBinaryOperation("@@22433", "!==", new PhiNameRef("other"), new PhiNullLiteral("@@22431")), new PhiBinaryOperation("@@22649", "&&", new PhiBinaryOperation("@@22439", "===", new PhiUnaryOperation("@@22436", "prefix", "typeof", new PhiNameRef("other")), new PhiStringLiteral("object")), new PhiBinaryOperation("@@22647", "&&", new PhiBinaryOperation("@@22449", "===", new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "getPrototypeOf"), array(new PhiThis())), new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "getPrototypeOf"), array(new PhiNameRef("other")))), new PhiBinaryOperation("@@22645", "&&", new PhiBinaryOperation("@@22636", "&&", new PhiBinaryOperation("@@22627", "&&", new PhiBinaryOperation("@@22618", "&&", new PhiBinaryOperation("@@22609", "&&", new PhiBinaryOperation("@@22600", "&&", new PhiBinaryOperation("@@22591", "&&", new PhiBinaryOperation("@@22582", "&&", new PhiBinaryOperation("@@22573", "&&", new PhiBinaryOperation("@@22564", "&&", new PhiBinaryOperation("@@22555", "&&", new PhiBinaryOperation("@@22546", "&&", new PhiBinaryOperation("@@22537", "&&", new PhiBinaryOperation("@@22528", "&&", new PhiBinaryOperation("@@22519", "&&", new PhiBinaryOperation("@@22510", "&&", new PhiBinaryOperation("@@22501", "&&", new PhiBinaryOperation("@@22492", "&&", new PhiBinaryOperation("@@22483", "&&", new PhiBinaryOperation("@@22474", "&&", new PhiBinaryOperation("@@22465", "&&", new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "common"), new PhiDot(new PhiNameRef("other"), "common"))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "title"), new PhiDot(new PhiNameRef("other"), "title")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "documentType"), new PhiDot(new PhiNameRef("other"), "documentType")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "numPages"), new PhiDot(new PhiNameRef("other"), "numPages")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "numSources"), new PhiDot(new PhiNameRef("other"), "numSources")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "details"), new PhiDot(new PhiNameRef("other"), "details")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "state"), new PhiDot(new PhiNameRef("other"), "state")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "confirmationSecret"), new PhiDot(new PhiNameRef("other"), "confirmationSecret")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "customerFirstName"), new PhiDot(new PhiNameRef("other"), "customerFirstName")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "customerLastName"), new PhiDot(new PhiNameRef("other"), "customerLastName")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "customerPhone"), new PhiDot(new PhiNameRef("other"), "customerPhone")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "customerEmail"), new PhiDot(new PhiNameRef("other"), "customerEmail")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "whatShouldBeFixedByCustomer"), new PhiDot(new PhiNameRef("other"), "whatShouldBeFixedByCustomer")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "adminNotes"), new PhiDot(new PhiNameRef("other"), "adminNotes")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "movedToStoreAt"), new PhiDot(new PhiNameRef("other"), "movedToStoreAt")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "minAllowedPriceOffer"), new PhiDot(new PhiNameRef("other"), "minAllowedPriceOffer")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "maxAllowedPriceOffer"), new PhiDot(new PhiNameRef("other"), "maxAllowedPriceOffer")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "minAllowedDurationOffer"), new PhiDot(new PhiNameRef("other"), "minAllowedDurationOffer")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "maxAllowedDurationOffer"), new PhiDot(new PhiNameRef("other"), "maxAllowedDurationOffer")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "customer"), new PhiDot(new PhiNameRef("other"), "customer")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "category"), new PhiDot(new PhiNameRef("other"), "category")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "bids"), new PhiDot(new PhiNameRef("other"), "bids")))))))));
   })));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrder"), "prototype"), new PhiStringLiteral("idBang"), new PhiObjectLiteral("@@22683", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrder"), "prototype"), new PhiStringLiteral("idBang"), new PhiObjectLiteral("@@22683", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     phiVars("@@22667", array(array("tmp\$", new PhiUnaryOperation("@@22664", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     return phiEvaluate(new PhiConditional(new PhiBinaryOperation("@@22675", "!=", new PhiBinaryOperation("@@22671", "=", new PhiNameRef("tmp\$"), new PhiDot(new PhiThis(), "id")), new PhiNullLiteral("@@22673")), new PhiNameRef("tmp\$"), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "throwNPE"), array())));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@22879", "=", new PhiDot(new PhiDot(new PhiNameRef("UAOrder"), "prototype"), "toRTO_mhpeer\$"), new PhiFunctionExpression(null, array("searchWords"), function () {
     phiVars("@@22710", array(array("tmp\$", new PhiUnaryOperation("@@22689", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_2", new PhiUnaryOperation("@@22692", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_3", new PhiUnaryOperation("@@22695", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_4", new PhiUnaryOperation("@@22698", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_5", new PhiUnaryOperation("@@22701", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_0", new PhiUnaryOperation("@@22704", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_1", new PhiUnaryOperation("@@22707", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     phiExpressionStatement(new PhiBinaryOperation("@@22726", "=", new PhiNameRef("tmp\$_2"), new PhiConditional(new PhiBinaryOperation("@@22719", "!=", new PhiBinaryOperation("@@22715", "=", new PhiNameRef("tmp\$"), new PhiDot(new PhiThis(), "id")), new PhiNullLiteral("@@22717")), new PhiNameRef("tmp\$"), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "throwNPE"), array()))));
@@ -5564,16 +6278,39 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
     phiExpressionStatement(new PhiBinaryOperation("@@22752", "=", new PhiNameRef("tmp\$_5"), new PhiInvocation(new PhiDot(new PhiNameRef("backPlatform"), "highlightRanges_kwv3np\$"), array(new PhiDot(new PhiDot(new PhiThis(), "order"), "details"), new PhiNameRef("searchWords")))));
     return phiEvaluate(new PhiNew(new PhiNameRef("UAOrderRTO"), array(new PhiNameRef("tmp\$_2"), new PhiNameRef("tmp\$_3"), new PhiBooleanLiteral("@@22757", true), new PhiNameRef("tmp\$_4"), new PhiDot(new PhiDot(new PhiDot(new PhiDot(new PhiThis(), "order"), "common"), "createdAt"), "time"), new PhiDot(new PhiDot(new PhiDot(new PhiDot(new PhiThis(), "order"), "common"), "updatedAt"), "time"), new PhiInvocation(new PhiDot(new PhiConditional(new PhiBinaryOperation("@@22778", "!=", new PhiBinaryOperation("@@22774", "=", new PhiNameRef("tmp\$_0"), new PhiDot(new PhiDot(new PhiThis(), "order"), "customer")), new PhiNullLiteral("@@22776")), new PhiNameRef("tmp\$_0"), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "throwNPE"), array())), "toRTO_mhpeer\$"), array(new PhiInvocation(new PhiNameRef("listOf"), array(new PhiArrayLiteral(array()))))), new PhiDot(new PhiDot(new PhiThis(), "order"), "documentType"), new PhiNumberLiteral("@@22793", -1), new PhiDot(new PhiDot(new PhiThis(), "order"), "numPages"), new PhiDot(new PhiDot(new PhiThis(), "order"), "numSources"), new PhiDot(new PhiDot(new PhiThis(), "order"), "details"), new PhiNameRef("tmp\$_5"), new PhiDot(new PhiDot(new PhiThis(), "order"), "adminNotes"), new PhiInvocation(new PhiDot(new PhiNameRef("backPlatform"), "highlightRanges_kwv3np\$"), array(new PhiDot(new PhiDot(new PhiThis(), "order"), "adminNotes"), new PhiNameRef("searchWords"))), new PhiDot(new PhiDot(new PhiThis(), "order"), "state"), new PhiDot(new PhiDot(new PhiThis(), "order"), "customerPhone"), new PhiDot(new PhiDot(new PhiThis(), "order"), "customerFirstName"), new PhiDot(new PhiDot(new PhiThis(), "order"), "customerLastName"), new PhiDot(new PhiDot(new PhiThis(), "order"), "whatShouldBeFixedByCustomer"), new PhiDot(new PhiDot(new PhiThis(), "order"), "customerEmail"), new PhiConditional(new PhiBinaryOperation("@@22841", "!=", new PhiBinaryOperation("@@22837", "=", new PhiNameRef("tmp\$_1"), new PhiDot(new PhiDot(new PhiThis(), "order"), "movedToStoreAt")), new PhiNullLiteral("@@22839")), new PhiDot(new PhiNameRef("tmp\$_1"), "time"), new PhiNullLiteral("@@22845")), new PhiDot(new PhiDot(new PhiThis(), "order"), "minAllowedPriceOffer"), new PhiDot(new PhiDot(new PhiThis(), "order"), "maxAllowedPriceOffer"), new PhiDot(new PhiDot(new PhiThis(), "order"), "minAllowedDurationOffer"), new PhiDot(new PhiDot(new PhiThis(), "order"), "maxAllowedDurationOffer"), new PhiInvocation(new PhiDot(new PhiDot(new PhiDot(new PhiThis(), "order"), "category"), "toRTO_6taknv\$"), array()), new PhiInvocation(new PhiNameRef("ifInStoreAndWriterLooking"), array(new PhiThis(), new PhiInvocation(new PhiNameRef("UAOrder\$toRTO\$lambda"), array(new PhiThis())))), new PhiInvocation(new PhiNameRef("ifInStoreAndWriterOrAdminLooking"), array(new PhiThis(), new PhiInvocation(new PhiNameRef("UAOrder\$toRTO\$lambda_0"), array(new PhiThis())))))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@22895", "=", new PhiDot(new PhiNameRef("UAOrder"), "\$metadata\$"), new PhiObjectLiteral("@@22893", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrder")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("MeganItem"), new PhiNameRef("ClitoralEntity0"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@22910", "=", new PhiDot(new PhiNameRef("UAOrderRepository"), "\$metadata\$"), new PhiObjectLiteral("@@22908", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrderRepository")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@22925", "=", new PhiDot(new PhiNameRef("UserToken"), "\$metadata\$"), new PhiObjectLiteral("@@22923", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserToken")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ClitoralEntity"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@22940", "=", new PhiDot(new PhiNameRef("UserTokenRepository"), "\$metadata\$"), new PhiObjectLiteral("@@22938", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserTokenRepository")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository"))))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFileFields"), "prototype"), new PhiStringLiteral("adminNotes"), new PhiObjectLiteral("@@22958", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiBinaryOperation("@@22895", "=", new PhiDot(new PhiNameRef("UAOrder"), "\$metadata\$"), new PhiObjectLiteral("@@22893", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrder")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("MeganItem"), new PhiNameRef("ClitoralEntity0")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@22910", "=", new PhiDot(new PhiNameRef("UAOrderRepository"), "\$metadata\$"), new PhiObjectLiteral("@@22908", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrderRepository")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@22925", "=", new PhiDot(new PhiNameRef("UserToken"), "\$metadata\$"), new PhiObjectLiteral("@@22923", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserToken")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ClitoralEntity")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@22940", "=", new PhiDot(new PhiNameRef("UserTokenRepository"), "\$metadata\$"), new PhiObjectLiteral("@@22938", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UserTokenRepository")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository")))))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFileFields"), "prototype"), new PhiStringLiteral("adminNotes"), new PhiObjectLiteral("@@22958", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "adminNotes_2jodwg\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotes"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotes"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@22955", "=", new PhiDot(new PhiThis(), "adminNotes_2jodwg\$_0"), new PhiNameRef("adminNotes")));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@22974", "=", new PhiDot(new PhiNameRef("UAOrderFileFields"), "\$metadata\$"), new PhiObjectLiteral("@@22972", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrderFileFields")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("FieldsWithAdminNotes"))))))));
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@22974", "=", new PhiDot(new PhiNameRef("UAOrderFileFields"), "\$metadata\$"), new PhiObjectLiteral("@@22972", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrderFileFields")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("FieldsWithAdminNotes")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@22982", "=", new PhiDot(new PhiDot(new PhiNameRef("UAOrderFileFields"), "prototype"), "component1"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "common"));
   })));
@@ -5639,10 +6376,12 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@23777", "=", new PhiDot(new PhiDot(new PhiNameRef("UAOrderFileFields"), "prototype"), "equals"), new PhiFunctionExpression(null, array("other"), function () {
     return phiEvaluate(new PhiBinaryOperation("@@23774", "||", new PhiBinaryOperation("@@23630", "===", new PhiThis(), new PhiNameRef("other")), new PhiBinaryOperation("@@23772", "&&", new PhiBinaryOperation("@@23635", "!==", new PhiNameRef("other"), new PhiNullLiteral("@@23633")), new PhiBinaryOperation("@@23770", "&&", new PhiBinaryOperation("@@23641", "===", new PhiUnaryOperation("@@23638", "prefix", "typeof", new PhiNameRef("other")), new PhiStringLiteral("object")), new PhiBinaryOperation("@@23768", "&&", new PhiBinaryOperation("@@23651", "===", new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "getPrototypeOf"), array(new PhiThis())), new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "getPrototypeOf"), array(new PhiNameRef("other")))), new PhiBinaryOperation("@@23766", "&&", new PhiBinaryOperation("@@23757", "&&", new PhiBinaryOperation("@@23748", "&&", new PhiBinaryOperation("@@23739", "&&", new PhiBinaryOperation("@@23730", "&&", new PhiBinaryOperation("@@23721", "&&", new PhiBinaryOperation("@@23712", "&&", new PhiBinaryOperation("@@23703", "&&", new PhiBinaryOperation("@@23694", "&&", new PhiBinaryOperation("@@23685", "&&", new PhiBinaryOperation("@@23676", "&&", new PhiBinaryOperation("@@23667", "&&", new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "common"), new PhiDot(new PhiNameRef("other"), "common"))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "name"), new PhiDot(new PhiNameRef("other"), "name")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "title"), new PhiDot(new PhiNameRef("other"), "title")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "mime"), new PhiDot(new PhiNameRef("other"), "mime")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "details"), new PhiDot(new PhiNameRef("other"), "details")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "adminNotes"), new PhiDot(new PhiNameRef("other"), "adminNotes")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "sha256"), new PhiDot(new PhiNameRef("other"), "sha256")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "sizeBytes"), new PhiDot(new PhiNameRef("other"), "sizeBytes")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "content"), new PhiDot(new PhiNameRef("other"), "content")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "forCustomerSeenAsFrom"), new PhiDot(new PhiNameRef("other"), "forCustomerSeenAsFrom")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "forWriterSeenAsFrom"), new PhiDot(new PhiNameRef("other"), "forWriterSeenAsFrom")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "creator"), new PhiDot(new PhiNameRef("other"), "creator")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "order"), new PhiDot(new PhiNameRef("other"), "order")))))))));
   })));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFile"), "prototype"), new PhiStringLiteral("idBang"), new PhiObjectLiteral("@@23804", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("UAOrderFile"), "prototype"), new PhiStringLiteral("idBang"), new PhiObjectLiteral("@@23804", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     phiVars("@@23788", array(array("tmp\$", new PhiUnaryOperation("@@23785", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     return phiEvaluate(new PhiConditional(new PhiBinaryOperation("@@23796", "!=", new PhiBinaryOperation("@@23792", "=", new PhiNameRef("tmp\$"), new PhiDot(new PhiThis(), "id")), new PhiNullLiteral("@@23794")), new PhiNameRef("tmp\$"), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "throwNPE"), array())));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@24132", "=", new PhiDot(new PhiDot(new PhiNameRef("UAOrderFile"), "prototype"), "toRTO_mhpeer\$"), new PhiFunctionExpression(null, array("searchWords"), function () {
     phiVars("@@23858", array(array("tmp\$", new PhiUnaryOperation("@@23810", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_5", new PhiUnaryOperation("@@23813", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_6", new PhiUnaryOperation("@@23816", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_7", new PhiUnaryOperation("@@23819", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_8", new PhiUnaryOperation("@@23822", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_9", new PhiUnaryOperation("@@23825", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_10", new PhiUnaryOperation("@@23828", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_11", new PhiUnaryOperation("@@23831", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_12", new PhiUnaryOperation("@@23834", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_13", new PhiUnaryOperation("@@23837", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_0", new PhiUnaryOperation("@@23840", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_1", new PhiUnaryOperation("@@23843", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_2", new PhiUnaryOperation("@@23846", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_3", new PhiUnaryOperation("@@23849", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_14", new PhiUnaryOperation("@@23852", "prefix", "void", new PhiNumberLiteral("@@something", 0))), array("tmp\$_4", new PhiUnaryOperation("@@23855", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     phiExpressionStatement(new PhiBinaryOperation("@@23874", "=", new PhiNameRef("tmp\$_5"), new PhiConditional(new PhiBinaryOperation("@@23867", "!=", new PhiBinaryOperation("@@23863", "=", new PhiNameRef("tmp\$"), new PhiDot(new PhiThis(), "id")), new PhiNullLiteral("@@23865")), new PhiNameRef("tmp\$"), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "throwNPE"), array()))));
@@ -5694,8 +6433,16 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
       phiExpressionStatement(new PhiBinaryOperation("@@24113", "=", new PhiNameRef("tmp\$_4"), new PhiInvocation(new PhiDot(new PhiNameRef("backPlatform"), "highlightRanges_kwv3np\$"), array(new PhiDot(new PhiDot(new PhiThis(), "orderFile"), "adminNotes"), new PhiNameRef("searchWords")))));
     return phiEvaluate(new PhiNew(new PhiNameRef("UAOrderFileRTO"), array(new PhiNameRef("tmp\$_5"), new PhiNameRef("tmp\$_2"), new PhiNameRef("tmp\$_13"), new PhiNameRef("tmp\$_6"), new PhiNameRef("tmp\$_7"), new PhiNameRef("tmp\$_8"), new PhiNameRef("tmp\$_0"), new PhiNameRef("tmp\$_9"), new PhiNameRef("tmp\$_3"), new PhiNameRef("tmp\$_10"), new PhiNameRef("tmp\$_12"), new PhiNameRef("tmp\$_14"), new PhiNameRef("tmp\$_4"), new PhiNameRef("tmp\$_11"))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@24148", "=", new PhiDot(new PhiNameRef("UAOrderFile"), "\$metadata\$"), new PhiObjectLiteral("@@24146", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrderFile")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("MeganItem"), new PhiNameRef("ClitoralEntity0"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@24163", "=", new PhiDot(new PhiNameRef("UAOrderFileRepository"), "\$metadata\$"), new PhiObjectLiteral("@@24161", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrderFileRepository")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@24148", "=", new PhiDot(new PhiNameRef("UAOrderFile"), "\$metadata\$"), new PhiObjectLiteral("@@24146", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrderFile")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("MeganItem"), new PhiNameRef("ClitoralEntity0")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@24163", "=", new PhiDot(new PhiNameRef("UAOrderFileRepository"), "\$metadata\$"), new PhiObjectLiteral("@@24161", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UAOrderFileRepository")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@24291", "=", new PhiDot(new PhiDot(new PhiNameRef("UADocumentCategory"), "prototype"), "toRTO_6taknv\$"), new PhiFunctionExpression(null, array("loadChildren"), function () {
     if (phiEvaluateToBoolean(new PhiBinaryOperation("@@24173", "===", new PhiNameRef("loadChildren"), new PhiUnaryOperation("@@24171", "prefix", "void", new PhiNumberLiteral("@@24169", 0)))))
       phiExpressionStatement(new PhiBinaryOperation("@@24178", "=", new PhiNameRef("loadChildren"), new PhiBooleanLiteral("@@24176", false)));
@@ -5721,8 +6468,16 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
       phiExpressionStatement(new PhiBinaryOperation("@@24282", "=", new PhiNameRef("tmp\$_0"), new PhiInvocation(new PhiNameRef("listOf"), array(new PhiArrayLiteral(array())))));
     return phiEvaluate(new PhiNew(new PhiNameRef("UADocumentCategoryRTO"), array(new PhiNameRef("tmp\$_1"), new PhiNameRef("tmp\$_2"), new PhiNameRef("pathTitle"), new PhiNameRef("tmp\$_0"))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@24306", "=", new PhiDot(new PhiNameRef("UADocumentCategory"), "\$metadata\$"), new PhiObjectLiteral("@@24304", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UADocumentCategory")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ClitoralEntity0"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@24320", "=", new PhiDot(new PhiNameRef("UADocumentCategoryFields"), "\$metadata\$"), new PhiObjectLiteral("@@24318", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UADocumentCategoryFields")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@24306", "=", new PhiDot(new PhiNameRef("UADocumentCategory"), "\$metadata\$"), new PhiObjectLiteral("@@24304", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UADocumentCategory")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ClitoralEntity0")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@24320", "=", new PhiDot(new PhiNameRef("UADocumentCategoryFields"), "\$metadata\$"), new PhiObjectLiteral("@@24318", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UADocumentCategoryFields")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@24328", "=", new PhiDot(new PhiDot(new PhiNameRef("UADocumentCategoryFields"), "prototype"), "component1"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "common"));
   })));
@@ -5752,75 +6507,157 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@24610", "=", new PhiDot(new PhiDot(new PhiNameRef("UADocumentCategoryFields"), "prototype"), "equals"), new PhiFunctionExpression(null, array("other"), function () {
     return phiEvaluate(new PhiBinaryOperation("@@24607", "||", new PhiBinaryOperation("@@24544", "===", new PhiThis(), new PhiNameRef("other")), new PhiBinaryOperation("@@24605", "&&", new PhiBinaryOperation("@@24549", "!==", new PhiNameRef("other"), new PhiNullLiteral("@@24547")), new PhiBinaryOperation("@@24603", "&&", new PhiBinaryOperation("@@24555", "===", new PhiUnaryOperation("@@24552", "prefix", "typeof", new PhiNameRef("other")), new PhiStringLiteral("object")), new PhiBinaryOperation("@@24601", "&&", new PhiBinaryOperation("@@24565", "===", new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "getPrototypeOf"), array(new PhiThis())), new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "getPrototypeOf"), array(new PhiNameRef("other")))), new PhiBinaryOperation("@@24599", "&&", new PhiBinaryOperation("@@24590", "&&", new PhiBinaryOperation("@@24581", "&&", new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "common"), new PhiDot(new PhiNameRef("other"), "common"))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "title"), new PhiDot(new PhiNameRef("other"), "title")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "parent"), new PhiDot(new PhiNameRef("other"), "parent")))), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "equals"), array(new PhiDot(new PhiThis(), "children"), new PhiDot(new PhiNameRef("other"), "children")))))))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@24625", "=", new PhiDot(new PhiNameRef("UADocumentCategoryRepository"), "\$metadata\$"), new PhiObjectLiteral("@@24623", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("UADocumentCategoryRepository")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository"))))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("Bid"), "prototype"), new PhiStringLiteral("adminNotes"), new PhiObjectLiteral("@@24643", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiBinaryOperation("@@24625", "=", new PhiDot(new PhiNameRef("UADocumentCategoryRepository"), "\$metadata\$"), new PhiObjectLiteral("@@24623", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("UADocumentCategoryRepository")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository")))))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("Bid"), "prototype"), new PhiStringLiteral("adminNotes"), new PhiObjectLiteral("@@24643", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "adminNotes_cqjbmu\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotes"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("adminNotes"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@24640", "=", new PhiDot(new PhiThis(), "adminNotes_cqjbmu\$_0"), new PhiNameRef("adminNotes")));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@24702", "=", new PhiDot(new PhiDot(new PhiNameRef("Bid"), "prototype"), "toRTO_mhpeer\$"), new PhiFunctionExpression(null, array("searchWords"), function () {
     phiVars("@@24652", array(array("tmp\$", new PhiUnaryOperation("@@24649", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     phiVars("@@24654", array(array("title", new PhiStringLiteral("pizda"))));
     return phiEvaluate(new PhiNew(new PhiNameRef("BidRTO"), array(new PhiConditional(new PhiBinaryOperation("@@24663", "!=", new PhiBinaryOperation("@@24659", "=", new PhiNameRef("tmp\$"), new PhiDot(new PhiThis(), "id")), new PhiNullLiteral("@@24661")), new PhiNameRef("tmp\$"), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "throwNPE"), array())), new PhiNameRef("title"), new PhiBooleanLiteral("@@24671", false), new PhiInvocation(new PhiDot(new PhiNameRef("backPlatform"), "highlightRanges_kwv3np\$"), array(new PhiNameRef("title"), new PhiNameRef("searchWords"))), new PhiDot(new PhiDot(new PhiDot(new PhiThis(), "common"), "createdAt"), "time"), new PhiDot(new PhiDot(new PhiDot(new PhiThis(), "common"), "updatedAt"), "time"), new PhiDot(new PhiThis(), "adminNotes"), new PhiInvocation(new PhiDot(new PhiNameRef("backPlatform"), "highlightRanges_kwv3np\$"), array(new PhiDot(new PhiThis(), "adminNotes"), new PhiNameRef("searchWords"))), new PhiDot(new PhiThis(), "priceOffer"), new PhiDot(new PhiThis(), "durationOffer"), new PhiDot(new PhiThis(), "comment"))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@24718", "=", new PhiDot(new PhiNameRef("Bid"), "\$metadata\$"), new PhiObjectLiteral("@@24716", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Bid")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("FieldsWithAdminNotes"), new PhiNameRef("ClitoralEntity0"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@24733", "=", new PhiDot(new PhiNameRef("BidRepository"), "\$metadata\$"), new PhiObjectLiteral("@@24731", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("BidRepository")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@24747", "=", new PhiDot(new PhiNameRef("XBackPlatform"), "\$metadata\$"), new PhiObjectLiteral("@@24745", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("XBackPlatform")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@24761", "=", new PhiDot(new PhiNameRef("ShitToDoInTransaction"), "\$metadata\$"), new PhiObjectLiteral("@@24759", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("ShitToDoInTransaction")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@24775", "=", new PhiDot(new PhiNameRef("XShittyObjectMapper"), "\$metadata\$"), new PhiObjectLiteral("@@24773", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("XShittyObjectMapper")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@24789", "=", new PhiDot(new PhiNameRef("XHackyObjectMapper"), "\$metadata\$"), new PhiObjectLiteral("@@24787", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("XHackyObjectMapper")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@24718", "=", new PhiDot(new PhiNameRef("Bid"), "\$metadata\$"), new PhiObjectLiteral("@@24716", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Bid")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("FieldsWithAdminNotes"), new PhiNameRef("ClitoralEntity0")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@24733", "=", new PhiDot(new PhiNameRef("BidRepository"), "\$metadata\$"), new PhiObjectLiteral("@@24731", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("BidRepository")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("PHP_CrudRepository")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@24747", "=", new PhiDot(new PhiNameRef("XBackPlatform"), "\$metadata\$"), new PhiObjectLiteral("@@24745", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("XBackPlatform")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@24761", "=", new PhiDot(new PhiNameRef("ShitToDoInTransaction"), "\$metadata\$"), new PhiObjectLiteral("@@24759", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("ShitToDoInTransaction")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@24775", "=", new PhiDot(new PhiNameRef("XShittyObjectMapper"), "\$metadata\$"), new PhiObjectLiteral("@@24773", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("XShittyObjectMapper")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@24789", "=", new PhiDot(new PhiNameRef("XHackyObjectMapper"), "\$metadata\$"), new PhiObjectLiteral("@@24787", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("XHackyObjectMapper")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@24794", array(array("requestGlobusThreadLocal", new PhiUnaryOperation("@@24791", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("RequestGlobusType"), "prototype"), new PhiStringLiteral("stamp"), new PhiObjectLiteral("@@24811", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("RequestGlobusType"), "prototype"), new PhiStringLiteral("stamp"), new PhiObjectLiteral("@@24811", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     phiVars("@@24803", array(array("\$receiver", new PhiDot(new PhiThis(), "stamp\$delegate"))));
     phiExpressionStatement(new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("stamp"))));
     return phiEvaluate(new PhiDot(new PhiNameRef("\$receiver"), "value"));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("RequestGlobusType"), "prototype"), new PhiStringLiteral("procedureCtx"), new PhiObjectLiteral("@@24841", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("RequestGlobusType"), "prototype"), new PhiStringLiteral("procedureCtx"), new PhiObjectLiteral("@@24841", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "procedureCtx\$delegate"), "getValue_lrcp0p\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("procedureCtx"))))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("procedureCtx"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("procedureCtx"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "procedureCtx\$delegate"), "setValue_9rddgb\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("procedureCtx"))), new PhiNameRef("procedureCtx"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("RequestGlobusType"), "prototype"), new PhiStringLiteral("requesterOrAnonymous"), new PhiObjectLiteral("@@24871", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("RequestGlobusType"), "prototype"), new PhiStringLiteral("requesterOrAnonymous"), new PhiObjectLiteral("@@24871", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "requesterOrAnonymous\$delegate"), "getValue_lrcp0p\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("requesterOrAnonymous"))))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("requesterOrAnonymous"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("requesterOrAnonymous"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "requesterOrAnonymous\$delegate"), "setValue_9rddgb\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("requesterOrAnonymous"))), new PhiNameRef("requesterOrAnonymous"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("RequestGlobusType"), "prototype"), new PhiStringLiteral("requesterOrAnonymousInitialFields"), new PhiObjectLiteral("@@24901", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("RequestGlobusType"), "prototype"), new PhiStringLiteral("requesterOrAnonymousInitialFields"), new PhiObjectLiteral("@@24901", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "requesterOrAnonymousInitialFields\$delegate"), "getValue_lrcp0p\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("requesterOrAnonymousInitialFields"))))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("requesterOrAnonymousInitialFields"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("requesterOrAnonymousInitialFields"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "requesterOrAnonymousInitialFields\$delegate"), "setValue_9rddgb\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("requesterOrAnonymousInitialFields"))), new PhiNameRef("requesterOrAnonymousInitialFields"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("RequestGlobusType"), "prototype"), new PhiStringLiteral("shitIsDangerous"), new PhiObjectLiteral("@@24931", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("RequestGlobusType"), "prototype"), new PhiStringLiteral("shitIsDangerous"), new PhiObjectLiteral("@@24931", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "shitIsDangerous\$delegate"), "getValue_lrcp0p\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("shitIsDangerous"))))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("shitIsDangerous"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("shitIsDangerous"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "shitIsDangerous\$delegate"), "setValue_9rddgb\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("shitIsDangerous"))), new PhiNameRef("shitIsDangerous"))));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@24946", "=", new PhiDot(new PhiNameRef("RequestGlobusType"), "\$metadata\$"), new PhiObjectLiteral("@@24944", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("RequestGlobusType")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@24960", "=", new PhiDot(new PhiNameRef("XStackTraceElement"), "\$metadata\$"), new PhiObjectLiteral("@@24958", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("XStackTraceElement")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@24975", "=", new PhiDot(new PhiNameRef("Back"), "\$metadata\$"), new PhiObjectLiteral("@@24973", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Back")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@24989", "=", new PhiDot(new PhiNameRef("Culprit"), "\$metadata\$"), new PhiObjectLiteral("@@24987", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Culprit")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25003", "=", new PhiDot(new PhiNameRef("WithCulprit"), "\$metadata\$"), new PhiObjectLiteral("@@25001", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("WithCulprit")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ExceptionWithCulprit"), "prototype"), new PhiStringLiteral("culprit"), new PhiObjectLiteral("@@25014", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@24946", "=", new PhiDot(new PhiNameRef("RequestGlobusType"), "\$metadata\$"), new PhiObjectLiteral("@@24944", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("RequestGlobusType")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@24960", "=", new PhiDot(new PhiNameRef("XStackTraceElement"), "\$metadata\$"), new PhiObjectLiteral("@@24958", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("XStackTraceElement")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@24975", "=", new PhiDot(new PhiNameRef("Back"), "\$metadata\$"), new PhiObjectLiteral("@@24973", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Back")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@24989", "=", new PhiDot(new PhiNameRef("Culprit"), "\$metadata\$"), new PhiObjectLiteral("@@24987", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Culprit")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@25003", "=", new PhiDot(new PhiNameRef("WithCulprit"), "\$metadata\$"), new PhiObjectLiteral("@@25001", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("WithCulprit")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ExceptionWithCulprit"), "prototype"), new PhiStringLiteral("culprit"), new PhiObjectLiteral("@@25014", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "culprit_edjd1x\$_0"));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ExceptionWithCulprit"), "prototype"), new PhiStringLiteral("message"), new PhiObjectLiteral("@@25026", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ExceptionWithCulprit"), "prototype"), new PhiStringLiteral("message"), new PhiObjectLiteral("@@25026", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "message_edjd1x\$_0"));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ExceptionWithCulprit"), "prototype"), new PhiStringLiteral("cause"), new PhiObjectLiteral("@@25038", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ExceptionWithCulprit"), "prototype"), new PhiStringLiteral("cause"), new PhiObjectLiteral("@@25038", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "cause_edjd1x\$_0"));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25055", "=", new PhiDot(new PhiNameRef("ExceptionWithCulprit"), "\$metadata\$"), new PhiObjectLiteral("@@25053", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("ExceptionWithCulprit")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("WithCulprit"), new PhiNameRef("Throwable"))))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("FormFieldBack"), "prototype"), new PhiStringLiteral("_specified"), new PhiObjectLiteral("@@25084", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@25055", "=", new PhiDot(new PhiNameRef("ExceptionWithCulprit"), "\$metadata\$"), new PhiObjectLiteral("@@25053", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("ExceptionWithCulprit")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("WithCulprit"), new PhiNameRef("Throwable")))))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("FormFieldBack"), "prototype"), new PhiStringLiteral("_specified"), new PhiObjectLiteral("@@25084", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "_specified\$delegate"), "getValue_lrcp0p\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("_specified"))))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("_specified"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("_specified"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "_specified\$delegate"), "setValue_9rddgb\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("_specified"))), new PhiNameRef("_specified"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("FormFieldBack"), "prototype"), new PhiStringLiteral("specified"), new PhiObjectLiteral("@@25096", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("FormFieldBack"), "prototype"), new PhiStringLiteral("specified"), new PhiObjectLiteral("@@25096", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "_specified"));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("FormFieldBack"), "prototype"), new PhiStringLiteral("constructionStack"), new PhiObjectLiteral("@@25108", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("FormFieldBack"), "prototype"), new PhiStringLiteral("constructionStack"), new PhiObjectLiteral("@@25108", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "constructionStack_n95uo6\$_0"));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@25125", "=", new PhiDot(new PhiDot(new PhiNameRef("FormFieldBack"), "prototype"), "load_201agv\$"), new PhiFunctionExpression(null, array("input", "fieldErrors"), function () {
     if (phiEvaluateToBoolean(new PhiDot(new PhiThis(), "include"))) {
       phiExpressionStatement(new PhiInvocation(new PhiNameRef("beingCulprit"), array(new PhiThis(), new PhiInvocation(new PhiNameRef("FormFieldBack\$load\$lambda"), array(new PhiThis(), new PhiNameRef("input"), new PhiNameRef("fieldErrors"))))));
@@ -5829,23 +6666,62 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@25141", "=", new PhiDot(new PhiDot(new PhiNameRef("FormFieldBack"), "prototype"), "toString"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiNameRef("bitch"), array(new PhiBinaryOperation("@@25137", "+", new PhiBinaryOperation("@@25134", "+", new PhiStringLiteral("Use field.value to get value of field ["), new PhiDot(new PhiThis(), "name")), new PhiStringLiteral("]")))));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@25156", "=", new PhiDot(new PhiNameRef("FormFieldBack"), "\$metadata\$"), new PhiObjectLiteral("@@25154", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("FormFieldBack")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Culprit"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25170", "=", new PhiDot(new PhiNameRef("BitchyProcedureContext"), "\$metadata\$"), new PhiObjectLiteral("@@25168", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("BitchyProcedureContext")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25184", "=", new PhiDot(new PhiNameRef("FuckingHttpServletResponse\$Writer"), "\$metadata\$"), new PhiObjectLiteral("@@25182", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Writer")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@25156", "=", new PhiDot(new PhiNameRef("FormFieldBack"), "\$metadata\$"), new PhiObjectLiteral("@@25154", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("FormFieldBack")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Culprit")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@25170", "=", new PhiDot(new PhiNameRef("BitchyProcedureContext"), "\$metadata\$"), new PhiObjectLiteral("@@25168", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("BitchyProcedureContext")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@25184", "=", new PhiDot(new PhiNameRef("FuckingHttpServletResponse\$Writer"), "\$metadata\$"), new PhiObjectLiteral("@@25182", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Writer")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@25189", array(array("FuckingHttpServletResponse\$Status\$OK_instance", new PhiUnaryOperation("@@25186", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25203", "=", new PhiDot(new PhiNameRef("FuckingHttpServletResponse\$Status"), "\$metadata\$"), new PhiObjectLiteral("@@25201", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Status")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@25203", "=", new PhiDot(new PhiNameRef("FuckingHttpServletResponse\$Status"), "\$metadata\$"), new PhiObjectLiteral("@@25201", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Status")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@25208", "=", new PhiDot(new PhiNameRef("FuckingHttpServletResponse\$Status"), "values"), new PhiNameRef("FuckingHttpServletResponse\$Status\$values")));
   phiExpressionStatement(new PhiBinaryOperation("@@25213", "=", new PhiDot(new PhiNameRef("FuckingHttpServletResponse\$Status"), "valueOf_61zpoe\$"), new PhiNameRef("FuckingHttpServletResponse\$Status\$valueOf")));
-  phiExpressionStatement(new PhiBinaryOperation("@@25227", "=", new PhiDot(new PhiNameRef("FuckingHttpServletResponse"), "\$metadata\$"), new PhiObjectLiteral("@@25225", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("FuckingHttpServletResponse")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25241", "=", new PhiDot(new PhiNameRef("FuckingHttpServletRequest\$Reader"), "\$metadata\$"), new PhiObjectLiteral("@@25239", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Reader")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25255", "=", new PhiDot(new PhiNameRef("FuckingHttpServletRequest"), "\$metadata\$"), new PhiObjectLiteral("@@25253", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("FuckingHttpServletRequest")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@25227", "=", new PhiDot(new PhiNameRef("FuckingHttpServletResponse"), "\$metadata\$"), new PhiObjectLiteral("@@25225", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("FuckingHttpServletResponse")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@25241", "=", new PhiDot(new PhiNameRef("FuckingHttpServletRequest\$Reader"), "\$metadata\$"), new PhiObjectLiteral("@@25239", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Reader")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@25255", "=", new PhiDot(new PhiNameRef("FuckingHttpServletRequest"), "\$metadata\$"), new PhiObjectLiteral("@@25253", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("FuckingHttpServletRequest")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@25300", array(array("findOrDie", new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "defineInlineFunction"), array(new PhiStringLiteral("aps-back.aps.back.findOrDie_ozsy7l\$"), new PhiFunctionExpression(null, array("findOrDie\$T_0", "isT", "\$receiver", "id"), function () {
     phiVars("@@25263", array(array("tmp\$", new PhiUnaryOperation("@@25260", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     return phiEvaluate(new PhiConditional(new PhiBinaryOperation("@@25273", "!=", new PhiBinaryOperation("@@25269", "=", new PhiNameRef("tmp\$"), new PhiInvocation(new PhiDot(new PhiNameRef("\$receiver"), "findOne_11rc\$"), array(new PhiNameRef("id")))), new PhiNullLiteral("@@25271")), new PhiNameRef("tmp\$"), new PhiInvocation(new PhiDot(new PhiDot(new PhiNameRef("_"), "aps"), "die_61zpoe\$"), array(new PhiBinaryOperation("@@25294", "+", new PhiBinaryOperation("@@25291", "+", new PhiBinaryOperation("@@25288", "+", new PhiStringLiteral("No fucking "), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "toString"), array(new PhiDot(new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "getKClass"), array(new PhiNameRef("findOrDie\$T_0"))), "simpleName")))), new PhiStringLiteral(" with ID ")), new PhiNameRef("id"))))));
   }))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25313", "=", new PhiDot(new PhiNameRef("FuckSomeoneParams"), "\$metadata\$"), new PhiObjectLiteral("@@25311", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("FuckSomeoneParams")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25325", "=", new PhiDot(new PhiNameRef("fuckSomeone\$ObjectLiteral"), "\$metadata\$"), new PhiObjectLiteral("@@25323", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25339", "=", new PhiDot(new PhiNameRef("TestServerFiddling"), "\$metadata\$"), new PhiObjectLiteral("@@25337", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("TestServerFiddling")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@25313", "=", new PhiDot(new PhiNameRef("FuckSomeoneParams"), "\$metadata\$"), new PhiObjectLiteral("@@25311", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("FuckSomeoneParams")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@25325", "=", new PhiDot(new PhiNameRef("fuckSomeone\$ObjectLiteral"), "\$metadata\$"), new PhiObjectLiteral("@@25323", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@25339", "=", new PhiDot(new PhiNameRef("TestServerFiddling"), "\$metadata\$"), new PhiObjectLiteral("@@25337", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("TestServerFiddling")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@25343", array(array("TestServerFiddling_instance", new PhiNullLiteral("@@25341"))));
   phiExpressionStatement(new PhiBinaryOperation("@@25358", "=", new PhiDot(new PhiDot(new PhiNameRef("SetGetResetShit"), "prototype"), "getAndReset"), new PhiFunctionExpression(null, array(), function () {
     phiVars("@@25349", array(array("res", new PhiDot(new PhiThis(), "value_0"))));
@@ -5855,96 +6731,188 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@25369", "=", new PhiDot(new PhiDot(new PhiNameRef("SetGetResetShit"), "prototype"), "set_11rb\$"), new PhiFunctionExpression(null, array("newValue"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@25366", "=", new PhiDot(new PhiThis(), "value_0"), new PhiNameRef("newValue")));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@25383", "=", new PhiDot(new PhiNameRef("SetGetResetShit"), "\$metadata\$"), new PhiObjectLiteral("@@25381", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("SetGetResetShit")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("CommonRequestFieldsHolder"), "prototype"), new PhiStringLiteral("databaseID"), new PhiObjectLiteral("@@25401", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiBinaryOperation("@@25383", "=", new PhiDot(new PhiNameRef("SetGetResetShit"), "\$metadata\$"), new PhiObjectLiteral("@@25381", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("SetGetResetShit")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("CommonRequestFieldsHolder"), "prototype"), new PhiStringLiteral("databaseID"), new PhiObjectLiteral("@@25401", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "databaseID_svhwcu\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("databaseID"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("databaseID"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@25398", "=", new PhiDot(new PhiThis(), "databaseID_svhwcu\$_0"), new PhiNameRef("databaseID")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("CommonRequestFieldsHolder"), "prototype"), new PhiStringLiteral("fakeEmail"), new PhiObjectLiteral("@@25420", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("CommonRequestFieldsHolder"), "prototype"), new PhiStringLiteral("fakeEmail"), new PhiObjectLiteral("@@25420", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "fakeEmail_svhwcu\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("fakeEmail"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("fakeEmail"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@25417", "=", new PhiDot(new PhiThis(), "fakeEmail_svhwcu\$_0"), new PhiNameRef("fakeEmail")));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("CommonRequestFieldsHolder"), "prototype"), new PhiStringLiteral("clientURL"), new PhiObjectLiteral("@@25439", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("CommonRequestFieldsHolder"), "prototype"), new PhiStringLiteral("clientURL"), new PhiObjectLiteral("@@25439", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "clientURL_svhwcu\$_0"));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("clientURL"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("clientURL"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@25436", "=", new PhiDot(new PhiThis(), "clientURL_svhwcu\$_0"), new PhiNameRef("clientURL")));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25455", "=", new PhiDot(new PhiNameRef("CommonRequestFieldsHolder"), "\$metadata\$"), new PhiObjectLiteral("@@25453", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("CommonRequestFieldsHolder")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("CommonRequestFields"))))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("wideClientKind"), new PhiObjectLiteral("@@25484", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@25455", "=", new PhiDot(new PhiNameRef("CommonRequestFieldsHolder"), "\$metadata\$"), new PhiObjectLiteral("@@25453", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("CommonRequestFieldsHolder")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("CommonRequestFields")))))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("wideClientKind"), new PhiObjectLiteral("@@25484", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "wideClientKind\$delegate"), "getValue_lrcp0p\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("wideClientKind"))))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("wideClientKind"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("wideClientKind"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "wideClientKind\$delegate"), "setValue_9rddgb\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("wideClientKind"))), new PhiNameRef("wideClientKind"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("clientKind"), new PhiObjectLiteral("@@25514", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("clientKind"), new PhiObjectLiteral("@@25514", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "clientKind\$delegate"), "getValue_lrcp0p\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("clientKind"))))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("clientKind"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("clientKind"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "clientKind\$delegate"), "setValue_9rddgb\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("clientKind"))), new PhiNameRef("clientKind"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("lang"), new PhiObjectLiteral("@@25544", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("lang"), new PhiObjectLiteral("@@25544", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "lang\$delegate"), "getValue_lrcp0p\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("lang"))))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("lang"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("lang"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "lang\$delegate"), "setValue_9rddgb\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("lang"))), new PhiNameRef("lang"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("clientDomain"), new PhiObjectLiteral("@@25574", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("clientDomain"), new PhiObjectLiteral("@@25574", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "clientDomain\$delegate"), "getValue_lrcp0p\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("clientDomain"))))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("clientDomain"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("clientDomain"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "clientDomain\$delegate"), "setValue_9rddgb\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("clientDomain"))), new PhiNameRef("clientDomain"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("clientPortSuffix"), new PhiObjectLiteral("@@25604", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("clientPortSuffix"), new PhiObjectLiteral("@@25604", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "clientPortSuffix\$delegate"), "getValue_lrcp0p\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("clientPortSuffix"))))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("clientPortSuffix"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("clientPortSuffix"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "clientPortSuffix\$delegate"), "setValue_9rddgb\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("clientPortSuffix"))), new PhiNameRef("clientPortSuffix"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("user_killme"), new PhiObjectLiteral("@@25634", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("user_killme"), new PhiObjectLiteral("@@25634", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "user_killme\$delegate"), "getValue_lrcp0p\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("user_killme"))))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("user_killme"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("user_killme"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "user_killme\$delegate"), "setValue_9rddgb\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("user_killme"))), new PhiNameRef("user_killme"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("token"), new PhiObjectLiteral("@@25664", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("token"), new PhiObjectLiteral("@@25664", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "token\$delegate"), "getValue_lrcp0p\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("token"))))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("token"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("token"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "token\$delegate"), "setValue_9rddgb\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("token"))), new PhiNameRef("token"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("hasUser"), new PhiObjectLiteral("@@25694", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("hasUser"), new PhiObjectLiteral("@@25694", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "hasUser\$delegate"), "getValue_lrcp0p\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("hasUser"))))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("hasUser"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("hasUser"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "hasUser\$delegate"), "setValue_9rddgb\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("hasUser"))), new PhiNameRef("hasUser"))));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("clientRoot"), new PhiObjectLiteral("@@25721", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ProcedureContext"), "prototype"), new PhiStringLiteral("clientRoot"), new PhiObjectLiteral("@@25721", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiBinaryOperation("@@25718", "+", new PhiBinaryOperation("@@25714", "+", new PhiBinaryOperation("@@25710", "+", new PhiBinaryOperation("@@25706", "+", new PhiDot(new PhiThis(), "clientProtocol"), new PhiStringLiteral("://")), new PhiDot(new PhiThis(), "clientDomain")), new PhiDot(new PhiThis(), "clientPortSuffix")), new PhiDot(new PhiThis(), "clientRootPath")));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25736", "=", new PhiDot(new PhiNameRef("ProcedureContext"), "\$metadata\$"), new PhiObjectLiteral("@@25734", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("ProcedureContext")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@25736", "=", new PhiDot(new PhiNameRef("ProcedureContext"), "\$metadata\$"), new PhiObjectLiteral("@@25734", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("ProcedureContext")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@25741", array(array("NeedsUser\$YES_instance", new PhiUnaryOperation("@@25738", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@25745", array(array("NeedsUser\$NO_instance", new PhiUnaryOperation("@@25742", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@25749", array(array("NeedsUser\$MAYBE_instance", new PhiUnaryOperation("@@25746", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25763", "=", new PhiDot(new PhiNameRef("NeedsUser"), "\$metadata\$"), new PhiObjectLiteral("@@25761", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("NeedsUser")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@25763", "=", new PhiDot(new PhiNameRef("NeedsUser"), "\$metadata\$"), new PhiObjectLiteral("@@25761", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("NeedsUser")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@25768", "=", new PhiDot(new PhiNameRef("NeedsUser"), "values"), new PhiNameRef("NeedsUser\$values")));
   phiExpressionStatement(new PhiBinaryOperation("@@25773", "=", new PhiDot(new PhiNameRef("NeedsUser"), "valueOf_61zpoe\$"), new PhiNameRef("NeedsUser\$valueOf")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("BackGlobus"), "prototype"), new PhiStringLiteral("version"), new PhiObjectLiteral("@@25786", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("BackGlobus"), "prototype"), new PhiStringLiteral("version"), new PhiObjectLiteral("@@25786", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiNameRef("backPlatform"), "getResourceAsText_61zpoe\$"), array(new PhiStringLiteral("aps/version.txt"))));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25801", "=", new PhiDot(new PhiNameRef("BackGlobus"), "\$metadata\$"), new PhiObjectLiteral("@@25799", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("BackGlobus")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@25801", "=", new PhiDot(new PhiNameRef("BackGlobus"), "\$metadata\$"), new PhiObjectLiteral("@@25799", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("BackGlobus")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@25805", array(array("BackGlobus_instance", new PhiNullLiteral("@@25803"))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ExpectedRPCShit"), "prototype"), new PhiStringLiteral("message"), new PhiObjectLiteral("@@25815", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ExpectedRPCShit"), "prototype"), new PhiStringLiteral("message"), new PhiObjectLiteral("@@25815", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "message_wx533e\$_0"));
-  })))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ExpectedRPCShit"), "prototype"), new PhiStringLiteral("cause"), new PhiObjectLiteral("@@25827", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("ExpectedRPCShit"), "prototype"), new PhiStringLiteral("cause"), new PhiObjectLiteral("@@25827", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiDot(new PhiThis(), "cause_wx533e\$_0"));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25843", "=", new PhiDot(new PhiNameRef("ExpectedRPCShit"), "\$metadata\$"), new PhiObjectLiteral("@@25841", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("ExpectedRPCShit")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Throwable"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25857", "=", new PhiDot(new PhiNameRef("RRLog"), "\$metadata\$"), new PhiObjectLiteral("@@25855", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("RRLog")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25871", "=", new PhiDot(new PhiNameRef("RRLogEntry"), "\$metadata\$"), new PhiObjectLiteral("@@25869", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("RRLogEntry")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25886", "=", new PhiDot(new PhiNameRef("MeganItem"), "\$metadata\$"), new PhiObjectLiteral("@@25884", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("MeganItem")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ToRtoable"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25900", "=", new PhiDot(new PhiNameRef("ToRtoable"), "\$metadata\$"), new PhiObjectLiteral("@@25898", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("ToRtoable")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("BitchyProcedure"), "prototype"), new PhiStringLiteral("bpc"), new PhiObjectLiteral("@@25929", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@25843", "=", new PhiDot(new PhiNameRef("ExpectedRPCShit"), "\$metadata\$"), new PhiObjectLiteral("@@25841", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("ExpectedRPCShit")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Throwable")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@25857", "=", new PhiDot(new PhiNameRef("RRLog"), "\$metadata\$"), new PhiObjectLiteral("@@25855", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("RRLog")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@25871", "=", new PhiDot(new PhiNameRef("RRLogEntry"), "\$metadata\$"), new PhiObjectLiteral("@@25869", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("RRLogEntry")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@25886", "=", new PhiDot(new PhiNameRef("MeganItem"), "\$metadata\$"), new PhiObjectLiteral("@@25884", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("MeganItem")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("ToRtoable")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@25900", "=", new PhiDot(new PhiNameRef("ToRtoable"), "\$metadata\$"), new PhiObjectLiteral("@@25898", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("ToRtoable")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("BitchyProcedure"), "prototype"), new PhiStringLiteral("bpc"), new PhiObjectLiteral("@@25929", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "bpc\$delegate"), "getValue_lrcp0p\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("bpc"))))));
-  })), array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("bpc"), function () {
+  })), 
+array(new PhiStringLiteral("set"), new PhiFunctionExpression(null, array("bpc"), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "bpc\$delegate"), "setValue_9rddgb\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("bpc"))), new PhiNameRef("bpc"))));
-  })))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25944", "=", new PhiDot(new PhiNameRef("BitchyProcedure"), "\$metadata\$"), new PhiObjectLiteral("@@25942", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("BitchyProcedure")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@25958", "=", new PhiDot(new PhiNameRef("FuckDangerouslyParams"), "\$metadata\$"), new PhiObjectLiteral("@@25956", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("FuckDangerouslyParams")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  })))
+))));
+  phiExpressionStatement(new PhiBinaryOperation("@@25944", "=", new PhiDot(new PhiNameRef("BitchyProcedure"), "\$metadata\$"), new PhiObjectLiteral("@@25942", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("BitchyProcedure")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@25958", "=", new PhiDot(new PhiNameRef("FuckDangerouslyParams"), "\$metadata\$"), new PhiObjectLiteral("@@25956", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("FuckDangerouslyParams")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@26035", "=", new PhiDot(new PhiDot(new PhiNameRef("DB"), "prototype"), "byNameOnTestServer_61zpoe\$"), new PhiFunctionExpression(null, array("name"), function () {
     phiVars("@@25966", array(array("tmp\$", new PhiUnaryOperation("@@25963", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
     phiVars("@@25969", array(array("\$receiver", new PhiDot(new PhiThis(), "dbs"))));
@@ -5979,12 +6947,18 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   })));
   phiVars("@@26059", array(array("DB\$DatabaseEngine\$POSTGRESQL_instance", new PhiUnaryOperation("@@26056", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
   phiVars("@@26063", array(array("DB\$DatabaseEngine\$MARIADB_instance", new PhiUnaryOperation("@@26060", "prefix", "void", new PhiNumberLiteral("@@something", 0)))));
-  phiExpressionStatement(new PhiBinaryOperation("@@26077", "=", new PhiDot(new PhiNameRef("DB\$DatabaseEngine"), "\$metadata\$"), new PhiObjectLiteral("@@26075", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("DatabaseEngine")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@26077", "=", new PhiDot(new PhiNameRef("DB\$DatabaseEngine"), "\$metadata\$"), new PhiObjectLiteral("@@26075", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("DatabaseEngine")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Enum")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@26082", "=", new PhiDot(new PhiNameRef("DB\$DatabaseEngine"), "values"), new PhiNameRef("DB\$DatabaseEngine\$values")));
   phiExpressionStatement(new PhiBinaryOperation("@@26087", "=", new PhiDot(new PhiNameRef("DB\$DatabaseEngine"), "valueOf_61zpoe\$"), new PhiNameRef("DB\$DatabaseEngine\$valueOf")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("DB\$Database"), "prototype"), new PhiStringLiteral("ds"), new PhiObjectLiteral("@@26105", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("DB\$Database"), "prototype"), new PhiStringLiteral("ds"), new PhiObjectLiteral("@@26105", array(
+array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "ds\$delegate"), "getValue_n5byny\$"), array(new PhiThis(), new PhiNew(new PhiDot(new PhiNameRef("Kotlin"), "PropertyMetadata"), array(new PhiStringLiteral("ds"))))));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@26120", "=", new PhiDot(new PhiDot(new PhiNameRef("DB\$Database"), "prototype"), "close"), new PhiFunctionExpression(null, array(), function () {
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "ds"), "close"), array()));
     phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "dslazy_0"), "reset"), array()));
@@ -5992,8 +6966,16 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@26134", "=", new PhiDot(new PhiDot(new PhiNameRef("DB\$Database"), "prototype"), "toString"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiBinaryOperation("@@26131", "+", new PhiBinaryOperation("@@26128", "+", new PhiStringLiteral("Database(id='"), new PhiDot(new PhiThis(), "id")), new PhiStringLiteral("')")));
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@26148", "=", new PhiDot(new PhiNameRef("DB\$Database"), "\$metadata\$"), new PhiObjectLiteral("@@26146", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Database")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@26162", "=", new PhiDot(new PhiNameRef("DB"), "\$metadata\$"), new PhiObjectLiteral("@@26160", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("DB")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@26148", "=", new PhiDot(new PhiNameRef("DB\$Database"), "\$metadata\$"), new PhiObjectLiteral("@@26146", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Database")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@26162", "=", new PhiDot(new PhiNameRef("DB"), "\$metadata\$"), new PhiObjectLiteral("@@26160", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("DB")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
   phiVars("@@26166", array(array("DB_instance", new PhiNullLiteral("@@26164"))));
   phiExpressionStatement(new PhiBinaryOperation("@@26181", "=", new PhiDot(new PhiDot(new PhiNameRef("ServeRecreateTestDatabaseSchema"), "prototype"), "serve"), new PhiFunctionExpression(null, array(), function () {
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("fuckDangerously"), array(new PhiNew(new PhiNameRef("FuckDangerouslyParams"), array(new PhiDot(new PhiThis(), "bpc"), new PhiNameRef("ServeRecreateTestDatabaseSchema\$serve\$lambda"), new PhiInvocation(new PhiNameRef("ServeRecreateTestDatabaseSchema\$serve\$lambda_0"), array(new PhiThis())))))));
@@ -6024,30 +7006,62 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
       }
     }
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@28251", "=", new PhiDot(new PhiNameRef("ServeRecreateTestDatabaseSchema"), "\$metadata\$"), new PhiObjectLiteral("@@28249", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("ServeRecreateTestDatabaseSchema")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("BitchyProcedure"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@28266", "=", new PhiDot(new PhiNameRef("Servant"), "\$metadata\$"), new PhiObjectLiteral("@@28264", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Servant")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation"))))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@28251", "=", new PhiDot(new PhiNameRef("ServeRecreateTestDatabaseSchema"), "\$metadata\$"), new PhiObjectLiteral("@@28249", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("ServeRecreateTestDatabaseSchema")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("BitchyProcedure")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@28266", "=", new PhiDot(new PhiNameRef("Servant"), "\$metadata\$"), new PhiObjectLiteral("@@28264", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Servant")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("Annotation")))))
+)));
   phiExpressionStatement(new PhiBinaryOperation("@@28272", "=", new PhiDot(new PhiDot(new PhiNameRef("RequestMatumba"), "prototype"), "beginHorizontal"), new PhiFunctionExpression(null, array(), function () {
   })));
   phiExpressionStatement(new PhiBinaryOperation("@@28278", "=", new PhiDot(new PhiDot(new PhiNameRef("RequestMatumba"), "prototype"), "endHorizontal"), new PhiFunctionExpression(null, array(), function () {
   })));
-  phiExpressionStatement(new PhiBinaryOperation("@@28292", "=", new PhiDot(new PhiNameRef("RequestMatumba"), "\$metadata\$"), new PhiObjectLiteral("@@28290", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("RequestMatumba")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@28306", "=", new PhiDot(new PhiNameRef("XIcon"), "\$metadata\$"), new PhiObjectLiteral("@@28304", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("XIcon")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@28321", "=", new PhiDot(new PhiNameRef("Twemoji"), "\$metadata\$"), new PhiObjectLiteral("@@28319", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Twemoji")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("XIcon"))))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@28336", "=", new PhiDot(new PhiNameRef("EmojiOne"), "\$metadata\$"), new PhiObjectLiteral("@@28334", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("EmojiOne")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("XIcon"))))))));
-  phiVars("@@28348", array(array("package\$aps", new PhiBinaryOperation("@@28346", "||", new PhiDot(new PhiNameRef("_"), "aps"), new PhiBinaryOperation("@@28344", "=", new PhiDot(new PhiNameRef("_"), "aps"), new PhiObjectLiteral("@@28342", array()))))));
-  phiVars("@@28359", array(array("package\$back", new PhiBinaryOperation("@@28357", "||", new PhiDot(new PhiNameRef("package\$aps"), "back"), new PhiBinaryOperation("@@28355", "=", new PhiDot(new PhiNameRef("package\$aps"), "back"), new PhiObjectLiteral("@@28353", array()))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("apsphp"), new PhiObjectLiteral("@@28366", array(array(new PhiNameRef("get"), new PhiNameRef("apsphp_getInstance")))))));
+  phiExpressionStatement(new PhiBinaryOperation("@@28292", "=", new PhiDot(new PhiNameRef("RequestMatumba"), "\$metadata\$"), new PhiObjectLiteral("@@28290", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("RequestMatumba")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@28306", "=", new PhiDot(new PhiNameRef("XIcon"), "\$metadata\$"), new PhiObjectLiteral("@@28304", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "INTERFACE")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("XIcon")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array())))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@28321", "=", new PhiDot(new PhiNameRef("Twemoji"), "\$metadata\$"), new PhiObjectLiteral("@@28319", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("Twemoji")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("XIcon")))))
+)));
+  phiExpressionStatement(new PhiBinaryOperation("@@28336", "=", new PhiDot(new PhiNameRef("EmojiOne"), "\$metadata\$"), new PhiObjectLiteral("@@28334", array(
+array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), 
+array(new PhiNameRef("simpleName"), new PhiStringLiteral("EmojiOne")), 
+array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array(new PhiNameRef("XIcon")))))
+)));
+  phiVars("@@28348", array(array("package\$aps", new PhiBinaryOperation("@@28346", "||", new PhiDot(new PhiNameRef("_"), "aps"), new PhiBinaryOperation("@@28344", "=", new PhiDot(new PhiNameRef("_"), "aps"), new PhiObjectLiteral("@@28342", array()
+))))));
+  phiVars("@@28359", array(array("package\$back", new PhiBinaryOperation("@@28357", "||", new PhiDot(new PhiNameRef("package\$aps"), "back"), new PhiBinaryOperation("@@28355", "=", new PhiDot(new PhiNameRef("package\$aps"), "back"), new PhiObjectLiteral("@@28353", array()
+))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("apsphp"), new PhiObjectLiteral("@@28366", array(
+array(new PhiNameRef("get"), new PhiNameRef("apsphp_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@28372", "=", new PhiDot(new PhiNameRef("package\$back"), "PHPDumpBodyToContainer"), new PhiNameRef("PHPDumpBodyToContainer")));
   phiExpressionStatement(new PhiBinaryOperation("@@28377", "=", new PhiDot(new PhiNameRef("package\$back"), "require_once_61zpoe\$"), new PhiNameRef("require_once")));
   phiExpressionStatement(new PhiBinaryOperation("@@28382", "=", new PhiDot(new PhiNameRef("package\$back"), "error_log_yhszz7\$"), new PhiNameRef("error_log")));
   phiExpressionStatement(new PhiBinaryOperation("@@28387", "=", new PhiDot(new PhiNameRef("package\$back"), "apsback_makeRequires"), new PhiNameRef("apsback_makeRequires")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("phplog"), new PhiObjectLiteral("@@28395", array(array(new PhiNameRef("get"), new PhiNameRef("phplog_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("phplog"), new PhiObjectLiteral("@@28395", array(
+array(new PhiNameRef("get"), new PhiNameRef("phplog_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@28401", "=", new PhiDot(new PhiNameRef("package\$back"), "main_kand9s\$"), new PhiNameRef("main")));
   phiExpressionStatement(new PhiBinaryOperation("@@28406", "=", new PhiDot(new PhiNameRef("package\$back"), "pizdunchik"), new PhiNameRef("pizdunchik")));
   phiExpressionStatement(new PhiBinaryOperation("@@28411", "=", new PhiDot(new PhiNameRef("package\$back"), "accessClitoris"), new PhiNameRef("accessClitoris")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$aps"), new PhiStringLiteral("sharedPlatform"), new PhiObjectLiteral("@@28420", array(array(new PhiNameRef("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$aps"), new PhiStringLiteral("sharedPlatform"), new PhiObjectLiteral("@@28420", array(
+array(new PhiNameRef("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiNameRef("sharedPlatform"));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@28426", "=", new PhiDot(new PhiNameRef("package\$aps"), "Pipiska"), new PhiNameRef("Pipiska")));
   phiExpressionStatement(new PhiBinaryOperation("@@28431", "=", new PhiDot(new PhiNameRef("Pizda"), "Clitoris"), new PhiNameRef("Pizda\$Clitoris")));
   phiExpressionStatement(new PhiBinaryOperation("@@28436", "=", new PhiDot(new PhiNameRef("package\$aps"), "Pizda"), new PhiNameRef("Pizda")));
@@ -6073,23 +7087,33 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@28536", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_ServletException"), new PhiNameRef("PHP_ServletException")));
   phiExpressionStatement(new PhiBinaryOperation("@@28541", "=", new PhiDot(new PhiNameRef("PHP_HttpServletRequest"), "Reader"), new PhiNameRef("PHP_HttpServletRequest\$Reader")));
   phiExpressionStatement(new PhiBinaryOperation("@@28546", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_HttpServletRequest"), new PhiNameRef("PHP_HttpServletRequest")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("PHP_HttpServletResponse"), new PhiStringLiteral("Companion"), new PhiObjectLiteral("@@28554", array(array(new PhiNameRef("get"), new PhiNameRef("PHP_HttpServletResponse\$Companion_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("PHP_HttpServletResponse"), new PhiStringLiteral("Companion"), new PhiObjectLiteral("@@28554", array(
+array(new PhiNameRef("get"), new PhiNameRef("PHP_HttpServletResponse\$Companion_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@28560", "=", new PhiDot(new PhiNameRef("PHP_HttpServletResponse"), "Writer"), new PhiNameRef("PHP_HttpServletResponse\$Writer")));
   phiExpressionStatement(new PhiBinaryOperation("@@28565", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_HttpServletResponse"), new PhiNameRef("PHP_HttpServletResponse")));
   phiExpressionStatement(new PhiBinaryOperation("@@28570", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_DataSource"), new PhiNameRef("PHP_DataSource")));
   phiExpressionStatement(new PhiBinaryOperation("@@28575", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_Scope"), new PhiNameRef("PHP_Scope")));
   phiExpressionStatement(new PhiBinaryOperation("@@28580", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_Component"), new PhiNameRef("PHP_Component")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("PHP_BeanDefinition"), new PhiStringLiteral("Companion"), new PhiObjectLiteral("@@28588", array(array(new PhiNameRef("get"), new PhiNameRef("PHP_BeanDefinition\$Companion_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("PHP_BeanDefinition"), new PhiStringLiteral("Companion"), new PhiObjectLiteral("@@28588", array(
+array(new PhiNameRef("get"), new PhiNameRef("PHP_BeanDefinition\$Companion_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@28594", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_BeanDefinition"), new PhiNameRef("PHP_BeanDefinition")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("backPlatform"), new PhiObjectLiteral("@@28603", array(array(new PhiNameRef("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("backPlatform"), new PhiObjectLiteral("@@28603", array(
+array(new PhiNameRef("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiNameRef("backPlatform"));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@28609", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_XmlRootElement"), new PhiNameRef("PHP_XmlRootElement")));
   phiExpressionStatement(new PhiBinaryOperation("@@28614", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_XmlElement"), new PhiNameRef("PHP_XmlElement")));
   phiExpressionStatement(new PhiBinaryOperation("@@28619", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_XmlAccessorType"), new PhiNameRef("PHP_XmlAccessorType")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("PHP_XmlAccessType"), new PhiStringLiteral("FIELD"), new PhiObjectLiteral("@@28627", array(array(new PhiNameRef("get"), new PhiNameRef("PHP_XmlAccessType\$FIELD_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("PHP_XmlAccessType"), new PhiStringLiteral("FIELD"), new PhiObjectLiteral("@@28627", array(
+array(new PhiNameRef("get"), new PhiNameRef("PHP_XmlAccessType\$FIELD_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@28633", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_XmlAccessType"), new PhiNameRef("PHP_XmlAccessType")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("PHP_Collections"), new PhiObjectLiteral("@@28641", array(array(new PhiNameRef("get"), new PhiNameRef("PHP_Collections_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("PHP_Collections"), new PhiObjectLiteral("@@28641", array(
+array(new PhiNameRef("get"), new PhiNameRef("PHP_Collections_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@28647", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_Date"), new PhiNameRef("PHP_Date")));
   phiExpressionStatement(new PhiBinaryOperation("@@28652", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_Logger"), new PhiNameRef("PHP_Logger")));
   phiExpressionStatement(new PhiBinaryOperation("@@28657", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_Serializable"), new PhiNameRef("PHP_Serializable")));
@@ -6097,15 +7121,23 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@28667", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_Transient"), new PhiNameRef("PHP_Transient")));
   phiExpressionStatement(new PhiBinaryOperation("@@28672", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_SharedSessionContractImplementor"), new PhiNameRef("PHP_SharedSessionContractImplementor")));
   phiExpressionStatement(new PhiBinaryOperation("@@28677", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_Timestamp"), new PhiNameRef("PHP_Timestamp")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("PHP_FetchType"), new PhiStringLiteral("LAZY"), new PhiObjectLiteral("@@28685", array(array(new PhiNameRef("get"), new PhiNameRef("PHP_FetchType\$LAZY_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("PHP_FetchType"), new PhiStringLiteral("EAGER"), new PhiObjectLiteral("@@28694", array(array(new PhiNameRef("get"), new PhiNameRef("PHP_FetchType\$EAGER_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("PHP_FetchType"), new PhiStringLiteral("LAZY"), new PhiObjectLiteral("@@28685", array(
+array(new PhiNameRef("get"), new PhiNameRef("PHP_FetchType\$LAZY_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("PHP_FetchType"), new PhiStringLiteral("EAGER"), new PhiObjectLiteral("@@28694", array(
+array(new PhiNameRef("get"), new PhiNameRef("PHP_FetchType\$EAGER_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@28700", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_FetchType"), new PhiNameRef("PHP_FetchType")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("PHP_CascadeType"), new PhiStringLiteral("ALL"), new PhiObjectLiteral("@@28708", array(array(new PhiNameRef("get"), new PhiNameRef("PHP_CascadeType\$ALL_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("PHP_CascadeType"), new PhiStringLiteral("ALL"), new PhiObjectLiteral("@@28708", array(
+array(new PhiNameRef("get"), new PhiNameRef("PHP_CascadeType\$ALL_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@28714", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_CascadeType"), new PhiNameRef("PHP_CascadeType")));
   phiExpressionStatement(new PhiBinaryOperation("@@28719", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_Index"), new PhiNameRef("PHP_Index")));
   phiExpressionStatement(new PhiBinaryOperation("@@28724", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_Embeddable"), new PhiNameRef("PHP_Embeddable")));
   phiExpressionStatement(new PhiBinaryOperation("@@28729", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_PreUpdate"), new PhiNameRef("PHP_PreUpdate")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("PHP_GenerationType"), new PhiStringLiteral("IDENTITY"), new PhiObjectLiteral("@@28737", array(array(new PhiNameRef("get"), new PhiNameRef("PHP_GenerationType\$IDENTITY_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("PHP_GenerationType"), new PhiStringLiteral("IDENTITY"), new PhiObjectLiteral("@@28737", array(
+array(new PhiNameRef("get"), new PhiNameRef("PHP_GenerationType\$IDENTITY_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@28743", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_GenerationType"), new PhiNameRef("PHP_GenerationType")));
   phiExpressionStatement(new PhiBinaryOperation("@@28748", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_GeneratedValue"), new PhiNameRef("PHP_GeneratedValue")));
   phiExpressionStatement(new PhiBinaryOperation("@@28753", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_Id"), new PhiNameRef("PHP_Id")));
@@ -6116,26 +7148,34 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@28778", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_OneToMany"), new PhiNameRef("PHP_OneToMany")));
   phiExpressionStatement(new PhiBinaryOperation("@@28783", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_Column"), new PhiNameRef("PHP_Column")));
   phiExpressionStatement(new PhiBinaryOperation("@@28788", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_Enumerated"), new PhiNameRef("PHP_Enumerated")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("PHP_EnumType"), new PhiStringLiteral("STRING"), new PhiObjectLiteral("@@28796", array(array(new PhiNameRef("get"), new PhiNameRef("PHP_EnumType\$STRING_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("PHP_EnumType"), new PhiStringLiteral("STRING"), new PhiObjectLiteral("@@28796", array(
+array(new PhiNameRef("get"), new PhiNameRef("PHP_EnumType\$STRING_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@28802", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_EnumType"), new PhiNameRef("PHP_EnumType")));
   phiExpressionStatement(new PhiBinaryOperation("@@28807", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_ManyToOne"), new PhiNameRef("PHP_ManyToOne")));
   phiExpressionStatement(new PhiBinaryOperation("@@28812", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_CrudRepository"), new PhiNameRef("PHP_CrudRepository")));
   phiExpressionStatement(new PhiBinaryOperation("@@28817", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_GenericGenerator"), new PhiNameRef("PHP_GenericGenerator")));
-  phiVars("@@28829", array(array("package\$phizdetslib", new PhiBinaryOperation("@@28827", "||", new PhiDot(new PhiNameRef("_"), "phizdetslib"), new PhiBinaryOperation("@@28825", "=", new PhiDot(new PhiNameRef("_"), "phizdetslib"), new PhiObjectLiteral("@@28823", array()))))));
+  phiVars("@@28829", array(array("package\$phizdetslib", new PhiBinaryOperation("@@28827", "||", new PhiDot(new PhiNameRef("_"), "phizdetslib"), new PhiBinaryOperation("@@28825", "=", new PhiDot(new PhiNameRef("_"), "phizdetslib"), new PhiObjectLiteral("@@28823", array()
+))))));
   phiExpressionStatement(new PhiBinaryOperation("@@28833", "=", new PhiDot(new PhiNameRef("package\$phizdetslib"), "phiEval_ytbaoo\$"), new PhiNameRef("phiEval")));
   phiExpressionStatement(new PhiBinaryOperation("@@28838", "=", new PhiDot(new PhiNameRef("package\$aps"), "XSharedPlatform"), new PhiNameRef("XSharedPlatform")));
   phiExpressionStatement(new PhiBinaryOperation("@@28843", "=", new PhiDot(new PhiNameRef("package\$aps"), "Dummy"), new PhiNameRef("Dummy")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$aps"), new PhiStringLiteral("KOMMON_HOME"), new PhiObjectLiteral("@@28851", array(array(new PhiNameRef("get"), new PhiNameRef("get_KOMMON_HOME")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$aps"), new PhiStringLiteral("KOMMON_HOME"), new PhiObjectLiteral("@@28851", array(
+array(new PhiNameRef("get"), new PhiNameRef("get_KOMMON_HOME")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@28857", "=", new PhiDot(new PhiNameRef("package\$aps"), "bitch_61zpoe\$"), new PhiNameRef("bitch")));
   phiExpressionStatement(new PhiBinaryOperation("@@28862", "=", new PhiDot(new PhiNameRef("package\$aps"), "wtf_61zpoe\$"), new PhiNameRef("wtf")));
   phiExpressionStatement(new PhiBinaryOperation("@@28867", "=", new PhiDot(new PhiNameRef("package\$aps"), "die_61zpoe\$"), new PhiNameRef("die")));
   phiExpressionStatement(new PhiBinaryOperation("@@28872", "=", new PhiDot(new PhiNameRef("package\$aps"), "fuckOff_61zpoe\$"), new PhiNameRef("fuckOff")));
   phiExpressionStatement(new PhiBinaryOperation("@@28877", "=", new PhiDot(new PhiNameRef("package\$aps"), "unsupported_61zpoe\$"), new PhiNameRef("unsupported")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$aps"), new PhiStringLiteral("exhaustive"), new PhiObjectLiteral("@@28892", array(array(new PhiNameRef("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$aps"), new PhiStringLiteral("exhaustive"), new PhiObjectLiteral("@@28892", array(
+array(new PhiNameRef("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiNameRef("exhaustive"));
-  })), array(new PhiNameRef("set"), new PhiFunctionExpression(null, array("value"), function () {
+  })), 
+array(new PhiNameRef("set"), new PhiFunctionExpression(null, array("value"), function () {
     phiExpressionStatement(new PhiBinaryOperation("@@28889", "=", new PhiNameRef("exhaustive"), new PhiNameRef("value")));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@28898", "=", new PhiDot(new PhiNameRef("package\$aps"), "measuringAndPrinting_klfg04\$"), new PhiNameRef("measuringAndPrinting")));
   phiExpressionStatement(new PhiBinaryOperation("@@28903", "=", new PhiDot(new PhiNameRef("package\$aps"), "ifOrEmpty_87ejdh\$"), new PhiNameRef("ifOrEmpty")));
   phiExpressionStatement(new PhiBinaryOperation("@@28908", "=", new PhiDot(new PhiNameRef("package\$aps"), "letu_9bxh2u\$"), new PhiNameRef("letu")));
@@ -6150,33 +7190,75 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@28953", "=", new PhiDot(new PhiNameRef("package\$aps"), "notNull_30y1fr\$"), new PhiNameRef("notNull")));
   phiExpressionStatement(new PhiBinaryOperation("@@28958", "=", new PhiDot(new PhiNameRef("package\$aps"), "notNullOnce_30y1fr\$"), new PhiNameRef("notNullOnce")));
   phiExpressionStatement(new PhiBinaryOperation("@@28963", "=", new PhiDot(new PhiNameRef("package\$aps"), "CommonRequestFields"), new PhiNameRef("CommonRequestFields")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserKind"), new PhiStringLiteral("CUSTOMER"), new PhiObjectLiteral("@@28971", array(array(new PhiNameRef("get"), new PhiNameRef("UserKind\$CUSTOMER_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserKind"), new PhiStringLiteral("WRITER"), new PhiObjectLiteral("@@28980", array(array(new PhiNameRef("get"), new PhiNameRef("UserKind\$WRITER_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserKind"), new PhiStringLiteral("ADMIN"), new PhiObjectLiteral("@@28989", array(array(new PhiNameRef("get"), new PhiNameRef("UserKind\$ADMIN_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserKind"), new PhiStringLiteral("CUSTOMER"), new PhiObjectLiteral("@@28971", array(
+array(new PhiNameRef("get"), new PhiNameRef("UserKind\$CUSTOMER_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserKind"), new PhiStringLiteral("WRITER"), new PhiObjectLiteral("@@28980", array(
+array(new PhiNameRef("get"), new PhiNameRef("UserKind\$WRITER_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserKind"), new PhiStringLiteral("ADMIN"), new PhiObjectLiteral("@@28989", array(
+array(new PhiNameRef("get"), new PhiNameRef("UserKind\$ADMIN_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@28995", "=", new PhiDot(new PhiNameRef("package\$aps"), "UserKind"), new PhiNameRef("UserKind")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("ClientKind"), new PhiStringLiteral("UA_CUSTOMER"), new PhiObjectLiteral("@@29003", array(array(new PhiNameRef("get"), new PhiNameRef("ClientKind\$UA_CUSTOMER_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("ClientKind"), new PhiStringLiteral("UA_WRITER"), new PhiObjectLiteral("@@29012", array(array(new PhiNameRef("get"), new PhiNameRef("ClientKind\$UA_WRITER_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("ClientKind"), new PhiStringLiteral("UA_CUSTOMER"), new PhiObjectLiteral("@@29003", array(
+array(new PhiNameRef("get"), new PhiNameRef("ClientKind\$UA_CUSTOMER_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("ClientKind"), new PhiStringLiteral("UA_WRITER"), new PhiObjectLiteral("@@29012", array(
+array(new PhiNameRef("get"), new PhiNameRef("ClientKind\$UA_WRITER_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@29018", "=", new PhiDot(new PhiNameRef("package\$aps"), "ClientKind"), new PhiNameRef("ClientKind")));
   phiExpressionStatement(new PhiBinaryOperation("@@29023", "=", new PhiDot(new PhiNameRef("WideClientKind"), "User"), new PhiNameRef("WideClientKind\$User")));
   phiExpressionStatement(new PhiBinaryOperation("@@29028", "=", new PhiDot(new PhiNameRef("WideClientKind"), "Test"), new PhiNameRef("WideClientKind\$Test")));
   phiExpressionStatement(new PhiBinaryOperation("@@29033", "=", new PhiDot(new PhiNameRef("package\$aps"), "WideClientKind"), new PhiNameRef("WideClientKind")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Language"), new PhiStringLiteral("EN"), new PhiObjectLiteral("@@29041", array(array(new PhiNameRef("get"), new PhiNameRef("Language\$EN_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Language"), new PhiStringLiteral("UA"), new PhiObjectLiteral("@@29050", array(array(new PhiNameRef("get"), new PhiNameRef("Language\$UA_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Language"), new PhiStringLiteral("EN"), new PhiObjectLiteral("@@29041", array(
+array(new PhiNameRef("get"), new PhiNameRef("Language\$EN_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Language"), new PhiStringLiteral("UA"), new PhiObjectLiteral("@@29050", array(
+array(new PhiNameRef("get"), new PhiNameRef("Language\$UA_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@29056", "=", new PhiDot(new PhiNameRef("package\$aps"), "Language"), new PhiNameRef("Language")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$text"), "prototype"), new PhiStringLiteral("symbols"), new PhiObjectLiteral("@@29065", array(array(new PhiNameRef("get"), new PhiNameRef("const\$text\$symbols_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$text"), "prototype"), new PhiStringLiteral("shebang"), new PhiObjectLiteral("@@29075", array(array(new PhiNameRef("get"), new PhiNameRef("const\$text\$shebang_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("text"), new PhiObjectLiteral("@@29085", array(array(new PhiNameRef("get"), new PhiNameRef("const\$text_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("msg"), new PhiObjectLiteral("@@29095", array(array(new PhiNameRef("get"), new PhiNameRef("const\$msg_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("orderArea"), new PhiObjectLiteral("@@29105", array(array(new PhiNameRef("get"), new PhiNameRef("const\$orderArea_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("windowMessage"), new PhiObjectLiteral("@@29115", array(array(new PhiNameRef("get"), new PhiNameRef("const\$windowMessage_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$urlq"), "prototype"), new PhiStringLiteral("test"), new PhiObjectLiteral("@@29125", array(array(new PhiNameRef("get"), new PhiNameRef("const\$urlq\$test_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("urlq"), new PhiObjectLiteral("@@29135", array(array(new PhiNameRef("get"), new PhiNameRef("const\$urlq_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("elementID"), new PhiObjectLiteral("@@29145", array(array(new PhiNameRef("get"), new PhiNameRef("const\$elementID_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("productName"), new PhiObjectLiteral("@@29155", array(array(new PhiNameRef("get"), new PhiNameRef("const\$productName_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("file"), new PhiObjectLiteral("@@29165", array(array(new PhiNameRef("get"), new PhiNameRef("const\$file_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("userID"), new PhiObjectLiteral("@@29175", array(array(new PhiNameRef("get"), new PhiNameRef("const\$userID_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("uaDocumentCategoryID"), new PhiObjectLiteral("@@29185", array(array(new PhiNameRef("get"), new PhiNameRef("const\$uaDocumentCategoryID_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$aps"), new PhiStringLiteral("const"), new PhiObjectLiteral("@@29194", array(array(new PhiNameRef("get"), new PhiNameRef("const_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$text"), "prototype"), new PhiStringLiteral("symbols"), new PhiObjectLiteral("@@29065", array(
+array(new PhiNameRef("get"), new PhiNameRef("const\$text\$symbols_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$text"), "prototype"), new PhiStringLiteral("shebang"), new PhiObjectLiteral("@@29075", array(
+array(new PhiNameRef("get"), new PhiNameRef("const\$text\$shebang_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("text"), new PhiObjectLiteral("@@29085", array(
+array(new PhiNameRef("get"), new PhiNameRef("const\$text_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("msg"), new PhiObjectLiteral("@@29095", array(
+array(new PhiNameRef("get"), new PhiNameRef("const\$msg_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("orderArea"), new PhiObjectLiteral("@@29105", array(
+array(new PhiNameRef("get"), new PhiNameRef("const\$orderArea_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("windowMessage"), new PhiObjectLiteral("@@29115", array(
+array(new PhiNameRef("get"), new PhiNameRef("const\$windowMessage_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const\$urlq"), "prototype"), new PhiStringLiteral("test"), new PhiObjectLiteral("@@29125", array(
+array(new PhiNameRef("get"), new PhiNameRef("const\$urlq\$test_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("urlq"), new PhiObjectLiteral("@@29135", array(
+array(new PhiNameRef("get"), new PhiNameRef("const\$urlq_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("elementID"), new PhiObjectLiteral("@@29145", array(
+array(new PhiNameRef("get"), new PhiNameRef("const\$elementID_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("productName"), new PhiObjectLiteral("@@29155", array(
+array(new PhiNameRef("get"), new PhiNameRef("const\$productName_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("file"), new PhiObjectLiteral("@@29165", array(
+array(new PhiNameRef("get"), new PhiNameRef("const\$file_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("userID"), new PhiObjectLiteral("@@29175", array(
+array(new PhiNameRef("get"), new PhiNameRef("const\$userID_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("const_0"), "prototype"), new PhiStringLiteral("uaDocumentCategoryID"), new PhiObjectLiteral("@@29185", array(
+array(new PhiNameRef("get"), new PhiNameRef("const\$uaDocumentCategoryID_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$aps"), new PhiStringLiteral("const"), new PhiObjectLiteral("@@29194", array(
+array(new PhiNameRef("get"), new PhiNameRef("const_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@29200", "=", new PhiDot(new PhiNameRef("FormResponse"), "Hunky"), new PhiNameRef("FormResponse\$Hunky")));
   phiExpressionStatement(new PhiBinaryOperation("@@29205", "=", new PhiDot(new PhiNameRef("FormResponse"), "Shitty"), new PhiNameRef("FormResponse\$Shitty")));
   phiExpressionStatement(new PhiBinaryOperation("@@29210", "=", new PhiDot(new PhiNameRef("package\$aps"), "FormResponse"), new PhiNameRef("FormResponse")));
@@ -6186,300 +7268,878 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@29230", "=", new PhiDot(new PhiNameRef("package\$aps"), "NoArgCtor"), new PhiNameRef("NoArgCtor")));
   phiExpressionStatement(new PhiBinaryOperation("@@29235", "=", new PhiDot(new PhiNameRef("package\$aps"), "AllOpen"), new PhiNameRef("AllOpen")));
   phiExpressionStatement(new PhiBinaryOperation("@@29240", "=", new PhiDot(new PhiNameRef("package\$aps"), "Ser"), new PhiNameRef("Ser")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserState"), new PhiStringLiteral("COOL"), new PhiObjectLiteral("@@29248", array(array(new PhiNameRef("get"), new PhiNameRef("UserState\$COOL_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserState"), new PhiStringLiteral("PROFILE_PENDING"), new PhiObjectLiteral("@@29257", array(array(new PhiNameRef("get"), new PhiNameRef("UserState\$PROFILE_PENDING_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserState"), new PhiStringLiteral("PROFILE_APPROVAL_PENDING"), new PhiObjectLiteral("@@29266", array(array(new PhiNameRef("get"), new PhiNameRef("UserState\$PROFILE_APPROVAL_PENDING_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserState"), new PhiStringLiteral("PROFILE_REJECTED"), new PhiObjectLiteral("@@29275", array(array(new PhiNameRef("get"), new PhiNameRef("UserState\$PROFILE_REJECTED_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserState"), new PhiStringLiteral("BANNED"), new PhiObjectLiteral("@@29284", array(array(new PhiNameRef("get"), new PhiNameRef("UserState\$BANNED_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserState"), new PhiStringLiteral("COOL"), new PhiObjectLiteral("@@29248", array(
+array(new PhiNameRef("get"), new PhiNameRef("UserState\$COOL_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserState"), new PhiStringLiteral("PROFILE_PENDING"), new PhiObjectLiteral("@@29257", array(
+array(new PhiNameRef("get"), new PhiNameRef("UserState\$PROFILE_PENDING_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserState"), new PhiStringLiteral("PROFILE_APPROVAL_PENDING"), new PhiObjectLiteral("@@29266", array(
+array(new PhiNameRef("get"), new PhiNameRef("UserState\$PROFILE_APPROVAL_PENDING_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserState"), new PhiStringLiteral("PROFILE_REJECTED"), new PhiObjectLiteral("@@29275", array(
+array(new PhiNameRef("get"), new PhiNameRef("UserState\$PROFILE_REJECTED_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserState"), new PhiStringLiteral("BANNED"), new PhiObjectLiteral("@@29284", array(
+array(new PhiNameRef("get"), new PhiNameRef("UserState\$BANNED_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@29290", "=", new PhiDot(new PhiNameRef("package\$aps"), "UserState"), new PhiNameRef("UserState")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLACK"), new PhiObjectLiteral("@@29298", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLACK_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLACK_BOOT"), new PhiObjectLiteral("@@29307", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLACK_BOOT_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("WHITE"), new PhiObjectLiteral("@@29316", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$WHITE_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_50"), new PhiObjectLiteral("@@29325", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_100"), new PhiObjectLiteral("@@29334", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_200"), new PhiObjectLiteral("@@29343", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_300"), new PhiObjectLiteral("@@29352", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_400"), new PhiObjectLiteral("@@29361", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_500"), new PhiObjectLiteral("@@29370", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_600"), new PhiObjectLiteral("@@29379", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_700"), new PhiObjectLiteral("@@29388", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_800"), new PhiObjectLiteral("@@29397", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_900"), new PhiObjectLiteral("@@29406", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_A100"), new PhiObjectLiteral("@@29415", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_A100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_A200"), new PhiObjectLiteral("@@29424", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_A200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_A400"), new PhiObjectLiteral("@@29433", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_A400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_A700"), new PhiObjectLiteral("@@29442", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_A700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_50"), new PhiObjectLiteral("@@29451", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_100"), new PhiObjectLiteral("@@29460", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_200"), new PhiObjectLiteral("@@29469", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_300"), new PhiObjectLiteral("@@29478", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_400"), new PhiObjectLiteral("@@29487", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_500"), new PhiObjectLiteral("@@29496", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_600"), new PhiObjectLiteral("@@29505", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_700"), new PhiObjectLiteral("@@29514", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_800"), new PhiObjectLiteral("@@29523", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_900"), new PhiObjectLiteral("@@29532", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_A100"), new PhiObjectLiteral("@@29541", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_A100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_A200"), new PhiObjectLiteral("@@29550", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_A200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_A400"), new PhiObjectLiteral("@@29559", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_A400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_A700"), new PhiObjectLiteral("@@29568", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_A700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_50"), new PhiObjectLiteral("@@29577", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_100"), new PhiObjectLiteral("@@29586", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_200"), new PhiObjectLiteral("@@29595", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_300"), new PhiObjectLiteral("@@29604", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_400"), new PhiObjectLiteral("@@29613", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_500"), new PhiObjectLiteral("@@29622", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_600"), new PhiObjectLiteral("@@29631", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_700"), new PhiObjectLiteral("@@29640", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_800"), new PhiObjectLiteral("@@29649", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_900"), new PhiObjectLiteral("@@29658", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_A100"), new PhiObjectLiteral("@@29667", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_A100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_A200"), new PhiObjectLiteral("@@29676", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_A200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_A400"), new PhiObjectLiteral("@@29685", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_A400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_A700"), new PhiObjectLiteral("@@29694", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_A700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_50"), new PhiObjectLiteral("@@29703", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_100"), new PhiObjectLiteral("@@29712", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_200"), new PhiObjectLiteral("@@29721", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_300"), new PhiObjectLiteral("@@29730", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_400"), new PhiObjectLiteral("@@29739", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_500"), new PhiObjectLiteral("@@29748", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_600"), new PhiObjectLiteral("@@29757", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_700"), new PhiObjectLiteral("@@29766", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_800"), new PhiObjectLiteral("@@29775", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_900"), new PhiObjectLiteral("@@29784", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_A100"), new PhiObjectLiteral("@@29793", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_A100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_A200"), new PhiObjectLiteral("@@29802", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_A200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_A400"), new PhiObjectLiteral("@@29811", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_A400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_A700"), new PhiObjectLiteral("@@29820", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_A700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_50"), new PhiObjectLiteral("@@29829", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_100"), new PhiObjectLiteral("@@29838", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_200"), new PhiObjectLiteral("@@29847", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_300"), new PhiObjectLiteral("@@29856", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_400"), new PhiObjectLiteral("@@29865", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_500"), new PhiObjectLiteral("@@29874", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_600"), new PhiObjectLiteral("@@29883", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_700"), new PhiObjectLiteral("@@29892", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_800"), new PhiObjectLiteral("@@29901", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_900"), new PhiObjectLiteral("@@29910", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_A100"), new PhiObjectLiteral("@@29919", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_A100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_A200"), new PhiObjectLiteral("@@29928", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_A200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_A400"), new PhiObjectLiteral("@@29937", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_A400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_A700"), new PhiObjectLiteral("@@29946", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_A700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_50"), new PhiObjectLiteral("@@29955", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_100"), new PhiObjectLiteral("@@29964", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_200"), new PhiObjectLiteral("@@29973", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_300"), new PhiObjectLiteral("@@29982", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_400"), new PhiObjectLiteral("@@29991", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_500"), new PhiObjectLiteral("@@30000", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_600"), new PhiObjectLiteral("@@30009", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_700"), new PhiObjectLiteral("@@30018", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_800"), new PhiObjectLiteral("@@30027", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_900"), new PhiObjectLiteral("@@30036", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_A100"), new PhiObjectLiteral("@@30045", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_A100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_A200"), new PhiObjectLiteral("@@30054", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_A200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_A400"), new PhiObjectLiteral("@@30063", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_A400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_A700"), new PhiObjectLiteral("@@30072", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_A700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_50"), new PhiObjectLiteral("@@30081", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_100"), new PhiObjectLiteral("@@30090", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_200"), new PhiObjectLiteral("@@30099", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_300"), new PhiObjectLiteral("@@30108", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_400"), new PhiObjectLiteral("@@30117", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_500"), new PhiObjectLiteral("@@30126", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_600"), new PhiObjectLiteral("@@30135", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_700"), new PhiObjectLiteral("@@30144", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_800"), new PhiObjectLiteral("@@30153", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_900"), new PhiObjectLiteral("@@30162", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_A100"), new PhiObjectLiteral("@@30171", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_A100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_A200"), new PhiObjectLiteral("@@30180", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_A200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_A400"), new PhiObjectLiteral("@@30189", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_A400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_A700"), new PhiObjectLiteral("@@30198", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_A700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_50"), new PhiObjectLiteral("@@30207", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_100"), new PhiObjectLiteral("@@30216", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_200"), new PhiObjectLiteral("@@30225", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_300"), new PhiObjectLiteral("@@30234", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_400"), new PhiObjectLiteral("@@30243", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_500"), new PhiObjectLiteral("@@30252", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_600"), new PhiObjectLiteral("@@30261", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_700"), new PhiObjectLiteral("@@30270", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_800"), new PhiObjectLiteral("@@30279", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_900"), new PhiObjectLiteral("@@30288", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_A100"), new PhiObjectLiteral("@@30297", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_A100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_A200"), new PhiObjectLiteral("@@30306", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_A200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_A400"), new PhiObjectLiteral("@@30315", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_A400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_A700"), new PhiObjectLiteral("@@30324", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_A700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_50"), new PhiObjectLiteral("@@30333", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_100"), new PhiObjectLiteral("@@30342", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_200"), new PhiObjectLiteral("@@30351", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_300"), new PhiObjectLiteral("@@30360", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_400"), new PhiObjectLiteral("@@30369", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_500"), new PhiObjectLiteral("@@30378", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_600"), new PhiObjectLiteral("@@30387", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_700"), new PhiObjectLiteral("@@30396", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_800"), new PhiObjectLiteral("@@30405", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_900"), new PhiObjectLiteral("@@30414", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_A100"), new PhiObjectLiteral("@@30423", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_A100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_A200"), new PhiObjectLiteral("@@30432", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_A200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_A400"), new PhiObjectLiteral("@@30441", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_A400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_A700"), new PhiObjectLiteral("@@30450", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_A700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_50"), new PhiObjectLiteral("@@30459", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_100"), new PhiObjectLiteral("@@30468", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_200"), new PhiObjectLiteral("@@30477", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_300"), new PhiObjectLiteral("@@30486", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_400"), new PhiObjectLiteral("@@30495", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_500"), new PhiObjectLiteral("@@30504", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_600"), new PhiObjectLiteral("@@30513", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_700"), new PhiObjectLiteral("@@30522", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_800"), new PhiObjectLiteral("@@30531", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_900"), new PhiObjectLiteral("@@30540", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_A100"), new PhiObjectLiteral("@@30549", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_A100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_A200"), new PhiObjectLiteral("@@30558", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_A200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_A400"), new PhiObjectLiteral("@@30567", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_A400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_A700"), new PhiObjectLiteral("@@30576", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_A700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_50"), new PhiObjectLiteral("@@30585", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_100"), new PhiObjectLiteral("@@30594", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_200"), new PhiObjectLiteral("@@30603", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_300"), new PhiObjectLiteral("@@30612", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_400"), new PhiObjectLiteral("@@30621", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_500"), new PhiObjectLiteral("@@30630", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_600"), new PhiObjectLiteral("@@30639", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_700"), new PhiObjectLiteral("@@30648", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_800"), new PhiObjectLiteral("@@30657", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_900"), new PhiObjectLiteral("@@30666", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_A100"), new PhiObjectLiteral("@@30675", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_A100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_A200"), new PhiObjectLiteral("@@30684", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_A200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_A400"), new PhiObjectLiteral("@@30693", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_A400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_A700"), new PhiObjectLiteral("@@30702", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_A700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_50"), new PhiObjectLiteral("@@30711", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_100"), new PhiObjectLiteral("@@30720", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_200"), new PhiObjectLiteral("@@30729", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_300"), new PhiObjectLiteral("@@30738", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_400"), new PhiObjectLiteral("@@30747", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_500"), new PhiObjectLiteral("@@30756", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_600"), new PhiObjectLiteral("@@30765", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_700"), new PhiObjectLiteral("@@30774", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_800"), new PhiObjectLiteral("@@30783", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_900"), new PhiObjectLiteral("@@30792", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_A100"), new PhiObjectLiteral("@@30801", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_A100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_A200"), new PhiObjectLiteral("@@30810", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_A200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_A400"), new PhiObjectLiteral("@@30819", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_A400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_A700"), new PhiObjectLiteral("@@30828", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_A700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_50"), new PhiObjectLiteral("@@30837", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_100"), new PhiObjectLiteral("@@30846", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_200"), new PhiObjectLiteral("@@30855", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_300"), new PhiObjectLiteral("@@30864", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_400"), new PhiObjectLiteral("@@30873", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_500"), new PhiObjectLiteral("@@30882", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_600"), new PhiObjectLiteral("@@30891", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_700"), new PhiObjectLiteral("@@30900", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_800"), new PhiObjectLiteral("@@30909", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_900"), new PhiObjectLiteral("@@30918", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_A100"), new PhiObjectLiteral("@@30927", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_A100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_A200"), new PhiObjectLiteral("@@30936", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_A200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_A400"), new PhiObjectLiteral("@@30945", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_A400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_A700"), new PhiObjectLiteral("@@30954", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_A700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_50"), new PhiObjectLiteral("@@30963", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_100"), new PhiObjectLiteral("@@30972", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_200"), new PhiObjectLiteral("@@30981", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_300"), new PhiObjectLiteral("@@30990", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_400"), new PhiObjectLiteral("@@30999", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_500"), new PhiObjectLiteral("@@31008", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_600"), new PhiObjectLiteral("@@31017", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_700"), new PhiObjectLiteral("@@31026", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_800"), new PhiObjectLiteral("@@31035", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_900"), new PhiObjectLiteral("@@31044", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_A100"), new PhiObjectLiteral("@@31053", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_A100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_A200"), new PhiObjectLiteral("@@31062", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_A200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_A400"), new PhiObjectLiteral("@@31071", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_A400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_A700"), new PhiObjectLiteral("@@31080", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_A700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_50"), new PhiObjectLiteral("@@31089", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_100"), new PhiObjectLiteral("@@31098", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_200"), new PhiObjectLiteral("@@31107", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_300"), new PhiObjectLiteral("@@31116", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_400"), new PhiObjectLiteral("@@31125", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_500"), new PhiObjectLiteral("@@31134", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_600"), new PhiObjectLiteral("@@31143", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_700"), new PhiObjectLiteral("@@31152", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_800"), new PhiObjectLiteral("@@31161", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_900"), new PhiObjectLiteral("@@31170", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_A100"), new PhiObjectLiteral("@@31179", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_A100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_A200"), new PhiObjectLiteral("@@31188", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_A200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_A400"), new PhiObjectLiteral("@@31197", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_A400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_A700"), new PhiObjectLiteral("@@31206", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_A700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_50"), new PhiObjectLiteral("@@31215", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_100"), new PhiObjectLiteral("@@31224", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_200"), new PhiObjectLiteral("@@31233", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_300"), new PhiObjectLiteral("@@31242", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_400"), new PhiObjectLiteral("@@31251", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_500"), new PhiObjectLiteral("@@31260", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_600"), new PhiObjectLiteral("@@31269", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_700"), new PhiObjectLiteral("@@31278", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_800"), new PhiObjectLiteral("@@31287", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_900"), new PhiObjectLiteral("@@31296", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_A100"), new PhiObjectLiteral("@@31305", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_A100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_A200"), new PhiObjectLiteral("@@31314", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_A200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_A400"), new PhiObjectLiteral("@@31323", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_A400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_A700"), new PhiObjectLiteral("@@31332", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_A700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_50"), new PhiObjectLiteral("@@31341", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_100"), new PhiObjectLiteral("@@31350", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_200"), new PhiObjectLiteral("@@31359", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_300"), new PhiObjectLiteral("@@31368", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_400"), new PhiObjectLiteral("@@31377", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_500"), new PhiObjectLiteral("@@31386", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_600"), new PhiObjectLiteral("@@31395", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_700"), new PhiObjectLiteral("@@31404", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_800"), new PhiObjectLiteral("@@31413", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_900"), new PhiObjectLiteral("@@31422", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_50"), new PhiObjectLiteral("@@31431", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_100"), new PhiObjectLiteral("@@31440", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_200"), new PhiObjectLiteral("@@31449", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_300"), new PhiObjectLiteral("@@31458", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_400"), new PhiObjectLiteral("@@31467", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_500"), new PhiObjectLiteral("@@31476", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_600"), new PhiObjectLiteral("@@31485", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_700"), new PhiObjectLiteral("@@31494", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_800"), new PhiObjectLiteral("@@31503", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_900"), new PhiObjectLiteral("@@31512", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_50"), new PhiObjectLiteral("@@31521", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_50_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_100"), new PhiObjectLiteral("@@31530", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_100_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_200"), new PhiObjectLiteral("@@31539", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_200_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_300"), new PhiObjectLiteral("@@31548", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_300_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_400"), new PhiObjectLiteral("@@31557", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_400_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_500"), new PhiObjectLiteral("@@31566", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_500_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_600"), new PhiObjectLiteral("@@31575", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_600_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_700"), new PhiObjectLiteral("@@31584", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_700_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_800"), new PhiObjectLiteral("@@31593", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_800_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_900"), new PhiObjectLiteral("@@31602", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_900_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED"), new PhiObjectLiteral("@@31611", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN"), new PhiObjectLiteral("@@31620", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE"), new PhiObjectLiteral("@@31629", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ROSYBROWN"), new PhiObjectLiteral("@@31638", array(array(new PhiNameRef("get"), new PhiNameRef("Color\$ROSYBROWN_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLACK"), new PhiObjectLiteral("@@29298", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLACK_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLACK_BOOT"), new PhiObjectLiteral("@@29307", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLACK_BOOT_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("WHITE"), new PhiObjectLiteral("@@29316", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$WHITE_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_50"), new PhiObjectLiteral("@@29325", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_100"), new PhiObjectLiteral("@@29334", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_200"), new PhiObjectLiteral("@@29343", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_300"), new PhiObjectLiteral("@@29352", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_400"), new PhiObjectLiteral("@@29361", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_500"), new PhiObjectLiteral("@@29370", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_600"), new PhiObjectLiteral("@@29379", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_700"), new PhiObjectLiteral("@@29388", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_800"), new PhiObjectLiteral("@@29397", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_900"), new PhiObjectLiteral("@@29406", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_A100"), new PhiObjectLiteral("@@29415", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_A100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_A200"), new PhiObjectLiteral("@@29424", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_A200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_A400"), new PhiObjectLiteral("@@29433", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_A400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED_A700"), new PhiObjectLiteral("@@29442", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_A700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_50"), new PhiObjectLiteral("@@29451", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_100"), new PhiObjectLiteral("@@29460", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_200"), new PhiObjectLiteral("@@29469", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_300"), new PhiObjectLiteral("@@29478", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_400"), new PhiObjectLiteral("@@29487", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_500"), new PhiObjectLiteral("@@29496", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_600"), new PhiObjectLiteral("@@29505", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_700"), new PhiObjectLiteral("@@29514", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_800"), new PhiObjectLiteral("@@29523", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_900"), new PhiObjectLiteral("@@29532", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_A100"), new PhiObjectLiteral("@@29541", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_A100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_A200"), new PhiObjectLiteral("@@29550", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_A200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_A400"), new PhiObjectLiteral("@@29559", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_A400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PINK_A700"), new PhiObjectLiteral("@@29568", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PINK_A700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_50"), new PhiObjectLiteral("@@29577", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_100"), new PhiObjectLiteral("@@29586", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_200"), new PhiObjectLiteral("@@29595", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_300"), new PhiObjectLiteral("@@29604", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_400"), new PhiObjectLiteral("@@29613", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_500"), new PhiObjectLiteral("@@29622", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_600"), new PhiObjectLiteral("@@29631", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_700"), new PhiObjectLiteral("@@29640", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_800"), new PhiObjectLiteral("@@29649", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_900"), new PhiObjectLiteral("@@29658", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_A100"), new PhiObjectLiteral("@@29667", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_A100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_A200"), new PhiObjectLiteral("@@29676", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_A200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_A400"), new PhiObjectLiteral("@@29685", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_A400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("PURPLE_A700"), new PhiObjectLiteral("@@29694", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$PURPLE_A700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_50"), new PhiObjectLiteral("@@29703", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_100"), new PhiObjectLiteral("@@29712", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_200"), new PhiObjectLiteral("@@29721", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_300"), new PhiObjectLiteral("@@29730", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_400"), new PhiObjectLiteral("@@29739", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_500"), new PhiObjectLiteral("@@29748", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_600"), new PhiObjectLiteral("@@29757", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_700"), new PhiObjectLiteral("@@29766", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_800"), new PhiObjectLiteral("@@29775", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_900"), new PhiObjectLiteral("@@29784", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_A100"), new PhiObjectLiteral("@@29793", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_A100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_A200"), new PhiObjectLiteral("@@29802", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_A200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_A400"), new PhiObjectLiteral("@@29811", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_A400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_PURPLE_A700"), new PhiObjectLiteral("@@29820", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_PURPLE_A700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_50"), new PhiObjectLiteral("@@29829", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_100"), new PhiObjectLiteral("@@29838", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_200"), new PhiObjectLiteral("@@29847", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_300"), new PhiObjectLiteral("@@29856", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_400"), new PhiObjectLiteral("@@29865", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_500"), new PhiObjectLiteral("@@29874", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_600"), new PhiObjectLiteral("@@29883", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_700"), new PhiObjectLiteral("@@29892", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_800"), new PhiObjectLiteral("@@29901", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_900"), new PhiObjectLiteral("@@29910", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_A100"), new PhiObjectLiteral("@@29919", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_A100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_A200"), new PhiObjectLiteral("@@29928", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_A200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_A400"), new PhiObjectLiteral("@@29937", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_A400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("INDIGO_A700"), new PhiObjectLiteral("@@29946", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$INDIGO_A700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_50"), new PhiObjectLiteral("@@29955", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_100"), new PhiObjectLiteral("@@29964", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_200"), new PhiObjectLiteral("@@29973", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_300"), new PhiObjectLiteral("@@29982", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_400"), new PhiObjectLiteral("@@29991", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_500"), new PhiObjectLiteral("@@30000", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_600"), new PhiObjectLiteral("@@30009", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_700"), new PhiObjectLiteral("@@30018", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_800"), new PhiObjectLiteral("@@30027", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_900"), new PhiObjectLiteral("@@30036", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_A100"), new PhiObjectLiteral("@@30045", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_A100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_A200"), new PhiObjectLiteral("@@30054", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_A200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_A400"), new PhiObjectLiteral("@@30063", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_A400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_A700"), new PhiObjectLiteral("@@30072", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_A700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_50"), new PhiObjectLiteral("@@30081", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_100"), new PhiObjectLiteral("@@30090", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_200"), new PhiObjectLiteral("@@30099", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_300"), new PhiObjectLiteral("@@30108", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_400"), new PhiObjectLiteral("@@30117", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_500"), new PhiObjectLiteral("@@30126", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_600"), new PhiObjectLiteral("@@30135", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_700"), new PhiObjectLiteral("@@30144", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_800"), new PhiObjectLiteral("@@30153", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_900"), new PhiObjectLiteral("@@30162", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_A100"), new PhiObjectLiteral("@@30171", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_A100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_A200"), new PhiObjectLiteral("@@30180", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_A200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_A400"), new PhiObjectLiteral("@@30189", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_A400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_BLUE_A700"), new PhiObjectLiteral("@@30198", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_BLUE_A700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_50"), new PhiObjectLiteral("@@30207", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_100"), new PhiObjectLiteral("@@30216", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_200"), new PhiObjectLiteral("@@30225", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_300"), new PhiObjectLiteral("@@30234", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_400"), new PhiObjectLiteral("@@30243", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_500"), new PhiObjectLiteral("@@30252", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_600"), new PhiObjectLiteral("@@30261", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_700"), new PhiObjectLiteral("@@30270", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_800"), new PhiObjectLiteral("@@30279", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_900"), new PhiObjectLiteral("@@30288", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_A100"), new PhiObjectLiteral("@@30297", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_A100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_A200"), new PhiObjectLiteral("@@30306", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_A200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_A400"), new PhiObjectLiteral("@@30315", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_A400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("CYAN_A700"), new PhiObjectLiteral("@@30324", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$CYAN_A700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_50"), new PhiObjectLiteral("@@30333", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_100"), new PhiObjectLiteral("@@30342", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_200"), new PhiObjectLiteral("@@30351", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_300"), new PhiObjectLiteral("@@30360", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_400"), new PhiObjectLiteral("@@30369", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_500"), new PhiObjectLiteral("@@30378", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_600"), new PhiObjectLiteral("@@30387", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_700"), new PhiObjectLiteral("@@30396", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_800"), new PhiObjectLiteral("@@30405", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_900"), new PhiObjectLiteral("@@30414", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_A100"), new PhiObjectLiteral("@@30423", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_A100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_A200"), new PhiObjectLiteral("@@30432", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_A200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_A400"), new PhiObjectLiteral("@@30441", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_A400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("TEAL_A700"), new PhiObjectLiteral("@@30450", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$TEAL_A700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_50"), new PhiObjectLiteral("@@30459", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_100"), new PhiObjectLiteral("@@30468", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_200"), new PhiObjectLiteral("@@30477", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_300"), new PhiObjectLiteral("@@30486", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_400"), new PhiObjectLiteral("@@30495", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_500"), new PhiObjectLiteral("@@30504", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_600"), new PhiObjectLiteral("@@30513", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_700"), new PhiObjectLiteral("@@30522", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_800"), new PhiObjectLiteral("@@30531", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_900"), new PhiObjectLiteral("@@30540", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_A100"), new PhiObjectLiteral("@@30549", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_A100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_A200"), new PhiObjectLiteral("@@30558", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_A200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_A400"), new PhiObjectLiteral("@@30567", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_A400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN_A700"), new PhiObjectLiteral("@@30576", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_A700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_50"), new PhiObjectLiteral("@@30585", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_100"), new PhiObjectLiteral("@@30594", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_200"), new PhiObjectLiteral("@@30603", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_300"), new PhiObjectLiteral("@@30612", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_400"), new PhiObjectLiteral("@@30621", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_500"), new PhiObjectLiteral("@@30630", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_600"), new PhiObjectLiteral("@@30639", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_700"), new PhiObjectLiteral("@@30648", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_800"), new PhiObjectLiteral("@@30657", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_900"), new PhiObjectLiteral("@@30666", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_A100"), new PhiObjectLiteral("@@30675", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_A100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_A200"), new PhiObjectLiteral("@@30684", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_A200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_A400"), new PhiObjectLiteral("@@30693", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_A400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIGHT_GREEN_A700"), new PhiObjectLiteral("@@30702", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIGHT_GREEN_A700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_50"), new PhiObjectLiteral("@@30711", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_100"), new PhiObjectLiteral("@@30720", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_200"), new PhiObjectLiteral("@@30729", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_300"), new PhiObjectLiteral("@@30738", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_400"), new PhiObjectLiteral("@@30747", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_500"), new PhiObjectLiteral("@@30756", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_600"), new PhiObjectLiteral("@@30765", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_700"), new PhiObjectLiteral("@@30774", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_800"), new PhiObjectLiteral("@@30783", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_900"), new PhiObjectLiteral("@@30792", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_A100"), new PhiObjectLiteral("@@30801", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_A100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_A200"), new PhiObjectLiteral("@@30810", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_A200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_A400"), new PhiObjectLiteral("@@30819", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_A400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("LIME_A700"), new PhiObjectLiteral("@@30828", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$LIME_A700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_50"), new PhiObjectLiteral("@@30837", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_100"), new PhiObjectLiteral("@@30846", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_200"), new PhiObjectLiteral("@@30855", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_300"), new PhiObjectLiteral("@@30864", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_400"), new PhiObjectLiteral("@@30873", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_500"), new PhiObjectLiteral("@@30882", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_600"), new PhiObjectLiteral("@@30891", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_700"), new PhiObjectLiteral("@@30900", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_800"), new PhiObjectLiteral("@@30909", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_900"), new PhiObjectLiteral("@@30918", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_A100"), new PhiObjectLiteral("@@30927", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_A100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_A200"), new PhiObjectLiteral("@@30936", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_A200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_A400"), new PhiObjectLiteral("@@30945", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_A400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("YELLOW_A700"), new PhiObjectLiteral("@@30954", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$YELLOW_A700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_50"), new PhiObjectLiteral("@@30963", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_100"), new PhiObjectLiteral("@@30972", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_200"), new PhiObjectLiteral("@@30981", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_300"), new PhiObjectLiteral("@@30990", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_400"), new PhiObjectLiteral("@@30999", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_500"), new PhiObjectLiteral("@@31008", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_600"), new PhiObjectLiteral("@@31017", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_700"), new PhiObjectLiteral("@@31026", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_800"), new PhiObjectLiteral("@@31035", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_900"), new PhiObjectLiteral("@@31044", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_A100"), new PhiObjectLiteral("@@31053", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_A100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_A200"), new PhiObjectLiteral("@@31062", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_A200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_A400"), new PhiObjectLiteral("@@31071", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_A400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("AMBER_A700"), new PhiObjectLiteral("@@31080", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$AMBER_A700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_50"), new PhiObjectLiteral("@@31089", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_100"), new PhiObjectLiteral("@@31098", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_200"), new PhiObjectLiteral("@@31107", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_300"), new PhiObjectLiteral("@@31116", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_400"), new PhiObjectLiteral("@@31125", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_500"), new PhiObjectLiteral("@@31134", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_600"), new PhiObjectLiteral("@@31143", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_700"), new PhiObjectLiteral("@@31152", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_800"), new PhiObjectLiteral("@@31161", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_900"), new PhiObjectLiteral("@@31170", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_A100"), new PhiObjectLiteral("@@31179", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_A100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_A200"), new PhiObjectLiteral("@@31188", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_A200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_A400"), new PhiObjectLiteral("@@31197", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_A400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ORANGE_A700"), new PhiObjectLiteral("@@31206", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$ORANGE_A700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_50"), new PhiObjectLiteral("@@31215", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_100"), new PhiObjectLiteral("@@31224", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_200"), new PhiObjectLiteral("@@31233", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_300"), new PhiObjectLiteral("@@31242", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_400"), new PhiObjectLiteral("@@31251", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_500"), new PhiObjectLiteral("@@31260", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_600"), new PhiObjectLiteral("@@31269", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_700"), new PhiObjectLiteral("@@31278", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_800"), new PhiObjectLiteral("@@31287", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_900"), new PhiObjectLiteral("@@31296", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_A100"), new PhiObjectLiteral("@@31305", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_A100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_A200"), new PhiObjectLiteral("@@31314", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_A200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_A400"), new PhiObjectLiteral("@@31323", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_A400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("DEEP_ORANGE_A700"), new PhiObjectLiteral("@@31332", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$DEEP_ORANGE_A700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_50"), new PhiObjectLiteral("@@31341", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_100"), new PhiObjectLiteral("@@31350", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_200"), new PhiObjectLiteral("@@31359", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_300"), new PhiObjectLiteral("@@31368", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_400"), new PhiObjectLiteral("@@31377", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_500"), new PhiObjectLiteral("@@31386", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_600"), new PhiObjectLiteral("@@31395", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_700"), new PhiObjectLiteral("@@31404", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_800"), new PhiObjectLiteral("@@31413", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BROWN_900"), new PhiObjectLiteral("@@31422", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BROWN_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_50"), new PhiObjectLiteral("@@31431", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_100"), new PhiObjectLiteral("@@31440", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_200"), new PhiObjectLiteral("@@31449", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_300"), new PhiObjectLiteral("@@31458", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_400"), new PhiObjectLiteral("@@31467", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_500"), new PhiObjectLiteral("@@31476", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_600"), new PhiObjectLiteral("@@31485", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_700"), new PhiObjectLiteral("@@31494", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_800"), new PhiObjectLiteral("@@31503", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GRAY_900"), new PhiObjectLiteral("@@31512", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GRAY_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_50"), new PhiObjectLiteral("@@31521", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_50_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_100"), new PhiObjectLiteral("@@31530", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_100_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_200"), new PhiObjectLiteral("@@31539", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_200_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_300"), new PhiObjectLiteral("@@31548", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_300_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_400"), new PhiObjectLiteral("@@31557", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_400_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_500"), new PhiObjectLiteral("@@31566", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_500_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_600"), new PhiObjectLiteral("@@31575", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_600_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_700"), new PhiObjectLiteral("@@31584", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_700_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_800"), new PhiObjectLiteral("@@31593", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_800_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE_GRAY_900"), new PhiObjectLiteral("@@31602", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_GRAY_900_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("RED"), new PhiObjectLiteral("@@31611", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$RED_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("GREEN"), new PhiObjectLiteral("@@31620", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$GREEN_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("BLUE"), new PhiObjectLiteral("@@31629", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$BLUE_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("Color"), new PhiStringLiteral("ROSYBROWN"), new PhiObjectLiteral("@@31638", array(
+array(new PhiNameRef("get"), new PhiNameRef("Color\$ROSYBROWN_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@31644", "=", new PhiDot(new PhiNameRef("package\$aps"), "Color"), new PhiNameRef("Color")));
   phiExpressionStatement(new PhiBinaryOperation("@@31649", "=", new PhiDot(new PhiNameRef("package\$aps"), "Titled"), new PhiNameRef("Titled")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("emojis"), "prototype"), new PhiStringLiteral("tw"), new PhiObjectLiteral("@@31658", array(array(new PhiNameRef("get"), new PhiNameRef("emojis\$tw_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("emojis"), "prototype"), new PhiStringLiteral("one"), new PhiObjectLiteral("@@31668", array(array(new PhiNameRef("get"), new PhiNameRef("emojis\$one_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$aps"), new PhiStringLiteral("emojis"), new PhiObjectLiteral("@@31677", array(array(new PhiNameRef("get"), new PhiNameRef("emojis_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("emojis"), "prototype"), new PhiStringLiteral("tw"), new PhiObjectLiteral("@@31658", array(
+array(new PhiNameRef("get"), new PhiNameRef("emojis\$tw_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("emojis"), "prototype"), new PhiStringLiteral("one"), new PhiObjectLiteral("@@31668", array(
+array(new PhiNameRef("get"), new PhiNameRef("emojis\$one_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$aps"), new PhiStringLiteral("emojis"), new PhiObjectLiteral("@@31677", array(
+array(new PhiNameRef("get"), new PhiNameRef("emojis_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@31683", "=", new PhiDot(new PhiNameRef("package\$aps"), "UserParamsHistoryItemRTO"), new PhiNameRef("UserParamsHistoryItemRTO")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("ABSTRACT"), new PhiObjectLiteral("@@31691", array(array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$ABSTRACT_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("COURSE"), new PhiObjectLiteral("@@31700", array(array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$COURSE_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("GRADUATION"), new PhiObjectLiteral("@@31709", array(array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$GRADUATION_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("LAB"), new PhiObjectLiteral("@@31718", array(array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$LAB_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("TEST"), new PhiObjectLiteral("@@31727", array(array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$TEST_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("RGR"), new PhiObjectLiteral("@@31736", array(array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$RGR_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("DRAWING"), new PhiObjectLiteral("@@31745", array(array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$DRAWING_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("DISSERTATION"), new PhiObjectLiteral("@@31754", array(array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$DISSERTATION_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("ESSAY"), new PhiObjectLiteral("@@31763", array(array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$ESSAY_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("PRACTICE"), new PhiObjectLiteral("@@31772", array(array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$PRACTICE_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("OTHER"), new PhiObjectLiteral("@@31781", array(array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$OTHER_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("ABSTRACT"), new PhiObjectLiteral("@@31691", array(
+array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$ABSTRACT_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("COURSE"), new PhiObjectLiteral("@@31700", array(
+array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$COURSE_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("GRADUATION"), new PhiObjectLiteral("@@31709", array(
+array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$GRADUATION_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("LAB"), new PhiObjectLiteral("@@31718", array(
+array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$LAB_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("TEST"), new PhiObjectLiteral("@@31727", array(
+array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$TEST_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("RGR"), new PhiObjectLiteral("@@31736", array(
+array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$RGR_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("DRAWING"), new PhiObjectLiteral("@@31745", array(
+array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$DRAWING_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("DISSERTATION"), new PhiObjectLiteral("@@31754", array(
+array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$DISSERTATION_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("ESSAY"), new PhiObjectLiteral("@@31763", array(
+array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$ESSAY_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("PRACTICE"), new PhiObjectLiteral("@@31772", array(
+array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$PRACTICE_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UADocumentType"), new PhiStringLiteral("OTHER"), new PhiObjectLiteral("@@31781", array(
+array(new PhiNameRef("get"), new PhiNameRef("UADocumentType\$OTHER_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@31787", "=", new PhiDot(new PhiNameRef("package\$aps"), "UADocumentType"), new PhiNameRef("UADocumentType")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("CREATED"), new PhiObjectLiteral("@@31795", array(array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$CREATED_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("CUSTOMER_DRAFT"), new PhiObjectLiteral("@@31804", array(array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$CUSTOMER_DRAFT_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("LOOKING_WRITERS"), new PhiObjectLiteral("@@31813", array(array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$LOOKING_WRITERS_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("WAITING_PAYMENT"), new PhiObjectLiteral("@@31822", array(array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$WAITING_PAYMENT_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("WRITER_ASSIGNED"), new PhiObjectLiteral("@@31831", array(array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$WRITER_ASSIGNED_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("WAITING_EMAIL_CONFIRMATION"), new PhiObjectLiteral("@@31840", array(array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$WAITING_EMAIL_CONFIRMATION_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("WAITING_ADMIN_APPROVAL"), new PhiObjectLiteral("@@31849", array(array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$WAITING_ADMIN_APPROVAL_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("RETURNED_TO_CUSTOMER_FOR_FIXING"), new PhiObjectLiteral("@@31858", array(array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$RETURNED_TO_CUSTOMER_FOR_FIXING_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("IN_STORE"), new PhiObjectLiteral("@@31867", array(array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$IN_STORE_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("CREATED"), new PhiObjectLiteral("@@31795", array(
+array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$CREATED_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("CUSTOMER_DRAFT"), new PhiObjectLiteral("@@31804", array(
+array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$CUSTOMER_DRAFT_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("LOOKING_WRITERS"), new PhiObjectLiteral("@@31813", array(
+array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$LOOKING_WRITERS_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("WAITING_PAYMENT"), new PhiObjectLiteral("@@31822", array(
+array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$WAITING_PAYMENT_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("WRITER_ASSIGNED"), new PhiObjectLiteral("@@31831", array(
+array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$WRITER_ASSIGNED_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("WAITING_EMAIL_CONFIRMATION"), new PhiObjectLiteral("@@31840", array(
+array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$WAITING_EMAIL_CONFIRMATION_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("WAITING_ADMIN_APPROVAL"), new PhiObjectLiteral("@@31849", array(
+array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$WAITING_ADMIN_APPROVAL_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("RETURNED_TO_CUSTOMER_FOR_FIXING"), new PhiObjectLiteral("@@31858", array(
+array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$RETURNED_TO_CUSTOMER_FOR_FIXING_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UAOrderState"), new PhiStringLiteral("IN_STORE"), new PhiObjectLiteral("@@31867", array(
+array(new PhiNameRef("get"), new PhiNameRef("UAOrderState\$IN_STORE_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@31873", "=", new PhiDot(new PhiNameRef("package\$aps"), "UAOrderState"), new PhiNameRef("UAOrderState")));
   phiExpressionStatement(new PhiBinaryOperation("@@31878", "=", new PhiDot(new PhiNameRef("package\$aps"), "UAOrderRTO"), new PhiNameRef("UAOrderRTO")));
   phiExpressionStatement(new PhiBinaryOperation("@@31883", "=", new PhiDot(new PhiNameRef("package\$aps"), "ValueAndWhetherMineRTO"), new PhiNameRef("ValueAndWhetherMineRTO")));
@@ -6492,7 +8152,9 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@31918", "=", new PhiDot(new PhiNameRef("package\$aps"), "HistoryItemRTOFields"), new PhiNameRef("HistoryItemRTOFields")));
   phiExpressionStatement(new PhiBinaryOperation("@@31923", "=", new PhiDot(new PhiNameRef("package\$aps"), "UADocumentCategoryRTO"), new PhiNameRef("UADocumentCategoryRTO")));
   phiExpressionStatement(new PhiBinaryOperation("@@31928", "=", new PhiDot(new PhiNameRef("package\$aps"), "BidRTO"), new PhiNameRef("BidRTO")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserRole"), new PhiStringLiteral("SUPPORT"), new PhiObjectLiteral("@@31936", array(array(new PhiNameRef("get"), new PhiNameRef("UserRole\$SUPPORT_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("UserRole"), new PhiStringLiteral("SUPPORT"), new PhiObjectLiteral("@@31936", array(
+array(new PhiNameRef("get"), new PhiNameRef("UserRole\$SUPPORT_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@31942", "=", new PhiDot(new PhiNameRef("package\$aps"), "UserRole"), new PhiNameRef("UserRole")));
   phiExpressionStatement(new PhiBinaryOperation("@@31947", "=", new PhiDot(new PhiNameRef("package\$aps"), "chopOffFileExtension_pdl1vz\$"), new PhiNameRef("chopOffFileExtension")));
   phiExpressionStatement(new PhiBinaryOperation("@@31952", "=", new PhiDot(new PhiNameRef("package\$aps"), "lastIndexOfOrNull_rjktp\$"), new PhiNameRef("lastIndexOfOrNull")));
@@ -6535,9 +8197,11 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@32137", "=", new PhiDot(new PhiNameRef("package\$back"), "ShitToDoInTransaction"), new PhiNameRef("ShitToDoInTransaction")));
   phiExpressionStatement(new PhiBinaryOperation("@@32142", "=", new PhiDot(new PhiNameRef("package\$back"), "XShittyObjectMapper"), new PhiNameRef("XShittyObjectMapper")));
   phiExpressionStatement(new PhiBinaryOperation("@@32147", "=", new PhiDot(new PhiNameRef("package\$back"), "XHackyObjectMapper"), new PhiNameRef("XHackyObjectMapper")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("requestGlobusThreadLocal"), new PhiObjectLiteral("@@32156", array(array(new PhiNameRef("get"), new PhiFunctionExpression(null, array(), function () {
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("requestGlobusThreadLocal"), new PhiObjectLiteral("@@32156", array(
+array(new PhiNameRef("get"), new PhiFunctionExpression(null, array(), function () {
     return phiEvaluate(new PhiNameRef("requestGlobusThreadLocal"));
-  })))))));
+  })))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@32162", "=", new PhiDot(new PhiNameRef("package\$back"), "RequestGlobusType"), new PhiNameRef("RequestGlobusType")));
   phiExpressionStatement(new PhiBinaryOperation("@@32167", "=", new PhiDot(new PhiNameRef("package\$back"), "XStackTraceElement"), new PhiNameRef("XStackTraceElement")));
   phiExpressionStatement(new PhiBinaryOperation("@@32172", "=", new PhiDot(new PhiNameRef("package\$back"), "Back"), new PhiNameRef("Back")));
@@ -6548,42 +8212,66 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@32197", "=", new PhiDot(new PhiNameRef("package\$back"), "FormFieldBack"), new PhiNameRef("FormFieldBack")));
   phiExpressionStatement(new PhiBinaryOperation("@@32202", "=", new PhiDot(new PhiNameRef("package\$back"), "BitchyProcedureContext"), new PhiNameRef("BitchyProcedureContext")));
   phiExpressionStatement(new PhiBinaryOperation("@@32207", "=", new PhiDot(new PhiNameRef("FuckingHttpServletResponse"), "Writer"), new PhiNameRef("FuckingHttpServletResponse\$Writer")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("FuckingHttpServletResponse\$Status"), new PhiStringLiteral("OK"), new PhiObjectLiteral("@@32215", array(array(new PhiNameRef("get"), new PhiNameRef("FuckingHttpServletResponse\$Status\$OK_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("FuckingHttpServletResponse\$Status"), new PhiStringLiteral("OK"), new PhiObjectLiteral("@@32215", array(
+array(new PhiNameRef("get"), new PhiNameRef("FuckingHttpServletResponse\$Status\$OK_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@32221", "=", new PhiDot(new PhiNameRef("FuckingHttpServletResponse"), "Status"), new PhiNameRef("FuckingHttpServletResponse\$Status")));
   phiExpressionStatement(new PhiBinaryOperation("@@32226", "=", new PhiDot(new PhiNameRef("package\$back"), "FuckingHttpServletResponse"), new PhiNameRef("FuckingHttpServletResponse")));
   phiExpressionStatement(new PhiBinaryOperation("@@32231", "=", new PhiDot(new PhiNameRef("FuckingHttpServletRequest"), "Reader"), new PhiNameRef("FuckingHttpServletRequest\$Reader")));
   phiExpressionStatement(new PhiBinaryOperation("@@32236", "=", new PhiDot(new PhiNameRef("package\$back"), "FuckingHttpServletRequest"), new PhiNameRef("FuckingHttpServletRequest")));
   phiExpressionStatement(new PhiBinaryOperation("@@32241", "=", new PhiDot(new PhiNameRef("package\$back"), "FuckSomeoneParams"), new PhiNameRef("FuckSomeoneParams")));
   phiExpressionStatement(new PhiBinaryOperation("@@32246", "=", new PhiDot(new PhiNameRef("package\$back"), "fuckSomeone_h40o6\$"), new PhiNameRef("fuckSomeone")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("TestServerFiddling"), new PhiObjectLiteral("@@32254", array(array(new PhiNameRef("get"), new PhiNameRef("TestServerFiddling_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("TestServerFiddling"), new PhiObjectLiteral("@@32254", array(
+array(new PhiNameRef("get"), new PhiNameRef("TestServerFiddling_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@32260", "=", new PhiDot(new PhiNameRef("package\$back"), "SetGetResetShit"), new PhiNameRef("SetGetResetShit")));
   phiExpressionStatement(new PhiBinaryOperation("@@32265", "=", new PhiDot(new PhiNameRef("package\$back"), "CommonRequestFieldsHolder"), new PhiNameRef("CommonRequestFieldsHolder")));
   phiExpressionStatement(new PhiBinaryOperation("@@32270", "=", new PhiDot(new PhiNameRef("package\$back"), "ProcedureContext"), new PhiNameRef("ProcedureContext")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("NeedsUser"), new PhiStringLiteral("YES"), new PhiObjectLiteral("@@32278", array(array(new PhiNameRef("get"), new PhiNameRef("NeedsUser\$YES_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("NeedsUser"), new PhiStringLiteral("NO"), new PhiObjectLiteral("@@32287", array(array(new PhiNameRef("get"), new PhiNameRef("NeedsUser\$NO_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("NeedsUser"), new PhiStringLiteral("MAYBE"), new PhiObjectLiteral("@@32296", array(array(new PhiNameRef("get"), new PhiNameRef("NeedsUser\$MAYBE_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("NeedsUser"), new PhiStringLiteral("YES"), new PhiObjectLiteral("@@32278", array(
+array(new PhiNameRef("get"), new PhiNameRef("NeedsUser\$YES_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("NeedsUser"), new PhiStringLiteral("NO"), new PhiObjectLiteral("@@32287", array(
+array(new PhiNameRef("get"), new PhiNameRef("NeedsUser\$NO_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("NeedsUser"), new PhiStringLiteral("MAYBE"), new PhiObjectLiteral("@@32296", array(
+array(new PhiNameRef("get"), new PhiNameRef("NeedsUser\$MAYBE_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@32302", "=", new PhiDot(new PhiNameRef("package\$back"), "NeedsUser"), new PhiNameRef("NeedsUser")));
   phiExpressionStatement(new PhiBinaryOperation("@@32307", "=", new PhiDot(new PhiNameRef("package\$back"), "userByToken2_61zpoe\$"), new PhiNameRef("userByToken2")));
   phiExpressionStatement(new PhiBinaryOperation("@@32312", "=", new PhiDot(new PhiNameRef("package\$back"), "systemDangerousToken"), new PhiNameRef("systemDangerousToken")));
   phiExpressionStatement(new PhiBinaryOperation("@@32317", "=", new PhiDot(new PhiNameRef("package\$back"), "bitchExpectedly_61zpoe\$"), new PhiNameRef("bitchExpectedly")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("BackGlobus"), new PhiObjectLiteral("@@32325", array(array(new PhiNameRef("get"), new PhiNameRef("BackGlobus_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("BackGlobus"), new PhiObjectLiteral("@@32325", array(
+array(new PhiNameRef("get"), new PhiNameRef("BackGlobus_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@32331", "=", new PhiDot(new PhiNameRef("package\$back"), "ExpectedRPCShit"), new PhiNameRef("ExpectedRPCShit")));
   phiExpressionStatement(new PhiBinaryOperation("@@32336", "=", new PhiDot(new PhiNameRef("package\$back"), "RRLog"), new PhiNameRef("RRLog")));
   phiExpressionStatement(new PhiBinaryOperation("@@32341", "=", new PhiDot(new PhiNameRef("package\$back"), "RRLogEntry"), new PhiNameRef("RRLogEntry")));
   phiExpressionStatement(new PhiBinaryOperation("@@32346", "=", new PhiDot(new PhiNameRef("package\$back"), "MeganItem"), new PhiNameRef("MeganItem")));
   phiExpressionStatement(new PhiBinaryOperation("@@32351", "=", new PhiDot(new PhiNameRef("package\$back"), "ToRtoable"), new PhiNameRef("ToRtoable")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("requestUserMaybe"), new PhiObjectLiteral("@@32359", array(array(new PhiNameRef("get"), new PhiNameRef("get_requestUserMaybe")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("requestUserEntity"), new PhiObjectLiteral("@@32368", array(array(new PhiNameRef("get"), new PhiNameRef("get_requestUserEntity")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("requestUser"), new PhiObjectLiteral("@@32377", array(array(new PhiNameRef("get"), new PhiNameRef("get_requestUser")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("requestUserMaybe"), new PhiObjectLiteral("@@32359", array(
+array(new PhiNameRef("get"), new PhiNameRef("get_requestUserMaybe")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("requestUserEntity"), new PhiObjectLiteral("@@32368", array(
+array(new PhiNameRef("get"), new PhiNameRef("get_requestUserEntity")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("requestUser"), new PhiObjectLiteral("@@32377", array(
+array(new PhiNameRef("get"), new PhiNameRef("get_requestUser")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@32383", "=", new PhiDot(new PhiNameRef("package\$back"), "BitchyProcedure"), new PhiNameRef("BitchyProcedure")));
   phiExpressionStatement(new PhiBinaryOperation("@@32388", "=", new PhiDot(new PhiNameRef("package\$back"), "FuckDangerouslyParams"), new PhiNameRef("FuckDangerouslyParams")));
   phiExpressionStatement(new PhiBinaryOperation("@@32393", "=", new PhiDot(new PhiNameRef("package\$back"), "fuckDangerously_aks0zv\$"), new PhiNameRef("fuckDangerously")));
   phiExpressionStatement(new PhiBinaryOperation("@@32398", "=", new PhiDot(new PhiNameRef("package\$back"), "enhanceDB"), new PhiNameRef("enhanceDB")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("DB\$DatabaseEngine"), new PhiStringLiteral("POSTGRESQL"), new PhiObjectLiteral("@@32406", array(array(new PhiNameRef("get"), new PhiNameRef("DB\$DatabaseEngine\$POSTGRESQL_getInstance")))))));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("DB\$DatabaseEngine"), new PhiStringLiteral("MARIADB"), new PhiObjectLiteral("@@32415", array(array(new PhiNameRef("get"), new PhiNameRef("DB\$DatabaseEngine\$MARIADB_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("DB\$DatabaseEngine"), new PhiStringLiteral("POSTGRESQL"), new PhiObjectLiteral("@@32406", array(
+array(new PhiNameRef("get"), new PhiNameRef("DB\$DatabaseEngine\$POSTGRESQL_getInstance")))
+))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("DB\$DatabaseEngine"), new PhiStringLiteral("MARIADB"), new PhiObjectLiteral("@@32415", array(
+array(new PhiNameRef("get"), new PhiNameRef("DB\$DatabaseEngine\$MARIADB_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@32422", "=", new PhiDot(new PhiDot(new PhiNameRef("DB"), "prototype"), "DatabaseEngine"), new PhiNameRef("DB\$DatabaseEngine")));
   phiExpressionStatement(new PhiBinaryOperation("@@32428", "=", new PhiDot(new PhiDot(new PhiNameRef("DB"), "prototype"), "Database"), new PhiNameRef("DB\$Database")));
-  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("DB"), new PhiObjectLiteral("@@32436", array(array(new PhiNameRef("get"), new PhiNameRef("DB_getInstance")))))));
+  phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$back"), new PhiStringLiteral("DB"), new PhiObjectLiteral("@@32436", array(
+array(new PhiNameRef("get"), new PhiNameRef("DB_getInstance")))
+))));
   phiExpressionStatement(new PhiBinaryOperation("@@32442", "=", new PhiDot(new PhiNameRef("package\$back"), "serveShit_w240ts\$"), new PhiNameRef("serveShit")));
   phiExpressionStatement(new PhiBinaryOperation("@@32447", "=", new PhiDot(new PhiNameRef("package\$back"), "ServeRecreateTestDatabaseSchema"), new PhiNameRef("ServeRecreateTestDatabaseSchema")));
   phiExpressionStatement(new PhiBinaryOperation("@@32452", "=", new PhiDot(new PhiNameRef("package\$back"), "Servant"), new PhiNameRef("Servant")));
@@ -6601,4 +8289,5 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "defineModule"), array(new PhiStringLiteral("aps-back"), new PhiNameRef("_"))));
   phiExpressionStatement(new PhiInvocation(new PhiNameRef("main"), array(new PhiArrayLiteral(array()))));
   return phiEvaluate(new PhiNameRef("_"));
-}), array(new PhiConditional(new PhiBinaryOperation("@@32541", "===", new PhiUnaryOperation("@@32538", "prefix", "typeof", new PhiBrackets(new PhiThis(), new PhiStringLiteral("aps-back"))), new PhiStringLiteral("undefined")), new PhiObjectLiteral("@@32543", array()), new PhiBrackets(new PhiThis(), new PhiStringLiteral("aps-back"))), new PhiNameRef("kotlin")))));
+}), array(new PhiConditional(new PhiBinaryOperation("@@32541", "===", new PhiUnaryOperation("@@32538", "prefix", "typeof", new PhiBrackets(new PhiThis(), new PhiStringLiteral("aps-back"))), new PhiStringLiteral("undefined")), new PhiObjectLiteral("@@32543", array()
+), new PhiBrackets(new PhiThis(), new PhiStringLiteral("aps-back"))), new PhiNameRef("kotlin")))));
