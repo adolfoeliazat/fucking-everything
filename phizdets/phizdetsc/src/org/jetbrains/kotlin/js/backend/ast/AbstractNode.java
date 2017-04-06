@@ -25,6 +25,7 @@ import phizdets.compiler.PhizdetscKt;
 public abstract class AbstractNode extends HasMetadata implements JsNode {
     private static long nextDebugTag = 0L;
     public String debugTag = "" + nextDebugTag++;
+    public boolean needsFuckingNewline = true;
 
     {
         if (debugTag.equals("191")) {
@@ -44,6 +45,7 @@ public abstract class AbstractNode extends HasMetadata implements JsNode {
         if (other instanceof AbstractNode) {
             AbstractNode otherNode = (AbstractNode) other;
             debugTag = otherNode.debugTag;
+            needsFuckingNewline = otherNode.needsFuckingNewline;
             PhizdetscKt.setDeclarationDescriptor(this, PhizdetscKt.getDeclarationDescriptor(otherNode));
         }
         //noinspection unchecked

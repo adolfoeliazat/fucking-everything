@@ -60,6 +60,7 @@ object JerkAPSBackPHP {
                 File("E:/fegh/aps/back-php/src/aps-back-php.kt"),
                 File("E:/fegh/aps/back-php/src/shared-php-impl.kt"),
                 File("E:/fegh/aps/back-php/src/shared-back-php-impl.kt"),
+                File("E:/fegh/aps/back-php/phizdetslib--junction/src/phizdetslib.kt"),
                 File("E:/fegh/aps/back-php/shared--junction/src/xplatf-shared-1.kt"),
                 File("E:/fegh/aps/back-php/shared-back--junction/src/xentities.kt"),
                 File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-1.kt"),
@@ -125,7 +126,7 @@ class Boobs(val testParams: TestParams) {
                 copyFile(outRoot + "/phizdets-stdlib.php", deploymentDir + "/phizdets-stdlib.php")
 
                 val shit = File(deploymentDir + "/${testParams.testName}.php").readText()
-                File("E:/fegh/phizdets/phizdetsc/src/phizdets/php/fuck-around.php").writeText("<?php " + shit.substring(shit.indexOf(";")))
+                File("E:/fegh/phizdets/phizdetsc/src/phizdets/php/fuck-around--${testParams.testName}.php").writeText("<?php " + shit.substring(shit.indexOf(";")))
 
                 // @here
 //                copyFile("${p.outFilePath}--tagged", deploymentDir + "/${p.testName}.php--tagged")

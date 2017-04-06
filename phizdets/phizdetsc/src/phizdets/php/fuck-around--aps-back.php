@@ -65,8 +65,7 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
         phiExpressionStatement(new PhiInvocation(new PhiNameRef("bitch"), array(new PhiBinaryOperation("@@205", "+", new PhiStringLiteral("Weird pathInfo: "), new PhiNameRef("pathInfo")))));
     }
      catch (Exception $__phiException) {
-      Phi::getCurrentEnv()->setVar('fuckup', $__phiException->phiValue);
-      if (phiEvaluateToBoolean(new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "isType"), array(new PhiNameRef("fuckup"), new PhiNameRef("Throwable"))))) {
+      Phi::getCurrentEnv()->setVar('fuckup', $__phiException->phiValue);if (phiEvaluateToBoolean(new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "isType"), array(new PhiNameRef("fuckup"), new PhiNameRef("Throwable"))))) {
         phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiNameRef("backPlatform"), "log"), "error_ldd2zj\$"), array(new PhiBinaryOperation("@@228", "+", new PhiBinaryOperation("@@221", "+", new PhiBinaryOperation("@@218", "+", new PhiStringLiteral("Can't fucking service ["), new PhiNameRef("pathInfo")), new PhiStringLiteral("]: ")), new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "toString"), array(new PhiDot(new PhiNameRef("fuckup"), "message")))), new PhiNameRef("fuckup"))));
         if (phiEvaluateToBoolean(new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "isType"), array(new PhiNameRef("fuckup"), new PhiNameRef("WithCulprit"))))) {
           phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiNameRef("backPlatform"), "log"), "section_61zpoe\$"), array(new PhiBinaryOperation("@@264", "+", new PhiStringLiteral("Culprit:\n\n"), new PhiInvocation(new PhiNameRef("joinToString"), array(new PhiDot(new PhiDot(new PhiNameRef("fuckup"), "culprit"), "constructionStack"), new PhiStringLiteral("\n"), new PhiUnaryOperation("@@248", "prefix", "void", new PhiNumberLiteral("@@246", 0)), new PhiUnaryOperation("@@252", "prefix", "void", new PhiNumberLiteral("@@250", 0)), new PhiUnaryOperation("@@256", "prefix", "void", new PhiNumberLiteral("@@254", 0)), new PhiUnaryOperation("@@260", "prefix", "void", new PhiNumberLiteral("@@258", 0)), new PhiNameRef("serveShit\$lambda_0")))))));
@@ -471,8 +470,7 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
       phiExpressionStatement(new PhiInvocation(new PhiNameRef("serviceShit"), array()));
     }
      catch (Exception $__phiException) {
-      Phi::getCurrentEnv()->setVar('e', $__phiException->phiValue);
-      if (phiEvaluateToBoolean(new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "isType"), array(new PhiNameRef("e"), new PhiNameRef("ExpectedRPCShit"))))) {
+      Phi::getCurrentEnv()->setVar('e', $__phiException->phiValue);if (phiEvaluateToBoolean(new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "isType"), array(new PhiNameRef("e"), new PhiNameRef("ExpectedRPCShit"))))) {
         if (phiEvaluateToBoolean(new PhiDot(new PhiNameRef("closure\$p"), "wrapInFormResponse"))) {
           phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiDot(new PhiThis(), "log"), "info_61zpoe\$"), array(new PhiBinaryOperation("@@2057", "+", new PhiStringLiteral("Softened RPC shit: "), new PhiDot(new PhiNameRef("e"), "message")))));
           phiExpressionStatement(new PhiBinaryOperation("@@2069", "=", new PhiDot(new PhiThis(), "responseBean"), new PhiNew(new PhiNameRef("FormResponse\$Shitty"), array(new PhiDot(new PhiNameRef("e"), "message"), new PhiDot(new PhiDot(new PhiThis(), "ctx"), "fieldErrors")))));
@@ -572,8 +570,7 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
       phiExpressionStatement(new PhiBinaryOperation("@@2344", "=", new PhiNameRef("tmp\$"), new PhiInvocation(new PhiNameRef("f"), array())));
     }
      catch (Exception $__phiException) {
-      Phi::getCurrentEnv()->setVar('e', $__phiException->phiValue);
-      if (phiEvaluateToBoolean(new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "isType"), array(new PhiNameRef("e"), new PhiNameRef("Exception"))))) {
+      Phi::getCurrentEnv()->setVar('e', $__phiException->phiValue);if (phiEvaluateToBoolean(new PhiInvocation(new PhiDot(new PhiNameRef("Kotlin"), "isType"), array(new PhiNameRef("e"), new PhiNameRef("Exception"))))) {
         phiThrow(new PhiNew(new PhiNameRef("ExceptionWithCulprit"), array(new PhiNameRef("e"), new PhiNameRef("culprit"))));
       }
        else
@@ -3769,7 +3766,7 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   }));
   phiExpressionStatement(new PhiFunctionExpression("XSharedPlatform", array(), function () {
   }));
-  phiExpressionStatement(new PhiFunctionExpression("eval_0", array("code"), function () {
+  phiExpressionStatement(new PhiFunctionExpression("phiEval", array("code"), function () {
     phiThrow(new PhiNew(new PhiNameRef("UnsupportedOperationException"), array(new PhiStringLiteral("pizda 5b4295a4-9059-47af-96fc-736e5921dc09"))));
   }));
   phiExpressionStatement(new PhiFunctionExpression("PHP_GenericGenerator", array("name", "strategy"), function () {
@@ -4149,7 +4146,7 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
     phiExpressionStatement(new PhiBinaryOperation("@@13470", "=", new PhiNameRef("phplog_instance"), new PhiThis()));
   }));
   phiExpressionStatement(new PhiFunctionExpression("apsback_makeRequires", array(), function () {
-    phiExpressionStatement(new PhiBinaryOperation("@@13479", "=", new PhiDot(new PhiInvocation(new PhiNameRef("apsphp_getInstance"), array()), "myFuckingDir"), new PhiInvocation(new PhiNameRef("eval_0"), array(new PhiStringLiteral("return __DIR__;")))));
+    phiExpressionStatement(new PhiBinaryOperation("@@13479", "=", new PhiDot(new PhiInvocation(new PhiNameRef("apsphp_getInstance"), array()), "myFuckingDir"), new PhiInvocation(new PhiNameRef("phiEval"), array(new PhiStringLiteral("return __DIR__;")))));
     phiExpressionStatement(new PhiInvocation(new PhiNameRef("require_once"), array(new PhiBinaryOperation("@@13486", "+", new PhiDot(new PhiInvocation(new PhiNameRef("apsphp_getInstance"), array()), "myFuckingDir"), new PhiStringLiteral("/aps-back-settings.php")))));
   }));
   phiExpressionStatement(new PhiFunctionExpression("error_log", array("xs"), function () {
@@ -4408,7 +4405,7 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
     return phiEvaluate(new PhiInvocation(new PhiNameRef("imf"), array(new PhiStringLiteral("561c681d-8cfe-44ee-afae-1da09189ef78"))));
   })))))));
   phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiDot(new PhiNameRef("PHP_HttpServletRequest"), "prototype"), new PhiStringLiteral("queryString"), new PhiObjectLiteral("@@14792", array(array(new PhiStringLiteral("get"), new PhiFunctionExpression(null, array(), function () {
-    return phiEvaluate(new PhiInvocation(new PhiExternalNameRef("eval"), array(new PhiStringLiteral("return \$_SERVER['QUERY_STRING'];"))));
+    return phiEvaluate(new PhiInvocation(new PhiNameRef("phiEval"), array(new PhiStringLiteral("return \$_SERVER['QUERY_STRING'];"))));
   })))))));
   phiExpressionStatement(new PhiBinaryOperation("@@14807", "=", new PhiDot(new PhiNameRef("PHP_HttpServletRequest"), "\$metadata\$"), new PhiObjectLiteral("@@14805", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "CLASS")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("PHP_HttpServletRequest")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
   phiExpressionStatement(new PhiBinaryOperation("@@14821", "=", new PhiDot(new PhiNameRef("PHP_HttpServletResponse\$Companion"), "\$metadata\$"), new PhiObjectLiteral("@@14819", array(array(new PhiNameRef("kind"), new PhiDot(new PhiDot(new PhiNameRef("Kotlin"), "Kind"), "OBJECT")), array(new PhiNameRef("simpleName"), new PhiStringLiteral("Companion")), array(new PhiNameRef("interfaces"), new PhiArrayLiteral(array()))))));
@@ -6125,7 +6122,7 @@ phiExpressionStatement(new PhiBinaryOperation("@@32551", "=", new PhiBrackets(ne
   phiExpressionStatement(new PhiBinaryOperation("@@28812", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_CrudRepository"), new PhiNameRef("PHP_CrudRepository")));
   phiExpressionStatement(new PhiBinaryOperation("@@28817", "=", new PhiDot(new PhiNameRef("package\$back"), "PHP_GenericGenerator"), new PhiNameRef("PHP_GenericGenerator")));
   phiVars("@@28829", array(array("package\$phizdetslib", new PhiBinaryOperation("@@28827", "||", new PhiDot(new PhiNameRef("_"), "phizdetslib"), new PhiBinaryOperation("@@28825", "=", new PhiDot(new PhiNameRef("_"), "phizdetslib"), new PhiObjectLiteral("@@28823", array()))))));
-  phiExpressionStatement(new PhiBinaryOperation("@@28833", "=", new PhiDot(new PhiNameRef("package\$phizdetslib"), "eval_ytbaoo\$"), new PhiNameRef("eval_0")));
+  phiExpressionStatement(new PhiBinaryOperation("@@28833", "=", new PhiDot(new PhiNameRef("package\$phizdetslib"), "phiEval_ytbaoo\$"), new PhiNameRef("phiEval")));
   phiExpressionStatement(new PhiBinaryOperation("@@28838", "=", new PhiDot(new PhiNameRef("package\$aps"), "XSharedPlatform"), new PhiNameRef("XSharedPlatform")));
   phiExpressionStatement(new PhiBinaryOperation("@@28843", "=", new PhiDot(new PhiNameRef("package\$aps"), "Dummy"), new PhiNameRef("Dummy")));
   phiExpressionStatement(new PhiInvocation(new PhiDot(new PhiNameRef("Object"), "defineProperty"), array(new PhiNameRef("package\$aps"), new PhiStringLiteral("KOMMON_HOME"), new PhiObjectLiteral("@@28851", array(array(new PhiNameRef("get"), new PhiNameRef("get_KOMMON_HOME")))))));

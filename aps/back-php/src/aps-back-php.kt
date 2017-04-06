@@ -1,6 +1,7 @@
 package aps.back
 
 import aps.*
+import phizdetslib.*
 
 object apsphp {
     var myFuckingDir by notNull<String>()
@@ -16,12 +17,8 @@ fun error_log(vararg xs: Any?) {
     imf("f258787a-ee6d-4b9f-b544-1653fc299bf1")
 }
 
-fun <T> eval(code: String): T {
-    imf("5b4295a4-9059-47af-96fc-736e5921dc09")
-}
-
 @PHPDumpBodyToContainer fun apsback_makeRequires() {
-    apsphp.myFuckingDir = eval<String>("return __DIR__;")
+    apsphp.myFuckingDir = phiEval<String>("return __DIR__;")
     // println("My fucking dir is " + aps.myFuckingDir)
     require_once(apsphp.myFuckingDir + "/aps-back-settings.php")
 }

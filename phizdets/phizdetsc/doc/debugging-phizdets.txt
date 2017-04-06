@@ -4,10 +4,18 @@
     - E:\fegh\phizdets\phizdetsc\src\phizdets\php\phizdets-stdlib.php
     - E:\fegh\out\production\phi-gross-test-1\lib\kotlin.js
 
-    - E:\fegh\out\GrossTestPhizdets\phi-gross-test-1\phi-gross-test-1.php--0
-    - E:\fegh\out\GrossTestPhizdets\phi-gross-test-1\phi-gross-test-1.php--1
-    - E:\fegh\out\GrossTestPhizdets\phi-gross-test-1\phi-gross-test-1.php
-    - E:\fegh\out\production\phi-gross-test-1\phi-gross-test-1.js
+    - phi-gross-test-1
+        - E:\fegh\out\phi-tests\phi-gross-test-1\phi-gross-test-1.php--0
+        - E:\fegh\out\phi-tests\phi-gross-test-1\phi-gross-test-1.php--1
+        - E:\fegh\out\phi-tests\phi-gross-test-1\phi-gross-test-1.php
+        - E:\fegh\out\production\phi-gross-test-1\phi-gross-test-1.js
+
+    - aps-back
+        - E:\fegh\out\phi-tests\aps-back\aps-back.php--0
+        - E:\fegh\out\phi-tests\aps-back\aps-back.php--1
+        - E:\fegh\out\phi-tests\aps-back\aps-back.php
+
+
 
 - Evaluate some shit in current environment
       phiEvaluate(expr)    expr can be a piece of shit copied (and maybe edited) from generated PHP
@@ -34,6 +42,27 @@
 - Add $debugTag to PhiExpression descendant that doesn't support it yet
 
 - Use phiDumpShit...()
+
+- Disable shit one by one and see what happens
+    - Or better, disable half of the shit, then half of the half, etc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

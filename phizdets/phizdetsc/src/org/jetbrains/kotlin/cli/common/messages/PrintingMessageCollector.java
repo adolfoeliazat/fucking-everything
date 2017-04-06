@@ -17,6 +17,7 @@
 package org.jetbrains.kotlin.cli.common.messages;
 
 import org.jetbrains.annotations.NotNull;
+import phizdets.compiler.PhizdetscGlobal;
 
 import java.io.PrintStream;
 
@@ -44,6 +45,8 @@ public class PrintingMessageCollector implements MessageCollector {
             @NotNull CompilerMessageLocation location
     ) {
         if (!verbose && CompilerMessageSeverity.VERBOSE.contains(severity)) return;
+        // @hack
+        if (PhizdetscGlobal.INSTANCE.shouldSkipCompilerMessage(severity, message, location)) return;
 
         hasErrors |= severity.isError();
 

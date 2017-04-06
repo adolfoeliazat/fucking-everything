@@ -229,24 +229,6 @@ class Phpifier(val program: JsProgram) {
                 ctx.replaceMe(new("PhiConditional", listOf(x.testExpression, x.thenExpression, x.elseExpression)))
             }
 
-            var shitCounter = 0
-            override fun endVisit(x: JsExpressionStatement, ctx: JsContext<JsNode>) {
-                super.endVisit(x, ctx)
-                if (x.skipTransformation == true)
-                    return
-
-                ctx.replaceMe(invocation("phiExpressionStatement", listOf(x.expression)).makeStmt())
-
-//            ctx.replaceMe(invocation("\$GLOBALS['shit'] = ${++shitCounter}; phiExpressionStatement", listOf(x.expression)).makeStmt())
-
-//            ctx.replaceMe(JsBlock(
-//                JsNameRef("\$GLOBALS['shit'] = ${++shitCounter}").makeStmt(),
-//                invocation("phiExpressionStatement", listOf(x.expression)).makeStmt()
-//            ))
-
-//            ctx.replaceMe(invocation("phiExpressionStatement", listOf(x.expression)).makeStmt())
-            }
-
             override fun endVisit(x: JsFunction, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
                 val argNames = mutableListOf<JsExpression>()
@@ -264,22 +246,6 @@ class Phpifier(val program: JsProgram) {
                 ctx.replaceMe(new("PhiFunctionExpression", listOf(name, args, body)))
             }
 
-            fun invocation(functionName: String, args: List<JsExpression>): JsInvocation {
-                return JsInvocation(JsNameRef(functionName), args)
-            }
-
-            fun new(ctor: String, args: List<JsExpression>): JsNew {
-                val ctorNameRef = JsNameRef(ctor)
-                ctorNameRef.skipTransformation = true
-                val new = new(ctorNameRef, args)
-                new.skipTransformation = true
-                new.debugTag = nextDebugTag()
-//            if (new.debugTag == "@@334") {
-//                "break on me"
-//            }
-                return new
-            }
-
             override fun endVisit(x: JsIf, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
                 val ifExpression = invocation("phiEvaluateToBoolean", listOf(x.ifExpression))
@@ -289,12 +255,6 @@ class Phpifier(val program: JsProgram) {
             override fun endVisit(x: JsBinaryOperation, ctx: JsContext<JsNode>) {
                 super.visit(x, ctx)
                 ctx.replaceMe(new("PhiBinaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral(x.operator.toString()), x.arg1, x.arg2)))
-            }
-
-            private fun new(ctor: JsNameRef, args: List<JsExpression>): JsNew {
-                return JsNew(ctor, args)-{o->
-                    o.skipTransformation = true
-                }
             }
 
             override fun endVisit(x: JsArrayAccess, ctx: JsContext<JsNode>) {
@@ -354,6 +314,46 @@ class Phpifier(val program: JsProgram) {
                 }
             }
 
+            fun invocation(functionName: String, args: List<JsExpression>): JsInvocation {
+                return JsInvocation(JsNameRef(functionName), args)
+            }
+
+            var shitCounter = 0
+            override fun endVisit(x: JsExpressionStatement, ctx: JsContext<JsNode>) {
+                super.endVisit(x, ctx)
+                if (x.skipTransformation == true)
+                    return
+
+                ctx.replaceMe(invocation("phiExpressionStatement", listOf(x.expression)).makeStmt())
+
+//            ctx.replaceMe(invocation("\$GLOBALS['shit'] = ${++shitCounter}; phiExpressionStatement", listOf(x.expression)).makeStmt())
+
+//            ctx.replaceMe(JsBlock(
+//                JsNameRef("\$GLOBALS['shit'] = ${++shitCounter}").makeStmt(),
+//                invocation("phiExpressionStatement", listOf(x.expression)).makeStmt()
+//            ))
+
+//            ctx.replaceMe(invocation("phiExpressionStatement", listOf(x.expression)).makeStmt())
+            }
+
+            private fun new(ctor: JsNameRef, args: List<JsExpression>): JsNew {
+                return JsNew(ctor, args)-{o->
+                    o.skipTransformation = true
+                }
+            }
+
+            fun new(ctor: String, args: List<JsExpression>): JsNew {
+                val ctorNameRef = JsNameRef(ctor)
+                ctorNameRef.skipTransformation = true
+                val new = new(ctorNameRef, args)
+                new.skipTransformation = true
+                new.debugTag = nextDebugTag()
+//            if (new.debugTag == "@@334") {
+//                "break on me"
+//            }
+                return new
+            }
+
             override fun endVisit(x: JsPrefixOperation, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
                 ctx.replaceMe(new("PhiUnaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral("prefix"), JsStringLiteral(x.operator.toString()), x.arg)))
@@ -369,7 +369,9 @@ class Phpifier(val program: JsProgram) {
 
                 val ident = "Exception \$__phiException"
                 val catchBody = JsBlock()
-                catchBody.statements.add(JsNameRef("Phi::getCurrentEnv()->setVar('${x.parameter.name.ident}', \$__phiException->phiValue)").makeStmt())
+                catchBody.statements.add(JsNameRef("Phi::getCurrentEnv()->setVar('${x.parameter.name.ident}', \$__phiException->phiValue)").makeStmt()-{o->
+                    (o as AbstractNode).needsFuckingNewline = false
+                })
                 catchBody.statements.addAll(x.body.statements)
                 ctx.replaceMe(JsCatch(x.scope, ident, catchBody))
             }

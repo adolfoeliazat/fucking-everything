@@ -11,6 +11,7 @@
       <module fileurl="file://$PROJECT_DIR$/idea-backdoor-client/idea-backdoor-client.iml" filepath="$PROJECT_DIR$/idea-backdoor-client/idea-backdoor-client.iml" />
       <module fileurl="file://$PROJECT_DIR$/phizdets/phi-gross-test-1/phi-gross-test-1.iml" filepath="$PROJECT_DIR$/phizdets/phi-gross-test-1/phi-gross-test-1.iml" group="phizdets" />
       <module fileurl="file://$PROJECT_DIR$/phizdets/phizdetsc/phizdetsc.iml" filepath="$PROJECT_DIR$/phizdets/phizdetsc/phizdetsc.iml" group="phizdets" />
+      <module fileurl="file://$PROJECT_DIR$/phizdets/phizdetslib/phizdetslib.iml" filepath="$PROJECT_DIR$/phizdets/phizdetslib/phizdetslib.iml" group="phizdets" />
       <module fileurl="file://$PROJECT_DIR$/photlin/photlin.iml" filepath="$PROJECT_DIR$/photlin/photlin.iml" />
       <module fileurl="file://$PROJECT_DIR$/photlin-dev-tools/photlin-dev-tools.iml" filepath="$PROJECT_DIR$/photlin-dev-tools/photlin-dev-tools.iml" />
       <module fileurl="file://$PROJECT_DIR$/photlin-stdlib/photlin-stdlib.iml" filepath="$PROJECT_DIR$/photlin-stdlib/photlin-stdlib.iml" />

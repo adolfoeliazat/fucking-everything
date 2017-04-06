@@ -30,6 +30,8 @@ import jdk.nashorn.internal.runtime.Context
 import jdk.nashorn.internal.runtime.ErrorManager
 import jdk.nashorn.internal.runtime.Source
 import jdk.nashorn.internal.runtime.options.Options
+import org.jetbrains.kotlin.cli.common.messages.CompilerMessageLocation
+import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.js.sourceMap.PhizdetsSourceGenerationVisitor
 import org.jetbrains.kotlin.js.util.TextOutputImpl
 import phizdets.Boobs
@@ -41,6 +43,10 @@ var JsNode.declarationDescriptor by AttachedShit<DeclarationDescriptor?>(shitToS
 object PhizdetscGlobal {
     var debugTagPrefix = ""
     var reportTranslationStage: (num: Int, program: JsProgram) -> Unit = {_,_->}
+
+    fun shouldSkipCompilerMessage(severity: CompilerMessageSeverity, message: String, location: CompilerMessageLocation): Boolean {
+        return severity == CompilerMessageSeverity.WARNING
+    }
 }
 
 

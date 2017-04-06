@@ -1,6 +1,7 @@
 package aps.back
 
 import aps.*
+import phizdetslib.*
 
 typealias XSerializable = PHP_Serializable
 typealias XTransient = PHP_Transient
@@ -70,7 +71,7 @@ class PHP_HttpServletRequest {
         get() = imf("561c681d-8cfe-44ee-afae-1da09189ef78")
 
     val queryString: String
-        get() = eval("return \$_SERVER['QUERY_STRING'];")
+        get() = phiEval("return \$_SERVER['QUERY_STRING'];")
 }
 
 class PHP_HttpServletResponse {

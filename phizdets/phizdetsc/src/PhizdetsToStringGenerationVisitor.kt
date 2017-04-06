@@ -793,6 +793,17 @@ open class PhizdetsToStringGenerationVisitor(val out: TextOutput, val taggedGenO
                 * Special treatment of the last statement in a block: only a few
                 * statements at the end of a block require semicolons.
                 */
+
+                // @debug
+//                if (statement is JsExpressionStatement) {
+//                    val expr = statement.expression
+//                    if (expr is JsNameRef) {
+//                        if (expr.ident.contains("setVar")) {
+//                            "break on me"
+//                        }
+//                    }
+//                }
+
                 val lastStatement = !iterator.hasNext() && needBraces && !JsRequiresSemiVisitor.exec(statement)
                 if (functionStmt) {
                     if (lastStatement) {
@@ -806,7 +817,13 @@ open class PhizdetsToStringGenerationVisitor(val out: TextOutput, val taggedGenO
                     } else {
                         semi()
                     }
-                    newlineOpt()
+                    val needsFuckingNewline = when (statement) {
+                        is AbstractNode -> statement.needsFuckingNewline
+                        else -> false
+                    }
+                    if (needsFuckingNewline) {
+                        newlineOpt()
+                    }
                 }
             }
         }
