@@ -533,15 +533,18 @@ object MapPhizdetsStack {
         } catch (e: Exception) {
         }
 
-//        val result = "${stackLine.prefix} ($shortPath:${orig.lineNumber}:${orig.columnPosition})" +
-//            nbsp.repeat(5) + marginNotes.joinToString(nbsp.repeat(3))
-
-        // throw Exception("fuck you")
-        var result = "$shortPath:${orig.lineNumber}:${orig.columnPosition}"
+        var result = "$shortPath:${orig.lineNumber}"
         if (result.startsWith("file://"))
             result = result.substring("file://".length)
-        // result = "\tat phizdets.Boobs.fuck($result)"
-        // result = "\tat phizdets.Boobs.fuck(e:\\phi-testing.kt:100)"
+
+        run { // Force IDEA to underline the freaking path
+            val firstLine = File(result.substring(0, result.lastIndexOf(":"))).readLines()[0]
+            check(firstLine.startsWith("package ")) {"96f7602f-7902-413f-9549-01aa6f46cb70"}
+            val packageName = firstLine.substring("package ".length)
+            val fileName = result.substring(result.lastIndexOf("/") + 1, result.lastIndexOf(":"))
+            result = packageName + "." + fileName.replace("-", "_").capitalize().replace(".kt", "Kt") +
+                ".somewhere ($result) col=${orig.columnPosition}"
+        }
 
         return result
     }

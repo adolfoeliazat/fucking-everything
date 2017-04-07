@@ -64,9 +64,9 @@ class SourceMapBuilderConsumer implements PairConsumer<SourceMapBuilder, Object>
 //                    "break on me".toString();
 //                }
 
-                if (jsNode.toString().contains("QUERY_STRING")) {
-                    "break on me".toString();
-                }
+//                if (jsNode.toString().contains("QUERY_STRING")) {
+//                    "break on me".toString();
+//                }
 
 //                if (jsNode instanceof JsReturn) {
 //                    JsReturn jsReturn = (JsReturn) jsNode;
