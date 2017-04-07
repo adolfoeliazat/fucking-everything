@@ -187,7 +187,7 @@ class Boobs(val testParams: TestParams) {
                             val s = actualPreparedResponse.text
                             var readingStackLines = false
                             val stackLines = mutableListOf<MapPhizdetsStack.StackLine>()
-                            s.lines().forEach {line->
+                            for (line in s.lines()) {
                                 if (readingStackLines) {
                                     val mr = Regex("(#\\d+) (.*)").matchEntire(line)
                                     if (mr != null) {
@@ -198,10 +198,16 @@ class Boobs(val testParams: TestParams) {
                                             val path = mr2.groupValues[1]
                                             val line = mr2.groupValues[2].toInt()
                                             val description = mr2.groupValues[3]
-                                            stackLines += MapPhizdetsStack.StackLine(prefix = "", resource = path, line = line, column = 1)
+                                            stackLines += MapPhizdetsStack.StackLine(
+                                                prefix = "", resource = path, line = line,
+
+                                                // XXX See SourceMapConsumerV3, condition `((SourceMapConsumerV3.Entry)entries.get(0)).getGeneratedColumn() > column`.
+                                                //     We don't want that condition to be true, so that it doesn't look for another mapping
+                                                column = 99999
+                                            )
                                         }
                                     } else {
-                                        return@forEach
+                                        break
                                     }
                                 } else {
                                     if (line == "Stack trace:") {
@@ -212,9 +218,9 @@ class Boobs(val testParams: TestParams) {
 
                             if (stackLines.isNotEmpty()) {
                                 clog("\n------------------- FUCKING STACK -------------------\n")
-                                stackLines.forEach {
+                                for (line in stackLines) {
                                     val fuck = MapPhizdetsStack.mapFuckingLine(
-                                        it,
+                                        line,
                                         getMapPath = {resource ->
                                             when (resource) {
                                                 "C:\\opt\\xampp\\htdocs\\phi-tests\\aps-back\\aps-back.php" -> MapPhizdetsStack.MapPath.Just("E:/fegh/out/phi-tests/aps-back/aps-back.php.map")

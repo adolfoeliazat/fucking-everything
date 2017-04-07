@@ -50,6 +50,8 @@ public abstract class AbstractNode extends HasMetadata implements JsNode {
             insertFuckingNewlineBeforeMe = otherNode.insertFuckingNewlineBeforeMe;
             insertFuckingNewlineAfterMe = otherNode.insertFuckingNewlineAfterMe;
             PhizdetscKt.setDeclarationDescriptor(this, PhizdetscKt.getDeclarationDescriptor(otherNode));
+            if (!(this instanceof JsExpressionStatement))
+                setSource(otherNode.getSource());
         }
         //noinspection unchecked
         return (T) this;

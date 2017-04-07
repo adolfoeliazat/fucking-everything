@@ -27,6 +27,7 @@ import jdk.nashorn.internal.ir.visitor.NodeVisitor
 import jdk.nashorn.internal.parser.Parser
 import jdk.nashorn.internal.parser.TokenType
 import jdk.nashorn.internal.runtime.Context
+import jdk.nashorn.internal.runtime.Debug
 import jdk.nashorn.internal.runtime.ErrorManager
 import jdk.nashorn.internal.runtime.Source
 import jdk.nashorn.internal.runtime.options.Options
@@ -48,6 +49,7 @@ object PhizdetscGlobal {
         return severity == CompilerMessageSeverity.WARNING
     }
 }
+
 
 
 class AttachedShit<T>(val shitToShit: MutableMap<Any, Any?>) : ReadWriteProperty<Any, T> {

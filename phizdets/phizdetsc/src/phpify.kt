@@ -87,6 +87,21 @@ class Phpifier(val program: JsProgram) {
 
     fun stage1() {
         object : JsVisitorWithContextImpl() {
+            override fun endVisit(x: JsNameRef, ctx: JsContext<*>) {
+                super.endVisit(x, ctx)
+                // @debug
+//                if (x.source != null) {
+//                    "break on me"
+//                }
+            }
+
+            override fun endVisit(x: JsThrow, ctx: JsContext<*>) {
+                super.endVisit(x, ctx)
+                // @debug
+//                if (x.source != null) {
+//                    "break on me"
+//                }
+            }
 
             override fun endVisit(x: JsFor, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
@@ -153,6 +168,7 @@ class Phpifier(val program: JsProgram) {
 
     fun stage2() {
         object : JsVisitorWithContextImpl() {
+
             override fun endVisit(x: JsWhile, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
 
@@ -187,12 +203,18 @@ class Phpifier(val program: JsProgram) {
 
             override fun endVisit(x: JsThrow, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
-                ctx.replaceMe(JsInvocation(JsNameRef("phiThrow"), x.expression).makeStmt())
+
+                // @debug
+                if (x.toString().contains("pizda")) {
+                    val tag = x.source.debug_attachTag("dt-pizda")
+//                    "break on me"
+                }
+                ctx.replaceMe(JsInvocation(JsNameRef("phiThrow"), x.expression).source(x.source).makeStmt())
             }
 
             override fun endVisit(x: JsStringLiteral, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
-                ctx.replaceMe(new("PhiStringLiteral", listOf(x)))
+                ctx.replaceMe(new("PhiStringLiteral", listOf(x)).source(x.source))
             }
 
             private fun void0() = new("PhiUnaryOperation", listOf(nextDebugTagLiteral(), JsStringLiteral("prefix"), JsStringLiteral("void"), new("PhiNumberLiteral", listOf(JsStringLiteral("@@something"), program.getNumberLiteral(0)))))
@@ -298,6 +320,12 @@ class Phpifier(val program: JsProgram) {
 
             override fun endVisit(x: JsNameRef, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
+
+                // @debug
+//                if (x.source != null) {
+//                    "break on me"
+//                }
+
                 if (x.skipTransformation == true)
                     return
                 val replacement = when {
@@ -314,6 +342,7 @@ class Phpifier(val program: JsProgram) {
                     }
                 }
                 try {
+                    replacement.debug_attachShit("replacedNode", x)
                     ctx.replaceMe(replacement)
                 } catch(e: Exception) {
                     "break on me"

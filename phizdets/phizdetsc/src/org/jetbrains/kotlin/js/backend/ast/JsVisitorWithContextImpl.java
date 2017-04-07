@@ -186,6 +186,9 @@ public class JsVisitorWithContextImpl extends JsVisitorWithContext {
 
     @Override
     protected <T extends JsNode> void doTraverse(T node, JsContext ctx) {
+//        if (node.getSource() != null) {
+//            "break on me".toString();
+//        }
         node.traverse(this, ctx);
     }
 

@@ -21,6 +21,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.PairConsumer;
 import org.jetbrains.kotlin.js.sourceMap.SourceMapBuilder;
+import org.jetbrains.kotlin.psi.KtConstantExpression;
+import vgrechka.DebugKt;
 
 class SourceMapBuilderConsumer implements PairConsumer<SourceMapBuilder, Object> {
     @Override
@@ -36,6 +38,11 @@ class SourceMapBuilderConsumer implements PairConsumer<SourceMapBuilder, Object>
         assert document != null;
         int line = document.getLineNumber(offset);
         int column = offset - document.getLineStartOffset(line);
+
+//        if ("dt-pizda".equals(DebugKt.getDebug_tag(sourceInfo))) {
+//            "break on me".toString();
+//        }
+
         builder.addMapping(file.getViewProvider().getVirtualFile().getPath(), line, column);
     }
 }

@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.js.backend.PhizdetsToStringGenerationVisitor
 import org.jetbrains.kotlin.js.backend.ast.*
 import org.jetbrains.kotlin.js.util.TextOutput
 import com.intellij.util.SmartList
+import vgrechka.*
 
 class PhizdetsSourceGenerationVisitor(out: TextOutput, taggedGenOut: TextOutput, private val sourceMapBuilder: SourceMapBuilder?) : PhizdetsToStringGenerationVisitor(out, taggedGenOut), TextOutput.OutListener {
 
@@ -58,6 +59,18 @@ class PhizdetsSourceGenerationVisitor(out: TextOutput, taggedGenOut: TextOutput,
     private fun mapSource(node: JsNode?) {
         if (sourceMapBuilder != null) {
             val sourceInfo = node!!.source
+
+            // @debug
+//            val shit = node.debug_attachedShit("replacedNode")
+//            if (shit != null) {
+//                "break on me"
+//            }
+
+            // @debug
+//            if ("dt-pizda" == sourceInfo.debug_tag) {
+//                "break on me".toString()
+//            }
+
             if (sourceInfo != null) {
                 if (p.isJustNewlined) {
                     pendingSources.add(sourceInfo)
