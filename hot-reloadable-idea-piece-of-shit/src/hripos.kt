@@ -56,7 +56,7 @@ class HotReloadableIdeaPieceOfShit {
     }
 }
 
-private interface Servant {
+internal interface Servant {
     fun serve(): Any
 }
 
@@ -64,7 +64,7 @@ class SimpleResponse(val status: String)
 
 class ErrorResponse(val error: String)
 
-private fun withProjectNamed(projectName: String, block: (Project) -> Any): Any {
+internal fun withProjectNamed(projectName: String, block: (Project) -> Any): Any {
     val project = ProjectManager.getInstance().openProjects.find {it.name == projectName}
         ?: bitch("No fucking project `$projectName`")
     return block(project)
@@ -89,7 +89,7 @@ class Command_MessAround(val projectName: String) : Servant {
     }
 }
 
-private class HriposDebugOutput(val project: Project) {
+internal class HriposDebugOutput(val project: Project) {
     val sw = StringWriter()
     val p = PrintWriter(sw)
 
@@ -189,18 +189,6 @@ class Command_IdeaBackdoorTesting_CheckKotlinClassesAreLoadedByPluginClassLoader
     }
 }
 
-@Ser @Suppress("Unused")
-class Command_PhiShowStack(val projectName: String, val stack: List<Any>) : Servant {
-    override fun serve() = withProjectNamed(projectName) {project->
-        val title = this::class.simpleName!!.substring("Command_".length)
-        val p = HriposDebugOutput(project)
-        for (item in stack) {
-            p.println(item.toString())
-        }
-        p.showDialog(title = title)
-        object {val output = p.output}
-    }
-}
 
 
 

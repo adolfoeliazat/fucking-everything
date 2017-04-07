@@ -2564,7 +2564,7 @@ function phiSendStack() {
         'projectName' => 'fegh',
         'stack' => $stack
     ), JSON_PRETTY_PRINT);
-    // return $json;
+    return $json;
 
     $ch = curl_init('http://10.0.2.2:12312?proc=PhiShowStack');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
