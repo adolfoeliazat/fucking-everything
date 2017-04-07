@@ -2558,6 +2558,21 @@ function phiEval($code) {
     return eval($code);
 }
 
+function phiSendStack() {
+    $stack = xdebug_get_function_stack();
+    $json = json_encode(array(
+        'projectName' => 'fegh',
+        'stack' => $stack
+    ), JSON_PRETTY_PRINT);
+    // return $json;
+
+    $ch = curl_init('http://10.0.2.2:12312?proc=PhiShowStack');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    return $response;
+}
 
 // ==================================== ENTRY ======================================
 

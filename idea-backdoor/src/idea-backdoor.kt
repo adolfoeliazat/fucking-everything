@@ -142,6 +142,7 @@ class IdeaBackdoorPlugin : ApplicationComponent {
     }
 }
 
+// Ex: _run vgrechka.ideabackdoor.SendSomeShitToBackdoor MessAround "{projectName: 'fegh'}"
 // Ex: _run vgrechka.ideabackdoor.SendSomeShitToBackdoor DebugConfiguration "{projectName: 'idea-backdoor-fucking', configurationName: 'FuckKt'}"
 // Ex: _run vgrechka.ideabackdoor.SendSomeShitToBackdoor IdeaBackdoorTesting_CheckKotlinClassesAreLoadedByPluginClassLoader:12313 "{projectName: 'idea-backdoor-fucking', configurationName: 'FuckKt'}"
 object SendSomeShitToBackdoor {
@@ -155,9 +156,11 @@ object SendSomeShitToBackdoor {
             proc = proc.substring(0, colon)
         }
 
+        val url = "http://localhost:$port?proc=$proc"
         val json = args[1]
+        clog("url =", url)
         clog("json =", json)
-        val res = HTTPClient.postJSON("http://localhost:$port?proc=$proc", json)
+        val res = HTTPClient.postJSON(url, json)
         clog("Response: $res")
         clog("OK")
     }

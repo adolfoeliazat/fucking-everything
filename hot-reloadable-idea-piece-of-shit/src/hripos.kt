@@ -189,6 +189,18 @@ class Command_IdeaBackdoorTesting_CheckKotlinClassesAreLoadedByPluginClassLoader
     }
 }
 
+@Ser @Suppress("Unused")
+class Command_PhiShowStack(val projectName: String, val stack: List<Any>) : Servant {
+    override fun serve() = withProjectNamed(projectName) {project->
+        val title = this::class.simpleName!!.substring("Command_".length)
+        val p = HriposDebugOutput(project)
+        for (item in stack) {
+            p.println(item.toString())
+        }
+        p.showDialog(title = title)
+        object {val output = p.output}
+    }
+}
 
 
 
