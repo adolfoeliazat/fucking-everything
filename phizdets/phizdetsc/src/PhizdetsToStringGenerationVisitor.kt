@@ -437,16 +437,20 @@ open class PhizdetsToStringGenerationVisitor(val out: TextOutput, val taggedGenO
     }
 
     override fun visitInvocation(invocation: JsInvocation) {
-        if (invocation.insertFuckingNewlineBeforeMe)
-            p.print("\n")
+        if (invocation.insertFuckingNewlineBeforeMe) {
+            newlineOpt()
+            // p.print("\n")
+        }
         printDebugTag(invocation)
         printPair(invocation, invocation.qualifier)
 
         leftParen()
         printExpressions(invocation.arguments)
         rightParen()
-        if (invocation.insertFuckingNewlineAfterMe)
-            p.print("\n")
+        if (invocation.insertFuckingNewlineAfterMe) {
+            newlineOpt()
+            // p.print("\n")
+        }
     }
 
     override fun visitLabel(x: JsLabel) {

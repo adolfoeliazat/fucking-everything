@@ -65,7 +65,7 @@ object JerkAPSBackPHP {
                 File("E:/fegh/aps/back-php/src/aps-back-php.kt"),
                 File("E:/fegh/aps/back-php/src/shared-php-impl.kt"),
                 File("E:/fegh/aps/back-php/src/shared-back-php-impl.kt"),
-                File("E:/fegh/aps/back-php/phizdetslib--junction/src/phizdetslib.kt"),
+                File("E:/fegh/aps/back-php/phizdetslib--junction/src/phizdets-lib.kt"),
                 File("E:/fegh/aps/back-php/shared--junction/src/xplatf-shared-1.kt"),
                 File("E:/fegh/aps/back-php/shared-back--junction/src/xentities.kt"),
                 File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-1.kt"),
@@ -495,6 +495,18 @@ object MapPhizdetsStack {
 
         val sourceMapping = mappingCache[mapPath]
 
+        run { // @debug-source-map
+            if (stackLine.line == 4469) {
+                val shit = sourceMapping.sourceMappingPenetration.generatedLineToDugEntry
+                val shitForLine = shit[stackLine.line]
+                if (shitForLine != null) {
+                    "break on me"
+                }
+                "break on me"
+            }
+        }
+
+
         val orig = sourceMapping.getMappingForLine(stackLine.line, stackLine.column)
             ?: throw Verbatim("No mapping for line")
 
@@ -521,8 +533,16 @@ object MapPhizdetsStack {
         } catch (e: Exception) {
         }
 
-        val result = "${stackLine.prefix} ($shortPath:${orig.lineNumber}:${orig.columnPosition})" +
-            nbsp.repeat(5) + marginNotes.joinToString(nbsp.repeat(3))
+//        val result = "${stackLine.prefix} ($shortPath:${orig.lineNumber}:${orig.columnPosition})" +
+//            nbsp.repeat(5) + marginNotes.joinToString(nbsp.repeat(3))
+
+        // throw Exception("fuck you")
+        var result = "$shortPath:${orig.lineNumber}:${orig.columnPosition}"
+        if (result.startsWith("file://"))
+            result = result.substring("file://".length)
+        // result = "\tat phizdets.Boobs.fuck($result)"
+        // result = "\tat phizdets.Boobs.fuck(e:\\phi-testing.kt:100)"
+
         return result
     }
 
@@ -613,10 +633,97 @@ object MapPhizdetsStack {
         if (normal.matches(Regex("\\w:(\\\\|/).*"))) normal = normal[0].toLowerCase() + normal.substring(1)
         return normal
     }
+
+
+
+    class SourceMapConsumerPenetration {
+        val generatedLineToDugEntry = mutableMapOf<Int, MutableList<DugEntry>>()
+
+        class DugEntry(val file: String,
+                       val generatedLine: Int,
+                       val sourceLine: Int,
+                       val sourceColumn: Int)
+    }
+
+    val SourceMapping.sourceMappingPenetration by lazy2 {sourceMapping->
+        val penetration = SourceMapConsumerPenetration()
+
+        val privateLines = run {
+            val f = sourceMapping.javaClass.getDeclaredField("lines")
+            f.isAccessible = true
+            f.get(sourceMapping) as List<List<Any>?>
+        }
+        val privateSources = run {
+            val f = sourceMapping.javaClass.getDeclaredField("sources")
+            f.isAccessible = true
+            f.get(sourceMapping) as Array<String>
+        }
+
+        for ((generatedLine, privateLine) in privateLines.withIndex()) {
+            if (privateLine != null) {
+                for (privateEntry in privateLine) {
+                    val sourceLine = run {
+                        val m = privateEntry.javaClass.getMethod("getSourceLine")
+                        m.isAccessible = true
+                        m.invoke(privateEntry) as Int
+                    }
+                    val sourceColumn = run {
+                        val m = privateEntry.javaClass.getMethod("getSourceColumn")
+                        m.isAccessible = true
+                        m.invoke(privateEntry) as Int
+                    }
+                    val sourceFileId = run {
+                        val m = privateEntry.javaClass.getMethod("getSourceFileId")
+                        m.isAccessible = true
+                        m.invoke(privateEntry) as Int
+                    }
+
+                    val entry = SourceMapConsumerPenetration.DugEntry(
+                        file = privateSources[sourceFileId],
+                        generatedLine = generatedLine + 1,
+                        sourceLine = sourceLine + 1,
+                        sourceColumn = sourceColumn + 1)
+
+                    val entries = penetration.generatedLineToDugEntry.getOrPut(generatedLine + 1) {mutableListOf()}
+                    entries += entry
+                }
+            }
+        }
+        penetration
+    }
 }
 
+fun <T> lazy2(initializer: (thisRef: Any) -> T) = SynchronizedLazyImpl2(initializer)
 
+class SynchronizedLazyImpl2<out T>(initializer: (thisRef: Any) -> T, lock: Any? = null) {
+    private object UNINITIALIZED_VALUE
 
+    private var initializer: ((thisRef: Any) -> T)? = initializer
+    @Volatile private var _value: Any? = UNINITIALIZED_VALUE
+    // final field is required to enable safe publication of constructed instance
+    private val lock = lock ?: this
+
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
+        val _v1 = _value
+        if (_v1 !== UNINITIALIZED_VALUE) {
+            @Suppress("UNCHECKED_CAST")
+            return _v1 as T
+        }
+
+        return synchronized(lock) {
+            val _v2 = _value
+            if (_v2 !== UNINITIALIZED_VALUE) {
+                @Suppress("UNCHECKED_CAST") (_v2 as T)
+            }
+            else {
+                val typedValue = initializer!!(thisRef!!)
+                _value = typedValue
+                initializer = null
+                typedValue
+            }
+        }
+    }
+}
 
 
 

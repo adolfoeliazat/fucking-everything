@@ -71,6 +71,11 @@ class PhizdetsSourceGenerationVisitor(out: TextOutput, taggedGenOut: TextOutput,
 //                "break on me".toString()
 //            }
 
+            // @debug
+//            if (node.toString().contains("QUERY_STRING")) {
+//                "break on me".toString()
+//            }
+
             if (sourceInfo != null) {
                 if (p.isJustNewlined) {
                     pendingSources.add(sourceInfo)

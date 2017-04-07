@@ -198,7 +198,18 @@ class Phpifier(val program: JsProgram) {
 
             override fun endVisit(x: JsReturn, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
-                ctx.replaceMe(JsReturn(invocation("phiEvaluate", listOf(x.expression ?: void0()))))
+
+                val replacement = JsReturn(invocation("phiEvaluate", listOf(x.expression ?: void0())))
+                if (x.expression != null) {
+                    replacement.source(x.expression.source)
+                }
+                ctx.replaceMe(replacement)
+
+//                run { // @debug-5
+//                    if (replacement.toString().contains("QUERY_STRING")) {
+//                        "break on me"
+//                    }
+//                }
             }
 
             override fun endVisit(x: JsThrow, ctx: JsContext<JsNode>) {
@@ -250,7 +261,15 @@ class Phpifier(val program: JsProgram) {
 
             override fun endVisit(x: JsInvocation, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
-                ctx.replaceMe(new("PhiInvocation", listOf(x.qualifier, invocation("array", x.arguments))))
+
+                val replacement = new("PhiInvocation", listOf(x.qualifier, invocation("array", x.arguments)))
+                ctx.replaceMe(replacement.source(x.source))
+
+//                run { // @debug-5
+//                    if (replacement.toString().contains("QUERY_STRING")) {
+//                        "break on me"
+//                    }
+//                }
             }
 
             override fun endVisit(x: JsConditional, ctx: JsContext<JsNode>) {

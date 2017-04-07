@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.js.backend.PhizdetsToStringGenerationVisitor;
 import org.jetbrains.kotlin.js.backend.ast.metadata.HasMetadata;
 import org.jetbrains.kotlin.js.util.TextOutputImpl;
 import phizdets.compiler.PhizdetscKt;
+import vgrechka.DebugKt;
 
 public abstract class AbstractNode extends HasMetadata implements JsNode {
     private static long nextDebugTag = 0L;
@@ -52,6 +53,8 @@ public abstract class AbstractNode extends HasMetadata implements JsNode {
             PhizdetscKt.setDeclarationDescriptor(this, PhizdetscKt.getDeclarationDescriptor(otherNode));
             if (!(this instanceof JsExpressionStatement))
                 setSource(otherNode.getSource());
+
+            DebugKt.debug_attachAllShitFrom(this, other);
         }
         //noinspection unchecked
         return (T) this;

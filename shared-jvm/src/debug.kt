@@ -8,6 +8,14 @@ object DebugGlobal {
     fun nextPUID(): Long = nextPUID++
 }
 
+fun Any.debug_attachAllShitFrom(src: Any) {
+    val shitAttachedToSource = DebugGlobal.shitToAttachedShit[src] ?: return
+    val shitAttachedToMe = DebugGlobal.shitToAttachedShit.getOrPut(this) {mutableMapOf()}
+    for ((k, v) in shitAttachedToSource) {
+        shitAttachedToMe[k] = v
+    }
+}
+
 fun Any.debug_attachShit(label: String, shit: Any?) {
     val attachedShit = DebugGlobal.shitToAttachedShit.getOrPut(this) {mutableMapOf()}
     attachedShit[label] = shit

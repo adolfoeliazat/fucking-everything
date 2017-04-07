@@ -16,6 +16,8 @@
 
 package org.jetbrains.kotlin.js.backend.ast;
 
+import vgrechka.DebugKt;
+
 public abstract class SourceInfoAwareJsNode extends AbstractNode {
     private Object source;
 
@@ -36,6 +38,20 @@ public abstract class SourceInfoAwareJsNode extends AbstractNode {
     @Override
     public JsNode source(Object info) {
         source = info;
+        if (source != null) {
+//            { // @debug-5
+//                if (this instanceof JsInvocation) {
+//                    JsInvocation node = (JsInvocation) this;
+//                    "break on me".toString();
+//                }
+//
+//                if (this.toString().contains("QUERY_STRING")) {
+//                    "break on me".toString();
+//                }
+//            }
+
+            DebugKt.debug_attachShit(source, "jsNode", this);
+        }
         return this;
     }
 }
