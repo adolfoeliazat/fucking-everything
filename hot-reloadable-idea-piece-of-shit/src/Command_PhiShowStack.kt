@@ -3,6 +3,7 @@
 package vgrechka.idea.hripos
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.type.TypeFactory
 import com.intellij.execution.ExecutionManager
 import com.intellij.execution.Executor
 import com.intellij.execution.executors.DefaultRunExecutor
@@ -34,7 +35,10 @@ import kotlin.properties.Delegates.notNull
 object MapPhizdetsStackToolIO {
     @Ser class Input(val projectName: String, val stack: List<StackItem>)
     @Ser class StackItem(val file: String, val line: Int)
-    @Ser class Output(val mappedStack: List<StackItem?>)
+    @Ser sealed class Output(dontDeleteMe: Unit = Unit) {
+        @Ser class Candy(val mappedStack: List<StackItem?>) : Output()
+        @Ser class Poop(val error: String) : Output()
+    }
 }
 
 @Ser class Command_PhiShowStack(val projectName: String, val stack: List<Map<String, Any?>>) : Servant {
@@ -82,6 +86,10 @@ object MapPhizdetsStackToolIO {
 
         val toolInput = MapPhizdetsStackToolIO.Input("aps-back-php", toolInputStack)
         val om = ObjectMapper()
+        om.typeFactory = TypeFactory
+            .defaultInstance()
+            .withClassLoader(this::class.java.classLoader)
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL)
         val inputJSON = om.writeValueAsString(toolInput)
         // mumble(inputJSON)
         scrollToEnd()
@@ -92,18 +100,32 @@ object MapPhizdetsStackToolIO {
                    "e:\\fegh\\_run.cmd phizdets.MapPhizdetsStackTool"),
             inheritIO = false,
             input = inputJSON)
-        if (res.stderr.isNotBlank()) {
-            barkNoln(res.stderr)
-            if (!res.stderr.endsWith("\n"))
-                bark("")
-        }
-        mumbleNoln(res.stdout)
-        if (!res.stdout.endsWith("\n"))
-            mumble("")
+
         if (res.exitValue != 0) {
+            run { // Dump output
+                if (res.stderr.isNotBlank()) {
+                    barkNoln(res.stderr)
+                    if (!res.stderr.endsWith("\n"))
+                        bark("")
+                }
+                mumbleNoln(res.stdout)
+                if (!res.stdout.endsWith("\n"))
+                    mumble("")
+            }
             FuckingUtils.error("MapPhizdetsStackTool returned ${res.exitValue}, meaning 'fuck you'")
             return
         }
+
+        val out = om.readValue(res.stdout, MapPhizdetsStackToolIO.Output::class.java)
+        exhaustive=when (out) {
+            is MapPhizdetsStackToolIO.Output.Candy -> {
+                mumble("Candy")
+            }
+            is MapPhizdetsStackToolIO.Output.Poop -> {
+                bark(out.error)
+            }
+        }
+        mumble("OK")
     }
 
     fun mumble(s: String) {

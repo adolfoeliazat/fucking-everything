@@ -8,9 +8,36 @@ object MapPhizdetsStackTool {
     @JvmStatic
     fun main(args: Array<String>) {
         val inputJSON = System.`in`.bufferedReader().readText()
+        System.err.println("inputJSON = $inputJSON")
         val om = ObjectMapper()
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL)
         val input = om.readValue(inputJSON, MapPhizdetsStackToolIO.Input::class.java)
-        clog("So, your fucking project is named ${input.projectName}?")
+        val output = MapPhizdetsStackToolIO.Output.Poop("Wat?")
+        val outputJSON = om.writeValueAsString(output)
+        clog(outputJSON)
+    }
+}
+
+object JerkMapPhizdetsStackTool2 {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val om = ObjectMapper()
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL)
+
+        val json = om.writeValueAsString(MapPhizdetsStackToolIO.Output.Poop("pizda"))
+        clog(json)
+
+        val out = om.readValue(json, MapPhizdetsStackToolIO.Output::class.java)
+        exhaustive=when (out) {
+            is MapPhizdetsStackToolIO.Output.Candy -> {
+                clog("Candy")
+            }
+            is MapPhizdetsStackToolIO.Output.Poop -> {
+                clog("Poop: ${out.error}")
+            }
+        }
+
+        clog("aaaaaaaaaaaaaaaa")
     }
 }
 
