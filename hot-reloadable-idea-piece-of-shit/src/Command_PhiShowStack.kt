@@ -1,5 +1,8 @@
+@file:Suppress("Unused")
+
 package vgrechka.idea.hripos
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.execution.ExecutionManager
 import com.intellij.execution.Executor
 import com.intellij.execution.executors.DefaultRunExecutor
@@ -28,43 +31,35 @@ import vgrechka.idea.*
 import java.util.*
 import kotlin.properties.Delegates.notNull
 
-@Ser @Suppress("Unused")
-class Command_PhiShowStack(val projectName: String, val stack: List<Map<String, Any?>>) : Servant {
+object MapPhizdetsStackToolIO {
+    @Ser class Input(val projectName: String, val stack: List<StackItem>)
+    @Ser class StackItem(val file: String, val line: Int)
+    @Ser class Output(val mappedStack: List<StackItem?>)
+}
+
+@Ser class Command_PhiShowStack(val projectName: String, val stack: List<Map<String, Any?>>) : Servant {
     lateinit var bs: Any
 
     override fun serve() = withProjectNamed(projectName) {project->
         val title = this::class.simpleName!!.substring("Command_".length)
 
-        val p = HriposDebugOutput(project)
-//        for (item in stack.reversed().drop(1)) {
-//            val file = item["file"].toString()
-//            val line = item["line"].toString().toInt()
-//            if (file.contains("aps-back.php")) {
-//                p.println(file + " -- " + line)
-//            }
-//        }
+//        val p = HriposDebugOutput(project)
 //        p.showDialog(title = title)
 
         try {
             bs = FuckingUtils.aLittleNonGCableAbomination(
                 project = project,
                 id = "Command_PhiShowStack.bullshitter",
-                version = 18,
+                version = 19,
                 make = {MyBullshitter(project, title = title)})
                 ?: bitch("No bullshitter")
 
             toFront()
-            mumble("----- Hello, honey. It's ${Date()} -----")
+            mumble("\n----- Hello, honey. It's ${Date()} -----\n")
 
-            val consoleViewImpl = run {
-                val m = bs.javaClass.getDeclaredMethod("getConsoleView")
-                m.isAccessible = true
-                m.invoke(bs) as ConsoleViewImpl
-            }
-            FuckingUtils.noise("Got ConsoleViewImpl " + consoleViewImpl)
-
-            FuckingUtils.noisy = true
-            FuckingUtils.info("Good")
+            // FuckingUtils.noisy = true
+            serve1()
+            // FuckingUtils.info("Good")
             "Astonishing success"
         }
         catch (e: Exception) {
@@ -73,10 +68,81 @@ class Command_PhiShowStack(val projectName: String, val stack: List<Map<String, 
         }
     }
 
+    fun serve1() {
+        val toolInputStack = mutableListOf<MapPhizdetsStackToolIO.StackItem>()
+        for (item in stack.reversed().drop(1)) {
+            val file = item["file"].toString()
+            val line = item["line"].toString().toInt()
+            if (file.contains("aps-back.php")) {
+                link("aps-back.php:$line")
+                mumble("")
+                toolInputStack += MapPhizdetsStackToolIO.StackItem("aps-back.php", line)
+            }
+        }
+
+        val toolInput = MapPhizdetsStackToolIO.Input("aps-back-php", toolInputStack)
+        val om = ObjectMapper()
+        val inputJSON = om.writeValueAsString(toolInput)
+        // mumble(inputJSON)
+        scrollToEnd()
+
+        val res = runProcessAndWait(listOf(
+            "cmd.exe",
+            "/c",
+            "e:\\fegh\\_run.cmd phizdets.MapPhizdetsStackTool"
+        ), inheritIO = false)
+        if (res.stderr.isNotBlank()) {
+            barkNoln(res.stderr)
+            if (!res.stderr.endsWith("\n"))
+                bark("")
+        }
+        mumbleNoln(res.stdout)
+        if (!res.stdout.endsWith("\n"))
+            mumble("")
+        if (res.exitValue != 0) {
+            FuckingUtils.error("MapPhizdetsStackTool returned ${res.exitValue}, meaning 'fuck you'")
+            return
+        }
+    }
+
     fun mumble(s: String) {
         val m = bs.javaClass.getMethod("mumble", String::class.java)
         m.isAccessible = true
         m.invoke(bs, s)
+    }
+
+    fun bark(s: String) {
+        val m = bs.javaClass.getMethod("bark", String::class.java)
+        m.isAccessible = true
+        m.invoke(bs, s)
+    }
+
+    fun mumbleNoln(s: String) {
+        val m = bs.javaClass.getMethod("mumbleNoln", String::class.java)
+        m.isAccessible = true
+        m.invoke(bs, s)
+    }
+
+    fun barkNoln(s: String) {
+        val m = bs.javaClass.getMethod("barkNoln", String::class.java)
+        m.isAccessible = true
+        m.invoke(bs, s)
+    }
+
+    fun link(s: String) {
+        getConsoleViewImpl().printHyperlink(s) {project->
+            FuckingUtils.info("pizda")
+        }
+    }
+
+    fun scrollToEnd() {
+        getConsoleViewImpl().scrollToEnd()
+    }
+
+    private fun getConsoleViewImpl(): ConsoleViewImpl {
+        val m = bs.javaClass.getDeclaredMethod("getConsoleView")
+        m.isAccessible = true
+        return m.invoke(bs) as ConsoleViewImpl
     }
 
     fun toFront() {
@@ -317,7 +383,7 @@ private class MyBullshitter(val project: Project, val title: String? = null) {
             }
 
             executor = DefaultRunExecutor.getRunExecutorInstance()
-            FuckingUtils.info("executor " + executor)
+            // FuckingUtils.info("executor " + executor)
             for (action in newConsoleView.createConsoleActions()) {
                 toolbarActions.add(action)
             }
@@ -366,7 +432,11 @@ private class MyBullshitter(val project: Project, val title: String? = null) {
     }
 
     fun bark(s: String) {
-        consoleView.print(s + "\n", ConsoleViewContentType.ERROR_OUTPUT)
+        barkNoln(s + "\n")
+    }
+
+    fun barkNoln(s: String) {
+        consoleView.print(s, ConsoleViewContentType.ERROR_OUTPUT)
     }
 
     fun bark(e: Throwable) {
@@ -444,9 +514,13 @@ object FuckingUtils {
             return motherfucker
         }
         catch (e: Exception) {
-            Messages.showErrorDialog(e.stackTraceStr, "Shit Didn't Work")
+            error(e.stackTraceStr)
             return null
         }
+    }
+
+    fun error(s: String) {
+        Messages.showErrorDialog(s, "Shit Didn't Work")
     }
 
     fun noise(s: String) {

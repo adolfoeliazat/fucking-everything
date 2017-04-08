@@ -4,6 +4,8 @@
         <pathelement location="out/production/shared-idea"/>
         <pathelement location="out/production/idea-backdoor"/>
         <pathelement location="out/production/idea-backdoor-client"/>
+        <pathelement location="out/production/hot-reloadable-idea-piece-of-shit"/>
+        <pathelement location="out/production/phizdetsc"/>
         <fileset dir="lib" includes="*.jar"/>
         <fileset dir="lib-gradle" includes="*.jar"/>
     </path>
