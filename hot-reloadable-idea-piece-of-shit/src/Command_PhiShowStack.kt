@@ -16,6 +16,7 @@ import com.intellij.openapi.util.Key
 import com.intellij.project.stateStore
 import com.intellij.unscramble.AnnotateStackTraceAction
 import com.intellij.util.containers.ConcurrentIntObjectMap
+import org.jetbrains.kotlin.utils.stackTraceStr
 import java.awt.BorderLayout
 import javax.swing.JPanel
 import vgrechka.*
@@ -25,7 +26,6 @@ import java.util.*
 import vgrechka.*
 import vgrechka.idea.*
 import java.util.*
-import kotlin.properties.Delegates.notNull
 
 @Ser @Suppress("Unused")
 class Command_PhiShowStack(val projectName: String, val stack: List<Map<String, Any?>>) : Servant {
@@ -44,70 +44,33 @@ class Command_PhiShowStack(val projectName: String, val stack: List<Map<String, 
 //        }
 //        p.showDialog(title = title)
 
-        run { // A little non-GCable abomination
-            val reset = false
+        try {
+            bs = FuckingUtils.aLittleNonGCableAbomination(
+                project = project,
+                id = "Command_PhiShowStack.bullshitter",
+                version = 4,
+                make = {MyBullshitter(project, title = title)})
+                ?: bitch("No bullshitter")
 
-            try {
-                val keyName = "Command_PhiShowStack.bullshitter3"
-                var key: Key<Any?>? = null
+            mumble("Hello, honey. It's ${Date()}")
 
-                val f = Key::class.java.getDeclaredField("allKeys")
-                f.isAccessible = true
-                val allKeys = f.get(null) as ConcurrentIntObjectMap<Key<*>>
-                noise(allKeys.size().toString() + " keys")
-                for (entry in allKeys.entries()) {
-                    val entryValue = entry.getValue()
-                    val f2 = try {
-                        entryValue.javaClass.getDeclaredField("myName")
-                    } catch (e: NoSuchFieldException) {
-                        continue // Ignore weird motherfucker
-                    }
-                    f2.isAccessible = true
-                    val myName = f2.get(entryValue) as String?
-                    if (keyName == myName) {
-                        key = entryValue as Key<Any?>
-                        noise("Found key " + key)
-                    }
-                }
-
-                if (reset) {
-                    if (key == null) {
-                        info("Key not found -- nothing to reset")
-                    } else {
-                        (project.getUserData(key) as MutableList<*>).clear()
-                        info("Killed motherfucker")
-                    }
-                    return@withProjectNamed ""
-                }
-
-                if (key == null) {
-                    noise("Creating shit")
-                    key = Key<Any?>(keyName)
-                    bs = MyBullshitter(project, title = title)
-                    val data = mutableListOf(key, bs)
-                    project.putUserData(key, data)
-                } else {
-                    noise("Found shit")
-                    bs = (project.getUserData(key) as MutableList<*>)[1]!!
-                }
-
-                mumble("Hi, fucker")
+            FuckingUtils.noisy = true
+            val consoleViewImpl = run {
+                val m = bs.javaClass.getDeclaredMethod("getConsoleView")
+                m.isAccessible = true
+                m.invoke(bs)
             }
-            catch (e: Throwable) {
-                Messages.showErrorDialog(e.javaClass.name + ": " + e.message, "Your Shit Didn't Work")
-            }
+            FuckingUtils.noise("Got ConsoleViewImpl " + consoleViewImpl)
+
+            FuckingUtils.info("Good")
+            "Astonishing success"
         }
-
-        object {val output = p.output}
+        catch (e: Exception) {
+            Messages.showErrorDialog(e.stackTraceStr, "Shit Didn't Work")
+            "Bloody error"
+        }
     }
 
-    fun noise(s: String) {
-        // Messages.showInfoMessage(s, "Noise")
-    }
-
-    fun info(s: String) {
-        Messages.showInfoMessage(s, "Info")
-    }
 
     fun mumble(s: String) {
         val m = bs.javaClass.getMethod("mumble", String::class.java)
@@ -411,6 +374,97 @@ private class MyBullshitter(val project: Project, val title: String? = null) {
 
 }
 
+object FuckingUtils {
+    var noisy = false
+
+    fun aLittleNonGCableAbomination(project: Project, id: String, version: Int, make: () -> Any): Any? {
+        try {
+            val fullKeyName = id + version
+            var key: Key<Any?>? = null
+
+            val allKeys = run {
+                val f = Key::class.java.getDeclaredField("allKeys")
+                f.isAccessible = true
+                f.get(null) as ConcurrentIntObjectMap<Key<*>>
+            }
+            noise("${allKeys.size()} keys")
+
+            val keysToRemove = mutableListOf<Key<*>>()
+            val iterator = allKeys.entries().iterator()
+            while (iterator.hasNext()) {
+                val entry = iterator.next()
+                val existingKey = entry.value
+                val existingKeyName = getKeyName(existingKey) ?: continue
+
+                if (existingKeyName.startsWith(id) && existingKeyName != fullKeyName) {
+                    keysToRemove += entry.value
+                }
+                else if (fullKeyName == existingKeyName) {
+                    key = existingKey as Key<Any?>
+                    // noise("Found key " + key)
+                }
+            }
+
+            if (keysToRemove.isNotEmpty()) {
+                for (x in keysToRemove) {
+                    allKeys.remove(getKeyIndex(x)!!)
+                }
+                noise("Removed ${keysToRemove.size} old motherfuckers, ${allKeys.size()} left in map")
+            }
+
+            val motherfucker = if (key == null) {
+                noise("Creating new motherfucker")
+                key = Key<Any?>(fullKeyName)
+                val newMotherfucker = make()
+                val data = mutableListOf(key, newMotherfucker)
+                project.putUserData(key, data)
+                newMotherfucker
+            }
+            else {
+                noise("Found suitable existing motherfucker")
+                (project.getUserData(key) as MutableList<*>)[1]!!
+            }
+
+            noise("Cool")
+            return motherfucker
+        }
+        catch (e: Exception) {
+            Messages.showErrorDialog(e.stackTraceStr, "Shit Didn't Work")
+            return null
+        }
+    }
+
+    fun noise(s: String) {
+        if (noisy) {
+            Messages.showInfoMessage(s, "Noise")
+        }
+    }
+
+    fun info(s: String) {
+        Messages.showInfoMessage(s, "Info")
+    }
+
+    private fun getKeyIndex(key: Key<*>): Int? {
+        return try {
+            val f = key.javaClass.getDeclaredField("myIndex")
+            f.isAccessible = true
+            f.get(key) as Int
+        } catch (e: NoSuchFieldException) {
+            null
+        }
+    }
+
+    private fun getKeyName(key: Key<*>): String? {
+        return try {
+            val f = key.javaClass.getDeclaredField("myName")
+            f.isAccessible = true
+            f.get(key) as String
+        } catch (e: NoSuchFieldException) {
+            null
+        }
+    }
+
+}
 
 
 
