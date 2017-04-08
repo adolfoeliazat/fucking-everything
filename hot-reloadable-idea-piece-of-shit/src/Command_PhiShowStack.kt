@@ -26,6 +26,7 @@ import java.util.*
 import vgrechka.*
 import vgrechka.idea.*
 import java.util.*
+import kotlin.properties.Delegates.notNull
 
 @Ser @Suppress("Unused")
 class Command_PhiShowStack(val projectName: String, val stack: List<Map<String, Any?>>) : Servant {
@@ -48,20 +49,21 @@ class Command_PhiShowStack(val projectName: String, val stack: List<Map<String, 
             bs = FuckingUtils.aLittleNonGCableAbomination(
                 project = project,
                 id = "Command_PhiShowStack.bullshitter",
-                version = 4,
+                version = 18,
                 make = {MyBullshitter(project, title = title)})
                 ?: bitch("No bullshitter")
 
-            mumble("Hello, honey. It's ${Date()}")
+            toFront()
+            mumble("----- Hello, honey. It's ${Date()} -----")
 
-            FuckingUtils.noisy = true
             val consoleViewImpl = run {
                 val m = bs.javaClass.getDeclaredMethod("getConsoleView")
                 m.isAccessible = true
-                m.invoke(bs)
+                m.invoke(bs) as ConsoleViewImpl
             }
             FuckingUtils.noise("Got ConsoleViewImpl " + consoleViewImpl)
 
+            FuckingUtils.noisy = true
             FuckingUtils.info("Good")
             "Astonishing success"
         }
@@ -71,11 +73,16 @@ class Command_PhiShowStack(val projectName: String, val stack: List<Map<String, 
         }
     }
 
-
     fun mumble(s: String) {
         val m = bs.javaClass.getMethod("mumble", String::class.java)
         m.isAccessible = true
         m.invoke(bs, s)
+    }
+
+    fun toFront() {
+        val m = bs.javaClass.getMethod("toFront")
+        m.isAccessible = true
+        m.invoke(bs)
     }
 }
 
@@ -288,6 +295,9 @@ object Command_PhiShowStackTest {
 
 
 private class MyBullshitter(val project: Project, val title: String? = null) {
+    private var executor: Executor? = null // by notNull<Executor>()
+    private var bullshitterDescr: RunContentDescriptor? = null // by notNull<RunContentDescriptor>()
+
     val consoleView: ConsoleView by relazy {
         var newConsoleView by notNullOnce<ConsoleView>()
 
@@ -300,13 +310,14 @@ private class MyBullshitter(val project: Project, val title: String? = null) {
 
             val toolbarActions = DefaultActionGroup()
             val consoleComponent = MyConsolePanel(newConsoleView, toolbarActions)
-            val bullshitterDescr = object : RunContentDescriptor(newConsoleView, null, consoleComponent, title ?: "Bullshitter", null) {
+            bullshitterDescr = object : RunContentDescriptor(newConsoleView, null, consoleComponent, title ?: "Bullshitter", null) {
                 override fun isContentReuseProhibited(): Boolean {
                     return true
                 }
             }
 
-            val executor = DefaultRunExecutor.getRunExecutorInstance()
+            executor = DefaultRunExecutor.getRunExecutorInstance()
+            FuckingUtils.info("executor " + executor)
             for (action in newConsoleView.createConsoleActions()) {
                 toolbarActions.add(action)
             }
@@ -315,7 +326,7 @@ private class MyBullshitter(val project: Project, val title: String? = null) {
             console.editor.settings.isCaretRowShown = true
             toolbarActions.add(AnnotateStackTraceAction(console.editor, console.hyperlinks))
             toolbarActions.add(CloseAction(executor, bullshitterDescr, project))
-            ExecutionManager.getInstance(project).contentManager.showRunContent(executor, bullshitterDescr)
+            ExecutionManager.getInstance(project).contentManager.showRunContent(executor!!, bullshitterDescr!!)
             newConsoleView.allowHeavyFilters()
 
             ExecutionManager.getInstance(project).contentManager
@@ -341,6 +352,10 @@ private class MyBullshitter(val project: Project, val title: String? = null) {
         newConsoleView
     }
 
+    fun toFront() {
+        consoleView // Init the bitch
+        ExecutionManager.getInstance(project).contentManager.toFrontRunContent(executor!!, bullshitterDescr!!)
+    }
 
     fun mumble(s: String) {
         mumbleNoln(s + "\n")
