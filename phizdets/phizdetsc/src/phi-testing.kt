@@ -37,8 +37,10 @@ import jdk.nashorn.internal.runtime.Source
 import jdk.nashorn.internal.runtime.options.Options
 import org.jetbrains.kotlin.js.sourceMap.PhizdetsSourceGenerationVisitor
 import org.jetbrains.kotlin.js.util.TextOutputImpl
+import org.jetbrains.kotlin.utils.addToStdlib.indexOfOrNull
 import phizdets.compiler.CompileStdlib
 import phizdets.compiler.PhizdetscGlobal
+import vgrechka.idea.hripos.*
 
 
 object CurrentTestFiddling {
@@ -199,7 +201,7 @@ class Boobs(val testParams: TestParams) {
                                             val line = mr2.groupValues[2].toInt()
                                             val description = mr2.groupValues[3]
                                             stackLines += MapPhizdetsStack.StackLine(
-                                                prefix = "", resource = path, line = line,
+                                                resource = path, line = line,
 
                                                 // XXX See SourceMapConsumerV3, condition `((SourceMapConsumerV3.Entry)entries.get(0)).getGeneratedColumn() > column`.
                                                 //     We don't want that condition to be true, so that it doesn't look for another mapping
@@ -219,15 +221,7 @@ class Boobs(val testParams: TestParams) {
                             if (stackLines.isNotEmpty()) {
                                 clog("\n------------------- FUCKING STACK -------------------\n")
                                 for (line in stackLines) {
-                                    val fuck = MapPhizdetsStack.mapFuckingLine(
-                                        line,
-                                        getMapPath = {resource ->
-                                            when (resource) {
-                                                "C:\\opt\\xampp\\htdocs\\phi-tests\\aps-back\\aps-back.php" -> MapPhizdetsStack.MapPath.Just("E:/fegh/out/phi-tests/aps-back/aps-back.php.map")
-                                                else -> MapPhizdetsStack.MapPath.Skip()
-                                            }
-                                        }
-                                    )
+                                    val fuck = MapPhizdetsStack.mapFuckingLineToFancyString(line, getMapPath = ::getAPSBackPHPMapPath)
                                     clog(fuck ?: "[Some obscure shit]")
                                 }
                                 clog()
@@ -472,7 +466,7 @@ object MapPhizdetsStack {
         /*if (CACHE_MAPPINGS_BETWEEN_REQUESTS) sharedMappingCache
         else*/ makeMappingCache()
 
-    class StackLine(val prefix: String, val resource: String, val line: Int, val column: Int)
+    class StackLine(val resource: String, val line: Int, val column: Int = 1)
 
     sealed class MapPath {
         class Just(val path: String) : MapPath()
@@ -483,13 +477,11 @@ object MapPhizdetsStack {
     private class Skip(reason: String) : Exception(reason)
     private class Verbatim(reason: String) : Exception(reason)
 
-    fun mapFuckingLine(stackLine: StackLine, getMapPath: (resource: String) -> MapPath): String? {
-        if (stackLine.line == 1) throw Skip("Ignoring line 1, as it's probably __awaiter() or some other junk")
-
+    fun mapFuckingLine(stackLine: StackLine, getMapPath: (resource: String) -> MapPath): StackLine? {
         val fuck = getMapPath(stackLine.resource)
         val mapPath = when (fuck) {
             is MapPath.Skip -> return null
-            is MapPath.Bitch -> throw Verbatim("No map file for ${stackLine.resource}")
+            is MapPath.Bitch -> bitch("No map file for ${stackLine.resource}")
             is MapPath.Just -> fuck.path
         }
 
@@ -508,7 +500,7 @@ object MapPhizdetsStack {
 
 
         val orig = sourceMapping.getMappingForLine(stackLine.line, stackLine.column)
-            ?: throw Verbatim("No mapping for line")
+            ?: return null
 
         var longPath = orig.originalFile
         var shortPath = orig.originalFile
@@ -533,9 +525,16 @@ object MapPhizdetsStack {
         } catch (e: Exception) {
         }
 
-        var result = "$shortPath:${orig.lineNumber}"
-        if (result.startsWith("file://"))
-            result = result.substring("file://".length)
+
+        var pizdaPath = shortPath
+        if (pizdaPath.startsWith("file://"))
+            pizdaPath = pizdaPath.substring("file://".length)
+        return StackLine(pizdaPath, orig.lineNumber, orig.columnPosition)
+    }
+
+    fun mapFuckingLineToFancyString(stackLine: StackLine, getMapPath: (resource: String) -> MapPath): String? {
+        val pizda = mapFuckingLine(stackLine, getMapPath) ?: return null
+        var result = "${pizda.resource}:${pizda.line}"
 
         run { // Force IDEA to underline the freaking path
             val firstLine = File(result.substring(0, result.lastIndexOf(":"))).readLines()[0]
@@ -543,74 +542,74 @@ object MapPhizdetsStack {
             val packageName = firstLine.substring("package ".length)
             val fileName = result.substring(result.lastIndexOf("/") + 1, result.lastIndexOf(":"))
             result = packageName + "." + fileName.replace("-", "_").capitalize().replace(".kt", "Kt") +
-                ".somewhere ($result) col=${orig.columnPosition}"
+                ".somewhere ($result) col=${pizda.column}"
         }
 
         return result
     }
 
-    fun goBananas(rawStack: String): String {
-        val noisy = false
-
-        // Ex:    at Object.die_61zpoe$ (http://aps-ua-writer.local:3022/into-kommon-js-enhanced.js:32:17)
-        // Ex:    at http://aps-ua-writer.local:3022/front-enhanced.js:12225:48
-        // Ex:    at Generator.next (<anonymous>)
-        // Ex:    at __awaiter (http://aps-ua-writer.local:3022/into-kommon-js-enhanced.js:1:138)
-
-//        val NORMAL_APS_HOME = normalizePath(const.file.APS_HOME)
-//        val NORMAL_KOMMON_HOME = normalizePath(KOMMON_HOME)
-
-
-        val resultLines = mutableListOf<String>()
-
-        for (mangledLine in rawStack.lines()) {
-
-            try {
-                if (!mangledLine.startsWith("    at ")) throw Verbatim("Doesn't start with [at]")
-
-                val mr = Regex("(.*?)\\(?(https?://.*):(\\d+):(\\d+)\\)?").matchEntire(mangledLine)
-                    ?: run {
-                    if (mangledLine.contains("at Generator.next")) throw Skip("Useless junk")
-                    throw Verbatim("Unrecognized")
-                }
-                if (noisy) dwarnStriking("Recognized: \n" + inspectMatchResult(mr))
-
-                val stackLine = run {
-                    val (prefix, resource, lineString, columnString) = mr.destructured
-                    val (line, column) =
-                        try {Pair(lineString.toInt(), columnString.toInt())}
-                        catch (e: NumberFormatException) {throw Verbatim("Bad line or column number")}
-                    StackLine(prefix, resource, line, column)
-                }
-
-                val result = mapFuckingLine(stackLine, getMapPath = {resource->
-                    when {
-                    //                    resource.contains("/front-enhanced.js") -> "${const.file.APS_HOME}/front/out/front.js.map"
-                    //                    resource.contains("/into-kommon-js-enhanced.js") -> "$KOMMON_HOME/js/out/into-kommon-js.js.map"
-                        resource.contains("pizda") -> MapPath.Just("pizda.map")
-                        else -> MapPath.Bitch()
-                    }
-                })
-                if (result != null)
-                    resultLines.add(result)
-            }
-            catch (e: Skip) {
-                if (noisy) dwarnStriking("Skip: ${e.message}: $mangledLine")
-            }
-            catch (e: Verbatim) {
-                if (noisy) dwarnStriking("Verbatim: ${e.message}: $mangledLine")
-                resultLines.add(
-                    if (mangledLine.startsWith("    at ")) mangledLine.replaceRange(0, 1, when {
-                        mangledLine.contains("kotlin") -> "K" // Standard library
-                        else -> "?"
-                    })
-                    else mangledLine
-                )
-            }
-        }
-
-        return resultLines.joinToString("\n")
-    }
+//    fun goBananas(rawStack: String): String {
+//        val noisy = false
+//
+//        // Ex:    at Object.die_61zpoe$ (http://aps-ua-writer.local:3022/into-kommon-js-enhanced.js:32:17)
+//        // Ex:    at http://aps-ua-writer.local:3022/front-enhanced.js:12225:48
+//        // Ex:    at Generator.next (<anonymous>)
+//        // Ex:    at __awaiter (http://aps-ua-writer.local:3022/into-kommon-js-enhanced.js:1:138)
+//
+////        val NORMAL_APS_HOME = normalizePath(const.file.APS_HOME)
+////        val NORMAL_KOMMON_HOME = normalizePath(KOMMON_HOME)
+//
+//
+//        val resultLines = mutableListOf<String>()
+//
+//        for (mangledLine in rawStack.lines()) {
+//
+//            try {
+//                if (!mangledLine.startsWith("    at ")) throw Verbatim("Doesn't start with [at]")
+//
+//                val mr = Regex("(.*?)\\(?(https?://.*):(\\d+):(\\d+)\\)?").matchEntire(mangledLine)
+//                    ?: run {
+//                    if (mangledLine.contains("at Generator.next")) throw Skip("Useless junk")
+//                    throw Verbatim("Unrecognized")
+//                }
+//                if (noisy) dwarnStriking("Recognized: \n" + inspectMatchResult(mr))
+//
+//                val stackLine = run {
+//                    val (prefix, resource, lineString, columnString) = mr.destructured
+//                    val (line, column) =
+//                        try {Pair(lineString.toInt(), columnString.toInt())}
+//                        catch (e: NumberFormatException) {throw Verbatim("Bad line or column number")}
+//                    StackLine(resource, line, column)
+//                }
+//
+//                val result = mapFuckingLineToFancyString(stackLine, getMapPath = {resource->
+//                    when {
+//                    //                    resource.contains("/front-enhanced.js") -> "${const.file.APS_HOME}/front/out/front.js.map"
+//                    //                    resource.contains("/into-kommon-js-enhanced.js") -> "$KOMMON_HOME/js/out/into-kommon-js.js.map"
+//                        resource.contains("pizda") -> MapPath.Just("pizda.map")
+//                        else -> MapPath.Bitch()
+//                    }
+//                })
+//                if (result != null)
+//                    resultLines.add(result)
+//            }
+//            catch (e: Skip) {
+//                if (noisy) dwarnStriking("Skip: ${e.message}: $mangledLine")
+//            }
+//            catch (e: Verbatim) {
+//                if (noisy) dwarnStriking("Verbatim: ${e.message}: $mangledLine")
+//                resultLines.add(
+//                    if (mangledLine.startsWith("    at ")) mangledLine.replaceRange(0, 1, when {
+//                        mangledLine.contains("kotlin") -> "K" // Standard library
+//                        else -> "?"
+//                    })
+//                    else mangledLine
+//                )
+//            }
+//        }
+//
+//        return resultLines.joinToString("\n")
+//    }
 
 
     private fun makeMappingCache(): LoadingCache<String, SourceMapping> {
@@ -727,6 +726,18 @@ class SynchronizedLazyImpl2<out T>(initializer: (thisRef: Any) -> T, lock: Any? 
         }
     }
 }
+
+fun getAPSBackPHPMapPath(resource: String): MapPhizdetsStack.MapPath = when {
+    resource == "aps-back.php"
+        || resource.endsWith("/aps-back.php")
+        || resource.endsWith("\\aps-back.php") ->
+        MapPhizdetsStack.MapPath.Just("E:/fegh/out/phi-tests/aps-back/aps-back.php.map")
+    else -> MapPhizdetsStack.MapPath.Skip()
+
+// resource == "C:\\opt\\xampp\\htdocs\\phi-tests\\aps-back\\aps-back.php" -> MapPhizdetsStack.MapPath.Just("E:/fegh/out/phi-tests/aps-back/aps-back.php.map")
+}
+
+
 
 
 

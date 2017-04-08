@@ -73,18 +73,16 @@ object MapPhizdetsStackToolIO {
     }
 
     fun serve1() {
-        val toolInputStack = mutableListOf<MapPhizdetsStackToolIO.StackItem>()
+        val stackItems = mutableListOf<MapPhizdetsStackToolIO.StackItem>()
         for (item in stack.reversed().drop(1)) {
             val file = item["file"].toString()
             val line = item["line"].toString().toInt()
             if (file.contains("aps-back.php")) {
-                link("aps-back.php:$line")
-                mumble("")
-                toolInputStack += MapPhizdetsStackToolIO.StackItem("aps-back.php", line)
+                stackItems += MapPhizdetsStackToolIO.StackItem("aps-back.php", line)
             }
         }
 
-        val toolInput = MapPhizdetsStackToolIO.Input("aps-back-php", toolInputStack)
+        val toolInput = MapPhizdetsStackToolIO.Input("aps-back-php", stackItems)
         val om = ObjectMapper()
         om.typeFactory = TypeFactory
             .defaultInstance()
@@ -119,7 +117,17 @@ object MapPhizdetsStackToolIO {
         val out = om.readValue(res.stdout, MapPhizdetsStackToolIO.Output::class.java)
         exhaustive=when (out) {
             is MapPhizdetsStackToolIO.Output.Candy -> {
-                mumble("Candy")
+                for ((i, item) in stackItems.withIndex()) {
+                    link(item.file + ":" + item.line)
+                    mumbleNoln(" --> ")
+                    val mappedItem = out.mappedStack[i]
+                    if (mappedItem == null) {
+                        mumbleNoln("[Obscure]")
+                    } else {
+                        link(mappedItem.file + ":" + mappedItem.line)
+                    }
+                    mumble("")
+                }
             }
             is MapPhizdetsStackToolIO.Output.Poop -> {
                 bark(out.error)
