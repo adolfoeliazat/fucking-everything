@@ -53,7 +53,7 @@ fun runProcessAndWait(cmdPieces: List<String>, inheritIO: Boolean = true, input:
                     buf.appendln(line)
                 }
             }
-            clog("Finished sucker thread")
+            // clog("Finished sucker thread")
         }
         return buf
     }
@@ -68,7 +68,7 @@ fun runProcessAndWait(cmdPieces: List<String>, inheritIO: Boolean = true, input:
                 pw.println(line)
             }
             pw.close()
-            clog("Finished feeder thread")
+            // clog("Finished feeder thread")
         }
     }
 

@@ -63,7 +63,7 @@ object MapPhizdetsStackToolIO {
 
             // FuckingUtils.noisy = true
             serve1()
-            // FuckingUtils.info("Good")
+            FuckingUtils.info("Received some shit to dig") // To bring the window to foreground
             "Astonishing success"
         }
         catch (e: Exception) {
@@ -77,9 +77,17 @@ object MapPhizdetsStackToolIO {
         for (item in stack.reversed().drop(1)) {
             val file = item["file"].toString()
             val line = item["line"].toString().toInt()
-            if (file.contains("aps-back.php")) {
-                stackItems += MapPhizdetsStackToolIO.StackItem("aps-back.php", line)
+
+            fun fuck(fileName: String): Boolean {
+                if (file.contains(fileName)) {
+                    stackItems += MapPhizdetsStackToolIO.StackItem(fileName, line)
+                    return true
+                }
+                return false
             }
+
+               fuck("aps-back.php")
+            || fuck("phizdets-stdlib.php")
         }
 
         val toolInput = MapPhizdetsStackToolIO.Input("aps-back-php", stackItems)
@@ -162,8 +170,9 @@ object MapPhizdetsStackToolIO {
 
     fun link(item: MapPhizdetsStackToolIO.StackItem) {
         getConsoleViewImpl().printHyperlink(item.file + ":" + item.line) {project->
-            val path = when {
-                item.file === "aps-back.php" -> "E:/fegh/out/phi-tests/aps-back/aps-back.php"
+            val path = when (item.file) {
+                "aps-back.php" -> "E:/fegh/out/phi-tests/aps-back/aps-back.php"
+                "phizdets-stdlib.php" -> "E:/fegh/phizdets/phizdetsc/src/phizdets/php/phizdets-stdlib.php"
                 else -> item.file
             }
             if (!openFile(project, path, item.line)) {

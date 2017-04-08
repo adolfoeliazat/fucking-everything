@@ -35,12 +35,3 @@ fun main(args: Array<String>) {
     serveShit(XHttpServletRequest(), XHttpServletResponse())
 }
 
-fun pizdunchik() {
-    val shit = PHP_XmlAccessType.values()
-}
-
-fun accessClitoris() {
-    val fuck = const.text.numberSign
-    val x = PHP_HttpServletResponse.SC_OK
-    val target = Pizda.Clitoris()
-}
