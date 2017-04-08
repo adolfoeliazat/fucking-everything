@@ -80,22 +80,9 @@ fun openFile(path: String, line: Int) {
     check(projects.size == 1) {"e5469c93-424d-4eef-81de-41c190b7f188"}
     val project = projects.first()
 
-    val file = LocalFileSystem.getInstance().findFileByPath(path)
-        ?: return Messages.showErrorDialog("File not fucking found", "Fuck You")
-    NonProjectFileWritingAccessProvider.allowWriting(file)
-
-    val descriptor = OpenFileDescriptor(project, file)
-    val editor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true)
-        ?: bitch("f1924b93-fc47-4c88-8d7a-75c94e67e481")
-
-    val position = LogicalPosition(line - 1, 0)
-    editor.caretModel.removeSecondaryCarets()
-    editor.caretModel.moveToLogicalPosition(position)
-    editor.scrollingModel.scrollToCaret(ScrollType.CENTER)
-    editor.selectionModel.removeSelection()
-    IdeFocusManager.getGlobalInstance().requestFocus(editor.contentComponent, true)
-
+    if (openFile(project, path, line)) return Messages.showErrorDialog("File not fucking found", "Fuck You")
 }
+
 
 @Ser class PDTRemoteCommand_TestResult(
     val rawResponseFromPHPScript: String

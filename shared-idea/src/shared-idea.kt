@@ -10,8 +10,15 @@ import com.intellij.execution.ui.*
 import com.intellij.execution.ui.actions.CloseAction
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.editor.LogicalPosition
+import com.intellij.openapi.editor.ScrollType
+import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.fileEditor.OpenFileDescriptor
+import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.unscramble.AnnotateStackTraceAction
 import java.awt.BorderLayout
 import javax.swing.JPanel
@@ -109,7 +116,23 @@ class Bullshitter(val project: Project, val title: String? = null) {
 
 }
 
+fun openFile(project: Project, path: String, line: Int): Boolean {
+    val file = LocalFileSystem.getInstance().findFileByPath(path)
+        ?: return false
+    NonProjectFileWritingAccessProvider.allowWriting(file)
 
+    val descriptor = OpenFileDescriptor(project, file)
+    val editor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true)
+        ?: bitch("f1924b93-fc47-4c88-8d7a-75c94e67e481")
+
+    val position = LogicalPosition(line - 1, 0)
+    editor.caretModel.removeSecondaryCarets()
+    editor.caretModel.moveToLogicalPosition(position)
+    editor.scrollingModel.scrollToCaret(ScrollType.CENTER)
+    editor.selectionModel.removeSelection()
+    IdeFocusManager.getGlobalInstance().requestFocus(editor.contentComponent, true)
+    return true
+}
 
 
 

@@ -118,13 +118,13 @@ object MapPhizdetsStackToolIO {
         exhaustive=when (out) {
             is MapPhizdetsStackToolIO.Output.Candy -> {
                 for ((i, item) in stackItems.withIndex()) {
-                    link(item.file + ":" + item.line)
+                    link(item)
                     mumbleNoln(" --> ")
                     val mappedItem = out.mappedStack[i]
                     if (mappedItem == null) {
                         mumbleNoln("[Obscure]")
                     } else {
-                        link(mappedItem.file + ":" + mappedItem.line)
+                        link(mappedItem)
                     }
                     mumble("")
                 }
@@ -160,9 +160,15 @@ object MapPhizdetsStackToolIO {
         m.invoke(bs, s)
     }
 
-    fun link(s: String) {
-        getConsoleViewImpl().printHyperlink(s) {project->
-            FuckingUtils.info("pizda")
+    fun link(item: MapPhizdetsStackToolIO.StackItem) {
+        getConsoleViewImpl().printHyperlink(item.file + ":" + item.line) {project->
+            val path = when {
+                item.file === "aps-back.php" -> "E:/fegh/out/phi-tests/aps-back/aps-back.php"
+                else -> item.file
+            }
+            if (!openFile(project, path, item.line)) {
+                FuckingUtils.error("No fucking way")
+            }
         }
     }
 
