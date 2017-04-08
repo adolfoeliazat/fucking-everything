@@ -42,159 +42,175 @@ object MapPhizdetsStackToolIO {
 }
 
 @Ser class Command_PhiShowStack(val projectName: String, val stack: List<Map<String, Any?>>) : Servant {
-    lateinit var bs: Any
+    class InterestingFile(val shortName: String, val fullPath: String)
 
-    override fun serve() = withProjectNamed(projectName) {project->
-        val title = this::class.simpleName!!.substring("Command_".length)
-
-//        val p = HriposDebugOutput(project)
-//        p.showDialog(title = title)
-
-        try {
-            bs = FuckingUtils.aLittleNonGCableAbomination(
-                project = project,
-                id = "Command_PhiShowStack.bullshitter",
-                version = 19,
-                make = {MyBullshitter(project, title = title)})
-                ?: bitch("No bullshitter")
-
-            toFront()
-            mumble("\n----- Hello, honey. It's ${Date()} -----\n")
-
-            // FuckingUtils.noisy = true
-            serve1()
-            FuckingUtils.info("Received some shit to dig") // To bring the window to foreground
+    override fun serve(): Any {
+        return try {
+            Go().bananas()
             "Astonishing success"
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             Messages.showErrorDialog(e.stackTraceStr, "Shit Didn't Work")
             "Bloody error"
         }
     }
 
-    fun serve1() {
-        val stackItems = mutableListOf<MapPhizdetsStackToolIO.StackItem>()
-        for (item in stack.reversed().drop(1)) {
-            val file = item["file"].toString()
-            val line = item["line"].toString().toInt()
+    inner class Go {
+        val interestingFiles = listOf(
+            InterestingFile("aps-back.php", "E:/fegh/out/phi-tests/aps-back/aps-back.php"),
+            InterestingFile("phizdets-stdlib.php", "E:/fegh/phizdets/phizdetsc/src/phizdets/php/phizdets-stdlib.php")
+        )
 
-            fun fuck(fileName: String): Boolean {
-                if (file.contains(fileName)) {
-                    stackItems += MapPhizdetsStackToolIO.StackItem(fileName, line)
-                    return true
-                }
-                return false
+        lateinit var bs: Any
+
+        fun bananas() {
+            withProjectNamed(projectName) {project ->
+                val title = Command_PhiShowStack::class.simpleName!!.substring("Command_".length)
+
+                //        val p = HriposDebugOutput(project)
+                //        p.showDialog(title = title)
+
+                bs = FuckingUtils.aLittleNonGCableAbomination(
+                    project = project,
+                    id = "Command_PhiShowStack.bullshitter",
+                    version = 19,
+                    make = {MyBullshitter(project, title = title)})
+                    ?: bitch("No bullshitter")
+
+                toFront()
+                mumble("\n----- Hello, honey. It's ${Date()} -----\n")
+
+                // FuckingUtils.noisy = true
+                serve1()
+                FuckingUtils.info("Received some shit to dig") // To bring the window to foreground
             }
-
-               fuck("aps-back.php")
-            || fuck("phizdets-stdlib.php")
         }
 
-        val toolInput = MapPhizdetsStackToolIO.Input("aps-back-php", stackItems)
-        val om = ObjectMapper()
-        om.typeFactory = TypeFactory
-            .defaultInstance()
-            .withClassLoader(this::class.java.classLoader)
-        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL)
-        val inputJSON = om.writeValueAsString(toolInput)
-        // mumble(inputJSON)
-        scrollToEnd()
-
-        val res = runProcessAndWait(
-            listOf("cmd.exe",
-                   "/c",
-                   "e:\\fegh\\_run.cmd phizdets.MapPhizdetsStackTool"),
-            inheritIO = false,
-            input = inputJSON)
-
-        if (res.exitValue != 0) {
-            run { // Dump output
-                if (res.stderr.isNotBlank()) {
-                    barkNoln(res.stderr)
-                    if (!res.stderr.endsWith("\n"))
-                        bark("")
-                }
-                mumbleNoln(res.stdout)
-                if (!res.stdout.endsWith("\n"))
-                    mumble("")
-            }
-            FuckingUtils.error("MapPhizdetsStackTool returned ${res.exitValue}, meaning 'fuck you'")
-            return
-        }
-
-        val out = om.readValue(res.stdout, MapPhizdetsStackToolIO.Output::class.java)
-        exhaustive=when (out) {
-            is MapPhizdetsStackToolIO.Output.Candy -> {
-                for ((i, item) in stackItems.withIndex()) {
-                    link(item)
-                    mumbleNoln(" --> ")
-                    val mappedItem = out.mappedStack[i]
-                    if (mappedItem == null) {
-                        mumbleNoln("[Obscure]")
-                    } else {
-                        link(mappedItem)
+        fun serve1() {
+            val stackItems = mutableListOf<MapPhizdetsStackToolIO.StackItem>()
+            for (item in stack.reversed().drop(1)) {
+                val file = item["file"].toString()
+                val line = item["line"].toString().toInt()
+                for (shit in interestingFiles) {
+                    if (file.contains(shit.shortName)) {
+                        stackItems += MapPhizdetsStackToolIO.StackItem(shit.shortName, line)
                     }
-                    mumble("")
                 }
             }
-            is MapPhizdetsStackToolIO.Output.Poop -> {
-                bark(out.error)
+
+            val toolInput = MapPhizdetsStackToolIO.Input("aps-back-php", stackItems)
+            val om = ObjectMapper()
+            om.typeFactory = TypeFactory
+                .defaultInstance()
+                .withClassLoader(this::class.java.classLoader)
+            om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL)
+            val inputJSON = om.writeValueAsString(toolInput)
+            // mumble(inputJSON)
+            scrollToEnd()
+
+            val res = runProcessAndWait(
+                listOf("cmd.exe",
+                       "/c",
+                       "e:\\fegh\\_run.cmd phizdets.MapPhizdetsStackTool"),
+                inheritIO = false,
+                input = inputJSON)
+
+            if (res.exitValue != 0) {
+                run { // Dump output
+                    if (res.stderr.isNotBlank()) {
+                        barkNoln(res.stderr)
+                        if (!res.stderr.endsWith("\n"))
+                            bark("")
+                    }
+                    mumbleNoln(res.stdout)
+                    if (!res.stdout.endsWith("\n"))
+                        mumble("")
+                }
+                FuckingUtils.error("MapPhizdetsStackTool returned ${res.exitValue}, meaning 'fuck you'")
+                return
+            }
+
+            val out = om.readValue(res.stdout, MapPhizdetsStackToolIO.Output::class.java)
+            exhaustive=when (out) {
+                is MapPhizdetsStackToolIO.Output.Candy -> {
+                    for ((i, item) in stackItems.withIndex()) {
+                        link(item)
+
+                        interestingFiles.find {it.shortName == item.file}?.let {
+                            mumbleNoln(" (")
+                            link("--1", it.fullPath + "--1", item.line)
+                            mumbleNoln(")")
+                        }
+
+                        mumbleNoln(" --> ")
+                        val mappedItem = out.mappedStack[i]
+                        if (mappedItem == null) {
+                            mumbleNoln("[Obscure]")
+                        } else {
+                            link(mappedItem)
+                        }
+                        mumble("")
+                    }
+                }
+                is MapPhizdetsStackToolIO.Output.Poop -> {
+                    bark(out.error)
+                }
+            }
+            mumble("OK")
+        }
+
+        fun mumble(s: String) {
+            val m = bs.javaClass.getMethod("mumble", String::class.java)
+            m.isAccessible = true
+            m.invoke(bs, s)
+        }
+
+        fun bark(s: String) {
+            val m = bs.javaClass.getMethod("bark", String::class.java)
+            m.isAccessible = true
+            m.invoke(bs, s)
+        }
+
+        fun mumbleNoln(s: String) {
+            val m = bs.javaClass.getMethod("mumbleNoln", String::class.java)
+            m.isAccessible = true
+            m.invoke(bs, s)
+        }
+
+        fun barkNoln(s: String) {
+            val m = bs.javaClass.getMethod("barkNoln", String::class.java)
+            m.isAccessible = true
+            m.invoke(bs, s)
+        }
+
+        fun link(item: MapPhizdetsStackToolIO.StackItem) {
+            val path = interestingFiles.find {it.shortName == item.file}?.fullPath
+                ?: item.file
+            link(item.file + ":" + item.line, path, item.line)
+        }
+
+        fun link(text: String, path: String, line: Int) {
+            getConsoleViewImpl().printHyperlink(text) {project ->
+                if (!openFile(project, path, line)) {
+                    FuckingUtils.error("No fucking way")
+                }
             }
         }
-        mumble("OK")
-    }
 
-    fun mumble(s: String) {
-        val m = bs.javaClass.getMethod("mumble", String::class.java)
-        m.isAccessible = true
-        m.invoke(bs, s)
-    }
-
-    fun bark(s: String) {
-        val m = bs.javaClass.getMethod("bark", String::class.java)
-        m.isAccessible = true
-        m.invoke(bs, s)
-    }
-
-    fun mumbleNoln(s: String) {
-        val m = bs.javaClass.getMethod("mumbleNoln", String::class.java)
-        m.isAccessible = true
-        m.invoke(bs, s)
-    }
-
-    fun barkNoln(s: String) {
-        val m = bs.javaClass.getMethod("barkNoln", String::class.java)
-        m.isAccessible = true
-        m.invoke(bs, s)
-    }
-
-    fun link(item: MapPhizdetsStackToolIO.StackItem) {
-        getConsoleViewImpl().printHyperlink(item.file + ":" + item.line) {project->
-            val path = when (item.file) {
-                "aps-back.php" -> "E:/fegh/out/phi-tests/aps-back/aps-back.php"
-                "phizdets-stdlib.php" -> "E:/fegh/phizdets/phizdetsc/src/phizdets/php/phizdets-stdlib.php"
-                else -> item.file
-            }
-            if (!openFile(project, path, item.line)) {
-                FuckingUtils.error("No fucking way")
-            }
+        fun scrollToEnd() {
+            getConsoleViewImpl().scrollToEnd()
         }
-    }
 
-    fun scrollToEnd() {
-        getConsoleViewImpl().scrollToEnd()
-    }
+        private fun getConsoleViewImpl(): ConsoleViewImpl {
+            val m = bs.javaClass.getDeclaredMethod("getConsoleView")
+            m.isAccessible = true
+            return m.invoke(bs) as ConsoleViewImpl
+        }
 
-    private fun getConsoleViewImpl(): ConsoleViewImpl {
-        val m = bs.javaClass.getDeclaredMethod("getConsoleView")
-        m.isAccessible = true
-        return m.invoke(bs) as ConsoleViewImpl
-    }
-
-    fun toFront() {
-        val m = bs.javaClass.getMethod("toFront")
-        m.isAccessible = true
-        m.invoke(bs)
+        fun toFront() {
+            val m = bs.javaClass.getMethod("toFront")
+            m.isAccessible = true
+            m.invoke(bs)
+        }
     }
 }
 
