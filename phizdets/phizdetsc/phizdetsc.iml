@@ -85,5 +85,6 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="hot-reloadable-idea-piece-of-shit" />
   </component>
 </module>

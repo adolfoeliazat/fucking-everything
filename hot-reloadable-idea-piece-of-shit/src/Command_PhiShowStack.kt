@@ -86,11 +86,12 @@ object MapPhizdetsStackToolIO {
         // mumble(inputJSON)
         scrollToEnd()
 
-        val res = runProcessAndWait(listOf(
-            "cmd.exe",
-            "/c",
-            "e:\\fegh\\_run.cmd phizdets.MapPhizdetsStackTool"
-        ), inheritIO = false)
+        val res = runProcessAndWait(
+            listOf("cmd.exe",
+                   "/c",
+                   "e:\\fegh\\_run.cmd phizdets.MapPhizdetsStackTool"),
+            inheritIO = false,
+            input = inputJSON)
         if (res.stderr.isNotBlank()) {
             barkNoln(res.stderr)
             if (!res.stderr.endsWith("\n"))

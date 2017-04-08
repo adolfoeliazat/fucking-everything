@@ -6,9 +6,7 @@ import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
+import java.io.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
@@ -33,15 +31,16 @@ data class RunProcessResult(
     val stderr: String
 )
 
-fun runProcessAndWait(cmdPieces: List<String>, inheritIO: Boolean = true): RunProcessResult {
-    clog("Executing: " + cmdPieces.joinToString(" "))
+fun runProcessAndWait(cmdPieces: List<String>, inheritIO: Boolean = true, input: String? = null): RunProcessResult {
+    // clog("Executing: " + cmdPieces.joinToString(" "))
     val pb = ProcessBuilder()
     val cmd = pb.command()
     cmd.addAll(cmdPieces)
-    if (inheritIO) pb.inheritIO()
+    if (inheritIO)
+        pb.inheritIO()
     val proc = pb.start()
 
-    fun suck(stm: InputStream): StringBuilder {
+    fun suckAsync(stm: InputStream): StringBuilder {
         val buf = StringBuilder()
         thread {
             val reader = BufferedReader(InputStreamReader(stm, Charsets.UTF_8.name()))
@@ -50,16 +49,29 @@ fun runProcessAndWait(cmdPieces: List<String>, inheritIO: Boolean = true): RunPr
                 if (line == null) {
                     break
                 } else {
-                    println(line)
+                    // println(line)
                     buf.appendln(line)
                 }
             }
+            clog("Finished sucker thread")
         }
         return buf
     }
 
-    val stdout = suck(proc.inputStream)
-    val stderr = suck(proc.errorStream)
+    val stdout = suckAsync(proc.inputStream)
+    val stderr = suckAsync(proc.errorStream)
+
+    if (input != null) {
+        thread {
+            val pw = PrintWriter(proc.outputStream, true)
+            for (line in input.lines()) {
+                pw.println(line)
+            }
+            pw.close()
+            clog("Finished feeder thread")
+        }
+    }
+
     val exitValue = proc.waitFor()
     return RunProcessResult(exitValue = exitValue, stdout = stdout.toString(), stderr = stderr.toString())
 }
