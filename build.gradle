@@ -20,6 +20,9 @@ dependencies {
     compile 'org.jetbrains.kotlin:kotlin-compiler:1.1.0'
     compile 'com.google.guava:guava:21.0'
     compile 'com.google.javascript:closure-compiler:v20170218'
+    compile 'net.java.dev.jna:jna:4.4.0'
+    compile 'net.java.dev.jna:jna-platform:4.4.0'
+    compile 'com.1stleg:jnativehook:2.1.0'
 }
 
 task importDeps(type: Copy) {
