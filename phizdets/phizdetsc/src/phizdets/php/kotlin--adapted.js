@@ -1,3 +1,4 @@
+"@@phi-begin-noFuckingNewlines";
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         define('kotlin', ['exports'], factory);
@@ -812,6 +813,9 @@ function isInheritanceFromInterface(metadata, iface) {
   return false;
 }
 Kotlin.isType = function(object, klass) {
+  // @hack
+  var metadata = undefined
+
   if (klass === Object) {
     switch(typeof object) {
       case "string":
@@ -33651,3 +33655,4 @@ Kotlin.isCharSequence = function(value) {
 })();
 
 }));
+"@@phi-end-noFuckingNewlines"

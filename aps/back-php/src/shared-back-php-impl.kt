@@ -71,7 +71,10 @@ class PHP_HttpServletRequest {
         get() = imf("561c681d-8cfe-44ee-afae-1da09189ef78")
 
     val queryString: String
-        get() = phiEval("return \$_SERVER['QUERY_STRING'];")
+        get() {
+            "aaaaaaaaaaaaaaaaaaaaa"
+            return phiEval("return \$_SERVER['QUERY_STRING'];") as String
+        }
 }
 
 class PHP_HttpServletResponse {

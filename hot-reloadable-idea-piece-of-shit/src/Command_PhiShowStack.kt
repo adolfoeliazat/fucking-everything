@@ -41,6 +41,12 @@ object MapPhizdetsStackToolIO {
     }
 }
 
+@Ser class Command_PhiMakeSenseOfPHPSpew(val spew: String) : Servant {
+    override fun serve() {
+        FuckingUtils.info("Spew: $spew")
+    }
+}
+
 @Ser class Command_PhiShowStack(val projectName: String, val stack: List<Map<String, Any?>>) : Servant {
     class InterestingFile(val shortName: String, val fullPath: String)
 

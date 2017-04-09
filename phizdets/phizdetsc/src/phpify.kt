@@ -47,6 +47,7 @@ class Phpifier(val program: JsProgram) {
 
     val shitToShit = mutableMapOf<Any, Any?>()
     var JsNode.skipTransformation by AttachedShit<Boolean?>(shitToShit)
+    var JsNode.isPhiVarsInvocation by AttachedShit<Boolean?>(shitToShit)
 
     fun nextDebugTagLiteral(): JsExpression {
         return JsStringLiteral(nextDebugTag())
@@ -168,6 +169,7 @@ class Phpifier(val program: JsProgram) {
 
     fun stage2() {
         object : JsVisitorWithContextImpl() {
+            var noFuckingNewlinesMode = false
 
             override fun endVisit(x: JsWhile, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
@@ -180,16 +182,23 @@ class Phpifier(val program: JsProgram) {
                 super.endVisit(x, ctx)
 
                 if (x.initVars != null) {
-                    ctx.replaceMe(JsFor(x.initVars,
-                                        invocation("phiEvaluateToBoolean", listOf(x.condition)),
-                                        invocation("phiEvaluate", listOf(x.incrementExpression)),
-                                        x.body))
+                    wtf("1b200051-33aa-427c-8b04-3ffa42967d3f")
+                    val shit = JsFor(x.initVars,
+                                     invocation("phiEvaluateToBoolean", listOf(x.condition)),
+                                     invocation("phiEvaluate", listOf(x.incrementExpression)),
+                                     x.body)
+                    ctx.replaceMe(shit)
                 }
                 else if (x.initExpression != null) {
-                    ctx.replaceMe(JsFor(x.initExpression,
-                                        invocation("phiEvaluateToBoolean", listOf(x.condition)),
-                                        invocation("phiEvaluate", listOf(x.incrementExpression)),
-                                        x.body))
+                    val fuck = when {
+                        x.initExpression.isPhiVarsInvocation == true -> x.initExpression
+                        else -> invocation("phiEvaluate", listOf(x.initExpression))
+                    }
+                    val shit = JsFor(fuck,
+                                     invocation("phiEvaluateToBoolean", listOf(x.condition)),
+                                     invocation("phiEvaluate", listOf(x.incrementExpression)),
+                                     x.body)
+                    ctx.replaceMe(shit)
                 }
                 else {
                     wtf("ec8fa1fa-f368-4416-9a6d-599e4db32fd9")
@@ -225,6 +234,12 @@ class Phpifier(val program: JsProgram) {
 
             override fun endVisit(x: JsStringLiteral, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
+
+                when (x.value) {
+                    "@@phi-begin-noFuckingNewlines" -> noFuckingNewlinesMode = true
+                    "@@phi-end-noFuckingNewlines" -> noFuckingNewlinesMode = false
+                }
+
                 ctx.replaceMe(new("PhiStringLiteral", listOf(x)).source(x.source))
             }
 
@@ -236,7 +251,9 @@ class Phpifier(val program: JsProgram) {
                     JsInvocation(JsNameRef("array"), JsStringLiteral(it.name.ident), it.initExpression
                         ?: void0())
                 }
-                ctx.replaceMe(JsInvocation(JsNameRef("phiVars"), nextDebugTagLiteral(), JsInvocation(JsNameRef("array"), *shit.toTypedArray())).makeStmt())
+                val jsInvocation = JsInvocation(JsNameRef("phiVars"), nextDebugTagLiteral(), JsInvocation(JsNameRef("array"), *shit.toTypedArray()))
+                jsInvocation.isPhiVarsInvocation = true
+                ctx.replaceMe(jsInvocation.makeStmt())
             }
 
 
@@ -249,13 +266,17 @@ class Phpifier(val program: JsProgram) {
                 super.endVisit(x, ctx)
                 val args = x.propertyInitializers.map {
                     invocation("array", listOf(it.labelExpr, it.valueExpr))-{o->
-                        o.insertFuckingNewlineBeforeMe = true
+                        if (!noFuckingNewlinesMode) {
+                            o.insertFuckingNewlineBeforeMe = true
+                        }
                     }
                 }
                 ctx.replaceMe(new("PhiObjectLiteral", listOf(
                     nextDebugTagLiteral(),
                     invocation("array", args)-{o->
-                        o.insertFuckingNewlineAfterMe = true
+                        if (!noFuckingNewlinesMode) {
+                            o.insertFuckingNewlineAfterMe = true
+                        }
                     })))
             }
 

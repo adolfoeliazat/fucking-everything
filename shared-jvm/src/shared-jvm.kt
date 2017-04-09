@@ -196,6 +196,11 @@ val relaxedObjectMapper by lazy {
 
 fun dontRun(block: () -> Unit) {}
 
+val Throwable.stackTraceString: String get() {
+    val sw = StringWriter()
+    this.printStackTrace(PrintWriter(sw))
+    return sw.toString()
+}
 
 
 

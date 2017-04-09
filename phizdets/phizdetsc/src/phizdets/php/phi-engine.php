@@ -34,6 +34,9 @@ class PhiDot extends PhiExpression {
     public function evaluate() {
         // TODO:vgrechka @duplication 6fe21b9f-6bdb-446e-8186-801891740e1b
 
+        $debug_exprToString = strval($this->qualifier) . '.' . $this->name;
+        $debug_env = Phi::getCurrentEnv()->deepClone();
+
         $object = $this->qualifier->evaluate();
         if (!($object instanceof PhiObject)) {
             if ($object instanceof PhiString) {
@@ -127,6 +130,22 @@ class PhiObject extends PhiValue {
 //        else
 //            return $value;
 //    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    function hasProperty($name) {
+        if (array_key_exists($name, $this->fields) || array_key_exists($name, $this->props))
+            return true;
+
+        $proto = $this->getProto();
+        if ($proto != null) {
+            return $proto->hasProperty($name);
+        } else {
+            return false;
+        }
+    }
 
     /**
      * @param string $name
@@ -1456,6 +1475,8 @@ class PhiBinaryOperation extends PhiExpression {
      * @throws PhiIllegalStateException
      */
     public function evaluate() {
+        $debug_env = Phi::getCurrentEnv()->deepClone();
+
         if ($this->op === '===') {
             return new PhiBoolean($this->testReferenceEquality());
         }
@@ -1602,6 +1623,18 @@ class PhiBinaryOperation extends PhiExpression {
         }
         else if ($this->op === '&=') {
             return $this->numberShitAndAssign(function($a, $b) {return $a & $b;});
+        }
+        else if ($this->op === 'in') {
+            $lhsPhiValue = $this->lhs->evaluate();
+            if (!($lhsPhiValue instanceof PhiString))
+                throw new PhiIllegalStateException("3fad25d5-c7f7-479b-a50a-bdbb9b9f5436");
+
+            $rhsPhiValue = $this->rhs->evaluate();
+            if (!($rhsPhiValue instanceof PhiObject))
+                throw new PhiIllegalStateException("0afcb4f6-05cc-44e8-b5e2-a6cfc218fb2a");
+
+            return new PhiBoolean($rhsPhiValue->hasProperty($lhsPhiValue->getValue()));
+
         }
         else {
             throw new PhiIllegalStateException("op = {$this->op}    6bb8ca7a-c00a-4f60-9930-211dba14c031");
@@ -1914,6 +1947,9 @@ function phiEvaluate($expr) {
     $debug_exprToString = strval($expr);
     $debug_env = Phi::getCurrentEnv()->deepClone();
 
+    if ($expr === null) {
+        strval('break on me');
+    }
     return $expr->evaluate();
 }
 
@@ -2050,6 +2086,10 @@ class PhiBrackets extends PhiExpression {
         $this->index = $index;
     }
 
+    function __toString() {
+        return "{$this->object}[{$this->index}]";
+    }
+
     /**
      * @return PhiExpression
      */
@@ -2079,8 +2119,19 @@ class PhiBrackets extends PhiExpression {
         if (!($indexPhiValue instanceof PhiString) && !($indexPhiValue instanceof PhiNumber))
             throw new PhiIllegalStateException("d27c6721-2fb0-42a5-b20c-96239a66bdda");
 
-        $fieldName = strval($indexPhiValue->getValue());
-        return $objectPhiValue->getProperty($fieldName);
+        $indexValue = $indexPhiValue->getValue();
+        if ($objectPhiValue instanceof PhiArray) {
+            if (!is_float($indexValue))
+                throw new PhiIllegalStateException("88b4a510-dc35-45cf-b252-2c0f37eee9ee");
+            if (((int) $indexValue) != $indexValue)
+                throw new PhiIllegalStateException("aa75fbc2-a93f-46a8-a846-653aae45e7fa");
+            if ($indexValue < 0 || $indexValue > count($objectPhiValue->items) - 1)
+                return new PhiUndefined();
+            return $objectPhiValue->items[$indexValue];
+        } else {
+            $fieldName = strval($indexValue);
+            return $objectPhiValue->getProperty($fieldName);
+        }
     }
 }
 
@@ -2914,6 +2965,40 @@ if (defined('PHI_RUN_QUICK_TESTS')) {
         phiPrintln(__FUNCTION__ . ': PASSED');
     }
     phiQuickTest_constructor();
+
+    function phiQuickTest_in() {
+        Phi::initEnv(); Phi::initStdlib();
+
+        // var p = {d: 20}
+        phiVars('@@', array(array('p', new PhiObjectLiteral('@@', array(
+            array(new PhiNameRef('d'), new PhiNumberLiteral('@@', 20)))))));
+
+        // var a = Object.create(p)
+        phiVars('@@', array(array('a',
+            new PhiInvocation(new PhiDot(new PhiNameRef('Object'), 'create'),
+                array(new PhiNameRef('p'))))));
+
+        // a.b = 10
+        phiExpressionStatement(new PhiBinaryOperation('@@', '=',
+            new PhiDot(new PhiNameRef('a'), 'b'),
+            new PhiNumberLiteral('@@', 10)));
+
+        $fuck = function($expected, $prop) {
+            phiEvaluateAndAssertToStringEquals(
+                new PhiBoolean($expected),
+                new PhiBinaryOperation('@@', 'in',
+                    new PhiStringLiteral($prop),
+                    new PhiNameRef('a')));
+        };
+
+        // true  EQ  'b' in a
+        $fuck(true, 'b');
+        // false  EQ  'c' in a
+        $fuck(false, 'c');
+        // true EQ 'd' in a
+        $fuck(true, 'd');
+    }
+    phiQuickTest_in();
 }
 
 Phi::initEnv();

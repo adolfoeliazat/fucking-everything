@@ -1,7 +1,5 @@
 ;---------- Disable Alt+Numpad character code input ----------
 
-NumpadClear::SendInput {Right}
-
 !NumpadIns::SendInput !{Ins}
 !NumpadEnd::SendInput !{End}
 !NumpadDown::SendInput !{Down}
@@ -66,5 +64,24 @@ NumpadClear::SendInput {Right}
 ^+!NumpadUp::SendInput ^+!{Up}
 ^+!NumpadPgUp::SendInput ^+!{PgUp}
 ^+!NumpadDel::SendInput ^+!{Del}
+
+
+;---------- Stuff ----------
+
+NumpadClear:: Run, C:\WINDOWS\system32\cmd.exe /c e:\fegh\_run.cmd vgrechka.globalmenu.StartGlobalMenu ,,Hide
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

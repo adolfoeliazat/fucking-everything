@@ -18,7 +18,7 @@ fun error_log(vararg xs: Any?) {
 }
 
 @PHPDumpBodyToContainer fun apsback_makeRequires() {
-    apsphp.myFuckingDir = phiEval<String>("return __DIR__;")
+    apsphp.myFuckingDir = phiEval("return __DIR__;") as String
     // println("My fucking dir is " + aps.myFuckingDir)
     require_once(apsphp.myFuckingDir + "/aps-back-settings.php")
 }

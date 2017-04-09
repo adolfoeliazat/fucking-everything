@@ -59,8 +59,15 @@ object PhizdetsTestingGlobal {
 }
 
 object JerkAPSBackPHP {
+    val alsoCompileStdlib =
+        false
+//            true
+
     @JvmStatic
     fun main(args: Array<String>) {
+        if (alsoCompileStdlib)
+            CompileStdlib.main(arrayOf())
+
         Boobs(TestParams(
             testName = "aps-back",
             sourceFiles = listOf(
@@ -241,7 +248,7 @@ class Boobs(val testParams: TestParams) {
                                 .replace("&amp;", "&"))
 
                             val message = PDTRemoteCommand_TestResult(rawResponseFromPHPScript = actualResponseJSON)
-                            sendTestResultToDevTools(message)
+//                            sendTestResultToDevTools(message)
                         }
 
                         exitProcess(1)

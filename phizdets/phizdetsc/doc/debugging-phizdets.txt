@@ -46,6 +46,11 @@
 - Disable shit one by one and see what happens
     - Or better, disable half of the shit, then half of the half, etc.
 
+- Fixing line misalignment between .php and .php--1
+    - First, find a point before where lines are aligned. Then look from there to see where they diverge
+
+
+
 
 
 
