@@ -12,11 +12,13 @@ import com.intellij.execution.impl.ConsoleViewImpl
 import com.intellij.execution.impl.ConsoleViewUtil
 import com.intellij.execution.ui.*
 import com.intellij.execution.ui.actions.CloseAction
+import com.intellij.ide.impl.ProjectUtil
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.Key
+import com.intellij.openapi.wm.WindowManager
 import com.intellij.project.stateStore
 import com.intellij.unscramble.AnnotateStackTraceAction
 import com.intellij.util.containers.ConcurrentIntObjectMap
@@ -29,7 +31,9 @@ import java.io.StringWriter
 import java.util.*
 import vgrechka.*
 import vgrechka.idea.*
+import java.awt.Frame
 import java.util.*
+import javax.swing.JFrame
 import kotlin.properties.Delegates.notNull
 
 object MapPhizdetsStackToolIO {
@@ -43,7 +47,14 @@ object MapPhizdetsStackToolIO {
 
 @Ser class Command_PhiMakeSenseOfPHPSpew(val spew: String) : Servant {
     override fun serve() {
-        FuckingUtils.info("Spew: $spew")
+        withProjectNamed("fegh") {project ->
+            val f = WindowManager.getInstance().getFrame(project)
+            if (f != null) {
+                f.state = JFrame.NORMAL
+            }
+            // ProjectUtil.focusProjectWindow(project, true)
+            FuckingUtils.info(spew)
+        }
     }
 }
 

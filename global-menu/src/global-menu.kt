@@ -1,24 +1,17 @@
 package vgrechka.globalmenu
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import javafx.application.Application
-import javafx.beans.value.ChangeListener
-import javafx.beans.value.ObservableValue
 import javafx.collections.FXCollections
-import javafx.event.ActionEvent
-import javafx.event.EventHandler
-import javafx.event.EventType
-import javafx.stage.Stage
-import vgrechka.*
 import javafx.scene.Scene
 import javafx.scene.control.*
-import javafx.scene.input.KeyCode
-import javafx.scene.input.KeyEvent
-import javafx.scene.layout.StackPane
-import javafx.scene.layout.VBox
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.input.Clipboard
 import javafx.scene.input.DataFormat
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyEvent
+import javafx.scene.layout.VBox
+import javafx.stage.Stage
+import vgrechka.*
 import vgrechka.idea.hripos.*
 import vgrechka.ideabackdoor.*
 import kotlin.system.exitProcess
@@ -128,6 +121,7 @@ class StartGlobalMenu : Application() {
 
         val scene = Scene(vbox, 300.0, 250.0)
 
+        primaryStage.modality
         primaryStage.title = "Global Menu"
         primaryStage.scene = scene
         primaryStage.show()
