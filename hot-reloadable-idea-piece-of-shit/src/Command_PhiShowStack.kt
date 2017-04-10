@@ -1,5 +1,4 @@
 @file:Suppress("Unused")
-
 package vgrechka.idea.hripos
 
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -36,6 +35,7 @@ import java.awt.Frame
 import java.util.*
 import javax.swing.JFrame
 import kotlin.properties.Delegates.notNull
+import kotlin.reflect.KFunction0
 
 object MapPhizdetsStackToolIO {
     @Ser class Input(val projectName: String, val stack: List<StackItem>)
@@ -46,9 +46,88 @@ object MapPhizdetsStackToolIO {
     }
 }
 
-@Ser class Command_PhiMakeSenseOfPHPSpew(val spew: String) : Servant {
-    override fun serve() {
-        withProjectNamed("fegh") {project->
+interface Mumbler {
+    fun scrollToEnd()
+    fun barkNoln(s: String)
+    fun bark(s: String)
+    fun mumbleNoln(s: String)
+    fun mumble(s: String)
+    fun link(text: String, path: String, line: Int)
+    fun toFront()
+}
+
+fun serveMumblingCommand(projectName: String, doUsefulShit: (Mumbler) -> Unit): Any {
+    return try {
+        withProjectNamed(projectName) {project ->
+            val title = "Moderate Bullshit"
+
+            //        val p = HriposDebugOutput(project)
+            //        p.showDialog(title = title)
+
+            val mumbler = object:Mumbler {
+                val bs: Any = run {
+                    // FuckingUtils.noisy = true
+                    FuckingUtils.aLittleNonGCableAbomination(
+                        project = project,
+                        id = "moderate-bullshit",
+                        version = 1,
+                        make = {MyBullshitter(project, title = title)})
+                        ?: bitch("No bullshitter")
+                }
+
+                override fun mumble(s: String) {
+                    val m = bs.javaClass.getMethod("mumble", String::class.java)
+                    m.isAccessible = true
+                    m.invoke(bs, s)
+                }
+
+                override fun bark(s: String) {
+                    val m = bs.javaClass.getMethod("bark", String::class.java)
+                    m.isAccessible = true
+                    m.invoke(bs, s)
+                }
+
+                override fun mumbleNoln(s: String) {
+                    val m = bs.javaClass.getMethod("mumbleNoln", String::class.java)
+                    m.isAccessible = true
+                    m.invoke(bs, s)
+                }
+
+                override fun barkNoln(s: String) {
+                    val m = bs.javaClass.getMethod("barkNoln", String::class.java)
+                    m.isAccessible = true
+                    m.invoke(bs, s)
+                }
+
+                override fun link(text: String, path: String, line: Int) {
+                    getConsoleViewImpl().printHyperlink(text) {project ->
+                        if (!openFile(project, path, line)) {
+                            FuckingUtils.error("No fucking way")
+                        }
+                    }
+                }
+
+                override fun scrollToEnd() {
+                    getConsoleViewImpl().scrollToEnd()
+                }
+
+                private fun getConsoleViewImpl(): ConsoleViewImpl {
+                    val m = bs.javaClass.getDeclaredMethod("getConsoleView")
+                    m.isAccessible = true
+                    return m.invoke(bs) as ConsoleViewImpl
+                }
+
+                override fun toFront() {
+                    val m = bs.javaClass.getMethod("toFront")
+                    m.isAccessible = true
+                    m.invoke(bs)
+                }
+            }
+
+            mumbler.toFront()
+            mumbler.mumble("\n----- Hello, honey. It's ${Date()} -----\n")
+
+            doUsefulShit(mumbler)
             val f = WindowManager.getInstance().getFrame(project)
             if (f != null) {
                 f.state = JFrame.NORMAL
@@ -56,9 +135,13 @@ object MapPhizdetsStackToolIO {
             // ProjectUtil.focusProjectWindow(project, true)
 
             ApplicationManager.getApplication().invokeLater {
-                FuckingUtils.info("What's up?")
+                FuckingUtils.info("Received some shit...")
             }
         }
+        "Astonishing success"
+    } catch (e: Exception) {
+        Messages.showErrorDialog(e.stackTraceStr, "Shit Didn't Work")
+        "Bloody error"
     }
 }
 
@@ -66,47 +149,18 @@ object MapPhizdetsStackToolIO {
     class InterestingFile(val shortName: String, val fullPath: String)
 
     override fun serve(): Any {
-        return try {
-            Go().bananas()
-            "Astonishing success"
-        } catch (e: Exception) {
-            Messages.showErrorDialog(e.stackTraceStr, "Shit Didn't Work")
-            "Bloody error"
-        }
-    }
+        return serveMumblingCommand(projectName) {con->
+            val interestingFiles = listOf(
+                InterestingFile("aps-back.php", "E:/fegh/out/phi-tests/aps-back/aps-back.php"),
+                InterestingFile("phizdets-stdlib.php", "E:/fegh/phizdets/phizdetsc/src/phizdets/php/phizdets-stdlib.php")
+            )
 
-    inner class Go {
-        val interestingFiles = listOf(
-            InterestingFile("aps-back.php", "E:/fegh/out/phi-tests/aps-back/aps-back.php"),
-            InterestingFile("phizdets-stdlib.php", "E:/fegh/phizdets/phizdetsc/src/phizdets/php/phizdets-stdlib.php")
-        )
-
-        lateinit var bs: Any
-
-        fun bananas() {
-            withProjectNamed(projectName) {project ->
-                val title = Command_PhiShowStack::class.simpleName!!.substring("Command_".length)
-
-                //        val p = HriposDebugOutput(project)
-                //        p.showDialog(title = title)
-
-                bs = FuckingUtils.aLittleNonGCableAbomination(
-                    project = project,
-                    id = "Command_PhiShowStack.bullshitter",
-                    version = 19,
-                    make = {MyBullshitter(project, title = title)})
-                    ?: bitch("No bullshitter")
-
-                toFront()
-                mumble("\n----- Hello, honey. It's ${Date()} -----\n")
-
-                // FuckingUtils.noisy = true
-                serve1()
-                FuckingUtils.info("Received some shit to dig") // To bring the window to foreground
+            fun link(item: MapPhizdetsStackToolIO.StackItem) {
+                val path = interestingFiles.find {it.shortName == item.file}?.fullPath
+                    ?: item.file
+                con.link(item.file + ":" + item.line, path, item.line)
             }
-        }
 
-        fun serve1() {
             val stackItems = mutableListOf<MapPhizdetsStackToolIO.StackItem>()
             for (item in stack.reversed().drop(1)) {
                 val file = item["file"].toString()
@@ -126,7 +180,7 @@ object MapPhizdetsStackToolIO {
             om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL)
             val inputJSON = om.writeValueAsString(toolInput)
             // mumble(inputJSON)
-            scrollToEnd()
+            con.scrollToEnd()
 
             val res = runProcessAndWait(
                 listOf("cmd.exe",
@@ -138,16 +192,16 @@ object MapPhizdetsStackToolIO {
             if (res.exitValue != 0) {
                 run { // Dump output
                     if (res.stderr.isNotBlank()) {
-                        barkNoln(res.stderr)
+                        con.barkNoln(res.stderr)
                         if (!res.stderr.endsWith("\n"))
-                            bark("")
+                            con.bark("")
                     }
-                    mumbleNoln(res.stdout)
+                    con.mumbleNoln(res.stdout)
                     if (!res.stdout.endsWith("\n"))
-                        mumble("")
+                        con.mumble("")
                 }
                 FuckingUtils.error("MapPhizdetsStackTool returned ${res.exitValue}, meaning 'fuck you'")
-                return
+                return@serveMumblingCommand
             }
 
             val out = om.readValue(res.stdout, MapPhizdetsStackToolIO.Output::class.java)
@@ -157,83 +211,229 @@ object MapPhizdetsStackToolIO {
                         link(item)
 
                         interestingFiles.find {it.shortName == item.file}?.let {
-                            mumbleNoln(" (")
-                            link("--1", it.fullPath + "--1", item.line)
-                            mumbleNoln(")")
+                            con.mumbleNoln(" (")
+                            con.link("--1", it.fullPath + "--1", item.line)
+                            con.mumbleNoln(")")
                         }
 
-                        mumbleNoln(" --> ")
+                        con.mumbleNoln(" --> ")
                         val mappedItem = out.mappedStack[i]
                         if (mappedItem == null) {
-                            mumbleNoln("[Obscure]")
+                            con.mumbleNoln("[Obscure]")
                         } else {
                             link(mappedItem)
                         }
-                        mumble("")
+                        con.mumble("")
                     }
                 }
                 is MapPhizdetsStackToolIO.Output.Poop -> {
-                    bark(out.error)
+                    con.bark(out.error)
                 }
             }
-            mumble("OK")
-        }
-
-        fun mumble(s: String) {
-            val m = bs.javaClass.getMethod("mumble", String::class.java)
-            m.isAccessible = true
-            m.invoke(bs, s)
-        }
-
-        fun bark(s: String) {
-            val m = bs.javaClass.getMethod("bark", String::class.java)
-            m.isAccessible = true
-            m.invoke(bs, s)
-        }
-
-        fun mumbleNoln(s: String) {
-            val m = bs.javaClass.getMethod("mumbleNoln", String::class.java)
-            m.isAccessible = true
-            m.invoke(bs, s)
-        }
-
-        fun barkNoln(s: String) {
-            val m = bs.javaClass.getMethod("barkNoln", String::class.java)
-            m.isAccessible = true
-            m.invoke(bs, s)
-        }
-
-        fun link(item: MapPhizdetsStackToolIO.StackItem) {
-            val path = interestingFiles.find {it.shortName == item.file}?.fullPath
-                ?: item.file
-            link(item.file + ":" + item.line, path, item.line)
-        }
-
-        fun link(text: String, path: String, line: Int) {
-            getConsoleViewImpl().printHyperlink(text) {project ->
-                if (!openFile(project, path, line)) {
-                    FuckingUtils.error("No fucking way")
-                }
-            }
-        }
-
-        fun scrollToEnd() {
-            getConsoleViewImpl().scrollToEnd()
-        }
-
-        private fun getConsoleViewImpl(): ConsoleViewImpl {
-            val m = bs.javaClass.getDeclaredMethod("getConsoleView")
-            m.isAccessible = true
-            return m.invoke(bs) as ConsoleViewImpl
-        }
-
-        fun toFront() {
-            val m = bs.javaClass.getMethod("toFront")
-            m.isAccessible = true
-            m.invoke(bs)
+            con.mumble("OK")
         }
     }
 }
+
+
+private class MyBullshitter(val project: Project, val title: String? = null) {
+    private var executor: Executor? = null // by notNull<Executor>()
+    private var bullshitterDescr: RunContentDescriptor? = null // by notNull<RunContentDescriptor>()
+
+    val consoleView: ConsoleView by relazy {
+        var newConsoleView by notNullOnce<ConsoleView>()
+
+        ApplicationManager.getApplication().invokeAndWait {
+            val bullshitterID = UUID.randomUUID().toString()
+            clog("Creating bullshitter for project ${project.name}: $bullshitterID")
+
+            val builder = TextConsoleBuilderFactory.getInstance().createBuilder(project)
+            newConsoleView = builder.console
+
+            val toolbarActions = DefaultActionGroup()
+            val consoleComponent = MyConsolePanel(newConsoleView, toolbarActions)
+            bullshitterDescr = object : RunContentDescriptor(newConsoleView, null, consoleComponent, title ?: "Bullshitter", null) {
+                override fun isContentReuseProhibited(): Boolean {
+                    return true
+                }
+            }
+
+            executor = DefaultRunExecutor.getRunExecutorInstance()
+            // FuckingUtils.noise("executor =" + executor)
+            for (action in newConsoleView.createConsoleActions()) {
+                toolbarActions.add(action)
+            }
+            val console = newConsoleView as ConsoleViewImpl
+            ConsoleViewUtil.enableReplaceActionForConsoleViewEditor(console.editor)
+            console.editor.settings.isCaretRowShown = true
+            toolbarActions.add(AnnotateStackTraceAction(console.editor, console.hyperlinks))
+            toolbarActions.add(CloseAction(executor, bullshitterDescr, project))
+            ExecutionManager.getInstance(project).contentManager.showRunContent(executor!!, bullshitterDescr!!)
+            newConsoleView.allowHeavyFilters()
+
+            ExecutionManager.getInstance(project).contentManager
+
+            val con = project.messageBus.connect()
+            con.subscribe(RunContentManager.TOPIC, object:RunContentWithExecutorListener {
+                override fun contentSelected(descriptor: RunContentDescriptor?, executor: Executor) {
+                    if (descriptor == bullshitterDescr) {
+                        clog("Bullshitter selected: $bullshitterID")
+                    }
+                }
+
+                override fun contentRemoved(descriptor: RunContentDescriptor?, executor: Executor) {
+                    if (descriptor == bullshitterDescr) {
+                        clog("Bullshitter removed: $bullshitterID")
+                        con.disconnect()
+                        relazy.reset(this@MyBullshitter::consoleView)
+                    }
+                }
+            })
+        }
+
+        newConsoleView
+    }
+
+    fun toFront() {
+        consoleView // Init the bitch
+        ExecutionManager.getInstance(project).contentManager.toFrontRunContent(executor!!, bullshitterDescr!!)
+    }
+
+    fun mumble(s: String) {
+        mumbleNoln(s + "\n")
+    }
+
+    fun mumbleNoln(s: String) {
+        consoleView.print(s, ConsoleViewContentType.NORMAL_OUTPUT)
+    }
+
+    fun bark(s: String) {
+        barkNoln(s + "\n")
+    }
+
+    fun barkNoln(s: String) {
+        consoleView.print(s, ConsoleViewContentType.ERROR_OUTPUT)
+    }
+
+    fun bark(e: Throwable) {
+        e.printStackTrace()
+        val stringWriter = StringWriter()
+        e.printStackTrace(PrintWriter(stringWriter))
+        bark(stringWriter.toString())
+    }
+
+    private class MyConsolePanel(consoleView: ExecutionConsole, toolbarActions: ActionGroup) : JPanel(BorderLayout()) {
+        init {
+            val toolbarPanel = JPanel(BorderLayout())
+            toolbarPanel.add(ActionManager.getInstance()
+                                 .createActionToolbar("PLACE?", toolbarActions, false)
+                                 .component)
+            add(toolbarPanel, BorderLayout.WEST)
+            add(consoleView.component, BorderLayout.CENTER)
+        }
+    }
+
+}
+
+object FuckingUtils {
+    var noisy = false
+
+    fun aLittleNonGCableAbomination(project: Project, id: String, version: Int, make: () -> Any): Any? {
+        try {
+            val fullKeyName = id + version
+            var key: Key<Any?>? = null
+
+            val allKeys = run {
+                val f = Key::class.java.getDeclaredField("allKeys")
+                f.isAccessible = true
+                f.get(null) as ConcurrentIntObjectMap<Key<*>>
+            }
+            noise("${allKeys.size()} keys")
+
+            val keysToRemove = mutableListOf<Key<*>>()
+            val iterator = allKeys.entries().iterator()
+            while (iterator.hasNext()) {
+                val entry = iterator.next()
+                val existingKey = entry.value
+                val existingKeyName = getKeyName(existingKey) ?: continue
+
+                if (existingKeyName.startsWith(id) && existingKeyName != fullKeyName) {
+                    keysToRemove += entry.value
+                }
+                else if (fullKeyName == existingKeyName) {
+                    key = existingKey as Key<Any?>
+                    // noise("Found key " + key)
+                }
+            }
+
+            if (keysToRemove.isNotEmpty()) {
+                for (x in keysToRemove) {
+                    allKeys.remove(getKeyIndex(x)!!)
+                }
+                noise("Removed ${keysToRemove.size} old motherfuckers, ${allKeys.size()} left in map")
+            }
+
+            val motherfucker = if (key == null) {
+                noise("Creating new motherfucker")
+                key = Key<Any?>(fullKeyName)
+                val newMotherfucker = make()
+                val data = mutableListOf(key, newMotherfucker)
+                project.putUserData(key, data)
+                newMotherfucker
+            }
+            else {
+                noise("Found suitable existing motherfucker")
+                (project.getUserData(key) as MutableList<*>)[1]!!
+            }
+
+            noise("Cool")
+            return motherfucker
+        }
+        catch (e: Exception) {
+            error(e.stackTraceStr)
+            return null
+        }
+    }
+
+    fun error(s: String) {
+        Messages.showErrorDialog(s, "Shit Didn't Work")
+    }
+
+    fun noise(s: String) {
+        if (noisy) {
+            Messages.showInfoMessage(s, "Noise")
+        }
+    }
+
+    fun info(s: String) {
+        Messages.showInfoMessage(s, "Info")
+    }
+
+    private fun getKeyIndex(key: Key<*>): Int? {
+        return try {
+            val f = key.javaClass.getDeclaredField("myIndex")
+            f.isAccessible = true
+            f.get(key) as Int
+        } catch (e: NoSuchFieldException) {
+            null
+        }
+    }
+
+    private fun getKeyName(key: Key<*>): String? {
+        return try {
+            val f = key.javaClass.getDeclaredField("myName")
+            f.isAccessible = true
+            f.get(key) as String
+        } catch (e: NoSuchFieldException) {
+            null
+        }
+    }
+
+}
+
+
+
+
 
 object Command_PhiShowStackTest {
     @JvmStatic
@@ -440,205 +640,6 @@ object Command_PhiShowStackTest {
 }
             """
 }
-
-
-
-private class MyBullshitter(val project: Project, val title: String? = null) {
-    private var executor: Executor? = null // by notNull<Executor>()
-    private var bullshitterDescr: RunContentDescriptor? = null // by notNull<RunContentDescriptor>()
-
-    val consoleView: ConsoleView by relazy {
-        var newConsoleView by notNullOnce<ConsoleView>()
-
-        ApplicationManager.getApplication().invokeAndWait {
-            val bullshitterID = UUID.randomUUID().toString()
-            clog("Creating bullshitter for project ${project.name}: $bullshitterID")
-
-            val builder = TextConsoleBuilderFactory.getInstance().createBuilder(project)
-            newConsoleView = builder.console
-
-            val toolbarActions = DefaultActionGroup()
-            val consoleComponent = MyConsolePanel(newConsoleView, toolbarActions)
-            bullshitterDescr = object : RunContentDescriptor(newConsoleView, null, consoleComponent, title ?: "Bullshitter", null) {
-                override fun isContentReuseProhibited(): Boolean {
-                    return true
-                }
-            }
-
-            executor = DefaultRunExecutor.getRunExecutorInstance()
-            // FuckingUtils.info("executor " + executor)
-            for (action in newConsoleView.createConsoleActions()) {
-                toolbarActions.add(action)
-            }
-            val console = newConsoleView as ConsoleViewImpl
-            ConsoleViewUtil.enableReplaceActionForConsoleViewEditor(console.editor)
-            console.editor.settings.isCaretRowShown = true
-            toolbarActions.add(AnnotateStackTraceAction(console.editor, console.hyperlinks))
-            toolbarActions.add(CloseAction(executor, bullshitterDescr, project))
-            ExecutionManager.getInstance(project).contentManager.showRunContent(executor!!, bullshitterDescr!!)
-            newConsoleView.allowHeavyFilters()
-
-            ExecutionManager.getInstance(project).contentManager
-
-            val con = project.messageBus.connect()
-            con.subscribe(RunContentManager.TOPIC, object:RunContentWithExecutorListener {
-                override fun contentSelected(descriptor: RunContentDescriptor?, executor: Executor) {
-                    if (descriptor == bullshitterDescr) {
-                        clog("Bullshitter selected: $bullshitterID")
-                    }
-                }
-
-                override fun contentRemoved(descriptor: RunContentDescriptor?, executor: Executor) {
-                    if (descriptor == bullshitterDescr) {
-                        clog("Bullshitter removed: $bullshitterID")
-                        con.disconnect()
-                        relazy.reset(this@MyBullshitter::consoleView)
-                    }
-                }
-            })
-        }
-
-        newConsoleView
-    }
-
-    fun toFront() {
-        consoleView // Init the bitch
-        ExecutionManager.getInstance(project).contentManager.toFrontRunContent(executor!!, bullshitterDescr!!)
-    }
-
-    fun mumble(s: String) {
-        mumbleNoln(s + "\n")
-    }
-
-    fun mumbleNoln(s: String) {
-        consoleView.print(s, ConsoleViewContentType.NORMAL_OUTPUT)
-    }
-
-    fun bark(s: String) {
-        barkNoln(s + "\n")
-    }
-
-    fun barkNoln(s: String) {
-        consoleView.print(s, ConsoleViewContentType.ERROR_OUTPUT)
-    }
-
-    fun bark(e: Throwable) {
-        e.printStackTrace()
-        val stringWriter = StringWriter()
-        e.printStackTrace(PrintWriter(stringWriter))
-        bark(stringWriter.toString())
-    }
-
-    private class MyConsolePanel(consoleView: ExecutionConsole, toolbarActions: ActionGroup) : JPanel(BorderLayout()) {
-        init {
-            val toolbarPanel = JPanel(BorderLayout())
-            toolbarPanel.add(ActionManager.getInstance()
-                                 .createActionToolbar("PLACE?", toolbarActions, false)
-                                 .component)
-            add(toolbarPanel, BorderLayout.WEST)
-            add(consoleView.component, BorderLayout.CENTER)
-        }
-    }
-
-}
-
-object FuckingUtils {
-    var noisy = false
-
-    fun aLittleNonGCableAbomination(project: Project, id: String, version: Int, make: () -> Any): Any? {
-        try {
-            val fullKeyName = id + version
-            var key: Key<Any?>? = null
-
-            val allKeys = run {
-                val f = Key::class.java.getDeclaredField("allKeys")
-                f.isAccessible = true
-                f.get(null) as ConcurrentIntObjectMap<Key<*>>
-            }
-            noise("${allKeys.size()} keys")
-
-            val keysToRemove = mutableListOf<Key<*>>()
-            val iterator = allKeys.entries().iterator()
-            while (iterator.hasNext()) {
-                val entry = iterator.next()
-                val existingKey = entry.value
-                val existingKeyName = getKeyName(existingKey) ?: continue
-
-                if (existingKeyName.startsWith(id) && existingKeyName != fullKeyName) {
-                    keysToRemove += entry.value
-                }
-                else if (fullKeyName == existingKeyName) {
-                    key = existingKey as Key<Any?>
-                    // noise("Found key " + key)
-                }
-            }
-
-            if (keysToRemove.isNotEmpty()) {
-                for (x in keysToRemove) {
-                    allKeys.remove(getKeyIndex(x)!!)
-                }
-                noise("Removed ${keysToRemove.size} old motherfuckers, ${allKeys.size()} left in map")
-            }
-
-            val motherfucker = if (key == null) {
-                noise("Creating new motherfucker")
-                key = Key<Any?>(fullKeyName)
-                val newMotherfucker = make()
-                val data = mutableListOf(key, newMotherfucker)
-                project.putUserData(key, data)
-                newMotherfucker
-            }
-            else {
-                noise("Found suitable existing motherfucker")
-                (project.getUserData(key) as MutableList<*>)[1]!!
-            }
-
-            noise("Cool")
-            return motherfucker
-        }
-        catch (e: Exception) {
-            error(e.stackTraceStr)
-            return null
-        }
-    }
-
-    fun error(s: String) {
-        Messages.showErrorDialog(s, "Shit Didn't Work")
-    }
-
-    fun noise(s: String) {
-        if (noisy) {
-            Messages.showInfoMessage(s, "Noise")
-        }
-    }
-
-    fun info(s: String) {
-        Messages.showInfoMessage(s, "Info")
-    }
-
-    private fun getKeyIndex(key: Key<*>): Int? {
-        return try {
-            val f = key.javaClass.getDeclaredField("myIndex")
-            f.isAccessible = true
-            f.get(key) as Int
-        } catch (e: NoSuchFieldException) {
-            null
-        }
-    }
-
-    private fun getKeyName(key: Key<*>): String? {
-        return try {
-            val f = key.javaClass.getDeclaredField("myName")
-            f.isAccessible = true
-            f.get(key) as String
-        } catch (e: NoSuchFieldException) {
-            null
-        }
-    }
-
-}
-
-
 
 
 
