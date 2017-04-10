@@ -14,6 +14,7 @@ import com.intellij.execution.ui.*
 import com.intellij.execution.ui.actions.CloseAction
 import com.intellij.ide.impl.ProjectUtil
 import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
@@ -47,13 +48,16 @@ object MapPhizdetsStackToolIO {
 
 @Ser class Command_PhiMakeSenseOfPHPSpew(val spew: String) : Servant {
     override fun serve() {
-        withProjectNamed("fegh") {project ->
+        withProjectNamed("fegh") {project->
             val f = WindowManager.getInstance().getFrame(project)
             if (f != null) {
                 f.state = JFrame.NORMAL
             }
             // ProjectUtil.focusProjectWindow(project, true)
-            FuckingUtils.info(spew)
+
+            ApplicationManager.getApplication().invokeLater {
+                FuckingUtils.info("What's up?")
+            }
         }
     }
 }

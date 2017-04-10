@@ -99,7 +99,7 @@ object GlobalMenuItem_Phizdets_MakeSenseOfPHPSpew : MenuItem {
 
     override fun makeDetailsControl() = TextArea()-{o->
         o.minHeight = 100.0
-        o.text = ""
+        o.text = "Looking at clipboard..."
 
         thread {
             Thread.sleep(250)
@@ -113,6 +113,7 @@ object GlobalMenuItem_Phizdets_MakeSenseOfPHPSpew : MenuItem {
 
     override fun run() {
         try {
+            GlobalMenuGlobal.primaryStage.isIconified = true
             sendCommandToIDEABackdoor(Command_PhiMakeSenseOfPHPSpew(spew))
             GlobalMenuGlobal.primaryStage.isIconified = true
         } catch(e: Exception) {
