@@ -83,6 +83,7 @@ fun stringBuild(block: (StringBuilder) -> Unit) =
     StringBuilder().also(block).toString()
 
 annotation class Ser
+annotation class AllOpen
 
 inline operator fun <T, FRet> T.minus(f: (T) -> FRet): T { f(this); return this }
 
@@ -201,6 +202,9 @@ val Throwable.stackTraceString: String get() {
     this.printStackTrace(PrintWriter(sw))
     return sw.toString()
 }
+
+@Ser data class FileLine(val file: String, val line: Int)
+data class FileLineColumn(val file: String, val line: Int, val column: Int = 1)
 
 
 

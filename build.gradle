@@ -23,6 +23,9 @@ dependencies {
     compile 'net.java.dev.jna:jna:4.4.0'
     compile 'net.java.dev.jna:jna-platform:4.4.0'
     compile 'com.1stleg:jnativehook:2.1.0'
+    compile 'org.parboiled:parboiled-core:1.1.8'
+    compile 'org.parboiled:parboiled-java:1.1.8'
+    compile 'junit:junit:4.12'
 }
 
 task importDeps(type: Copy) {

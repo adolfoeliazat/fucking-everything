@@ -56,9 +56,17 @@ class PhizdetsSourceGenerationVisitor(out: TextOutput, taggedGenOut: TextOutput,
         super.accept(node)
     }
 
+    // @debug-source-map
     private fun mapSource(node: JsNode?) {
         if (sourceMapBuilder != null) {
             val sourceInfo = node!!.source
+
+//            run { // @debug
+//                if (node is JsConditional) {
+//                    "break on me"
+//                }
+//            }
+
 
             // @debug
 //            val shit = node.debug_attachedShit("replacedNode")

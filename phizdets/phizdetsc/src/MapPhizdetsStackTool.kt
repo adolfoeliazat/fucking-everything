@@ -26,12 +26,33 @@ object MapPhizdetsStackTool {
             return MapPhizdetsStackToolIO.Output.Poop("I don't support your fucking ${input.projectName}")
 
         return MapPhizdetsStackToolIO.Output.Candy(input.stack.map {obscureItem->
-            val pizda = MapPhizdetsStack.mapFuckingLine(MapPhizdetsStack.StackLine(obscureItem.file, obscureItem.line), getMapPath = ::getAPSBackPHPMapPath)
+            val pizda = MapPhizdetsStack.mapFuckingLine(FileLineColumn(obscureItem.file, obscureItem.line, 9999999), getMapPath = ::getAPSBackPHPMapPath)
             when (pizda) {
                 null -> null
-                else -> MapPhizdetsStackToolIO.StackItem(pizda.resource, pizda.line)
+                else -> FileLine(pizda.file, pizda.line)
             }
         })
+    }
+}
+
+object JerkMapPhizdetsStackTool5 {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val mapping = MapPhizdetsStack.getMapping("E:/fegh/out/phi-tests/aps-back/aps-back.php.map")
+        val penetration = mapping.sourceMappingPenetration
+        clog(mapping.getMappingForLine(4284, 9999999))
+        "break on me"
+    }
+}
+
+object JerkMapPhizdetsStackTool4 {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val out = MapPhizdetsStackTool.main2(MapPhizdetsStackToolIO.Input("aps-back-php", listOf(
+            FileLine("aps-back.php", 4284)
+        ))) as MapPhizdetsStackToolIO.Output.Candy
+        val shit = out.mappedStack.first()!!
+        clog(shit.file + ":" + shit.line)
     }
 }
 

@@ -295,7 +295,11 @@ class Phpifier(val program: JsProgram) {
 
             override fun endVisit(x: JsConditional, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
-                ctx.replaceMe(new("PhiConditional", listOf(x.testExpression, x.thenExpression, x.elseExpression)))
+                if (x.toString().contains("typeof") && x.toString().contains("QUERY_STRING")) {
+                    "break on me"
+                }
+                ctx.replaceMe(new("PhiConditional", listOf(x.testExpression, x.thenExpression, x.elseExpression))
+                                  .source(x.source))
             }
 
             override fun endVisit(x: JsFunction, ctx: JsContext<JsNode>) {

@@ -1,9 +1,7 @@
 <component name="libraryTable">
   <library name="lib-gradle">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib-gradle/asm-5.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib-gradle/asm-commons-5.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib-gradle/asm-tree-5.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib-gradle/http2-client-9.4.3.v20170317.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib-gradle/http2-common-9.4.3.v20170317.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib-gradle/http2-hpack-9.4.3.v20170317.jar!/" />
@@ -48,6 +46,8 @@
       <root url="jar://$PROJECT_DIR$/lib-gradle/websocket-common-9.4.3.v20170317.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib-gradle/websocket-server-9.4.3.v20170317.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib-gradle/websocket-servlet-9.4.3.v20170317.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/asm-5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/asm-tree-5.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
