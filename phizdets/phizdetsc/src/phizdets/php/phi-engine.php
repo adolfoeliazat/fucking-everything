@@ -1634,7 +1634,10 @@ class PhiBinaryOperation extends PhiExpression {
                 throw new PhiIllegalStateException("0afcb4f6-05cc-44e8-b5e2-a6cfc218fb2a");
 
             return new PhiBoolean($rhsPhiValue->hasProperty($lhsPhiValue->getValue()));
-
+        }
+        else if ($this->op === ',') {
+            $this->lhs->evaluate();
+            return $this->rhs->evaluate();
         }
         else {
             throw new PhiIllegalStateException("op = {$this->op}    6bb8ca7a-c00a-4f60-9930-211dba14c031");
@@ -2999,6 +3002,26 @@ if (defined('PHI_RUN_QUICK_TESTS')) {
         $fuck(true, 'd');
     }
     phiQuickTest_in();
+
+    function phiQuickTest_comma() {
+        Phi::initEnv(); Phi::initStdlib();
+
+        // 11  EQ  1 + 2, 3 + 4, 5 + 6
+        phiEvaluateAndAssertToStringEquals(
+            new PhiNumber(11),
+            new PhiBinaryOperation('@@', ',',
+                new PhiBinaryOperation('@@', '+',
+                    new PhiNumberLiteral('@@', 1),
+                    new PhiNumberLiteral('@@', 2)),
+                new PhiBinaryOperation('@@', ',',
+                    new PhiBinaryOperation('@@', '+',
+                        new PhiNumberLiteral('@@', 3),
+                        new PhiNumberLiteral('@@', 4)),
+                    new PhiBinaryOperation('@@', '+',
+                        new PhiNumberLiteral('@@', 5),
+                        new PhiNumberLiteral('@@', 6)))));
+    }
+    phiQuickTest_comma();
 }
 
 Phi::initEnv();

@@ -92,43 +92,49 @@ fun runMapPhizdetsStackTool(con: Mumbler, stackItems: MutableList<FileLine>): Ma
 }
 
 @Ser class Command_PhiShowStack(val projectName: String, val stack: List<Map<String, Any?>>) : Servant {
-
     override fun serve(): Any {
-        return serveMumblingCommand(projectName) {con->
-
-            val stackItems = mutableListOf<FileLine>()
-            for (item in stack.reversed().drop(1)) {
-                val file = item["file"].toString()
-                val line = item["line"].toString().toInt()
-                for (shit in APSBackPHPDevTools.interestingFiles) {
-                    if (file.contains(shit.shortName)) {
-                        stackItems += FileLine(shit.shortName, line)
-                    }
-                }
-            }
-
-            val toolOut = runMapPhizdetsStackTool(con, stackItems) ?: return@serveMumblingCommand
-
-            for ((i, item) in stackItems.withIndex()) {
-                APSBackPHPDevTools.link(con, item)
-
-                APSBackPHPDevTools.interestingFiles.find {it.shortName == item.file}?.let {
-                    con.mumbleNoln(" (")
-                    con.link("--1", it.fullPath + "--1", item.line)
-                    con.mumbleNoln(")")
-                }
-
-                con.mumbleNoln(" --> ")
-                val mappedItem = toolOut.mappedStack[i]
-                if (mappedItem == null) {
-                    con.mumbleNoln("[Obscure]")
-                } else {
-                    APSBackPHPDevTools.link(con, mappedItem)
-                }
-                con.mumble("")
-            }
-            con.mumble("OK")
+        val spew = StringBuilder()
+        for (item in stack.reversed().drop(1)) {
+            val file = item["file"].toString()
+            val line = item["line"].toString().toInt()
+            spew += "$file:$line\n"
         }
+        return Command_PhiMakeSenseOfPHPSpew(spew.toString()).serve()
+    }
+
+    private fun oldShit(con: Mumbler) {
+        val stackItems = mutableListOf<FileLine>()
+        for (item in stack.reversed().drop(1)) {
+            val file = item["file"].toString()
+            val line = item["line"].toString().toInt()
+            for (shit in APSBackPHPDevTools.interestingFiles) {
+                if (file.contains(shit.shortName)) {
+                    stackItems += FileLine(shit.shortName, line)
+                }
+            }
+        }
+
+        val toolOut = runMapPhizdetsStackTool(con, stackItems) ?: return
+
+        for ((i, item) in stackItems.withIndex()) {
+            APSBackPHPDevTools.link(con, item)
+
+            APSBackPHPDevTools.interestingFiles.find {it.shortName == item.file}?.let {
+                con.mumbleNoln(" (")
+                con.link("--1", it.fullPath + "--1", item.line)
+                con.mumbleNoln(")")
+            }
+
+            con.mumbleNoln(" --> ")
+            val mappedItem = toolOut.mappedStack[i]
+            if (mappedItem == null) {
+                con.mumbleNoln("[Obscure]")
+            } else {
+                APSBackPHPDevTools.link(con, mappedItem)
+            }
+            con.mumble("")
+        }
+        con.mumble("OK")
     }
 }
 

@@ -253,6 +253,7 @@ class Phpifier(val program: JsProgram) {
                 }
                 val jsInvocation = JsInvocation(JsNameRef("phiVars"), nextDebugTagLiteral(), JsInvocation(JsNameRef("array"), *shit.toTypedArray()))
                 jsInvocation.isPhiVarsInvocation = true
+                jsInvocation.source(x.source)
                 ctx.replaceMe(jsInvocation.makeStmt())
             }
 

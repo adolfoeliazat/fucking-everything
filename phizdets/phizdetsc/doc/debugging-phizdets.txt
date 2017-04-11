@@ -49,6 +49,22 @@
 - Fixing line misalignment between .php and .php--1
     - First, find a point before where lines are aligned. Then look from there to see where they diverge
 
+- Fixing wrong source mapping
+    - Chances are, when replacing nodes with phi... invocations, JsNode.source is not transferred from the node being replaced to the replacement
+    - Look at generated line. Which phi... invocations are there?
+    - Then go to stage2(), find endVisit() for corresponding JsNode type. Are there something like `replacement.source(x.source)`?
+    - Also useful is to set breakpoint in that endVisit() and see if x.source actually points to some KtElement, not null
+      (because line number is taken from KtElement in SourceMapBuilderConsumer).
+      `(x.source as ...).text` will give a piece of corresponding .kt source code
+    - When pinning down a piece of transformed code in endVisit(), don't hesitate to add something like ```
+          if (x.toString().contains("someVarName") || x.toString().contains("someLiteral) || x.toString().contains("someFunctionName")) {
+              (*) "break on me" // Breakpoint here
+          }
+      ```
+    - See // @debug-source-map
+
+
+
 
 
 

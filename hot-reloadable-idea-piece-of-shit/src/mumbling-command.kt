@@ -129,6 +129,7 @@ fun serveMumblingCommand(projectName: String, doUsefulShit: (Mumbler) -> Unit): 
             mumbler.mumble("\n----- Hello, honey. It's ${Date()} -----\n")
 
             doUsefulShit(mumbler)
+            mumbler.scrollToEnd()
 
             val f = WindowManager.getInstance().getFrame(project)
             if (f != null) {

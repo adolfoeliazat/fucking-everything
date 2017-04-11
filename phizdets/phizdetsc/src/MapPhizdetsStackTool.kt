@@ -40,7 +40,7 @@ object JerkMapPhizdetsStackTool5 {
     fun main(args: Array<String>) {
         val mapping = MapPhizdetsStack.getMapping("E:/fegh/out/phi-tests/aps-back/aps-back.php.map")
         val penetration = mapping.sourceMappingPenetration
-        clog(mapping.getMappingForLine(4284, 9999999))
+        clog(mapping.getMappingForLine(46, 9999999))
         "break on me"
     }
 }
