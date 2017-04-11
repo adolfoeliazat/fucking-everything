@@ -907,13 +907,12 @@
   Kotlin.isType = function (object, klass) {
     var metadata = undefined;
     if (klass === Object) {
-      switch (typeof object) {
-        case "string":
-        case "number":
-        case "boolean":
-        case "function":
-          return true;
-        default:return object instanceof Object;
+      var t = typeof object;
+      if (t === "string" || t === "number" || t === "boolean" || t === "function") {
+        return true;
+      }
+       else {
+        return object instanceof Object;
       }
     }
     if (object == null || klass == null || (typeof object !== "object" && typeof object !== "function")) {
@@ -1414,38 +1413,81 @@
       return [AnnotationTarget$CLASS_getInstance(), AnnotationTarget$ANNOTATION_CLASS_getInstance(), AnnotationTarget$TYPE_PARAMETER_getInstance(), AnnotationTarget$PROPERTY_getInstance(), AnnotationTarget$FIELD_getInstance(), AnnotationTarget$LOCAL_VARIABLE_getInstance(), AnnotationTarget$VALUE_PARAMETER_getInstance(), AnnotationTarget$CONSTRUCTOR_getInstance(), AnnotationTarget$FUNCTION_getInstance(), AnnotationTarget$PROPERTY_GETTER_getInstance(), AnnotationTarget$PROPERTY_SETTER_getInstance(), AnnotationTarget$TYPE_getInstance(), AnnotationTarget$EXPRESSION_getInstance(), AnnotationTarget$FILE_getInstance(), AnnotationTarget$TYPEALIAS_getInstance()];
     };
     var AnnotationTarget$valueOf = function (name) {
-      switch (name) {
-        case "CLASS":
-          return AnnotationTarget$CLASS_getInstance();
-        case "ANNOTATION_CLASS":
+      if (name === "CLASS") {
+        return AnnotationTarget$CLASS_getInstance();
+      }
+       else {
+        if (name === "ANNOTATION_CLASS") {
           return AnnotationTarget$ANNOTATION_CLASS_getInstance();
-        case "TYPE_PARAMETER":
-          return AnnotationTarget$TYPE_PARAMETER_getInstance();
-        case "PROPERTY":
-          return AnnotationTarget$PROPERTY_getInstance();
-        case "FIELD":
-          return AnnotationTarget$FIELD_getInstance();
-        case "LOCAL_VARIABLE":
-          return AnnotationTarget$LOCAL_VARIABLE_getInstance();
-        case "VALUE_PARAMETER":
-          return AnnotationTarget$VALUE_PARAMETER_getInstance();
-        case "CONSTRUCTOR":
-          return AnnotationTarget$CONSTRUCTOR_getInstance();
-        case "FUNCTION":
-          return AnnotationTarget$FUNCTION_getInstance();
-        case "PROPERTY_GETTER":
-          return AnnotationTarget$PROPERTY_GETTER_getInstance();
-        case "PROPERTY_SETTER":
-          return AnnotationTarget$PROPERTY_SETTER_getInstance();
-        case "TYPE":
-          return AnnotationTarget$TYPE_getInstance();
-        case "EXPRESSION":
-          return AnnotationTarget$EXPRESSION_getInstance();
-        case "FILE":
-          return AnnotationTarget$FILE_getInstance();
-        case "TYPEALIAS":
-          return AnnotationTarget$TYPEALIAS_getInstance();
-        default:Kotlin.throwISE("No enum constant kotlin.annotation.AnnotationTarget." + name);
+        }
+         else {
+          if (name === "TYPE_PARAMETER") {
+            return AnnotationTarget$TYPE_PARAMETER_getInstance();
+          }
+           else {
+            if (name === "PROPERTY") {
+              return AnnotationTarget$PROPERTY_getInstance();
+            }
+             else {
+              if (name === "FIELD") {
+                return AnnotationTarget$FIELD_getInstance();
+              }
+               else {
+                if (name === "LOCAL_VARIABLE") {
+                  return AnnotationTarget$LOCAL_VARIABLE_getInstance();
+                }
+                 else {
+                  if (name === "VALUE_PARAMETER") {
+                    return AnnotationTarget$VALUE_PARAMETER_getInstance();
+                  }
+                   else {
+                    if (name === "CONSTRUCTOR") {
+                      return AnnotationTarget$CONSTRUCTOR_getInstance();
+                    }
+                     else {
+                      if (name === "FUNCTION") {
+                        return AnnotationTarget$FUNCTION_getInstance();
+                      }
+                       else {
+                        if (name === "PROPERTY_GETTER") {
+                          return AnnotationTarget$PROPERTY_GETTER_getInstance();
+                        }
+                         else {
+                          if (name === "PROPERTY_SETTER") {
+                            return AnnotationTarget$PROPERTY_SETTER_getInstance();
+                          }
+                           else {
+                            if (name === "TYPE") {
+                              return AnnotationTarget$TYPE_getInstance();
+                            }
+                             else {
+                              if (name === "EXPRESSION") {
+                                return AnnotationTarget$EXPRESSION_getInstance();
+                              }
+                               else {
+                                if (name === "FILE") {
+                                  return AnnotationTarget$FILE_getInstance();
+                                }
+                                 else {
+                                  if (name === "TYPEALIAS") {
+                                    return AnnotationTarget$TYPEALIAS_getInstance();
+                                  }
+                                   else {
+                                    Kotlin.throwISE("No enum constant kotlin.annotation.AnnotationTarget." + name);
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     };
     var AnnotationRetention = function (name, ordinal) {
@@ -1476,14 +1518,21 @@
       return [AnnotationRetention$SOURCE_getInstance(), AnnotationRetention$BINARY_getInstance(), AnnotationRetention$RUNTIME_getInstance()];
     };
     var AnnotationRetention$valueOf = function (name) {
-      switch (name) {
-        case "SOURCE":
-          return AnnotationRetention$SOURCE_getInstance();
-        case "BINARY":
+      if (name === "SOURCE") {
+        return AnnotationRetention$SOURCE_getInstance();
+      }
+       else {
+        if (name === "BINARY") {
           return AnnotationRetention$BINARY_getInstance();
-        case "RUNTIME":
-          return AnnotationRetention$RUNTIME_getInstance();
-        default:Kotlin.throwISE("No enum constant kotlin.annotation.AnnotationRetention." + name);
+        }
+         else {
+          if (name === "RUNTIME") {
+            return AnnotationRetention$RUNTIME_getInstance();
+          }
+           else {
+            Kotlin.throwISE("No enum constant kotlin.annotation.AnnotationRetention." + name);
+          }
+        }
       }
     };
     var Target = function (allowedTargets) {
@@ -12454,12 +12503,16 @@
       return [RegexOption$IGNORE_CASE_getInstance(), RegexOption$MULTILINE_getInstance()];
     };
     var RegexOption$valueOf = function (name) {
-      switch (name) {
-        case "IGNORE_CASE":
-          return RegexOption$IGNORE_CASE_getInstance();
-        case "MULTILINE":
+      if (name === "IGNORE_CASE") {
+        return RegexOption$IGNORE_CASE_getInstance();
+      }
+       else {
+        if (name === "MULTILINE") {
           return RegexOption$MULTILINE_getInstance();
-        default:Kotlin.throwISE("No enum constant kotlin.text.RegexOption." + name);
+        }
+         else {
+          Kotlin.throwISE("No enum constant kotlin.text.RegexOption." + name);
+        }
       }
     };
     var MatchGroup = function (value) {
@@ -12929,14 +12982,21 @@
       return [KParameter$Kind$INSTANCE_getInstance(), KParameter$Kind$EXTENSION_RECEIVER_getInstance(), KParameter$Kind$VALUE_getInstance()];
     };
     var KParameter$Kind$valueOf = function (name) {
-      switch (name) {
-        case "INSTANCE":
-          return KParameter$Kind$INSTANCE_getInstance();
-        case "EXTENSION_RECEIVER":
+      if (name === "INSTANCE") {
+        return KParameter$Kind$INSTANCE_getInstance();
+      }
+       else {
+        if (name === "EXTENSION_RECEIVER") {
           return KParameter$Kind$EXTENSION_RECEIVER_getInstance();
-        case "VALUE":
-          return KParameter$Kind$VALUE_getInstance();
-        default:Kotlin.throwISE("No enum constant kotlin.reflect.KParameter.Kind." + name);
+        }
+         else {
+          if (name === "VALUE") {
+            return KParameter$Kind$VALUE_getInstance();
+          }
+           else {
+            Kotlin.throwISE("No enum constant kotlin.reflect.KParameter.Kind." + name);
+          }
+        }
       }
     };
     var KProperty = function () {
@@ -13020,14 +13080,21 @@
       return [KVariance$INVARIANT_getInstance(), KVariance$IN_getInstance(), KVariance$OUT_getInstance()];
     };
     var KVariance$valueOf = function (name) {
-      switch (name) {
-        case "INVARIANT":
-          return KVariance$INVARIANT_getInstance();
-        case "IN":
+      if (name === "INVARIANT") {
+        return KVariance$INVARIANT_getInstance();
+      }
+       else {
+        if (name === "IN") {
           return KVariance$IN_getInstance();
-        case "OUT":
-          return KVariance$OUT_getInstance();
-        default:Kotlin.throwISE("No enum constant kotlin.reflect.KVariance." + name);
+        }
+         else {
+          if (name === "OUT") {
+            return KVariance$OUT_getInstance();
+          }
+           else {
+            Kotlin.throwISE("No enum constant kotlin.reflect.KVariance." + name);
+          }
+        }
       }
     };
     var KVisibility = function (name, ordinal) {
@@ -13063,16 +13130,26 @@
       return [KVisibility$PUBLIC_getInstance(), KVisibility$PROTECTED_getInstance(), KVisibility$INTERNAL_getInstance(), KVisibility$PRIVATE_getInstance()];
     };
     var KVisibility$valueOf = function (name) {
-      switch (name) {
-        case "PUBLIC":
-          return KVisibility$PUBLIC_getInstance();
-        case "PROTECTED":
+      if (name === "PUBLIC") {
+        return KVisibility$PUBLIC_getInstance();
+      }
+       else {
+        if (name === "PROTECTED") {
           return KVisibility$PROTECTED_getInstance();
-        case "INTERNAL":
-          return KVisibility$INTERNAL_getInstance();
-        case "PRIVATE":
-          return KVisibility$PRIVATE_getInstance();
-        default:Kotlin.throwISE("No enum constant kotlin.reflect.KVisibility." + name);
+        }
+         else {
+          if (name === "INTERNAL") {
+            return KVisibility$INTERNAL_getInstance();
+          }
+           else {
+            if (name === "PRIVATE") {
+              return KVisibility$PRIVATE_getInstance();
+            }
+             else {
+              Kotlin.throwISE("No enum constant kotlin.reflect.KVisibility." + name);
+            }
+          }
+        }
       }
     };
     var AbstractCollection = function () {
@@ -13115,16 +13192,26 @@
       return [State$Ready_getInstance(), State$NotReady_getInstance(), State$Done_getInstance(), State$Failed_getInstance()];
     };
     var State$valueOf = function (name) {
-      switch (name) {
-        case "Ready":
-          return State$Ready_getInstance();
-        case "NotReady":
+      if (name === "Ready") {
+        return State$Ready_getInstance();
+      }
+       else {
+        if (name === "NotReady") {
           return State$NotReady_getInstance();
-        case "Done":
-          return State$Done_getInstance();
-        case "Failed":
-          return State$Failed_getInstance();
-        default:Kotlin.throwISE("No enum constant kotlin.collections.State." + name);
+        }
+         else {
+          if (name === "Done") {
+            return State$Done_getInstance();
+          }
+           else {
+            if (name === "Failed") {
+              return State$Failed_getInstance();
+            }
+             else {
+              Kotlin.throwISE("No enum constant kotlin.collections.State." + name);
+            }
+          }
+        }
       }
     };
     var AbstractIterator = function () {
@@ -16399,14 +16486,21 @@
       return [LazyThreadSafetyMode$SYNCHRONIZED_getInstance(), LazyThreadSafetyMode$PUBLICATION_getInstance(), LazyThreadSafetyMode$NONE_getInstance()];
     };
     var LazyThreadSafetyMode$valueOf = function (name) {
-      switch (name) {
-        case "SYNCHRONIZED":
-          return LazyThreadSafetyMode$SYNCHRONIZED_getInstance();
-        case "PUBLICATION":
+      if (name === "SYNCHRONIZED") {
+        return LazyThreadSafetyMode$SYNCHRONIZED_getInstance();
+      }
+       else {
+        if (name === "PUBLICATION") {
           return LazyThreadSafetyMode$PUBLICATION_getInstance();
-        case "NONE":
-          return LazyThreadSafetyMode$NONE_getInstance();
-        default:Kotlin.throwISE("No enum constant kotlin.LazyThreadSafetyMode." + name);
+        }
+         else {
+          if (name === "NONE") {
+            return LazyThreadSafetyMode$NONE_getInstance();
+          }
+           else {
+            Kotlin.throwISE("No enum constant kotlin.LazyThreadSafetyMode." + name);
+          }
+        }
       }
     };
     var UNINITIALIZED_VALUE = function () {

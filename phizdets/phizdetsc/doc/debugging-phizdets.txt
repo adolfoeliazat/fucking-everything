@@ -63,6 +63,11 @@
       ```
     - See // @debug-source-map
 
+- Use phiBreakDebugger() instead of xdebug_break() in large files
+
+- Pass shit from a large file into phiBreakDebugger() via argument: phiBreakDebugger(someShitFromCallSite)
+
+
 
 
 

@@ -817,16 +817,11 @@ Kotlin.isType = function(object, klass) {
   var metadata = undefined
 
   if (klass === Object) {
-    switch(typeof object) {
-      case "string":
-      ;
-      case "number":
-      ;
-      case "boolean":
-      ;
-      case "function":
+    // @hack
+    var t = typeof object
+    if (t === "string" || t === "number" || t === "boolean" || t === "function") {
         return true;
-      default:
+    } else {
         return object instanceof Object;
     }
   }
@@ -1719,40 +1714,39 @@ Kotlin.isCharSequence = function(value) {
   }
   AnnotationTarget.values = AnnotationTarget$values;
   function AnnotationTarget$valueOf(name) {
-    switch(name) {
-      case "CLASS":
+    // @hack
+      if (name === "CLASS")
         return AnnotationTarget$CLASS_getInstance();
-      case "ANNOTATION_CLASS":
+      else if (name === "ANNOTATION_CLASS")
         return AnnotationTarget$ANNOTATION_CLASS_getInstance();
-      case "TYPE_PARAMETER":
+      else if (name === "TYPE_PARAMETER")
         return AnnotationTarget$TYPE_PARAMETER_getInstance();
-      case "PROPERTY":
+      else if (name === "PROPERTY")
         return AnnotationTarget$PROPERTY_getInstance();
-      case "FIELD":
+      else if (name === "FIELD")
         return AnnotationTarget$FIELD_getInstance();
-      case "LOCAL_VARIABLE":
+      else if (name === "LOCAL_VARIABLE")
         return AnnotationTarget$LOCAL_VARIABLE_getInstance();
-      case "VALUE_PARAMETER":
+      else if (name === "VALUE_PARAMETER")
         return AnnotationTarget$VALUE_PARAMETER_getInstance();
-      case "CONSTRUCTOR":
+      else if (name === "CONSTRUCTOR")
         return AnnotationTarget$CONSTRUCTOR_getInstance();
-      case "FUNCTION":
+      else if (name === "FUNCTION")
         return AnnotationTarget$FUNCTION_getInstance();
-      case "PROPERTY_GETTER":
+      else if (name === "PROPERTY_GETTER")
         return AnnotationTarget$PROPERTY_GETTER_getInstance();
-      case "PROPERTY_SETTER":
+      else if (name === "PROPERTY_SETTER")
         return AnnotationTarget$PROPERTY_SETTER_getInstance();
-      case "TYPE":
+      else if (name === "TYPE")
         return AnnotationTarget$TYPE_getInstance();
-      case "EXPRESSION":
+      else if (name === "EXPRESSION")
         return AnnotationTarget$EXPRESSION_getInstance();
-      case "FILE":
+      else if (name === "FILE")
         return AnnotationTarget$FILE_getInstance();
-      case "TYPEALIAS":
+      else if (name === "TYPEALIAS")
         return AnnotationTarget$TYPEALIAS_getInstance();
-      default:
+      else
         Kotlin.throwISE("No enum constant kotlin.annotation.AnnotationTarget." + name);
-    }
   }
   AnnotationTarget.valueOf_61zpoe$ = AnnotationTarget$valueOf;
   function AnnotationRetention(name, ordinal) {
@@ -1788,16 +1782,15 @@ Kotlin.isCharSequence = function(value) {
   }
   AnnotationRetention.values = AnnotationRetention$values;
   function AnnotationRetention$valueOf(name) {
-    switch(name) {
-      case "SOURCE":
+      // @hack
+      if (name === "SOURCE")
         return AnnotationRetention$SOURCE_getInstance();
-      case "BINARY":
+      else if (name === "BINARY")
         return AnnotationRetention$BINARY_getInstance();
-      case "RUNTIME":
+      else if (name === "RUNTIME")
         return AnnotationRetention$RUNTIME_getInstance();
-      default:
+      else
         Kotlin.throwISE("No enum constant kotlin.annotation.AnnotationRetention." + name);
-    }
   }
   AnnotationRetention.valueOf_61zpoe$ = AnnotationRetention$valueOf;
   function Target(allowedTargets) {
@@ -21931,14 +21924,13 @@ Kotlin.isCharSequence = function(value) {
   }
   RegexOption.values = RegexOption$values;
   function RegexOption$valueOf(name) {
-    switch(name) {
-      case "IGNORE_CASE":
+    // @hack
+      if (name === "IGNORE_CASE")
         return RegexOption$IGNORE_CASE_getInstance();
-      case "MULTILINE":
+      else if (name === "MULTILINE")
         return RegexOption$MULTILINE_getInstance();
-      default:
+      else
         Kotlin.throwISE("No enum constant kotlin.text.RegexOption." + name);
-    }
   }
   RegexOption.valueOf_61zpoe$ = RegexOption$valueOf;
   function MatchGroup(value) {
@@ -25136,16 +25128,15 @@ Kotlin.isCharSequence = function(value) {
   }
   KParameter$Kind.values = KParameter$Kind$values;
   function KParameter$Kind$valueOf(name) {
-    switch(name) {
-      case "INSTANCE":
+    // @hack
+      if (name === "INSTANCE")
         return KParameter$Kind$INSTANCE_getInstance();
-      case "EXTENSION_RECEIVER":
+      else if (name === "EXTENSION_RECEIVER")
         return KParameter$Kind$EXTENSION_RECEIVER_getInstance();
-      case "VALUE":
+      else if (name === "VALUE")
         return KParameter$Kind$VALUE_getInstance();
-      default:
+      else
         Kotlin.throwISE("No enum constant kotlin.reflect.KParameter.Kind." + name);
-    }
   }
   KParameter$Kind.valueOf_61zpoe$ = KParameter$Kind$valueOf;
   KParameter.$metadata$ = {kind:Kotlin.Kind.INTERFACE, simpleName:"KParameter", interfaces:[KAnnotatedElement]};
@@ -25287,16 +25278,15 @@ Kotlin.isCharSequence = function(value) {
   }
   KVariance.values = KVariance$values;
   function KVariance$valueOf(name) {
-    switch(name) {
-      case "INVARIANT":
+  // @hack
+      if (name ==="INVARIANT")
         return KVariance$INVARIANT_getInstance();
-      case "IN":
+      else if (name === "IN")
         return KVariance$IN_getInstance();
-      case "OUT":
+      else if (name === "OUT")
         return KVariance$OUT_getInstance();
-      default:
+      else
         Kotlin.throwISE("No enum constant kotlin.reflect.KVariance." + name);
-    }
   }
   KVariance.valueOf_61zpoe$ = KVariance$valueOf;
   function KVisibility(name, ordinal) {
@@ -25338,18 +25328,17 @@ Kotlin.isCharSequence = function(value) {
   }
   KVisibility.values = KVisibility$values;
   function KVisibility$valueOf(name) {
-    switch(name) {
-      case "PUBLIC":
+    // @hack
+      if (name === "PUBLIC")
         return KVisibility$PUBLIC_getInstance();
-      case "PROTECTED":
+      else if (name === "PROTECTED")
         return KVisibility$PROTECTED_getInstance();
-      case "INTERNAL":
+      else if (name === "INTERNAL")
         return KVisibility$INTERNAL_getInstance();
-      case "PRIVATE":
+      else if (name === "PRIVATE")
         return KVisibility$PRIVATE_getInstance();
-      default:
+      else
         Kotlin.throwISE("No enum constant kotlin.reflect.KVisibility." + name);
-    }
   }
   KVisibility.valueOf_61zpoe$ = KVisibility$valueOf;
   function AbstractCollection() {
@@ -25443,18 +25432,17 @@ Kotlin.isCharSequence = function(value) {
   }
   State.values = State$values;
   function State$valueOf(name) {
-    switch(name) {
-      case "Ready":
+  // @hack
+      if (name === "Ready")
         return State$Ready_getInstance();
-      case "NotReady":
+      else if (name === "NotReady")
         return State$NotReady_getInstance();
-      case "Done":
+      else if (name === "Done")
         return State$Done_getInstance();
-      case "Failed":
+      else if (name === "Failed")
         return State$Failed_getInstance();
-      default:
+      else
         Kotlin.throwISE("No enum constant kotlin.collections.State." + name);
-    }
   }
   State.valueOf_61zpoe$ = State$valueOf;
   function AbstractIterator() {
@@ -30740,16 +30728,15 @@ Kotlin.isCharSequence = function(value) {
   }
   LazyThreadSafetyMode.values = LazyThreadSafetyMode$values;
   function LazyThreadSafetyMode$valueOf(name) {
-    switch(name) {
-      case "SYNCHRONIZED":
+  // @hack
+      if (name === "SYNCHRONIZED")
         return LazyThreadSafetyMode$SYNCHRONIZED_getInstance();
-      case "PUBLICATION":
+      else if (name === "PUBLICATION")
         return LazyThreadSafetyMode$PUBLICATION_getInstance();
-      case "NONE":
+      else if (name === "NONE")
         return LazyThreadSafetyMode$NONE_getInstance();
-      default:
+      else
         Kotlin.throwISE("No enum constant kotlin.LazyThreadSafetyMode." + name);
-    }
   }
   LazyThreadSafetyMode.valueOf_61zpoe$ = LazyThreadSafetyMode$valueOf;
   function UNINITIALIZED_VALUE() {

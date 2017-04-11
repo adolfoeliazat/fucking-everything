@@ -3046,6 +3046,26 @@ if (defined('PHI_RUN_QUICK_STDLIB_TESTS')) {
         );
     }
     phiQuickTest_getStringHashCode();
+
+    function phiQuickTest_isType() {
+        // 'string'  EQ  typeof 'pizda'
+        phiEvaluateAndAssertToStringEquals(
+            new PhiString('string'),
+            new PhiUnaryOperation('@@', 'prefix', 'typeof',
+                new PhiStringLiteral('pizda')));
+
+        // true  EQ  Kotlin.isType('pizda', Object)
+        phiEvaluateAndAssertToStringEquals(
+            new PhiBoolean(true),
+            new PhiInvocation(new PhiDot(new PhiNameRef('kotlin'), 'isType'), array(
+                new PhiStringLiteral('pizda'),
+                new PhiNameRef('Object')
+            )));
+
+        phiPrintln(__FUNCTION__ . ': PASSED');
+    }
+    phiQuickTest_isType();
+
 }
 
 
