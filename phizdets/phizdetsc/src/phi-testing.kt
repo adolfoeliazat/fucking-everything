@@ -81,7 +81,8 @@ object JerkAPSBackPHP {
                 File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-2.kt"),
                 File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-shared-impl-1.kt")),
             localSettingsFile = "E:/fegh/aps/back-php/src/aps-back-settings--local.php",
-            vboxSettingsFile = "E:/fegh/aps/back-php/src/aps-back-settings--vbox.php"
+            vboxSettingsFile = "E:/fegh/aps/back-php/src/aps-back-settings--vbox.php",
+            logFile = "c:/tmp/aps-back-php.log"
         )).goBananas()
     }
 }
@@ -91,7 +92,8 @@ class TestParams(
     val testName: String,
     val sourceFiles: List<File>,
     val localSettingsFile: String,
-    val vboxSettingsFile: String
+    val vboxSettingsFile: String,
+    val logFile: String
 )
 
 class Boobs(val testParams: TestParams) {
@@ -174,16 +176,19 @@ class Boobs(val testParams: TestParams) {
                 if (CurrentTestFiddling.preventRequest) {
                     clog("Skipping actual request")
                 } else {
+                    val logFile = File(testParams.logFile)
+                    if (logFile.exists()) {
+                        check(logFile.delete()) {"a30068f4-835c-48b1-9068-72e8b9136aec"}
+                    }
                     val actualResponseJSON = HTTPClient.postJSON("http://localhost/phi-tests/${testParams.testName}/${testParams.testName}.php?${entry.queryString}", adaptedRequestJSON)
                     val expectedResponseJSON = entry.responseJSON
                     val actualPreparedResponse = prepare(actualResponseJSON)
                     val expectedPreparedResponse = prepare(expectedResponseJSON)
 
-                    val allLogFile = File("$deploymentLogDir/all.log")
-                    if (allLogFile.exists()) {
-                        val text = allLogFile.readText()
+                    if (logFile.exists()) {
+                        val text = logFile.readText()
                         if (text.isNotBlank()) {
-                            printSectionTitle("ALL.LOG")
+                            printSectionTitle("FUCKING LOG")
                             clog(text)
                         }
                     }

@@ -1,7 +1,8 @@
 <?php
 
 define("INTO_COMPOSER_VENDOR_DIR", "/fucking/shit");
-phiPrintln('Hi, fucker. I am the vbox settings');
+define("MY_FUCKING_LOG", "/tmp/aps-back-php.log");
+// phiPrintln('Hi, fucker. I am the vbox settings');
 
 /*
 require_once(INTO_COMPOSER_VENDOR_DIR . "/autoload.php");

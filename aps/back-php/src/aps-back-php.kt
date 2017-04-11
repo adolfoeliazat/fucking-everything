@@ -1,6 +1,7 @@
 package aps.back
 
 import aps.*
+import org.w3c.fetch.RequestDestination
 import phizdetslib.*
 
 object apsphp {
@@ -11,15 +12,12 @@ fun require_once(path: String) {
     phiEval("require_once('$path');")
 }
 
-fun error_log(vararg xs: Any?) {
-    imf("f258787a-ee6d-4b9f-b544-1653fc299bf1")
-}
-
 
 object phplog {
     fun info(vararg xs: Any?) {
         val shit = xs.joinToString(" ") {it.toString()}
-        error_log("$shit\n", 3, apsphp.myFuckingDir + "/../log/all.log")
+        val logFile = phiEval("return MY_FUCKING_LOG;") as String
+        error_log("$shit\n", 3, logFile)
     }
 }
 

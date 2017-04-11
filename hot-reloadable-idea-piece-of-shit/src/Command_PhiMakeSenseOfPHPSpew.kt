@@ -99,9 +99,9 @@ import kotlin.system.exitProcess
                     val interestingFile = APSBackPHPDevTools.findInterestingFile(spewFileLine.file)!!
                     con.link(item.text, interestingFile.fullPath, spewFileLine.line)
 
-                    if (listOf("aps-back.php", "phizdets-stdlib.php").contains(interestingFile.shortName)) {
+                    interestingFile.firstAdditionalFile?.let {
                         con.mumbleNoln(" (")
-                        con.link("--1", interestingFile.fullPath + "--1", spewFileLine.line)
+                        con.link("--1", it, spewFileLine.line)
                         con.mumbleNoln(")")
                     }
 

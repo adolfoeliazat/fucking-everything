@@ -9,7 +9,7 @@ try {
     require_once 'phi-engine.php';
     require_once 'fuckaroundapsback/aps-back.php';
 } catch (Throwable $e) {
-    error_log($e->getMessage() . "\n" . $e->getFile() . ':' . $e->getLine() . "\n\n" . $e->getTraceAsString());
+    error_log("\n" . $e->getMessage() . "\n" . $e->getFile() . ':' . $e->getLine() . "\n\n" . $e->getTraceAsString());
 }
 
 

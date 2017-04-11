@@ -448,7 +448,7 @@ class Phpifier(val program: JsProgram) {
             override fun endVisit(x: JsCatch, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
 
-                val ident = "Exception \$__phiException"
+                val ident = "PhiBloodyException \$__phiException"
                 val catchBody = JsBlock()
                 catchBody.statements.add(JsNameRef("Phi::getCurrentEnv()->setVar('${x.parameter.name.ident}', \$__phiException->phiValue)").makeStmt()-{o->
                     (o as AbstractNode).statementNeedsFuckingNewline = false

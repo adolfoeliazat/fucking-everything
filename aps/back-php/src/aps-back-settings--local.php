@@ -1,7 +1,8 @@
 <?php
 
 define("INTO_COMPOSER_VENDOR_DIR", "E:\\fegh\\composer\\vendor");
-phiPrintln('Hi, fucker. I am the local settings');
+define("MY_FUCKING_LOG", "c:\\tmp\\aps-back-php.log");
+// phiPrintln('Hi, fucker. I am the local settings');
 
 /*
 require_once(INTO_COMPOSER_VENDOR_DIR . "/autoload.php");

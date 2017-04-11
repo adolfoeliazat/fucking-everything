@@ -847,10 +847,15 @@ class Phi {
                                 throw new PhiIllegalStateException("4669b3ee-136b-44ed-a5d3-29e9ad473445");
                             $start = $start->getValue();
 
+                            $string = $value->getValue();
+
                             $end = Phi::getCurrentEnv()->getVar('end');
-                            if (!($end instanceof PhiNumber))
+                            if ($end instanceof PhiUndefined)
+                                $end = mb_strlen($string, 'UTF-8');
+                            else if ($end instanceof PhiNumber)
+                                $end = $end->getValue();
+                            else if (!($end instanceof PhiNumber))
                                 throw new PhiIllegalStateException("d77f7a7f-f809-42b8-8cef-e118b8f9ce1a");
-                            $end = $end->getValue();
 
                             if ($start < 0)
                                 $start = 0;
@@ -863,7 +868,6 @@ class Phi {
                                 $start = $tmp;
                             }
 
-                            $string = $value->getValue();
                             $length = $end - $start;
                             $res = mb_substr($string, $start, $length, 'UTF-8');
                             return new PhiString($res);
@@ -896,12 +900,53 @@ class Phi {
 
                             if ($fromIndex < 0)
                                 $fromIndex = 0;
-                            if ($fromIndex >= mb_strlen($string))
+                            if ($fromIndex >= mb_strlen($string, 'UTF-8'))
                                 return new PhiNumber(-1);
 
                             $res = mb_strpos($string, $searchValue, $fromIndex, 'UTF-8');
                             if ($res === false)
                                 $res = -1;
+                            return new PhiNumber($res);
+                        }
+                    ), array('vararg' => true)));
+
+                    $thiz->setProperty('lastIndexOf', new PhiFunction(new PhiFunctionExpression(
+                        'lastIndexOf', array(),
+                        function() use ($value) {
+                            $args = Phi::getCurrentEnv()->getFunctionArgs();
+                            $searchValuePhiValue = $args[0];
+                            if (!($searchValuePhiValue instanceof PhiString))
+                                throw new PhiIllegalStateException("071a3808-c8df-4e1a-983b-f86a031c5c25");
+                            $searchValue = $searchValuePhiValue->getValue();
+
+                            $string = $value->getValue();
+
+                            if (count($args) === 1) {
+                                $fromIndex = mb_strlen($string, 'UTF-8') - 1;
+                            }
+                            else if (count($args) === 2) {
+                                $fromIndexPhiValue = $args[1];
+                                if (!($fromIndexPhiValue instanceof PhiNumber))
+                                    throw new PhiIllegalStateException("9b4ed8f5-546b-437c-affb-7d140aec1c2e");
+                                $fromIndex = $fromIndexPhiValue->getValue();
+                            }
+                            else {
+                                throw new PhiIllegalStateException("1301e89e-c345-4a59-8ca4-16a50c9a1eab");
+                            }
+
+                            if ($fromIndex < 0)
+                                $fromIndex = 0;
+                            if ($fromIndex >= mb_strlen($string, "UTF-8"))
+                                $fromIndex = mb_strlen($string, "UTF-8") - 1;
+
+                            $res = -1;
+                            for ($i = $fromIndex; $i >= 0; --$i) {
+                                if ($searchValue === mb_substr($string, $i, mb_strlen($searchValue, 'UTF-8'), 'UTF-8')) {
+                                    $res = $i;
+                                    break;
+                                }
+                            }
+
                             return new PhiNumber($res);
                         }
                     ), array('vararg' => true)));
@@ -1228,6 +1273,9 @@ class Phi {
         else if ($phiValue instanceof PhiString) {
             return $phiValue->getValue();
         }
+        else if ($phiValue instanceof PhiNumber) {
+            return $phiValue->getValue();
+        }
         else {
             throw new PhiIllegalStateException("7d8c0fe9-e2f2-4fa1-9e5e-7aa1f5079f9a");
         }
@@ -1244,6 +1292,9 @@ class Phi {
         }
         else if (gettype($nativeValue) === 'string') {
             return new PhiString($nativeValue);
+        }
+        else if (gettype($nativeValue) === 'boolean') {
+            return new PhiBoolean($nativeValue);
         }
         else {
             throw new PhiIllegalStateException("02db567a-dc19-4a51-9d4e-5a8c22178d59");
@@ -2024,6 +2075,19 @@ function phiExpressionStatement($expr) {
     }
 }
 
+class PhiBloodyException extends Exception {
+    public $phiValue;
+
+    /**
+     * @param string $message
+     * @param PhiValue $phiValue
+     */
+    public function __construct($message, $phiValue) {
+        parent::__construct($message);
+        $this->phiValue = $phiValue;
+    }
+}
+
 /**
  * @param PhiExpression $expr
  * @throws Exception
@@ -2039,15 +2103,16 @@ function phiThrow($expr) {
 //    }
 
     if ($messagePhiValue instanceof PhiString) {
-        $exception = new Exception($messagePhiValue->getValue());
+        $message = $messagePhiValue->getValue();
     }
     else if ($messagePhiValue instanceof PhiUndefined) {
-        $exception = new Exception();
+        $message = "";
     }
     else {
         throw new PhiIllegalStateException("cbba8949-ba96-43d5-93f1-dd84bd002d67");
     }
-    $exception->phiValue = $phiValue;
+
+    $exception = new PhiBloodyException($message, $phiValue);
     throw $exception;
 }
 
@@ -3282,13 +3347,39 @@ if (defined('PHI_RUN_QUICK_TESTS')) {
                 new PhiInvocation(new PhiDot(new PhiStringLiteral($s), 'indexOf'), $args));
         };
 
+        $fuck(-1, 'pizdarunda', 'cunt');
         $fuck(3, 'pizdarunda', 'da');
         $fuck(8, 'pizdarunda', 'da', 4);
         $fuck(3, 'pizdarunda', 'da', -1);
+        $fuck(-1, 'pizdarunda', 'da', 9);
 
         phiPrintln(__FUNCTION__ . ': PASSED');
     }
     phiQuickTest_indexOf();
+
+    function phiQuickTest_lastIndexOf() {
+        Phi::initEnv(); Phi::initStdlib();
+
+        $fuck = function($expectedResult, $s, $searchValue, $fromIndex = null) {
+            // s.lastIndexOf(searchValue[, fromIndex])
+            $args = array(new PhiStringLiteral($searchValue));
+            if ($fromIndex !== null) {
+                array_push($args, new PhiNumberLiteral('@@', $fromIndex));
+            }
+            phiEvaluateAndAssertToStringEquals(
+                new PhiNumber($expectedResult),
+                new PhiInvocation(new PhiDot(new PhiStringLiteral($s), 'lastIndexOf'), $args));
+        };
+
+        $fuck(-1, 'pizdarunda', 'cunt');
+        $fuck(8, 'pizdarunda', 'da');
+        $fuck(3, 'pizdarunda', 'da', 7);
+        $fuck(0, 'pizdarunda', 'piz', -1);
+        $fuck(8, 'pizdarunda', 'da', 100);
+
+        phiPrintln(__FUNCTION__ . ': PASSED');
+    }
+    phiQuickTest_lastIndexOf();
 }
 
 Phi::initEnv();

@@ -38,15 +38,14 @@ import kotlin.properties.Delegates.notNull
 import kotlin.reflect.KFunction0
 
 object APSBackPHPDevTools {
-    class InterestingFile(val shortNames: List<String>, val fullPath: String) {
-        constructor(shortName: String, fullPath: String): this(listOf(shortName), fullPath)
+    class InterestingFile(val shortNames: List<String>, val fullPath: String, val firstAdditionalFile: String? = null) {
         val shortName get() = shortNames.first()
     }
 
     val interestingFiles = listOf(
-        InterestingFile(listOf("aps-back.php", "fuck-around--aps-back.php"), "E:/fegh/out/phi-tests/aps-back/aps-back.php"),
-        InterestingFile("phizdets-stdlib.php", "E:/fegh/phizdets/phizdetsc/src/phizdets/php/phizdets-stdlib.php"),
-        InterestingFile("phi-engine.php", "E:/fegh/phizdets/phizdetsc/src/phizdets/php/phi-engine.php")
+        InterestingFile(listOf("aps-back.php"), "E:/fegh/phizdets/phizdetsc/src/phizdets/php/fuckaroundapsback/aps-back.php", firstAdditionalFile = "E:/fegh/out/phi-tests/aps-back/aps-back.php--1"),
+        InterestingFile(listOf("phizdets-stdlib.php"), "E:/fegh/phizdets/phizdetsc/src/phizdets/php/phizdets-stdlib.php", firstAdditionalFile = "E:/fegh/phizdets/phizdetsc/src/phizdets/php/phizdets-stdlib.php--1"),
+        InterestingFile(listOf("phi-engine.php"), "E:/fegh/phizdets/phizdetsc/src/phizdets/php/phi-engine.php")
     )
 
     fun findInterestingFile(shortName: String): InterestingFile? =
