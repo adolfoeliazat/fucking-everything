@@ -14,7 +14,7 @@ fun require_once(path: String) {
 
 
 object phplog {
-    fun info(vararg xs: Any?) {
+    fun println(vararg xs: Any?) {
         val shit = xs.joinToString(" ") {it.toString()}
         val logFile = phiEval("return MY_FUCKING_LOG;") as String
         error_log("$shit\n", 3, logFile)

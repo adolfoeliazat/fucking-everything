@@ -122,11 +122,12 @@ interface PHP_BeanDefinition {
 val backPlatform = object : XBackPlatform {
     override val log = object : XLogger {
         override fun info(s: String) {
-            phplog.info(s)
+            phplog.println("[INFO] " + s)
         }
 
         override fun error(s: String, e: Throwable) {
-            imf("539567e3-19ef-4eb5-b89b-87316ad6752a")
+            phplog.println("[ERROR] " + s)
+            phplog.println("[ERROR] " + e.message)
         }
 
         override fun section(s: String) {
