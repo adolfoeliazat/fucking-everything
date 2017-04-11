@@ -817,6 +817,37 @@ class Phi {
                         }
                     )));
 
+                    $thiz->setProperty('substring', phiEvaluate(new PhiFunctionExpression(
+                        'substring', array('start', 'end'),
+                        function() use ($value) {
+                            $start = Phi::getCurrentEnv()->getVar('start');
+                            if (!($start instanceof PhiNumber))
+                                throw new PhiIllegalStateException("4669b3ee-136b-44ed-a5d3-29e9ad473445");
+                            $start = $start->getValue();
+
+                            $end = Phi::getCurrentEnv()->getVar('end');
+                            if (!($end instanceof PhiNumber))
+                                throw new PhiIllegalStateException("d77f7a7f-f809-42b8-8cef-e118b8f9ce1a");
+                            $end = $end->getValue();
+
+                            if ($start < 0)
+                                $start = 0;
+                            if ($end < 0)
+                                $end = 0;
+
+                            if ($start > $end) {
+                                $tmp = $end;
+                                $end = $start;
+                                $start = $tmp;
+                            }
+
+                            $string = $value->getValue();
+                            $length = $end - $start;
+                            $res = mb_substr($string, $start, $length, 'UTF-8');
+                            return new PhiString($res);
+                        }
+                    )));
+
                     $thiz->setProperty('charCodeAt', phiEvaluate(new PhiFunctionExpression(
                         'charCodeAt', array('index'),
                         function() use ($value) {
@@ -2275,7 +2306,7 @@ class PhiInvocation extends PhiExpression {
 
                 return new PhiString($lhsValue->getValue() . $rhsValue->getValue());
             }
-            throw new PhiIllegalStateException("f30e6af1-a2b9-4345-8922-51caa7ba7bcb");
+            throw new PhiIllegalStateException("Fucky invocation: $this    f30e6af1-a2b9-4345-8922-51caa7ba7bcb");
         }
 
         $argPhiValues = array();
@@ -3022,6 +3053,25 @@ if (defined('PHI_RUN_QUICK_TESTS')) {
                         new PhiNumberLiteral('@@', 6)))));
     }
     phiQuickTest_comma();
+
+    function phiQuickTest_substring() {
+        Phi::initEnv(); Phi::initStdlib();
+
+        $fuck = function($expected, $s, $start, $end) {
+            phiEvaluateAndAssertToStringEquals(
+                new PhiString($expected),
+                new PhiInvocation(new PhiDot(new PhiStringLiteral($s), 'substring'), array(
+                    new PhiNumberLiteral('@@', $start), new PhiNumberLiteral('@@', $end)
+                )));
+        };
+
+        $fuck('dunis', 'pizdunishka', 3, 8);
+        $fuck('', 'pizdunishka', 3, 3);
+        $fuck('du', 'pizdunishka', 5, 3);
+        $fuck('p', 'pizdunishka', -1, 1);
+        $fuck('ka', 'pizdunishka', 9, 100);
+    }
+    phiQuickTest_substring();
 }
 
 Phi::initEnv();
