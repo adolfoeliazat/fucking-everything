@@ -79,8 +79,9 @@ object JerkAPSBackPHP {
                 File("E:/fegh/aps/back-php/shared-back--junction/src/xentities.kt"),
                 File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-1.kt"),
                 File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-2.kt"),
-                File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-shared-impl-1.kt")
-            )
+                File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-shared-impl-1.kt")),
+            localSettingsFile = "E:/fegh/aps/back-php/src/aps-back-settings--local.php",
+            vboxSettingsFile = "E:/fegh/aps/back-php/src/aps-back-settings--vbox.php"
         )).goBananas()
     }
 }
@@ -88,7 +89,9 @@ object JerkAPSBackPHP {
 
 class TestParams(
     val testName: String,
-    val sourceFiles: List<File>
+    val sourceFiles: List<File>,
+    val localSettingsFile: String,
+    val vboxSettingsFile: String
 )
 
 class Boobs(val testParams: TestParams) {
@@ -138,9 +141,12 @@ class Boobs(val testParams: TestParams) {
                 copyFile(outRoot + "/phi-engine.php", deploymentDir + "/phi-engine.php")
                 copyFile(CompileStdlib.stdlibPHPFilePath, outRoot + "/phizdets-stdlib.php")
                 copyFile(outRoot + "/phizdets-stdlib.php", deploymentDir + "/phizdets-stdlib.php")
+                copyFile(testParams.localSettingsFile, deploymentDir + "/${testParams.testName}-settings.php")
 
                 val shit = File(deploymentDir + "/${testParams.testName}.php").readText()
-                File("E:/fegh/phizdets/phizdetsc/src/phizdets/php/fuck-around--${testParams.testName}.php").writeText("<?php " + shit.substring(shit.indexOf(";")))
+                val fuckAroundDir = "E:/fegh/phizdets/phizdetsc/src/phizdets/php/fuckaroundapsback"
+                File("$fuckAroundDir/${testParams.testName}.php").writeText(shit.replaceFirst("require_once('phi-engine.php');", ""));
+                copyFile(testParams.vboxSettingsFile, "$fuckAroundDir/${testParams.testName}-settings.php")
 
                 // @here
 //                copyFile("${p.outFilePath}--tagged", deploymentDir + "/${p.testName}.php--tagged")
@@ -288,127 +294,127 @@ class Boobs(val testParams: TestParams) {
     }
 }
 
-object GrossTestPhizdets {
-    private val PHP_INTERP = "C:\\opt\\xampp\\php\\php.exe"
-    private val APS_BACK_PHP_ROOT = "E:\\fegh\\aps\\back-php"
-
-    @Ser @XmlRootElement @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(propOrder = arrayOf("php", "stdout", "stderr", "exitCode"))
-    class TestResult(val php: String, val stdout: String, val stderr: String, val exitCode: Int) {
-        fun printHuman() {
-            val xml = toXML()
-            clog(xml
-                     .replace("<php>", "\n<---------- PHP ---------->\n")
-                     .replace("</php>", "</php>")
-                     .replace("<stdout>", "\n<---------- STDOUT ---------->\n")
-                     .replace("</stdout>", "</stdout>")
-                     .replace("<stderr>", "\n<---------- STDERR ---------->\n")
-                     .replace("</stderr>", "</stderr>")
-                     .replace("    <exitCode>", "\n<exitCode>")
-                     .replace("&gt;", ">").replace("&lt;", "<").replace("&amp;", "&"))
-
-            val printWrappedStderr = true
-            if (printWrappedStderr && stderr.isNotBlank()) {
-                printWrappedText("WRAPPED STDERR", stderr)
-            }
-
-        }
-
-        fun toXML(): String {
-            val stringWriter = StringWriter()
-            JAXB.marshal(this, stringWriter)
-            return stringWriter.toString()
-        }
-    }
-
-    @JvmStatic
-    fun main(_args: Array<String>) {
-        clog("Tits :)")
-        PhizdetscGlobal.debugTagPrefix = ""
-
-        val args = when {
-            _args.isEmpty() -> arrayOf("requestResponseScenario", "phi-gross-test-1")
-//            _args.isEmpty() -> arrayOf("justRun", "test1")
-            else -> _args
-        }.toMutableList()
-
-        val cmd = args.removeAt(0)
-        val testName = args.removeAt(0)
-        val root = "E:/fegh/phizdets/phi-gross-test-1"
-        val srcRoot = "$root\\src"
-        val p = TestParams(
-            testName = testName,
-            sourceFiles = filesFrom(srcRoot)
-        )
-
-        when (cmd) {
-//            "harden" -> {
-//                clog("Hardening results of ${p.testName}")
-//                val actualXML = File("${p.outRoot}/${p.testName}-actual.xml").readText()
-//                File("${p.srcRoot}/${p.testName}-expected.xml").writeText(actualXML)
+//object GrossTestPhizdets {
+//    private val PHP_INTERP = "C:\\opt\\xampp\\php\\php.exe"
+//    private val APS_BACK_PHP_ROOT = "E:\\fegh\\aps\\back-php"
+//
+//    @Ser @XmlRootElement @XmlAccessorType(XmlAccessType.FIELD)
+//    @XmlType(propOrder = arrayOf("php", "stdout", "stderr", "exitCode"))
+//    class TestResult(val php: String, val stdout: String, val stderr: String, val exitCode: Int) {
+//        fun printHuman() {
+//            val xml = toXML()
+//            clog(xml
+//                     .replace("<php>", "\n<---------- PHP ---------->\n")
+//                     .replace("</php>", "</php>")
+//                     .replace("<stdout>", "\n<---------- STDOUT ---------->\n")
+//                     .replace("</stdout>", "</stdout>")
+//                     .replace("<stderr>", "\n<---------- STDERR ---------->\n")
+//                     .replace("</stderr>", "</stderr>")
+//                     .replace("    <exitCode>", "\n<exitCode>")
+//                     .replace("&gt;", ">").replace("&lt;", "<").replace("&amp;", "&"))
+//
+//            val printWrappedStderr = true
+//            if (printWrappedStderr && stderr.isNotBlank()) {
+//                printWrappedText("WRAPPED STDERR", stderr)
 //            }
-//            "justRun" -> justRun(p)
-            "requestResponseScenario" -> Boobs(p).goBananas()
-            else -> wtf("cmd = $cmd    1743afc0-066f-4196-869d-cf33e199c5ab")
-        }
-
-
-        clog("OK")
-    }
-
-
-
-
-
-//    fun postJSON(url: String, content: String): String {
-//        return post(url, "application/json", content)
-//    }
 //
-//    fun postXML(url: String, content: String): String {
-//        return post(url, "application/xml", content)
-//    }
-
-//    private fun post(url: String, mime: String, content: String): String {
-//        val JSON = MediaType.parse(mime + "; charset=utf-8")
-//        val client = OkHttpClient()
-//        val body = RequestBody.create(JSON, content)
-//        val request = Request.Builder()
-//            .url(url)
-//            .post(body)
-//            .build()
-//        val response = client.newCall(request).execute()
-//        return response.body().string()
-//    }
-
-//    private fun justRun(p: TestParams) {
-//        compileAndStuff(p) {
-//            val res = execPHP(p)
+//        }
 //
-//            val testResult = TestResult(php = File(p.outFilePath).readText(),
-//                                        stdout = res.stdout,
-//                                        stderr = res.stderr,
-//                                        exitCode = res.exitValue)
-//            File("${p.outRoot}/${p.testName}-actual.xml").writeText(testResult.toXML())
-//            testResult.printHuman()
-//
-//            if (res.exitValue != 0) {
-//                clog("PHP shitted at us with code ${res.exitValue}")
-//                exitProcess(1)
-//            }
+//        fun toXML(): String {
+//            val stringWriter = StringWriter()
+//            JAXB.marshal(this, stringWriter)
+//            return stringWriter.toString()
 //        }
 //    }
-
-//    private fun execPHP(p: TestParams): RunProcessResult {
-//        return runProcessAndWait(listOf(PHP_INTERP, p.outFilePath), inheritIO = false)
+//
+//    @JvmStatic
+//    fun main(_args: Array<String>) {
+//        clog("Tits :)")
+//        PhizdetscGlobal.debugTagPrefix = ""
+//
+//        val args = when {
+//            _args.isEmpty() -> arrayOf("requestResponseScenario", "phi-gross-test-1")
+////            _args.isEmpty() -> arrayOf("justRun", "test1")
+//            else -> _args
+//        }.toMutableList()
+//
+//        val cmd = args.removeAt(0)
+//        val testName = args.removeAt(0)
+//        val root = "E:/fegh/phizdets/phi-gross-test-1"
+//        val srcRoot = "$root\\src"
+//        val p = TestParams(
+//            testName = testName,
+//            sourceFiles = filesFrom(srcRoot)
+//        )
+//
+//        when (cmd) {
+////            "harden" -> {
+////                clog("Hardening results of ${p.testName}")
+////                val actualXML = File("${p.outRoot}/${p.testName}-actual.xml").readText()
+////                File("${p.srcRoot}/${p.testName}-expected.xml").writeText(actualXML)
+////            }
+////            "justRun" -> justRun(p)
+//            "requestResponseScenario" -> Boobs(p).goBananas()
+//            else -> wtf("cmd = $cmd    1743afc0-066f-4196-869d-cf33e199c5ab")
+//        }
+//
+//
+//        clog("OK")
 //    }
-
-}
+//
+//
+//
+//
+//
+////    fun postJSON(url: String, content: String): String {
+////        return post(url, "application/json", content)
+////    }
+////
+////    fun postXML(url: String, content: String): String {
+////        return post(url, "application/xml", content)
+////    }
+//
+////    private fun post(url: String, mime: String, content: String): String {
+////        val JSON = MediaType.parse(mime + "; charset=utf-8")
+////        val client = OkHttpClient()
+////        val body = RequestBody.create(JSON, content)
+////        val request = Request.Builder()
+////            .url(url)
+////            .post(body)
+////            .build()
+////        val response = client.newCall(request).execute()
+////        return response.body().string()
+////    }
+//
+////    private fun justRun(p: TestParams) {
+////        compileAndStuff(p) {
+////            val res = execPHP(p)
+////
+////            val testResult = TestResult(php = File(p.outFilePath).readText(),
+////                                        stdout = res.stdout,
+////                                        stderr = res.stderr,
+////                                        exitCode = res.exitValue)
+////            File("${p.outRoot}/${p.testName}-actual.xml").writeText(testResult.toXML())
+////            testResult.printHuman()
+////
+////            if (res.exitValue != 0) {
+////                clog("PHP shitted at us with code ${res.exitValue}")
+////                exitProcess(1)
+////            }
+////        }
+////    }
+//
+////    private fun execPHP(p: TestParams): RunProcessResult {
+////        return runProcessAndWait(listOf(PHP_INTERP, p.outFilePath), inheritIO = false)
+////    }
+//
+//}
 
 object PrepareFuckAroundPHP {
     @JvmStatic
     fun main(args: Array<String>) {
         CompileStdlib.main(arrayOf())
-        GrossTestPhizdets.main(arrayOf())
+//        GrossTestPhizdets.main(arrayOf())
     }
 }
 

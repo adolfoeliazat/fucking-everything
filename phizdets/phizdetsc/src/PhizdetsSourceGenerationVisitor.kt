@@ -99,11 +99,14 @@ class PhizdetsSourceGenerationVisitor(out: TextOutput, taggedGenOut: TextOutput,
     }
 
     override fun visitProgram(program: JsProgram) {
-        // @fuck1
+        // @phi-1
 
-        p.print("<?php require_once('phi-engine.php'); @define('PHI_KILL_LONG_LOOPS', true); ")
+        p.print("<?php \$GLOBALS['myFuckingDir'] = __DIR__; require_once('phi-engine.php'); @define('PHI_KILL_LONG_LOOPS', true); ")
 
         program.acceptChildren(this)
         sourceMapBuilder?.addLink()
     }
 }
+
+
+

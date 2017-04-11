@@ -1,4 +1,4 @@
-<?php require_once('phi-engine.php'); @define('PHI_KILL_LONG_LOOPS', true); "@@phi-begin-noFuckingNewlines";
+<?php $GLOBALS['myFuckingDir'] = __DIR__; require_once('phi-engine.php'); @define('PHI_KILL_LONG_LOOPS', true); "@@phi-begin-noFuckingNewlines";
 (function (root, factory) {
   if (typeof define === "function" && define.amd) {
     define("kotlin", ["exports"], factory);

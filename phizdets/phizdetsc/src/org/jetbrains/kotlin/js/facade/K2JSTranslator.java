@@ -98,7 +98,7 @@ public final class K2JSTranslator {
 
         expandIsCalls(program, context);
 
-        // @fuck2
+        // @phi-2
         phpify(program);
 
         ProgressIndicatorAndCompilationCanceledStatus.checkCanceled();

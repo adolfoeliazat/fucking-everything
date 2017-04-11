@@ -7,21 +7,14 @@ object apsphp {
     var myFuckingDir by notNull<String>()
 }
 
-annotation class PHPDumpBodyToContainer
-
 fun require_once(path: String) {
-    imf("119e3083-946c-428e-b380-037bb6fcb537")
+    phiEval("require_once('$path');")
 }
 
 fun error_log(vararg xs: Any?) {
     imf("f258787a-ee6d-4b9f-b544-1653fc299bf1")
 }
 
-@PHPDumpBodyToContainer fun apsback_makeRequires() {
-    apsphp.myFuckingDir = phiEval("return __DIR__;") as String
-    // println("My fucking dir is " + aps.myFuckingDir)
-    require_once(apsphp.myFuckingDir + "/aps-back-settings.php")
-}
 
 object phplog {
     fun info(vararg xs: Any?) {
@@ -32,6 +25,10 @@ object phplog {
 
 
 fun main(args: Array<String>) {
+    apsphp.myFuckingDir = phiEval("return \$GLOBALS['myFuckingDir'];") as String
+    // println("My fucking dir is " + aps.myFuckingDir)
+    require_once(apsphp.myFuckingDir + "/aps-back-settings.php")
+
     // dumpRequestShitAndFuckAway()
     serveShit(XHttpServletRequest(), XHttpServletResponse())
 }

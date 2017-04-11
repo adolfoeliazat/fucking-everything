@@ -110,7 +110,7 @@ abstract class TranslationResult protected constructor(val diagnostics: Diagnost
         private class CodeAndDebugShit(val code: String, val taggedGen: String)
 
         private fun getCodeAndDebugShit(output: TextOutput, taggedGenOutput: TextOutput, sourceMapBuilder: SourceMapBuilder?): CodeAndDebugShit {
-            // @fuck1
+            // @phi-1
             program.accept(PhizdetsSourceGenerationVisitor(output, taggedGenOutput, sourceMapBuilder))
             return CodeAndDebugShit(
                 code = output.toString(),
@@ -119,7 +119,7 @@ abstract class TranslationResult protected constructor(val diagnostics: Diagnost
         }
 
 //        private fun getCode(output: TextOutput, sourceMapBuilder: SourceMapBuilder?): String {
-//            // @fuck1
+//            // @phi-1
 //            program.accept(JsSourceGenerationVisitor(output, sourceMapBuilder))
 //            return output.toString()
 //        }

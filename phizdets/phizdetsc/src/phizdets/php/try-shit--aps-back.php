@@ -5,7 +5,11 @@
 
 $_SERVER['QUERY_STRING'] = 'pathInfo=/rpc/Miranda';
 
-require_once 'phi-engine.php';
-require_once 'fuck-around--aps-back.php';
+try {
+    require_once 'phi-engine.php';
+    require_once 'fuckaroundapsback/aps-back.php';
+} catch (Throwable $e) {
+    error_log($e->getMessage() . "\n" . $e->getFile() . ':' . $e->getLine() . "\n\n" . $e->getTraceAsString());
+}
 
 
