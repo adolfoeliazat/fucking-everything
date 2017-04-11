@@ -102,8 +102,6 @@ class PHP_HttpServletResponse {
     }
 }
 
-external fun header(x: String)
-
 class PHP_DataSource {
     fun close() {
         imf("e738c4a5-8529-4d45-8227-f3df72bc5c31")

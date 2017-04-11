@@ -32,6 +32,30 @@ object phplog {
 
 
 fun main(args: Array<String>) {
+    // dumpRequestShitAndFuckAway()
     serveShit(XHttpServletRequest(), XHttpServletResponse())
 }
+
+fun dumpRequestShitAndFuckAway() {
+    phiEval("""
+        echo 'QUERY_STRING = ';
+        var_export(${'$'}_SERVER['QUERY_STRING']);
+        exit();
+    """)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
