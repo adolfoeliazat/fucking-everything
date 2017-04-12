@@ -147,7 +147,7 @@ fun runMapPhizdetsStackTool(con: Mumbler, stackItems: MutableList<FileLine>): Ma
 object Command_PhiShowStackTest {
     @JvmStatic
     fun main(args: Array<String>) {
-        HTTPClient.postJSON("http://localhost:12312?proc=PhiShowStack", json)
+        HTTPClient.post(HTTPClient.MediaTypeName.JSON, "http://localhost:12312?proc=PhiShowStack", json)
     }
 
     val json = """

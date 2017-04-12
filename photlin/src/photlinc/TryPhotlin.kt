@@ -165,7 +165,7 @@ object TryPhotlin {
                         bitch("Cannot delete freaking $file")
                 }
 
-                val actualResponseJSON = HTTPClient.postJSON("http://localhost/TryPhotlin/${p.testName}/${p.testName}.php?${entry.queryString}", adaptedRequestJSON)
+                val actualResponseJSON = HTTPClient.post(HTTPClient.MediaTypeName.JSON, "http://localhost/TryPhotlin/${p.testName}/${p.testName}.php?${entry.queryString}", adaptedRequestJSON)
                 val expectedResponseJSON = entry.responseJSON
                 val actualPreparedResponse = prepare(actualResponseJSON)
                 val expectedPreparedResponse = prepare(expectedResponseJSON)
@@ -213,7 +213,8 @@ object TryPhotlin {
     private fun sendTestResultToDevTools(req: PDTRemoteCommand_TestResult) {
         print("Sending shit to photlin-dev-tools...")
         val proc = req::class.simpleName!!.substring("PDTRemoteCommand_".length)
-        val rawResponse = HTTPClient.postJSON(
+        val rawResponse = HTTPClient.post(
+            HTTPClient.MediaTypeName.JSON,
             "http://localhost:" + PhotlinDevToolsGlobal.rpcServerPort + "?proc=$proc",
             ObjectMapper().writeValueAsString(req))
         println(" " + rawResponse)

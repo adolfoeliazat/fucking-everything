@@ -399,13 +399,39 @@ class Phpifier(val program: JsProgram) {
                 return JsInvocation(JsNameRef(functionName), args)
             }
 
-            var shitCounter = 0
             override fun endVisit(x: JsExpressionStatement, ctx: JsContext<JsNode>) {
                 super.endVisit(x, ctx)
                 if (x.skipTransformation == true)
                     return
 
-                ctx.replaceMe(invocation("phiExpressionStatement", listOf(x.expression)).makeStmt())
+                val expr = x.expression
+//                if (expr is JsNew) {
+//                    val constructorExpression = expr.constructorExpression
+//                    if (constructorExpression is JsNameRef) {
+//                        if (constructorExpression.ident == "PhiInvocation") {
+//                            val firstArg = expr.arguments[0]
+//                            if (firstArg is JsNew) {
+//                                val firstArgConstructorExpression = firstArg.constructorExpression
+//                                if (firstArgConstructorExpression is JsNameRef) {
+//                                    if (firstArgConstructorExpression.ident == "PhiExternalNameRef") {
+//                                        val shit = firstArg.arguments[0]
+//                                        if (shit is JsStringLiteral && shit.value == "phiEval") {
+//                                            val secondArg = expr.arguments[1] as JsInvocation
+//                                            val secondArgQualifier = secondArg.qualifier
+//                                            check(secondArgQualifier is JsNameRef && secondArgQualifier.ident == "array") {"72bb7eed-1a8f-453f-9013-c597e57be8b8"}
+//                                            val bitch = secondArg.arguments[0]
+//
+//                                            ctx.replaceMe(invocation("\$__phiShitToEvaluate = phiEvaluate", listOf(bitch)).makeStmt())
+//                                            return
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+
+                ctx.replaceMe(invocation("phiExpressionStatement", listOf(expr)).makeStmt())
 
 //            ctx.replaceMe(invocation("\$GLOBALS['shit'] = ${++shitCounter}; phiExpressionStatement", listOf(x.expression)).makeStmt())
 
@@ -456,8 +482,6 @@ class Phpifier(val program: JsProgram) {
                 catchBody.statements.addAll(x.body.statements)
                 ctx.replaceMe(JsCatch(x.scope, ident, catchBody))
             }
-
-
         }.accept(program)
     }
 }

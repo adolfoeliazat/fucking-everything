@@ -40,6 +40,7 @@ import org.jetbrains.kotlin.js.util.TextOutputImpl
 import org.jetbrains.kotlin.utils.addToStdlib.indexOfOrNull
 import phizdets.compiler.CompileStdlib
 import phizdets.compiler.PhizdetscGlobal
+import vgrechka.HTTPClient.post
 import vgrechka.idea.hripos.*
 
 
@@ -58,35 +59,48 @@ object PhizdetsTestingGlobal {
 
 }
 
-object JerkAPSBackPHP {
+object CompileAPSBackPHP {
     val alsoCompileStdlib =
         false
-//            true
+//        true
 
     @JvmStatic
     fun main(args: Array<String>) {
         if (alsoCompileStdlib)
             CompileStdlib.main(arrayOf())
-
-        Boobs(TestParams(
-            testName = "aps-back",
-            sourceFiles = listOf(
-                File("E:/fegh/aps/back-php/src/aps-back-php.kt"),
-                File("E:/fegh/aps/back-php/src/shared-php-impl.kt"),
-                File("E:/fegh/aps/back-php/src/shared-back-php-impl.kt"),
-                File("E:/fegh/aps/back-php/phizdetslib--junction/src/phizdets-lib.kt"),
-                File("E:/fegh/aps/back-php/shared--junction/src/xplatf-shared-1.kt"),
-                File("E:/fegh/aps/back-php/shared-back--junction/src/xentities.kt"),
-                File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-1.kt"),
-                File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-2.kt"),
-                File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-shared-impl-1.kt")),
-            localSettingsFile = "E:/fegh/aps/back-php/src/aps-back-settings--local.php",
-            vboxSettingsFile = "E:/fegh/aps/back-php/src/aps-back-settings--vbox.php",
-            logFile = "c:/tmp/aps-back-php.log"
-        )).goBananas()
+        Boobs(apsBackTestParams).goBananas(testRequest = false)
     }
 }
 
+object JerkAPSBackPHP {
+    val alsoCompileStdlib =
+        false
+//        true
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        if (alsoCompileStdlib)
+            CompileStdlib.main(arrayOf())
+        Boobs(apsBackTestParams).goBananas()
+    }
+}
+
+val apsBackTestParams by lazy {TestParams(
+    testName = "aps-back",
+    sourceFiles = listOf(
+        File("E:/fegh/aps/back-php/src/aps-back-php.kt"),
+        File("E:/fegh/aps/back-php/src/shared-php-impl.kt"),
+        File("E:/fegh/aps/back-php/src/shared-back-php-impl.kt"),
+        File("E:/fegh/aps/back-php/phizdetslib--junction/src/phizdets-lib.kt"),
+        File("E:/fegh/aps/back-php/shared--junction/src/xplatf-shared-1.kt"),
+        File("E:/fegh/aps/back-php/shared-back--junction/src/xentities.kt"),
+        File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-1.kt"),
+        File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-2.kt"),
+        File("E:/fegh/aps/back-php/shared-back--junction/src/xplatf-back-shared-impl-1.kt")),
+    localSettingsFile = "E:/fegh/aps/back-php/src/aps-back-settings--local.php",
+    vboxSettingsFile = "E:/fegh/aps/back-php/src/aps-back-settings--vbox.php",
+    logFile = "c:/tmp/aps-back-php.log"
+)}
 
 class TestParams(
     val testName: String,
@@ -105,7 +119,7 @@ class Boobs(val testParams: TestParams) {
     var outFilePath by notNull<String>()
     val outRoot = "$PHOTLINC_OUT_ROOT\\${testParams.testName}"
 
-    fun goBananas() {
+    fun goBananas(testRequest: Boolean = true) {
         PhizdetscGlobal.reportTranslationStage = {num: Int, program: JsProgram ->
             val output = TextOutputImpl()
             val taggedGenOutput = TextOutputImpl()
@@ -116,6 +130,30 @@ class Boobs(val testParams: TestParams) {
         }
 
         compileAndStuff(testParams) {
+            val deploymentDir = "$HTDOCS_OUT${testParams.testName}"
+            if (!CurrentTestFiddling.preventCompilationAndDeploying) {
+                val generatedShit = File(outFilePath).readText()
+
+                File(deploymentDir + "/${testParams.testName}.php").writeText(
+                    generatedShit.replaceFirst("<?php", "<?php try { ") + "} catch (Exception \$e) { echo(\"\\n\" . \$e->getMessage() . \"\\n\" . \$e->getFile() . ':' . \$e->getLine() . \"\\n\\n\" . \$e->getTraceAsString()); }")
+
+//                copyFile(p.outFilePath + "--tagged-gen", deploymentDir + "/${p.testName}.php--tagged-gen")
+                copyFile(outRoot + "/phi-engine.php", deploymentDir + "/phi-engine.php")
+                copyFile(CompileStdlib.stdlibPHPFilePath, outRoot + "/phizdets-stdlib.php")
+                copyFile(outRoot + "/phizdets-stdlib.php", deploymentDir + "/phizdets-stdlib.php")
+                copyFile(testParams.localSettingsFile, deploymentDir + "/${testParams.testName}-settings.php")
+
+                val fuckAroundDir = "E:/fegh/phizdets/phizdetsc/src/phizdets/php/fuckaroundapsback"
+                File("$fuckAroundDir/${testParams.testName}.php").writeText(generatedShit.replaceFirst("require_once('phi-engine.php');", ""));
+                copyFile(testParams.vboxSettingsFile, "$fuckAroundDir/${testParams.testName}-settings.php")
+
+                // @here
+//                copyFile("${p.outFilePath}--tagged", deploymentDir + "/${p.testName}.php--tagged")
+//                copyFile(p.phpSettingsSourceFilePath, deploymentDir + "/${p.phpSettingsFileName}")
+            }
+
+            if (!testRequest) return@compileAndStuff
+
             val om = ObjectMapper()
 
             class PrepareResult(val text: String, val parsedOK: Boolean)
@@ -136,24 +174,6 @@ class Boobs(val testParams: TestParams) {
                 }
             }
 
-            val deploymentDir = "$HTDOCS_OUT${testParams.testName}"
-            if (!CurrentTestFiddling.preventCompilationAndDeploying) {
-                copyFile(outFilePath, deploymentDir + "/${testParams.testName}.php")
-//                copyFile(p.outFilePath + "--tagged-gen", deploymentDir + "/${p.testName}.php--tagged-gen")
-                copyFile(outRoot + "/phi-engine.php", deploymentDir + "/phi-engine.php")
-                copyFile(CompileStdlib.stdlibPHPFilePath, outRoot + "/phizdets-stdlib.php")
-                copyFile(outRoot + "/phizdets-stdlib.php", deploymentDir + "/phizdets-stdlib.php")
-                copyFile(testParams.localSettingsFile, deploymentDir + "/${testParams.testName}-settings.php")
-
-                val shit = File(deploymentDir + "/${testParams.testName}.php").readText()
-                val fuckAroundDir = "E:/fegh/phizdets/phizdetsc/src/phizdets/php/fuckaroundapsback"
-                File("$fuckAroundDir/${testParams.testName}.php").writeText(shit.replaceFirst("require_once('phi-engine.php');", ""));
-                copyFile(testParams.vboxSettingsFile, "$fuckAroundDir/${testParams.testName}-settings.php")
-
-                // @here
-//                copyFile("${p.outFilePath}--tagged", deploymentDir + "/${p.testName}.php--tagged")
-//                copyFile(p.phpSettingsSourceFilePath, deploymentDir + "/${p.phpSettingsFileName}")
-            }
 
             val jaxbContext = JAXBContext.newInstance(RRLog::class.java)
             val unmarshaller = jaxbContext.createUnmarshaller()
@@ -180,7 +200,10 @@ class Boobs(val testParams: TestParams) {
                     if (logFile.exists()) {
                         check(logFile.delete()) {"a30068f4-835c-48b1-9068-72e8b9136aec"}
                     }
-                    val actualResponseJSON = HTTPClient.postJSON("http://localhost/phi-tests/${testParams.testName}/${testParams.testName}.php?${entry.queryString}", adaptedRequestJSON)
+                    val actualResponseJSON = post(
+                        mediaTypeName = HTTPClient.MediaTypeName.JSON,
+                        url = "http://localhost/phi-tests/${testParams.testName}/${testParams.testName}.php?${entry.queryString}",
+                        content = adaptedRequestJSON)
                     val expectedResponseJSON = entry.responseJSON
                     val actualPreparedResponse = prepare(actualResponseJSON)
                     val expectedPreparedResponse = prepare(expectedResponseJSON)
@@ -466,7 +489,8 @@ private fun printWrappedText(title: String, text: String) {
 private fun sendTestResultToDevTools(req: PDTRemoteCommand_TestResult) {
     print("Sending shit to photlin-dev-tools...")
     val proc = req::class.simpleName!!.substring("PDTRemoteCommand_".length)
-    val rawResponse = HTTPClient.postJSON(
+    val rawResponse = post(
+        HTTPClient.MediaTypeName.JSON,
         "http://localhost:" + PhotlinDevToolsGlobal.rpcServerPort + "?proc=$proc",
         ObjectMapper().writeValueAsString(req))
     println(" " + rawResponse)

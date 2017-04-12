@@ -1,5 +1,4 @@
-Git
-===
+========== Git ==========
 
     git show --pretty="" --name-status <commit-sha>
 
@@ -25,14 +24,12 @@ Git
         git push -f origin master
 
 
-IntelliJ
-========
+========== IntelliJ ==========
 
     Reload ideavimrc          :source ~/.ideavimrc
 
 
-Misc
-====
+========== Misc ==========
 
     netstat -a -o
     netstat -a -o | findstr 8080
@@ -40,15 +37,14 @@ Misc
 
     echo -ne '\e]0;Title\a'
 
-VirtualBox
-==========
+
+========== VirtualBox ==========
 
     Host IP as visible from guest: 10.0.2.2
     DISPLAY=10.0.2.2:0 gnome-terminal
 
 
-Linux
-=====
+========== Linux ==========
 
     ps aux --sort -rss    | head -n15
 
@@ -56,6 +52,11 @@ Linux
         - Copy shit to ~/.fonts
         $ sudo fc-cache -fv
 
+
+========== Java ==========
+
+    set _JAVA_OPTIONS=-Xmx512m
+    java -XX:+PrintFlagsFinal -version | findstr HeapSize
 
 
 

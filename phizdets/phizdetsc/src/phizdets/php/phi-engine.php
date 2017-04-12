@@ -96,11 +96,13 @@ abstract class PhiExpression {
 class PhiObject extends PhiValue {
     /**@var PhiValue[]*/ public $fields = array();
     /**@var PhiObject[]*/ public $props = array();
+    public $shit;
 
     /**
      * @param array $opts
      */
     function __construct($opts = array()) {
+        $this->shit = new stdClass();
         /**@var PhiValue $proto*/
         if (!array_key_exists('proto', $opts)) {
             $proto = Phi::$Object_prototype;
@@ -280,6 +282,38 @@ class PhiObject extends PhiValue {
         }
 
         return new PhiUndefined();
+    }
+
+    public function __toString() {
+        $shit = "PhiObject(\n";
+        foreach ($this->fields as $key => $value) {
+            if ($key !== '__proto__') {
+                $valueAsString = phiShitToString($value);
+                $shit .= "    $key: $valueAsString\n";
+            }
+        }
+        $shit .= "\n)";
+        return $shit;
+    }
+}
+
+function phiShitToString(&$shit) {
+    if (is_string($shit)) {
+        return "'$shit'";
+    }
+    else if (is_null($shit) || is_scalar($shit) || is_object($shit) && method_exists($shit, '__toString')) {
+        return strval($shit);
+    }
+    else if (is_array($shit)) {
+        $res = "[\n";
+        foreach ($shit as $key => $value) {
+            $res .= '        ' . $key . ' => ' . phiShitToString($value) . ",\n";
+        }
+        $res .= "    ]";
+        return $res;
+    }
+    else {
+        return '[obscure shit]';
     }
 }
 
@@ -485,16 +519,18 @@ class PhiNull extends PhiValue {
 }
 
 class PhiEnv {
-    /**@var PhiEnv*/ private $parent;
-    /**@var PhiValue[]*/ private $vars = array();
-    /**@var PhiValue*/ private $thisValue;
-    /**@var PhiValue[]*/ private $functionArgs;
+    /**@var PhiEnv*/ public $parent;
+    /**@var PhiValue[]*/ public $vars = array();
+    /**@var PhiValue*/ public $thisValue;
+    /**@var PhiValue[]*/ public $functionArgs;
+    public $shit;
 
     /**
      * @param PhiEnv $parent
      */
     function __construct($parent) {
         $this->parent = $parent;
+        $this->shit = new stdClass();
     }
 
     function deepClone() {
@@ -1276,6 +1312,9 @@ class Phi {
         else if ($phiValue instanceof PhiNumber) {
             return $phiValue->getValue();
         }
+        else if ($phiValue instanceof PhiBoolean) {
+            return $phiValue->getValue();
+        }
         else {
             throw new PhiIllegalStateException("7d8c0fe9-e2f2-4fa1-9e5e-7aa1f5079f9a");
         }
@@ -1293,12 +1332,29 @@ class Phi {
         else if (gettype($nativeValue) === 'string') {
             return new PhiString($nativeValue);
         }
+        else if (gettype($nativeValue) === 'integer') {
+            return new PhiNumber($nativeValue);
+        }
         else if (gettype($nativeValue) === 'boolean') {
             return new PhiBoolean($nativeValue);
         }
         else {
-            throw new PhiIllegalStateException("02db567a-dc19-4a51-9d4e-5a8c22178d59");
+//            return $nativeValue;
+            // return new PhiNativeValue($nativeValue);
+             throw new PhiIllegalStateException("02db567a-dc19-4a51-9d4e-5a8c22178d59");
         }
+    }
+}
+
+class PhiNativeValue {
+    public $value;
+
+    public function __construct($value) {
+        $this->value = $value;
+    }
+
+    function __toString() {
+        return 'PhiNativeValue(' . phiShitToString($this->value) . ')';
     }
 }
 
@@ -1699,6 +1755,12 @@ class PhiBinaryOperation extends PhiExpression {
             if (($lhsPhiValue instanceof PhiString) && ($rhsPhiValue instanceof PhiString)) {
                 return new PhiString($lhsPhiValue->getValue() . $rhsPhiValue->getValue());
             }
+            else if (($lhsPhiValue instanceof PhiString) && ($rhsPhiValue instanceof PhiNumber)) {
+                return new PhiString($lhsPhiValue->getValue() . $rhsPhiValue->getValue());
+            }
+            else if (($lhsPhiValue instanceof PhiNumber) && ($rhsPhiValue instanceof PhiString)) {
+                return new PhiString($lhsPhiValue->getValue() . $rhsPhiValue->getValue());
+            }
             else if (($lhsPhiValue instanceof PhiNumber) && ($rhsPhiValue instanceof PhiNumber)) {
                 return new PhiNumber($lhsPhiValue->getValue() + $rhsPhiValue->getValue());
             }
@@ -1995,7 +2057,7 @@ class PhiStringLiteral extends PhiExpression {
 }
 
 class PhiNumber extends PhiValue {
-    /**@var double*/ private $value;
+    /**@var double*/ public $value;
 
     /**
      * @param double $value
@@ -2028,7 +2090,7 @@ class PhiNumber extends PhiValue {
 }
 
 class PhiString extends PhiValue {
-    /**@var string*/ private $value;
+    /**@var string*/ public $value;
 
     /**
      * @param string $value
@@ -2458,7 +2520,11 @@ class PhiInvocation extends PhiExpression {
                 array_push($nativeArgs, $argNativeValue);
             }
             $nativeRes = call_user_func_array($this->callee->getName(), $nativeArgs);
-            return Phi::nativeToPhiValue($nativeRes);
+            if ($this->callee->getName() === "phiEvalToNative") {
+                return $nativeRes;
+            } else {
+                return Phi::nativeToPhiValue($nativeRes);
+            }
         }
         else {
             $receiverPhiValue = new PhiUndefined();
@@ -2779,7 +2845,9 @@ function phiDumpShit3() {
     phiPrintln('');
 }
 
-function phiBreakDebugger($shit) {
+function phiBreakDebugger($shit = null) {
+//    phiPrint(Phi::getCurrentEnv()->thisValue->__toString());
+//    exit();
     strval('break on me');
 }
 
@@ -2817,6 +2885,10 @@ function phiNegateAndAddOne($bits) {
 }
 
 function phiEval($code) {
+    return eval($code);
+}
+
+function phiEvalToNative($code) {
     return eval($code);
 }
 

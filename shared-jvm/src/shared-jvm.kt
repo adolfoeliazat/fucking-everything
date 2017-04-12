@@ -7,6 +7,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import java.io.*
+import java.nio.charset.Charset
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
@@ -161,21 +162,19 @@ class relazy<out T>(val initializer: () -> T) {
     }
 }
 
+
 object HTTPClient {
-    fun postJSON(url: String, content: String, readTimeoutSeconds: Long? = null): String {
-        return post(url, "application/json", content, readTimeoutSeconds = readTimeoutSeconds)
+    object MediaTypeName {
+        val JSON = "application/json"
+        val XML = "application/xml"
     }
 
-    fun postXML(url: String, content: String): String {
-        return post(url, "application/xml", content)
-    }
-
-    fun post(url: String, mime: String, content: String, readTimeoutSeconds: Long? = null): String {
-        val JSON = MediaType.parse(mime + "; charset=utf-8")
+    fun post(mediaTypeName: String, url: String, content: String, readTimeoutSeconds: Long? = null): String {
+        val mediaType = MediaType.parse(mediaTypeName + "; charset=utf-8")
         val client = OkHttpClient.Builder()
             .readTimeout(readTimeoutSeconds ?: 5, TimeUnit.SECONDS)
             .build()
-        val body = RequestBody.create(JSON, content)
+        val body = RequestBody.create(mediaType, content)
         val request = Request.Builder()
             .url(url)
             .post(body)
@@ -184,7 +183,9 @@ object HTTPClient {
         val code = response.code()
         if (code != 200)
             bitch("Shitty HTTP response code: $code")
-        return response.body().string()
+
+        val charset = Charset.forName("UTF-8")
+        return response.body().source().readString(charset)
     }
 }
 

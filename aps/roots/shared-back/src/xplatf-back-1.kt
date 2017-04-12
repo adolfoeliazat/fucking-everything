@@ -577,7 +577,7 @@ fun serveShit(req: XHttpServletRequest, res: XHttpServletResponse) {
         ss[1]
     }
 
-    try {
+//    try {
         when {
 //            pathInfo == "/welcome" -> {
 //                res.spitText("FUCK YOU")
@@ -600,15 +600,15 @@ fun serveShit(req: XHttpServletRequest, res: XHttpServletResponse) {
 
             else -> bitch("Weird pathInfo: $pathInfo")
         }
-    } catch(fuckup: Throwable) {
-        backPlatform.log.error("Can't fucking service [$pathInfo]: ${fuckup.message}", fuckup)
-
-        if (fuckup is WithCulprit) {
-            backPlatform.log.section("Culprit:\n\n" + fuckup.culprit.constructionStack.joinToString("\n") {it.toString()})
-        }
-
-        throw XServletException(fuckup)
-    }
+//    } catch(fuckup: Throwable) {
+//        backPlatform.log.error("Can't fucking service [$pathInfo]: ${fuckup.message}", fuckup)
+//
+//        if (fuckup is WithCulprit) {
+//            backPlatform.log.section("Culprit:\n\n" + fuckup.culprit.constructionStack.joinToString("\n") {it.toString()})
+//        }
+//
+//        throw XServletException(fuckup)
+//    }
 }
 
 

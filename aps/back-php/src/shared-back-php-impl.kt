@@ -137,6 +137,7 @@ val backPlatform = object : XBackPlatform {
     }
 
     override fun makeServant(procedureName: String): BitchyProcedure {
+        PhiTools.dumpEnvAndDie(PhiTools.currentEnv())
         imf("15b54189-8f6f-4077-a3a3-b54b214fd23f")
     }
 
