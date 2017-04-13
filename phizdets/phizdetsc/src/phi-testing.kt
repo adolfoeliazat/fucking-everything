@@ -15,7 +15,6 @@ import org.jetbrains.kotlin.js.backend.ast.*
 import org.jetbrains.kotlin.js.facade.K2JSTranslator
 import org.jetbrains.kotlin.js.translate.utils.jsAstUtils.array
 import org.jetbrains.kotlin.js.translate.utils.jsAstUtils.index
-import photlin.devtools.*
 import vgrechka.*
 import java.io.File
 import java.io.StringWriter
@@ -281,7 +280,7 @@ class Boobs(val testParams: TestParams) {
                                 .replace("&lt;", "<")
                                 .replace("&amp;", "&"))
 
-                            val message = PDTRemoteCommand_TestResult(rawResponseFromPHPScript = actualResponseJSON)
+//                            val message = PDTRemoteCommand_TestResult(rawResponseFromPHPScript = actualResponseJSON)
 //                            sendTestResultToDevTools(message)
                         }
 
@@ -486,16 +485,16 @@ private fun printWrappedText(title: String, text: String) {
     clog(wrappedStderr)
 }
 
-private fun sendTestResultToDevTools(req: PDTRemoteCommand_TestResult) {
-    print("Sending shit to photlin-dev-tools...")
-    val proc = req::class.simpleName!!.substring("PDTRemoteCommand_".length)
-    val rawResponse = post(
-        HTTPClient.MediaTypeName.JSON,
-        "http://localhost:" + PhotlinDevToolsGlobal.rpcServerPort + "?proc=$proc",
-        ObjectMapper().writeValueAsString(req))
-    println(" " + rawResponse)
-    //clog("Response: $rawResponse")
-}
+//private fun sendTestResultToDevTools(req: PDTRemoteCommand_TestResult) {
+//    print("Sending shit to photlin-dev-tools...")
+//    val proc = req::class.simpleName!!.substring("PDTRemoteCommand_".length)
+//    val rawResponse = post(
+//        HTTPClient.MediaTypeName.JSON,
+//        "http://localhost:" + PhotlinDevToolsGlobal.rpcServerPort + "?proc=$proc",
+//        ObjectMapper().writeValueAsString(req))
+//    println(" " + rawResponse)
+//    //clog("Response: $rawResponse")
+//}
 
 fun filesFrom(dirPath: String): List<File> {
     val dir = File(dirPath)

@@ -10,7 +10,6 @@ import org.jetbrains.kotlin.js.backend.ast.*
 import org.jetbrains.kotlin.js.facade.K2JSTranslator
 import org.jetbrains.kotlin.js.translate.utils.jsAstUtils.array
 import org.jetbrains.kotlin.js.translate.utils.jsAstUtils.index
-import photlin.devtools.*
 import vgrechka.*
 import java.io.File
 import java.io.StringWriter

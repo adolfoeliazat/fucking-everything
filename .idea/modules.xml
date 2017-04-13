@@ -11,11 +11,9 @@
       <module fileurl="file://$PROJECT_DIR$/idea-backdoor/idea-backdoor.iml" filepath="$PROJECT_DIR$/idea-backdoor/idea-backdoor.iml" />
       <module fileurl="file://$PROJECT_DIR$/idea-backdoor-client/idea-backdoor-client.iml" filepath="$PROJECT_DIR$/idea-backdoor-client/idea-backdoor-client.iml" />
       <module fileurl="file://$PROJECT_DIR$/phizdets/phi-gross-test-1/phi-gross-test-1.iml" filepath="$PROJECT_DIR$/phizdets/phi-gross-test-1/phi-gross-test-1.iml" group="phizdets" />
+      <module fileurl="file://$PROJECT_DIR$/phizdets/phizdets-idea/phizdets-idea.iml" filepath="$PROJECT_DIR$/phizdets/phizdets-idea/phizdets-idea.iml" group="phizdets" />
       <module fileurl="file://$PROJECT_DIR$/phizdets/phizdetsc/phizdetsc.iml" filepath="$PROJECT_DIR$/phizdets/phizdetsc/phizdetsc.iml" group="phizdets" />
       <module fileurl="file://$PROJECT_DIR$/phizdets/phizdetslib/phizdetslib.iml" filepath="$PROJECT_DIR$/phizdets/phizdetslib/phizdetslib.iml" group="phizdets" />
-      <module fileurl="file://$PROJECT_DIR$/photlin/photlin.iml" filepath="$PROJECT_DIR$/photlin/photlin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/photlin-dev-tools/photlin-dev-tools.iml" filepath="$PROJECT_DIR$/photlin-dev-tools/photlin-dev-tools.iml" />
-      <module fileurl="file://$PROJECT_DIR$/photlin-stdlib/photlin-stdlib.iml" filepath="$PROJECT_DIR$/photlin-stdlib/photlin-stdlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared-idea/shared-idea.iml" filepath="$PROJECT_DIR$/shared-idea/shared-idea.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared-jvm/shared-jvm.iml" filepath="$PROJECT_DIR$/shared-jvm/shared-jvm.iml" />
       <module fileurl="file://$PROJECT_DIR$/txt/txt.iml" filepath="$PROJECT_DIR$/txt/txt.iml" />
