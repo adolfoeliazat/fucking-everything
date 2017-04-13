@@ -1,0 +1,17 @@
+<project name="aps-back-phi">
+    <target name="phi-compile">
+        <java classname="phizdets.compiler.JS2Phizdets">
+            <classpath>
+                <pathelement location="C:\opt\jdk1.8.0_121\jre\lib\ext\nashorn.jar"/>
+                <pathelement location="C:\opt\jdk1.8.0_121\jre\lib\rt.jar"/>
+                <pathelement location="E:\fegh\out\production\shared-jvm"/>
+                <pathelement location="E:\fegh\out\production\phizdetsc"/>
+                <pathelement location="E:\fegh\lib\kotlin-runtime.jar"/>
+                <pathelement location="E:\fegh\lib\kotlin-reflect.jar"/>
+                <pathelement location="E:\fegh\lib-gradle\kotlin-compiler-1.1.0.jar"/>
+            </classpath>
+            <arg value="E:\fegh\aps\aps-back-phi\out\production\aps-back-phi\aps-back-phi.js"/>
+        </java>
+    </target>
+</project>
+
