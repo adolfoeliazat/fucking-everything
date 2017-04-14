@@ -1,0 +1,27 @@
+<idea-plugin>
+
+  <!--
+   Extension points to support gnu command line language.
+   See {@link vgrechka.phizdetsidea.commandInterface.commandLineackage
+  -->
+  <extensions defaultExtensionNs="com.intellij">
+
+
+    <fileTypeFactory implementation="vgrechka.phizdetsidea.commandInterface.commandLine.CommandLineFileTypeFactory"/>
+    <lang.parserDefinition language="CommandLine"
+                           implementationClass="vgrechka.phizdetsidea.commandInterface.commandLine.CommandLineParserDefinition"/>
+    <lang.syntaxHighlighterFactory language="CommandLine"
+                                   implementationClass="vgrechka.phizdetsidea.commandInterface.commandLine.CommandLineSyntaxHighlighterFactory"/>
+    <psi.referenceContributor language="CommandLine"
+                              implementation="vgrechka.phizdetsidea.commandInterface.commandLine.CommandLineReferenceContributor"/>
+    <lang.elementManipulator forClass="vgrechka.phizdetsidea.commandInterface.commandLine.CommandLineElement"
+                             implementationClass="vgrechka.phizdetsidea.commandInterface.commandLine.CommandLineElementManipulator"/>
+    <localInspection language="CommandLine" shortName="CommandLineInspection" displayName="Command-line inspection"
+                     enabledByDefault="true" level="WARNING"
+                     groupKey="INSP.GROUP.phizdets"
+                     groupBundle="vgrechka.phizdetsidea.phizdets.PyBundle"
+                     implementationClass="vgrechka.phizdetsidea.commandInterface.commandLine.CommandLineInspection"/>
+    <lang.documentationProvider language="CommandLine"
+                                implementationClass="vgrechka.phizdetsidea.commandInterface.commandLine.CommandLineDocumentationProvider"/>
+  </extensions>
+</idea-plugin>

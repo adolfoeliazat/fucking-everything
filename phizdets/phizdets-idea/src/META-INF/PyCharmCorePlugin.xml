@@ -1,0 +1,16 @@
+<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="/META-INF/pycharm-core.xml" xpointer="xpointer(/idea-plugin/*)"/>
+  <xi:include href="/META-INF/phizdets-core-ide.xml" xpointer="xpointer(/idea-plugin/*)"/>
+
+  <application-components>
+    <component>
+      <implementation-class>vgrechka.phizdetsidea.phizdets.PyCharmInitialConfigurator</implementation-class>
+      <headless-implementation-class/>
+    </component>
+    <component>
+      <interface-class>vgrechka.phizdetsidea.phizdets.console.PhizdetsConsoleRunnerFactory</interface-class>
+      <implementation-class>vgrechka.phizdetsidea.phizdets.console.PydevConsoleRunnerFactory</implementation-class>
+    </component>
+
+  </application-components>
+</idea-plugin>

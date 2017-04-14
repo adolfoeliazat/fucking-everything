@@ -1,0 +1,22 @@
+<idea-plugin>
+  <!-- Components and extensions declared in this file work both in PyCharm and Phizdets plugin (but not in CLion).
+       Both Community and Professional editions. -->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Buildout -->
+    <facetType implementation="vgrechka.phizdetsidea.phizdets.buildout.BuildoutFacetType"/>
+    <framework.detector implementation="vgrechka.phizdetsidea.phizdets.buildout.BuildoutFrameworkDetector"/>
+
+    <lang.parserDefinition language="BuildoutCfg" implementationClass="vgrechka.phizdetsidea.phizdets.buildout.config.BuildoutCfgParserDefinition"/>
+    <fileTypeFactory implementation="vgrechka.phizdetsidea.phizdets.buildout.config.BuildoutCfgFileTypeFactory"/>
+    <lang.syntaxHighlighterFactory language="BuildoutCfg"
+                                   implementationClass="vgrechka.phizdetsidea.phizdets.buildout.config.BuildoutCfgHighlighterFactory"/>
+
+    <localInspection language="BuildoutCfg" shortName="BuildoutUnresolvedPartInspection" bundle="vgrechka.phizdetsidea.phizdets.PyBundle"
+                     key="buildout.unresolved.part.inspection" groupKey="buildout" enabledByDefault="true" level="WARNING"
+                     implementationClass="vgrechka.phizdetsidea.phizdets.buildout.config.inspection.BuildoutUnresolvedPartInspection"/>
+
+    <colorSettingsPage implementation="vgrechka.phizdetsidea.phizdets.buildout.config.BuildoutCfgColorsPage"/>
+    <problemFileHighlightFilter implementation="vgrechka.phizdetsidea.phizdets.buildout.config.BuildoutCfgProblemFileHighlightFilter"/>
+  </extensions>
+</idea-plugin>

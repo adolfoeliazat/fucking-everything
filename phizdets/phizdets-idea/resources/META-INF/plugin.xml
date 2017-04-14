@@ -22,11 +22,679 @@
   <depends>com.intellij.modules.lang</depends>
   -->
 
-  <extensions defaultExtensionNs="com.intellij">
-  </extensions>
+    <resource-bundle>vgrechka.phizdetsidea.phizdets.PyBundle</resource-bundle>
+
+
 
   <actions>
     <!-- Add your actions here -->
   </actions>
+
+
+    <extensions defaultExtensionNs="com.intellij">
+        <psi.treeChangePreprocessor implementation="vgrechka.phizdetsidea.phizdets.PhizdetsPsiManager"/>
+        <library.type implementation="vgrechka.phizdetsidea.phizdets.library.PhizdetsLibraryType"/>
+        <renameHandler implementation="vgrechka.phizdetsidea.phizdets.magicLiteral.PyMagicLiteralRenameHandler"/>
+        <nameSuggestionProvider implementation="vgrechka.phizdetsidea.phizdets.refactoring.PyNameSuggestionProvider"/>
+        <methodNavigationOffsetProvider implementation="vgrechka.phizdetsidea.phizdets.codeInsight.PyMethodNavigationOffsetProvider"/>
+        <copyPastePreProcessor implementation="vgrechka.phizdetsidea.phizdets.editor.PhizdetsCopyPasteProcessor"/>
+        <fileTypeFactory implementation="vgrechka.phizdetsidea.phizdets.PhizdetsFileTypeFactory"/>
+        <fileTypeDetector implementation="vgrechka.phizdetsidea.phizdets.PyFileTypeDetector"/>
+        <editorHighlighterProvider filetype="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.PyEditorHighlighterProvider"/>
+        <lang.syntaxHighlighterFactory language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.highlighting.PySyntaxHighlighterFactory"/>
+        <lang.braceMatcher language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.PyBraceMatcher"/>
+        <lang.parserDefinition language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.PhizdetsParserDefinition"/>
+        <lang.commenter language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.PhizdetsCommenter"/>
+        <lang.foldingBuilder language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.PhizdetsFoldingBuilder"/>
+        <lang.findUsagesProvider language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.findUsages.PhizdetsFindUsagesProvider"/>
+        <lang.formatter language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.formatter.PhizdetsFormattingModelBuilder"/>
+        <preFormatProcessor implementation="vgrechka.phizdetsidea.phizdets.formatter.PyPreFormatProcessor"/>
+        <postFormatProcessor implementation="vgrechka.phizdetsidea.phizdets.formatter.PyTrailingBlankLinesPostFormatProcessor"/>
+        <postFormatProcessor implementation="vgrechka.phizdetsidea.phizdets.formatter.PyFromImportPostFormatProcessor"/>
+        <lang.whiteSpaceFormattingStrategy language="Phizdets"
+                                           implementationClass="vgrechka.phizdetsidea.phizdets.formatter.PyWhiteSpaceFormattingStrategy"/>
+        <lang.lineWrapStrategy language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.formatter.PyLineWrapPositionStrategy"/>
+        <lang.namesValidator language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.refactoring.rename.PhizdetsNamesValidator"/>
+        <lang.surroundDescriptor language="Phizdets"
+                                 implementationClass="vgrechka.phizdetsidea.phizdets.refactoring.surround.PyStatementSurroundDescriptor"/>
+        <lang.surroundDescriptor language="Phizdets"
+                                 implementationClass="vgrechka.phizdetsidea.phizdets.refactoring.surround.PyExpressionSurroundDescriptor"/>
+        <lang.unwrapDescriptor language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.refactoring.unwrap.PyUnwrapDescriptor"/>
+        <lang.psiStructureViewFactory language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.structureView.PyStructureViewFactory"/>
+        <lang.documentationProvider language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.documentation.PhizdetsDocumentationProvider"/>
+        <lang.documentationProvider language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.console.PydevDocumentationProvider"/>
+        <lang.emacs language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.editor.PyEmacsHandler"/>
+        <highlightRangeExtension implementation="vgrechka.phizdetsidea.phizdets.validation.DumbAwareHighlightingAnnotator"/>
+        <annotator language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.validation.PyAnnotatingVisitor"/>
+        <annotator language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.validation.PyDumbAwareAnnotator"/>
+        <annotator language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyCompatibilityInspectionAdvertiser"/>
+        <quoteHandler fileType="Phizdets" className="vgrechka.phizdetsidea.phizdets.editor.PhizdetsQuoteHandler"/>
+        <enterHandlerDelegate implementation="vgrechka.phizdetsidea.phizdets.editor.PhizdetsEnterHandler"/>
+        <enterHandlerDelegate implementation="vgrechka.phizdetsidea.phizdets.editor.PyEnterAtIndentHandler" order="first"/>
+        <enterHandlerDelegate implementation="vgrechka.phizdetsidea.phizdets.editor.PyEnterBetweenBracketsHandler"/>
+        <editorActionHandler action="EditorCopy" implementationClass="vgrechka.phizdetsidea.phizdets.console.PyConsoleCopyHandler"/>
+
+        <editor.backspaceModeOverride language="Phizdets" implementationClass="com.intellij.codeInsight.editorActions.SmartBackspaceDisabler"/>
+        <sdkType implementation="vgrechka.phizdetsidea.phizdets.sdk.PhizdetsSdkType"/>
+        <gotoClassContributor implementation="vgrechka.phizdetsidea.phizdets.PyGotoClassContributor"/>
+        <gotoSymbolContributor implementation="vgrechka.phizdetsidea.phizdets.PyGotoSymbolContributor"/>
+        <codeInsight.parameterInfo language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.PyParameterInfoHandler"/>
+        <codeInsight.fillParagraph language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.actions.PyFillParagraphHandler"/>
+        <colorSettingsPage implementation="vgrechka.phizdetsidea.phizdets.highlighting.PhizdetsColorsPage"/>
+        <extendWordSelectionHandler implementation="vgrechka.phizdetsidea.phizdets.editor.selectWord.PyWordSelectionHandler"/>
+        <extendWordSelectionHandler implementation="vgrechka.phizdetsidea.phizdets.editor.selectWord.PyLiteralSelectionHandler"/>
+        <extendWordSelectionHandler implementation="vgrechka.phizdetsidea.phizdets.editor.selectWord.PyStatementSelectionHandler"/>
+        <extendWordSelectionHandler implementation="vgrechka.phizdetsidea.phizdets.editor.selectWord.PyListSelectionHandler"/>
+        <extendWordSelectionHandler implementation="vgrechka.phizdetsidea.phizdets.editor.selectWord.PyCommaSelectionHandler"/>
+        <basicWordSelectionFilter implementation="vgrechka.phizdetsidea.phizdets.editor.selectWord.PyBasicWordSelectionFilter"/>
+        <stripTrailingSpacesFilterFactory implementation="vgrechka.phizdetsidea.phizdets.editor.PyStripTrailingSpacesFilterFactory"/>
+        <completion.contributor language="Phizdets"
+                                implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.completion.PyKeywordCompletionContributor"/>
+        <completion.contributor language="Phizdets"
+                                implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.completion.PySpecialMethodNamesCompletionContributor"/>
+        <completion.contributor language="Phizdets"
+                                implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.completion.PySuperMethodCompletionContributor"/>
+        <completion.contributor language="Phizdets"
+                                implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.completion.PySuperClassAttributesCompletionContributor"/>
+        <completion.contributor language="Phizdets"
+                                implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.completion.PyDictKeyNamesCompletionContributor"/>
+        <completion.contributor language="Phizdets"
+                                implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.completion.PyParameterCompletionContributor"/>
+        <completion.contributor language="Phizdets"
+                                implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.completion.PyDocstringCompletionContributor"/>
+        <completion.contributor language="Phizdets"
+                                implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.completion.PyMetaClassCompletionContributor"/>
+        <completion.contributor language="Phizdets"
+                                implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.completion.PyStructuralTypeAttributesCompletionContributor"/>
+
+        <completion.contributor language="Phizdets"
+                                implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.completion.PyStringFormatCompletionContributor" />
+
+        <lang.tokenSeparatorGenerator language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.PyTokenSeparatorGenerator"/>
+        <lang.elementManipulator forClass="vgrechka.phizdetsidea.phizdets.psi.PyReferenceExpression"
+                                 implementationClass="vgrechka.phizdetsidea.phizdets.psi.impl.PyReferenceExpressionManipulator"/>
+
+        <projectService serviceInterface="vgrechka.phizdetsidea.phizdets.psi.PyElementGenerator"
+                        serviceImplementation="vgrechka.phizdetsidea.phizdets.psi.impl.PyElementGeneratorImpl"/>
+
+        <projectService serviceInterface="vgrechka.phizdetsidea.phizdets.psi.types.TypeEvalContextCache"
+                        serviceImplementation="vgrechka.phizdetsidea.phizdets.psi.types.TypeEvalContextCacheImpl"
+        />
+
+        <projectService serviceImplementation="vgrechka.phizdetsidea.phizdets.inspections.PyCompatibilityInspectionAdvertiserSettings"/>
+
+        <applicationService serviceInterface="vgrechka.phizdetsidea.phizdets.packaging.PyPackageService"
+                            serviceImplementation="vgrechka.phizdetsidea.phizdets.packaging.PyPackageService"/>
+        <applicationService serviceInterface="vgrechka.phizdetsidea.phizdets.packaging.PyCondaPackageService"
+                            serviceImplementation="vgrechka.phizdetsidea.phizdets.packaging.PyCondaPackageService"/>
+        <applicationService serviceInterface="vgrechka.phizdetsidea.phizdets.module.PyModuleService"
+                            serviceImplementation="vgrechka.phizdetsidea.phizdets.module.PyModuleServiceImpl"/>
+        <applicationService serviceInterface="vgrechka.phizdetsidea.phizdets.sdk.flavors.WinRegistryService"
+                            serviceImplementation="vgrechka.phizdetsidea.phizdets.sdk.flavors.WinRegistryServiceImpl"/>
+        <applicationService
+                serviceImplementation="vgrechka.phizdetsidea.phizdets.sdk.flavors.WinPhizdetsSdkFlavor"/>
+        <typedHandler implementation="vgrechka.phizdetsidea.phizdets.codeInsight.PyKeywordTypedHandler" id="pyCommaAfterKwd"/>
+        <typedHandler implementation="vgrechka.phizdetsidea.phizdets.codeInsight.PyMethodNameTypedHandler" id="pyMethodNameTypedHandler"/>
+        <typedHandler implementation="vgrechka.phizdetsidea.phizdets.editor.PhizdetsSpaceHandler"/>
+
+        <stubIndex implementation="vgrechka.phizdetsidea.phizdets.psi.stubs.PyClassNameIndex"/>
+        <stubIndex implementation="vgrechka.phizdetsidea.phizdets.psi.stubs.PyClassNameIndexInsensitive"/>
+        <stubIndex implementation="vgrechka.phizdetsidea.phizdets.psi.stubs.PyFunctionNameIndex"/>
+        <stubIndex implementation="vgrechka.phizdetsidea.phizdets.psi.stubs.PySuperClassIndex"/>
+        <stubIndex implementation="vgrechka.phizdetsidea.phizdets.psi.stubs.PyVariableNameIndex"/>
+        <stubIndex implementation="vgrechka.phizdetsidea.phizdets.psi.stubs.PyInstanceAttributeIndex"/>
+        <stubIndex implementation="vgrechka.phizdetsidea.phizdets.psi.stubs.PyDecoratorStubIndex"/>
+        <stubIndex implementation="vgrechka.phizdetsidea.phizdets.psi.stubs.PyClassAttributesIndex"/>
+        <fileBasedIndex implementation="vgrechka.phizdetsidea.phizdets.psi.stubs.PyModuleNameIndex"/>
+        <fileBasedIndex implementation="vgrechka.phizdetsidea.phizdets.psi.stubs.PySetuptoolsNamespaceIndex"/>
+
+        <declarationRangeHandler key="vgrechka.phizdetsidea.phizdets.psi.PyClass"
+                                 implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.PyDeclarationRangeHandler"/>
+
+        <declarationRangeHandler key="vgrechka.phizdetsidea.phizdets.psi.PyFunction"
+                                 implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.PyDeclarationRangeHandler"/>
+
+        <targetElementEvaluator language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.PyTargetElementEvaluator"/>
+
+        <moduleService serviceInterface="vgrechka.phizdetsidea.phizdets.ReSTService"
+                       serviceImplementation="vgrechka.phizdetsidea.phizdets.ReSTService"/>
+
+        <!-- Run/Debug -->
+        <applicationService serviceInterface="vgrechka.phizdetsidea.phizdets.run.PyRunConfigurationFactory"
+                            serviceImplementation="vgrechka.phizdetsidea.phizdets.run.PyRunConfigurationFactoryImpl"/>
+        <applicationService serviceInterface="vgrechka.phizdetsidea.phizdets.run.PhizdetsRunConfigurationExtensionsManager"
+                            serviceImplementation="vgrechka.phizdetsidea.phizdets.run.PhizdetsRunConfigurationExtensionsManager"/>
+        <configurationType implementation="vgrechka.phizdetsidea.phizdets.run.PhizdetsConfigurationType"/>
+        <programRunner implementation="vgrechka.phizdetsidea.phizdets.run.PhizdetsRunner" order="first"/>
+        <programRunner implementation="vgrechka.phizdetsidea.phizdets.debugger.PyDebugRunner"/>
+        <runConfigurationProducer implementation="vgrechka.phizdetsidea.phizdets.run.PhizdetsRunConfigurationProducer"/>
+        <xdebugger.breakpointType implementation="vgrechka.phizdetsidea.phizdets.debugger.PyLineBreakpointType"/>
+        <xdebugger.breakpointType implementation="vgrechka.phizdetsidea.phizdets.debugger.PyExceptionBreakpointType"/>
+        <xdebugger.settings implementation="vgrechka.phizdetsidea.phizdets.debugger.settings.PyDebuggerSettings"/>
+        <xdebugger.localAttachDebuggerProvider implementation="vgrechka.phizdetsidea.phizdets.debugger.attach.PyLocalAttachDebuggerProvider"/>
+
+        <configurationType implementation="vgrechka.phizdetsidea.phizdets.testing.PhizdetsTestConfigurationType"/>
+        <configurationType implementation="vgrechka.phizdetsidea.phizdets.testing.tox.PyToxConfigurationType"/>
+
+        <runConfigurationProducer implementation="vgrechka.phizdetsidea.phizdets.testing.unittest.PhizdetsUnitTestConfigurationProducer"/>
+        <runConfigurationProducer implementation="vgrechka.phizdetsidea.phizdets.testing.pytest.PyTestConfigurationProducer"/>
+        <runConfigurationProducer implementation="vgrechka.phizdetsidea.phizdets.testing.doctest.PhizdetsDocTestConfigurationProducer"/>
+        <runConfigurationProducer implementation="vgrechka.phizdetsidea.phizdets.testing.tox.PyToxConfigurationProducer"/>
+        <runConfigurationProducer implementation="vgrechka.phizdetsidea.phizdets.testing.nosetest.PhizdetsNoseTestConfigurationProducer"/>
+        <runConfigurationProducer implementation="vgrechka.phizdetsidea.phizdets.testing.universalTests.PyUniversalTestsConfigurationProducer"/>
+
+        <codeInsight.lineMarkerProvider language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.PyLineMarkerProvider"/>
+        <runLineMarkerContributor language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.PyRunLineMarkerContributor"/>
+        <definitionsSearch implementation="vgrechka.phizdetsidea.phizdets.psi.search.PyDefinitionsSearch"/>
+        <gotoTargetRendererProvider implementation="vgrechka.phizdetsidea.phizdets.codeInsight.PyGotoTargetRendererProvider"/>
+
+        <typeHierarchyProvider language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.hierarchy.PyTypeHierachyProvider"/>
+        <callHierarchyProvider language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.hierarchy.call.PyCallHierarchyProvider"/>
+        <highlightUsagesHandlerFactory implementation="vgrechka.phizdetsidea.phizdets.codeInsight.highlighting.PyHighlightExitPointsHandlerFactory"/>
+
+        <joinLinesHandler implementation="vgrechka.phizdetsidea.phizdets.editor.PyJoinLinesHandler"/>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyConvertMethodToPropertyIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.ImportToImportFromIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyConvertStaticMethodToFunctionIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.SpecifyTypeInDocstringIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.SpecifyTypeInPy3AnnotationsIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyAnnotateTypesIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.TypeAssertionIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.ImportFromToImportIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.ImportToggleAliasIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PySplitIfIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyNegateComparisonIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyStringConcatenationToFormatIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.ConvertFormatOperatorToMethodIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyFlipComparisonIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyDemorganIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.ReplaceListComprehensionWithForIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyJoinIfIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyDictConstructorToLiteralFormIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyDictLiteralFormToConstructorIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyQuotedStringIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyConvertLambdaToFunctionIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.ConvertVariadicParamIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyConvertTripleQuotedStringIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyConvertLiteralToTupleIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyConvertLiteralToListIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyConvertLiteralToSetIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyTransformConditionalExpressionIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyGenerateDocstringIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyYieldFromIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.convertToFString.PyConvertToFStringIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <intentionAction>
+            <className>vgrechka.phizdetsidea.phizdets.codeInsight.intentions.PyConvertTypeCommentToVariableAnnotationIntention</className>
+            <category>Phizdets</category>
+        </intentionAction>
+
+        <testFinder implementation="vgrechka.phizdetsidea.phizdets.codeInsight.testIntegration.PyTestFinder"/>
+        <testCreator language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.testIntegration.PyTestCreator"/>
+
+        <stubElementTypeHolder class="vgrechka.phizdetsidea.phizdets.PyElementTypes"/>
+
+        <localInspection language="Phizdets" shortName="PyArgumentListInspection" suppressId="PyArgumentList" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.incorrect.call.arguments" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyArgumentListInspection"/>
+        <localInspection language="Phizdets" shortName="PyRedeclarationInspection" suppressId="PyRedeclaration" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.redeclaration" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyRedeclarationInspection"/>
+        <localInspection language="Phizdets" shortName="PyUnresolvedReferencesInspection" suppressId="PyUnresolvedReferences" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.unresolved.refs" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.unresolvedReference.PyUnresolvedReferencesInspection"/>
+        <localInspection language="Phizdets" shortName="PyInterpreterInspection" suppressId="PyInterpreter" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.invalid.interpreter" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyInterpreterInspection"/>
+        <localInspection language="Phizdets" shortName="PyMethodParametersInspection" suppressId="PyMethodParameters" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.problematic.first.parameter" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyMethodParametersInspection"/>
+        <localInspection language="Phizdets" shortName="PyUnreachableCodeInspection" suppressId="PyUnreachableCode" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.unreachable.code" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyUnreachableCodeInspection"/>
+        <localInspection language="Phizdets" shortName="PyMethodFirstArgAssignmentInspection" suppressId="PyMethodFirstArgAssignment" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.first.arg.assign" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyMethodFirstArgAssignmentInspection"/>
+        <localInspection language="Phizdets" shortName="PyStringFormatInspection" suppressId="PyStringFormat" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.str.format" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyStringFormatInspection"/>
+        <localInspection language="Phizdets" shortName="PyMethodOverridingInspection" suppressId="PyMethodOverriding" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.method.over" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyMethodOverridingInspection"/>
+        <localInspection language="Phizdets" shortName="PyInitNewSignatureInspection" suppressId="PyInitNewSignature" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.new.init.signature" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyInitNewSignatureInspection"/>
+        <localInspection language="Phizdets" shortName="PyTrailingSemicolonInspection" suppressId="PyTrailingSemicolon" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.trailing.semicolon" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyTrailingSemicolonInspection"/>
+        <localInspection language="Phizdets" shortName="PyReturnFromInitInspection" suppressId="PyReturnFromInit" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.init.return" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyReturnFromInitInspection"/>
+        <localInspection language="Phizdets" shortName="PyUnusedLocalInspection" suppressId="PyUnusedLocal" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.unused" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyUnusedLocalInspection"/>
+        <localInspection language="Phizdets" shortName="PyDictCreationInspection" suppressId="PyDictCreation" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.dict.creation" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyDictCreationInspection"/>
+        <localInspection language="Phizdets" shortName="PyDictDuplicateKeysInspection" suppressId="PyDictDuplicateKeys" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.duplicate.keys" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyDictDuplicateKeysInspection"/>
+        <localInspection language="Phizdets" shortName="PyExceptClausesOrderInspection" suppressId="PyExceptClausesOrder" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.bad.except.clauses.order" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyExceptClausesOrderInspection"/>
+        <localInspection language="Phizdets" shortName="PyTupleAssignmentBalanceInspection" suppressId="PyTupleAssignmentBalance" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.incorrect.assignment" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyTupleAssignmentBalanceInspection"/>
+        <localInspection language="Phizdets" shortName="PyClassicStyleClassInspection" suppressId="PyClassicStyleClass" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.classic.class.usage" groupKey="INSP.GROUP.phizdets" enabledByDefault="false"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyClassicStyleClassInspection"/>
+        <localInspection language="Phizdets" shortName="PyExceptionInheritInspection" suppressId="PyExceptionInherit" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.exception.not.inherit" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyExceptionInheritInspection"/>
+        <localInspection language="Phizdets" shortName="PyDefaultArgumentInspection" suppressId="PyDefaultArgument" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.default.argument" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyDefaultArgumentInspection"/>
+        <localInspection language="Phizdets" shortName="PyRaisingNewStyleClassInspection" suppressId="PyRaisingNewStyleClass" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.raising.new.style.class" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyRaisingNewStyleClassInspection"/>
+        <localInspection language="Phizdets" shortName="PyIncorrectDocstringInspection" suppressId="PyIncorrectDocstring" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.incorrect.docstring" groupKey="INSP.GROUP.phizdets" enabledByDefault="true" level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyIncorrectDocstringInspection"/>
+        <localInspection language="Phizdets" shortName="PyMissingOrEmptyDocstringInspection" suppressId="PyMissingOrEmptyDocstring" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.missing.or.empty.docstring" groupKey="INSP.GROUP.phizdets" enabledByDefault="false" level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyMissingOrEmptyDocstringInspection"/>
+        <localInspection language="Phizdets" shortName="PyUnboundLocalVariableInspection" suppressId="PyUnboundLocalVariable" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.unbound" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyUnboundLocalVariableInspection"/>
+        <localInspection language="Phizdets" shortName="PyStatementEffectInspection" suppressId="PyStatementEffect" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.statement.effect" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyStatementEffectInspection"/>
+        <localInspection language="Phizdets" shortName="PySimplifyBooleanCheckInspection" suppressId="PySimplifyBooleanCheck" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.check.can.be.simplified" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PySimplifyBooleanCheckInspection"/>
+        <localInspection language="Phizdets" shortName="PyFromFutureImportInspection" suppressId="PyFromFutureImport" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.from.future.import" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyFromFutureImportInspection"/>
+        <localInspection language="Phizdets" shortName="PyComparisonWithNoneInspection" suppressId="PyComparisonWithNone" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.comparison.with.none" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyComparisonWithNoneInspection"/>
+        <localInspection language="Phizdets" shortName="PyStringExceptionInspection" suppressId="PyStringException" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.raising.string.exception" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyStringExceptionInspection"/>
+        <localInspection language="Phizdets" shortName="PySuperArgumentsInspection" suppressId="PySuperArguments" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.wrong.super.arguments" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PySuperArgumentsInspection"/>
+        <localInspection language="Phizdets" shortName="PyByteLiteralInspection" suppressId="PyByteLiteral" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.byte.literal" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyByteLiteralInspection"/>
+        <localInspection language="Phizdets" shortName="PyNonAsciiCharInspection" suppressId="PyNonAsciiChar" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.non.ascii" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyNonAsciiCharInspection"/>
+        <localInspection language="Phizdets" shortName="PyTupleItemAssignmentInspection" suppressId="PyTupleItemAssignment" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.tuple.item.assignment" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyTupleItemAssignmentInspection"/>
+        <localInspection language="Phizdets" shortName="PyCallingNonCallableInspection" suppressId="PyCallingNonCallable" displayName="Trying to call a non-callable object" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyCallingNonCallableInspection"/>
+        <localInspection language="Phizdets" shortName="PyPropertyAccessInspection" suppressId="PyPropertyAccess" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.property.access" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyPropertyAccessInspection"/>
+        <localInspection language="Phizdets" shortName="PyPropertyDefinitionInspection" suppressId="PyPropertyDefinition" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.property.definition" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyPropertyDefinitionInspection"/>
+        <localInspection language="Phizdets" shortName="PyInconsistentIndentationInspection" suppressId="PyInconsistentIndentation" displayName="Inconsistent indentation" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyInconsistentIndentationInspection"/>
+        <localInspection language="Phizdets" shortName="PyNestedDecoratorsInspection" suppressId="PyNestedDecorators" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.nested.decorators" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyNestedDecoratorsInspection"/>
+        <localInspection language="Phizdets" shortName="PyCallByClassInspection" suppressId="PyCallByClass" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.different.class.call" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyCallByClassInspection"/>
+        <localInspection language="Phizdets" shortName="PyBroadExceptionInspection" suppressId="PyBroadException" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.too.broad.exception.clauses" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyBroadExceptionInspection"/>
+        <localInspection language="Phizdets" shortName="PyRedundantParenthesesInspection" suppressId="PyRedundantParentheses" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.redundant.parentheses" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyRedundantParenthesesInspection"/>
+        <localInspection language="Phizdets" shortName="PyAugmentAssignmentInspection" suppressId="PyAugmentAssignment" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.augment.assignment" groupKey="INSP.GROUP.phizdets" enabledByDefault="false"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyAugmentAssignmentInspection"/>
+        <localInspection language="Phizdets" shortName="PyChainedComparisonsInspection" suppressId="PyChainedComparisons" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.chained.comparisons" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyChainedComparisonsInspection"/>
+        <localInspection language="Phizdets" shortName="PyOldStyleClassesInspection" suppressId="PyOldStyleClasses" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.oldstyle.class" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyOldStyleClassesInspection"/>
+        <localInspection language="Phizdets" shortName="PyCompatibilityInspection" suppressId="PyCompatibility" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.compatibility" groupKey="INSP.GROUP.phizdets" enabledByDefault="false"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyCompatibilityInspection"/>
+        <localInspection language="Phizdets" shortName="PyListCreationInspection" suppressId="PyListCreation" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.list.creation" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyListCreationInspection"/>
+        <localInspection language="Phizdets" shortName="PyUnnecessaryBackslashInspection" suppressId="PyUnnecessaryBackslash" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.unnecessary.backslash" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyUnnecessaryBackslashInspection"/>
+        <localInspection language="Phizdets" shortName="PySingleQuotedDocstringInspection" suppressId="PySingleQuotedDocstring" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.single.quoted.docstring" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PySingleQuotedDocstringInspection"/>
+        <localInspection language="Phizdets" shortName="PyMissingConstructorInspection" suppressId="PyMissingConstructor" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.missing.super.constructor" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyMissingConstructorInspection"/>
+        <localInspection language="Phizdets" shortName="PyArgumentEqualDefaultInspection" suppressId="PyArgumentEqualDefault" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.argument.equal.default" groupKey="INSP.GROUP.phizdets" enabledByDefault="false"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyArgumentEqualDefaultInspection"/>
+        <localInspection language="Phizdets" shortName="PySetFunctionToLiteralInspection" suppressId="PySetFunctionToLiteral" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.set.function.to.literal" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PySetFunctionToLiteralInspection"/>
+        <localInspection language="Phizdets" shortName="PyDecoratorInspection" suppressId="PyDecorator" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.decorator.outside.class" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyDecoratorInspection"/>
+        <localInspection language="Phizdets" shortName="PyTypeCheckerInspection" suppressId="PyTypeChecker" displayName="Type checker" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyTypeCheckerInspection"/>
+        <localInspection language="Phizdets" shortName="PyDeprecationInspection" suppressId="PyDeprecation" displayName="Deprecated function, class or module" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyDeprecationInspection"/>
+        <localInspection language="Phizdets" shortName="PyMandatoryEncodingInspection" suppressId="PyMandatoryEncoding" displayName="No encoding specified for file" groupKey="INSP.GROUP.phizdets" enabledByDefault="false"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyMandatoryEncodingInspection"/>
+        <localInspection shortName="PyPackageRequirementsInspection" suppressId="PyPackageRequirements" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.requirements" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyPackageRequirementsInspection"/>
+        <localInspection language="Phizdets" shortName="PyPep8Inspection" suppressId="PyPep8" displayName="PEP 8 coding style violation" groupKey="INSP.GROUP.phizdets" enabledByDefault="true" level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyPep8Inspection"/>
+        <localInspection language="Phizdets" shortName="PyAttributeOutsideInitInspection" suppressId="PyAttributeOutsideInit" displayName="Instance attribute defined outside __init__" groupKey="INSP.GROUP.phizdets" enabledByDefault="true" level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyAttributeOutsideInitInspection"/>
+        <localInspection language="Phizdets" shortName="PyClassHasNoInitInspection" suppressId="PyClassHasNoInit" displayName="Class has no __init__ method" groupKey="INSP.GROUP.phizdets" enabledByDefault="true" level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyClassHasNoInitInspection"/>
+        <localInspection language="Phizdets" shortName="PyNoneFunctionAssignmentInspection" suppressId="PyNoneFunctionAssignment" displayName="Assigning function call that doesn't return anything" groupKey="INSP.GROUP.phizdets" enabledByDefault="true" level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyNoneFunctionAssignmentInspection"/>
+        <localInspection language="Phizdets" shortName="PyGlobalUndefinedInspection" suppressId="PyGlobalUndefined" displayName="Global variable is undefined at the module level" groupKey="INSP.GROUP.phizdets" enabledByDefault="true" level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyGlobalUndefinedInspection"/>
+        <localInspection language="Phizdets" shortName="PyProtectedMemberInspection" suppressId="PyProtectedMember" displayName="Access to a protected member of a class" groupKey="INSP.GROUP.phizdets" enabledByDefault="true" level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyProtectedMemberInspection"/>
+        <localInspection language="Phizdets" shortName="PyMethodMayBeStaticInspection" suppressId="PyMethodMayBeStatic" displayName="Method may be static" groupKey="INSP.GROUP.phizdets" enabledByDefault="true" level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyMethodMayBeStaticInspection"/>
+        <localInspection language="Phizdets" shortName="PyDocstringTypesInspection" suppressId="PyDocstringTypes" bundle="vgrechka.phizdetsidea.phizdets.PyBundle" key="INSP.NAME.docstring.types" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyDocstringTypesInspection"/>
+        <localInspection language="Phizdets" shortName="PyShadowingBuiltinsInspection" suppressId="PyShadowingBuiltins" displayName="Shadowing built-ins" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyShadowingBuiltinsInspection"/>
+        <localInspection language="Phizdets" shortName="PyShadowingNamesInspection" suppressId="PyShadowingNames" displayName="Shadowing names from outer scopes" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyShadowingNamesInspection"/>
+        <localInspection language="Phizdets" shortName="PyAbstractClassInspection" suppressId="PyAbstractClass" displayName="Class must implement all abstract methods" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyAbstractClassInspection"/>
+        <localInspection language="Phizdets" shortName="PyPep8NamingInspection" suppressId="PyPep8Naming" displayName="PEP 8 naming convention violation" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyPep8NamingInspection"/>
+        <localInspection language="Phizdets" shortName="PyAssignmentToLoopOrWithParameterInspection" suppressId="PyAssignmentToLoopOrWithParameter" displayName="Assignment to 'for' loop or 'with' statement parameter" groupKey="INSP.GROUP.phizdets" enabledByDefault="true"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyAssignmentToLoopOrWithParameterInspection"/>
+        <localInspection language="Phizdets" shortName="PyDunderSlotsInspection" suppressId="PyDunderSlots" displayName="Definition of __slots__ in a class" groupKey="INSP.GROUP.phizdets" enabledByDefault="true" level="WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyDunderSlotsInspection"/>
+        <localInspection language="Phizdets" shortName="PyMissingTypeHintsInspection" suppressId="PyMissingTypeHints" displayName="Missing type hinting for function definition" groupKey="INSP.GROUP.phizdets" enabledByDefault="false"  level="WEAK WARNING" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyMissingTypeHintsInspection"/>
+
+        <defaultLiveTemplatesProvider implementation="vgrechka.phizdetsidea.phizdets.codeInsight.liveTemplates.PyDefaultLiveTemplatesProvider"/>
+        <liveTemplateContext implementation="vgrechka.phizdetsidea.phizdets.codeInsight.liveTemplates.PhizdetsTemplateContextType$General"/>
+        <liveTemplateContext implementation="vgrechka.phizdetsidea.phizdets.codeInsight.liveTemplates.PhizdetsTemplateContextType$Class"/>
+        <liveTemplateMacro implementation="vgrechka.phizdetsidea.phizdets.codeInsight.liveTemplates.CollectionElementNameMacro"/>
+        <liveTemplateMacro implementation="vgrechka.phizdetsidea.phizdets.codeInsight.liveTemplates.PyClassNameMacro"/>
+        <liveTemplateMacro implementation="vgrechka.phizdetsidea.phizdets.codeInsight.liveTemplates.PyFunctionNameMacro"/>
+        <liveTemplateMacro implementation="vgrechka.phizdetsidea.phizdets.codeInsight.liveTemplates.PyIterableVariableMacro"/>
+
+        <codeInsight.overrideMethod language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.override.PyOverrideMethodsHandler"/>
+        <lang.refactoringSupport language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.refactoring.PyRefactoringProvider"/>
+        <lang.refactoringSupport.classMembersRefactoringSupport language="Phizdets"
+                                                                implementationClass="vgrechka.phizdetsidea.phizdets.refactoring.classes.PyMembersRefactoringSupport"/>
+        <inlineActionHandler implementation="vgrechka.phizdetsidea.phizdets.refactoring.inline.PyInlineLocalHandler"/>
+        <codeInsight.gotoSuper language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.PyGotoSuperHandler"/>
+        <gotoDeclarationHandler implementation="vgrechka.phizdetsidea.phizdets.codeInsight.PyBreakContinueGotoProvider" order="FIRST"/>
+        <gotoDeclarationHandler implementation="vgrechka.phizdetsidea.phizdets.psi.impl.PyGotoDeclarationHandler"/>
+        <lang.smartEnterProcessor language="Phizdets"
+                                  implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.editorActions.smartEnter.PySmartEnterProcessor"/>
+        <statementUpDownMover implementation="vgrechka.phizdetsidea.phizdets.codeInsight.editorActions.moveUpDown.PyStatementMover" id="statement"
+                              order="before line"/>
+
+        <filePropertyPusher implementation="vgrechka.phizdetsidea.phizdets.psi.impl.PhizdetsLanguageLevelPusher"/>
+
+        <elementDescriptionProvider implementation="vgrechka.phizdetsidea.phizdets.findUsages.PyElementDescriptionProvider"/>
+        <elementDescriptionProvider implementation="vgrechka.phizdetsidea.phizdets.magicLiteral.PyMagicLiteralElementDescriptionProvider"/>
+        <fileStructureGroupRuleProvider implementation="vgrechka.phizdetsidea.phizdets.findUsages.PyFunctionGroupingRuleProvider" id="py-function"/>
+        <usageTypeProvider implementation="vgrechka.phizdetsidea.phizdets.findUsages.PyUsageTypeProvider"/>
+        <usageTargetProvider implementation="vgrechka.phizdetsidea.phizdets.magicLiteral.PyMagicLiteralUsageTargetProvider"/>
+        <importFilteringRule implementation="vgrechka.phizdetsidea.phizdets.findUsages.PyImportFilteringRule"/>
+
+        <multiHostInjector implementation="vgrechka.phizdetsidea.phizdets.codeInsight.regexp.PhizdetsRegexpInjector"/>
+        <lang.parserDefinition language="PhizdetsRegExp"
+                               implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.regexp.PhizdetsRegexpParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="PhizdetsRegExp"
+                                       implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.regexp.PhizdetsRegexpSyntaxHighlighterFactory"/>
+        <lang.parserDefinition language="PhizdetsVerboseRegExp"
+                               implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.regexp.PhizdetsVerboseRegexpParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="PhizdetsVerboseRegExp"
+                                       implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.regexp.PhizdetsVerboseRegexpSyntaxHighlighterFactory"/>
+
+        <applicationService serviceInterface="vgrechka.phizdetsidea.phizdets.codeInsight.PyCodeInsightSettings"
+                            serviceImplementation="vgrechka.phizdetsidea.phizdets.codeInsight.PyCodeInsightSettings"/>
+        <applicationService serviceInterface="vgrechka.phizdetsidea.phizdets.testing.PyTestFrameworkService"
+                            serviceImplementation="vgrechka.phizdetsidea.phizdets.testing.PyTestFrameworkService"/>
+        <autoImportOptionsProvider instance="vgrechka.phizdetsidea.phizdets.codeInsight.imports.PyAutoImportOptions"/>
+
+        <completion.contributor language="Phizdets"
+                                implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.completion.PyClassNameCompletionContributor"/>
+        <weigher key="completion" implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.completion.PhizdetsCompletionWeigher" order="first"/>
+        <completion.confidence language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.completion.PyCompletionConfidence"/>
+        <typedHandler implementation="vgrechka.phizdetsidea.phizdets.console.completion.PhizdetsConsoleAutopopupBlockingHandler" id="pydevBlockAutoPopup"
+                      order="first, before completionAutoPopup"/>
+
+        <referencesSearch implementation="vgrechka.phizdetsidea.phizdets.psi.search.PyInitReferenceSearchExecutor"/>
+        <referencesSearch implementation="vgrechka.phizdetsidea.phizdets.magicLiteral.PyMagicLiteralReferenceSearcher"/>
+        <referencesSearch implementation="vgrechka.phizdetsidea.phizdets.psi.search.PyKeywordArgumentSearchExecutor"/>
+        <referencesSearch implementation="vgrechka.phizdetsidea.phizdets.psi.search.PyStringReferenceSearch"/>
+        <findUsagesHandlerFactory implementation="vgrechka.phizdetsidea.phizdets.findUsages.PyFindUsagesHandlerFactory" id="Phizdets"
+                                  order="last, before default"/>
+        <readWriteAccessDetector implementation="vgrechka.phizdetsidea.phizdets.findUsages.PyReadWriteAccessDetector"/>
+        <findUsagesHandlerFactory implementation="vgrechka.phizdetsidea.phizdets.magicLiteral.PyMagicLiteralFindUsagesHandlerFactory"/>
+
+        <renamePsiElementProcessor implementation="vgrechka.phizdetsidea.phizdets.refactoring.rename.RenamePyVariableProcessor" order="last" id="pyvar"/>
+        <renamePsiElementProcessor implementation="vgrechka.phizdetsidea.phizdets.refactoring.rename.RenamePyFunctionProcessor" order="before pyvar"/>
+        <renamePsiElementProcessor implementation="vgrechka.phizdetsidea.phizdets.refactoring.rename.RenamePyClassProcessor" order="before pyvar"/>
+        <renamePsiElementProcessor implementation="vgrechka.phizdetsidea.phizdets.magicLiteral.PyMagicLiteralRenameProcessor" order="before pyvar"/>
+        <renamePsiElementProcessor implementation="vgrechka.phizdetsidea.phizdets.refactoring.rename.RenamePyFileProcessor" order="first"/>
+        <renamePsiElementProcessor implementation="vgrechka.phizdetsidea.phizdets.refactoring.rename.RenameUnsupportedExpressionProcessor"/>
+
+        <automaticRenamerFactory implementation="vgrechka.phizdetsidea.phizdets.refactoring.rename.PyContainingFileRenamerFactory"/>
+        <automaticRenamerFactory implementation="vgrechka.phizdetsidea.phizdets.refactoring.rename.PyInheritorRenameFactory"/>
+        <automaticRenamerFactory implementation="vgrechka.phizdetsidea.phizdets.refactoring.rename.PyParametersRenameFactory"/>
+
+        <moveFileHandler implementation="vgrechka.phizdetsidea.phizdets.refactoring.move.PyMoveFileHandler"/>
+        <refactoring.moveHandler implementation="vgrechka.phizdetsidea.phizdets.refactoring.move.PyMoveSymbolDelegate"/>
+
+        <refactoring.changeSignatureUsageProcessor implementation="vgrechka.phizdetsidea.phizdets.refactoring.changeSignature.PyChangeSignatureUsageProcessor" id="Phizdets"/>
+
+        <lang.importOptimizer language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.imports.PyImportOptimizer"/>
+
+        <codeStyleSettingsProvider implementation="vgrechka.phizdetsidea.phizdets.formatter.PyCodeStyleSettingsProvider"/>
+        <langCodeStyleSettingsProvider implementation="vgrechka.phizdetsidea.phizdets.formatter.PyLanguageCodeStyleSettingsProvider"/>
+
+        <lang.elementManipulator forClass="vgrechka.phizdetsidea.phizdets.psi.PyStringLiteralExpression"
+                                 implementationClass="vgrechka.phizdetsidea.phizdets.psi.impl.PyStringLiteralExpressionManipulator"/>
+        <lang.elementManipulator forClass="vgrechka.phizdetsidea.phizdets.psi.PyKeywordArgument"
+                                 implementationClass="vgrechka.phizdetsidea.phizdets.psi.impl.PyKeywordArgumentManipulator"/>
+
+        <analyzeStacktraceFilter implementation="vgrechka.phizdetsidea.phizdets.run.PhizdetsTracebackFilter"/>
+
+        <internalFileTemplate name="Phizdets Script"/>
+        <internalFileTemplate name="Phizdets Unit Test"/>
+        <internalFileTemplate name="Setup Script"/>
+
+        <moduleService serviceInterface="vgrechka.phizdetsidea.phizdets.psi.resolve.PhizdetsPathCache"
+                       serviceImplementation="vgrechka.phizdetsidea.phizdets.psi.resolve.PhizdetsModulePathCache"/>
+
+        <problemFileHighlightFilter implementation="vgrechka.phizdetsidea.phizdets.codeInsight.PyProblemFileHighlightFilter"/>
+
+        <editorSmartKeysConfigurable instance="vgrechka.phizdetsidea.phizdets.codeInsight.PySmartKeysOptions"/>
+        <editorSmartKeysConfigurable instance="vgrechka.phizdetsidea.phizdets.codeInsight.PySpecificSmartKeysOptions"/>
+
+        <psi.referenceContributor implementation="vgrechka.phizdetsidea.phizdets.codeInsight.PyStdReferenceContributor"/>
+
+        <applicationService serviceInterface="vgrechka.phizdetsidea.phizdets.documentation.PhizdetsDocumentationMap"
+                            serviceImplementation="vgrechka.phizdetsidea.phizdets.documentation.PhizdetsDocumentationMap"/>
+        <applicationConfigurable groupId="tools" instance="vgrechka.phizdetsidea.phizdets.documentation.PhizdetsDocumentationConfigurable"
+                                 id="vgrechka.phizdetsidea.phizdets.documentation.PhizdetsDocumentationConfigurable"
+                                 displayName="Phizdets External Documentation"/>
+        <projectConfigurable groupId="tools" instance="vgrechka.phizdetsidea.phizdets.configuration.PyIntegratedToolsModulesConfigurable"
+                             id="vgrechka.phizdetsidea.phizdets.configuration.PyIntegratedToolsModulesConfigurable" displayName="Phizdets Integrated Tools"
+                             nonDefaultProject="true"/>
+        <search.optionContributor implementation="vgrechka.phizdetsidea.phizdets.configuration.PySearchableOptionContributor"/>
+        <moduleService serviceInterface="vgrechka.phizdetsidea.phizdets.documentation.PyDocumentationSettings"
+                       serviceImplementation="vgrechka.phizdetsidea.phizdets.documentation.PyDocumentationSettings"/>
+        <psi.referenceContributor implementation="vgrechka.phizdetsidea.phizdets.documentation.docstrings.DocStringReferenceContributor"/>
+        <psi.referenceContributor implementation="vgrechka.phizdetsidea.phizdets.codeInsight.PhizdetsFormattedStringReferenceContributor"/>
+        <completion.contributor language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.documentation.docstrings.DocStringTagCompletionContributor"/>
+        <completion.contributor language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.documentation.docstrings.DocStringSectionHeaderCompletionContributor"/>
+
+        <treeStructureProvider implementation="vgrechka.phizdetsidea.phizdets.projectView.PyTreeStructureProvider"/>
+
+        <project.converterProvider implementation="vgrechka.phizdetsidea.phizdets.testing.converters.PhizdetsTestConverterProvider"/>
+
+        <projectConfigurable groupId="build" dynamic="true" id="pyconsole" instance="vgrechka.phizdetsidea.phizdets.console.PyConsoleOptionsConfigurable"
+                             displayName="Console"/>
+        <projectService serviceImplementation="vgrechka.phizdetsidea.phizdets.console.PyConsoleOptions"/>
+
+        <projectConfigurable groupId="build" groupWeight="119" id="reference.idesettings.debugger.phizdets" instance="vgrechka.phizdetsidea.phizdets.debugger.PyDebuggerConfigurable"
+                             displayName="Phizdets Debugger"/>
+        <projectService serviceImplementation="vgrechka.phizdetsidea.phizdets.debugger.PyDebuggerOptionsProvider"/>
+
+        <codeBlockProvider language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.PyCodeBlockProvider"/>
+
+        <iconProvider implementation="vgrechka.phizdetsidea.phizdets.PyDirectoryIconProvider" id="pyDirectoryDefault"/>
+
+        <projectService serviceInterface="vgrechka.phizdetsidea.phizdets.debugger.PySignatureCacheManager"
+                        serviceImplementation="vgrechka.phizdetsidea.phizdets.debugger.PySignatureCacheManagerImpl"/>
+
+        <projectService serviceInterface="vgrechka.phizdetsidea.phizdets.psi.PyPsiFacade"
+                        serviceImplementation="vgrechka.phizdetsidea.phizdets.psi.impl.PyPsiFacadeImpl"/>
+        <applicationService serviceInterface="vgrechka.phizdetsidea.phizdets.packaging.PyPackageManagers"
+                            serviceImplementation="vgrechka.phizdetsidea.phizdets.packaging.PyPackageManagersImpl"/>
+
+        <qualifiedNameProvider implementation="vgrechka.phizdetsidea.phizdets.actions.PyQualifiedNameProvider"/>
+
+        <externalAnnotator language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.validation.Pep8ExternalAnnotator"/>
+
+        <statistics.usagesCollector implementation="vgrechka.phizdetsidea.phizdets.statistics.PyInterpreterUsagesCollector"/>
+        <statistics.usagesCollector implementation="vgrechka.phizdetsidea.phizdets.statistics.PyPackageUsagesCollector"/>
+
+        <additionalTextAttributes scheme="Default" file="colorSchemes/PhizdetsDefault.xml"/>
+        <additionalTextAttributes scheme="Darcula" file="colorSchemes/PhizdetsDarcula.xml"/>
+
+        <postStartupActivity implementation="vgrechka.phizdetsidea.phizdets.sdk.PhizdetsSdkUpdater"/>
+        <postStartupActivity implementation="vgrechka.phizdetsidea.phizdets.packaging.PyPackagesUpdater"/>
+        <directoryProjectConfigurator implementation="vgrechka.phizdetsidea.phizdets.testing.PyIntegratedToolsProjectConfigurator" id="integratedTools" order="after sdk"/>
+
+
+        <macro implementation="vgrechka.phizdetsidea.phizdets.sdk.InterpreterDirectoryMacro"/>
+
+        <!-- User skeletons -->
+        <codeInsight.lineMarkerProvider language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.userSkeletons.PyUserSkeletonsLineMarkerProvider"/>
+
+        <!-- TestRunnerService -->
+        <moduleService serviceInterface="vgrechka.phizdetsidea.phizdets.testing.TestRunnerService"
+                       serviceImplementation="vgrechka.phizdetsidea.phizdets.testing.TestRunnerService"/>
+
+        <!-- PyDocstring -->
+        <languageInjector implementation="vgrechka.phizdetsidea.phizdets.documentation.doctest.PyDocstringLanguageInjector"/>
+        <lang.parserDefinition language="PyDocstring" implementationClass="vgrechka.phizdetsidea.phizdets.documentation.doctest.PyDocstringParserDefinition"/>
+        <highlightErrorFilter implementation="vgrechka.phizdetsidea.phizdets.documentation.doctest.PyDocstringErrorFilter"/>
+
+        <!-- PyFunctionTypeAnnotation -->
+        <lang.parserDefinition language="PyFunctionTypeComment"
+                               implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.functionTypeComments.PyFunctionTypeAnnotationParserDefinition"/>
+
+        <!-- Packaging -->
+        <moduleService serviceInterface="vgrechka.phizdetsidea.phizdets.packaging.PyPackageRequirementsSettings"
+                       serviceImplementation="vgrechka.phizdetsidea.phizdets.packaging.PyPackageRequirementsSettings"/>
+
+        <!-- typing -->
+        <multiHostInjector implementation="vgrechka.phizdetsidea.phizdets.codeInsight.typing.PyTypingAnnotationInjector"/>
+        <lang.parserDefinition language="PhizdetsStub" implementationClass="vgrechka.phizdetsidea.phizdets.pyi.PyiParserDefinition"/>
+        <fileTypeFactory implementation="vgrechka.phizdetsidea.phizdets.pyi.PyiFileTypeFactory"/>
+        <codeInsight.lineMarkerProvider language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.pyi.PyiRelatedItemLineMarkerProvider"/>
+
+        <lang.inspectionSuppressor language="Phizdets" implementationClass="vgrechka.phizdetsidea.phizdets.inspections.PyInspectionsSuppressor"/>
+        <refactoring.invertBoolean implementation="vgrechka.phizdetsidea.phizdets.refactoring.invertBoolean.PyInvertBooleanDelegate"/>
+
+        <backspaceHandlerDelegate implementation="vgrechka.phizdetsidea.phizdets.codeInsight.editorActions.PyTripleQuoteBackspaceDelegate"/>
+
+        <!--folding-->
+        <codeFoldingOptionsProvider instance="vgrechka.phizdetsidea.phizdets.PhizdetsFoldingOptionsProvider"/>
+        <applicationService serviceInterface="vgrechka.phizdetsidea.phizdets.PhizdetsFoldingSettings"
+                            serviceImplementation="vgrechka.phizdetsidea.phizdets.PhizdetsFoldingSettings"/>
+
+        <!-- f-strings -->
+        <multiHostInjector implementation="vgrechka.phizdetsidea.phizdets.codeInsight.fstrings.PyFStringsInjector"/>
+
+        <!-- postfix templates!-->
+        <codeInsight.template.postfixTemplateProvider language="Phizdets"
+                                                      implementationClass="vgrechka.phizdetsidea.phizdets.codeInsight.postfix.PyPostfixTemplateProvider"/>
+
+        <breadcrumbsInfoProvider implementation="vgrechka.phizdetsidea.phizdets.breadcrumbs.PyBreadcrumbsInfoProvider"/>
+        <highlightVisitor implementation="vgrechka.phizdetsidea.phizdets.highlighting.PyRainbowVisitor"/>
+
+        <toolWindow id="Data View" factoryClass="vgrechka.phizdetsidea.phizdets.debugger.containerview.PyDataViewToolWindowFactory" anchor="right" icon="PhizdetsIcons.Phizdets.DataView"/>
+        <projectService serviceInterface="vgrechka.phizdetsidea.phizdets.debugger.containerview.PyDataView" serviceImplementation="vgrechka.phizdetsidea.phizdets.debugger.containerview.PyDataView"/>
+
+
+
+        <applicationService serviceInterface="vgrechka.phizdetsidea.phizdets.run.PyCommonOptionsFormFactory"
+                            serviceImplementation="vgrechka.phizdetsidea.phizdets.PyIdeCommonOptionsFormFactory"/>
+
+
+    </extensions>
+
+
+
+    <extensionPoints>
+        <extensionPoint qualifiedName="Phizdetsid.phizdetsDocumentationQuickInfoProvider" interface="vgrechka.phizdetsidea.phizdets.documentation.PhizdetsDocumentationQuickInfoProvider"/>
+        <extensionPoint qualifiedName="Phizdetsid.importResolver" interface="vgrechka.phizdetsidea.phizdets.psi.impl.PyImportResolver"/>
+        <extensionPoint qualifiedName="Phizdetsid.magicLiteral" interface="vgrechka.phizdetsidea.phizdets.magicLiteral.PyMagicLiteralExtensionPoint"/>
+        <extensionPoint qualifiedName="Phizdetsid.unresolvedReferenceSkipper" interface="vgrechka.phizdetsidea.phizdets.inspections.unresolvedReference.PyUnresolvedReferenceSkipperExtPoint"/>
+        <extensionPoint qualifiedName="Phizdetsid.resolveResultRater" interface="vgrechka.phizdetsidea.phizdets.psi.impl.PyResolveResultRater"/>
+        <extensionPoint qualifiedName="Phizdetsid.typeProvider" interface="vgrechka.phizdetsidea.phizdets.psi.impl.PyTypeProvider"/>
+        <extensionPoint qualifiedName="Phizdetsid.pySuperMethodsSearch" interface="com.intellij.util.QueryExecutor"/>
+        <extensionPoint qualifiedName="Phizdetsid.pyClassInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
+        <extensionPoint qualifiedName="Phizdetsid.pyClassMembersProvider" interface="vgrechka.phizdetsidea.phizdets.psi.types.PyClassMembersProvider"/>
+        <extensionPoint qualifiedName="Phizdetsid.pyModuleMembersProvider" interface="vgrechka.phizdetsidea.phizdets.psi.types.PyModuleMembersProvider"/>
+        <extensionPoint qualifiedName="Phizdetsid.pyOverridingMethodsSearch" interface="com.intellij.util.QueryExecutor"/>
+        <extensionPoint qualifiedName="Phizdetsid.runnableScriptFilter" interface="vgrechka.phizdetsidea.phizdets.run.RunnableScriptFilter"/>
+        <extensionPoint qualifiedName="Phizdetsid.runnableUnitTestFilter" interface="vgrechka.phizdetsidea.phizdets.testing.RunnableUnitTestFilter"/>
+        <extensionPoint qualifiedName="Phizdetsid.unresolvedReferenceQuickFixProvider"
+                        interface="vgrechka.phizdetsidea.phizdets.inspections.PyUnresolvedReferenceQuickFixProvider"/>
+        <extensionPoint qualifiedName="Phizdetsid.dumbAnnotator" interface="vgrechka.phizdetsidea.phizdets.validation.PyAnnotator"/>
+        <extensionPoint qualifiedName="Phizdetsid.inspectionExtension" interface="vgrechka.phizdetsidea.phizdets.inspections.PyInspectionExtension"/>
+        <extensionPoint qualifiedName="Phizdetsid.customTargetExpressionStubType"
+                        interface="vgrechka.phizdetsidea.phizdets.psi.impl.stubs.CustomTargetExpressionStubType"/>
+        <extensionPoint qualifiedName="Phizdetsid.knownDecoratorProvider" interface="vgrechka.phizdetsidea.phizdets.psi.PyKnownDecoratorProvider"/>
+        <extensionPoint qualifiedName="Phizdetsid.documentationLinkProvider" interface="vgrechka.phizdetsidea.phizdets.documentation.PhizdetsDocumentationLinkProvider"/>
+        <extensionPoint qualifiedName="Phizdetsid.importCandidateProvider" interface="vgrechka.phizdetsidea.phizdets.codeInsight.imports.PyImportCandidateProvider"/>
+        <extensionPoint qualifiedName="Phizdetsid.dialectsTokenSetContributor" interface="vgrechka.phizdetsidea.phizdets.PhizdetsDialectsTokenSetContributor"/>
+        <extensionPoint qualifiedName="Phizdetsid.runConfigurationExtension" interface="vgrechka.phizdetsidea.phizdets.run.PhizdetsRunConfigurationExtension"/>
+        <extensionPoint qualifiedName="Phizdetsid.visitorFilter" beanClass="com.intellij.lang.LanguageExtensionPoint">
+            <with attribute="implementationClass" implements="vgrechka.phizdetsidea.phizdets.inspections.PhizdetsVisitorFilter"/>
+        </extensionPoint>
+        <extensionPoint qualifiedName="Phizdetsid.remoteInterpreterManager" interface="vgrechka.phizdetsidea.phizdets.remote.PhizdetsRemoteInterpreterManager"/>
+        <extensionPoint qualifiedName="Phizdetsid.remoteSkeletonGeneratorFactory" interface="vgrechka.phizdetsidea.phizdets.remote.PyRemoteSkeletonGeneratorFactory"/>
+        <extensionPoint qualifiedName="Phizdetsid.remoteProcessStarterManager" interface="vgrechka.phizdetsidea.phizdets.run.PyRemoteProcessStarterManager"/>
+        <extensionPoint qualifiedName="Phizdetsid.keywordArgumentProvider" interface="vgrechka.phizdetsidea.phizdets.psi.impl.PyKeywordArgumentProvider"/>
+        <extensionPoint qualifiedName="Phizdetsid.canonicalPathProvider" interface="vgrechka.phizdetsidea.phizdets.psi.resolve.PyCanonicalPathProvider"/>
+        <extensionPoint qualifiedName="Phizdetsid.pyReferenceResolveProvider" interface="vgrechka.phizdetsidea.phizdets.psi.resolve.PyReferenceResolveProvider"/>
+        <extensionPoint qualifiedName="Phizdetsid.breakpointHandler" interface="vgrechka.phizdetsidea.phizdets.debugger.PyBreakpointHandlerFactory"/>
+        <extensionPoint qualifiedName="Phizdetsid.consoleOptionsProvider" interface="vgrechka.phizdetsidea.phizdets.console.PyConsoleOptionsProvider"/>
+        <extensionPoint qualifiedName="Phizdetsid.pyRootTypeProvider" interface="vgrechka.phizdetsidea.phizdets.module.PyRootTypeProvider"/>
+        <extensionPoint qualifiedName="Phizdetsid.runConfigurationEditorExtension" interface="vgrechka.phizdetsidea.phizdets.run.PyRunConfigurationEditorExtension"/>
+        <extensionPoint qualifiedName="Phizdetsid.pyCustomSdkUiProvider" interface="vgrechka.phizdetsidea.phizdets.sdk.PyCustomSdkUiProvider"/>
+        <extensionPoint qualifiedName="Phizdetsid.pep8ProblemSuppressor" interface="vgrechka.phizdetsidea.phizdets.validation.Pep8ProblemSuppressor"/>
+        <extensionPoint qualifiedName="Phizdetsid.phizdetsFlavorProvider" interface="vgrechka.phizdetsidea.phizdets.sdk.flavors.PhizdetsFlavorProvider"/>
+        <extensionPoint qualifiedName="Phizdetsid.debugSessionFactory" interface="vgrechka.phizdetsidea.phizdets.debugger.PyDebugSessionFactory"/>
+        <extensionPoint qualifiedName="Phizdetsid.customPackageIdentifier" interface="vgrechka.phizdetsidea.phizdets.psi.PyCustomPackageIdentifier"/>
+    </extensionPoints>
+
+
+
+
+
+
 
 </idea-plugin>
