@@ -151,20 +151,22 @@ public final class PhizdetsSdkType extends SdkType {
   @NonNls
   @Nullable
   public String suggestHomePath() {
-    final String phizdetsFromPath = findPhizdetsInPath();
-    if (phizdetsFromPath != null) {
-      return phizdetsFromPath;
-    }
-    for (PhizdetsSdkFlavor flavor : PhizdetsSdkFlavor.getApplicableFlavors()) {
-      TreeSet<String> candidates = createVersionSet();
-      candidates.addAll(flavor.suggestHomePaths());
-      if (!candidates.isEmpty()) {
-        // return latest version
-        String[] candidateArray = ArrayUtil.toStringArray(candidates);
-        return candidateArray[candidateArray.length - 1];
-      }
-    }
-    return null;
+    return "C:\\opt\\xampp\\php\\php.exe";
+
+//    final String phizdetsFromPath = findPhizdetsInPath();
+//    if (phizdetsFromPath != null) {
+//      return phizdetsFromPath;
+//    }
+//    for (PhizdetsSdkFlavor flavor : PhizdetsSdkFlavor.getApplicableFlavors()) {
+//      TreeSet<String> candidates = createVersionSet();
+//      candidates.addAll(flavor.suggestHomePaths());
+//      if (!candidates.isEmpty()) {
+//        // return latest version
+//        String[] candidateArray = ArrayUtil.toStringArray(candidates);
+//        return candidateArray[candidateArray.length - 1];
+//      }
+//    }
+//    return null;
   }
 
   @Nullable
@@ -493,16 +495,17 @@ public final class PhizdetsSdkType extends SdkType {
   }
 
   public void setupSdkPaths(@NotNull Sdk sdk) {
-    final Project project;
-    final WeakReference<Component> ownerComponentRef = sdk.getUserData(SDK_CREATOR_COMPONENT_KEY);
-    final Component ownerComponent = SoftReference.dereference(ownerComponentRef);
-    if (ownerComponent != null) {
-      project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(ownerComponent));
-    }
-    else {
-      project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
-    }
-    PhizdetsSdkUpdater.updateOrShowError(sdk, null, project, ownerComponent);
+      return;
+//    final Project project;
+//    final WeakReference<Component> ownerComponentRef = sdk.getUserData(SDK_CREATOR_COMPONENT_KEY);
+//    final Component ownerComponent = SoftReference.dereference(ownerComponentRef);
+//    if (ownerComponent != null) {
+//      project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(ownerComponent));
+//    }
+//    else {
+//      project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+//    }
+//    PhizdetsSdkUpdater.updateOrShowError(sdk, null, project, ownerComponent);
   }
 
   @Override
@@ -642,35 +645,38 @@ public final class PhizdetsSdkType extends SdkType {
   @Nullable
   @Override
   public String getVersionString(@NotNull Sdk sdk) {
-    if (isRemote(sdk)) {
-      final PyRemoteSdkAdditionalDataBase data = (PyRemoteSdkAdditionalDataBase)sdk.getSdkAdditionalData();
-      assert data != null;
-      String versionString = data.getVersionString();
-      if (StringUtil.isEmpty(versionString)) {
-        final PhizdetsRemoteInterpreterManager remoteInterpreterManager = PhizdetsRemoteInterpreterManager.getInstance();
-        if (remoteInterpreterManager != null) {
-          try {
-            versionString =
-              remoteInterpreterManager.getInterpreterVersion(null, data);
-          }
-          catch (Exception e) {
-            LOG.warn("Couldn't get interpreter version:" + e.getMessage(), e);
-            versionString = "undefined";
-          }
-        }
-        data.setVersionString(versionString);
-      }
-      return versionString;
-    }
-    else {
-      return getVersionString(sdk.getHomePath());
-    }
+      return "Fucking Version";
+
+//    if (isRemote(sdk)) {
+//      final PyRemoteSdkAdditionalDataBase data = (PyRemoteSdkAdditionalDataBase)sdk.getSdkAdditionalData();
+//      assert data != null;
+//      String versionString = data.getVersionString();
+//      if (StringUtil.isEmpty(versionString)) {
+//        final PhizdetsRemoteInterpreterManager remoteInterpreterManager = PhizdetsRemoteInterpreterManager.getInstance();
+//        if (remoteInterpreterManager != null) {
+//          try {
+//            versionString =
+//              remoteInterpreterManager.getInterpreterVersion(null, data);
+//          }
+//          catch (Exception e) {
+//            LOG.warn("Couldn't get interpreter version:" + e.getMessage(), e);
+//            versionString = "undefined";
+//          }
+//        }
+//        data.setVersionString(versionString);
+//      }
+//      return versionString;
+//    }
+//    else {
+//      return getVersionString(sdk.getHomePath());
+//    }
   }
 
   @Nullable
   public String getVersionString(final String sdkHome) {
-    final PhizdetsSdkFlavor flavor = PhizdetsSdkFlavor.getFlavor(sdkHome);
-    return flavor != null ? flavor.getVersionString(sdkHome) : null;
+      return "XAMPP 5.6.30";
+//    final PhizdetsSdkFlavor flavor = PhizdetsSdkFlavor.getFlavor(sdkHome);
+//    return flavor != null ? flavor.getVersionString(sdkHome) : null;
   }
 
   public static List<Sdk> getAllSdks() {

@@ -24,6 +24,11 @@
 
     <resource-bundle>vgrechka.phizdetsidea.phizdets.PyBundle</resource-bundle>
 
+    <application-components>
+        <component>
+            <implementation-class>vgrechka.phizdetsidea.PhizdetsIDEAPlugin</implementation-class>
+        </component>
+    </application-components>
 
 
   <actions>

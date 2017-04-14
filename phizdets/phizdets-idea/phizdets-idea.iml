@@ -11,5 +11,6 @@
     <orderEntry type="jdk" jdkName="idea-sdk-4-phizdets" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="shared-jvm" />
+    <orderEntry type="module" module-name="shared-idea" />
   </component>
 </module>

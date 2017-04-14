@@ -164,7 +164,7 @@ public abstract class PhizdetsSdkFlavor {
   }
 
   public boolean isValidSdkPath(@NotNull File file) {
-    return FileUtil.getNameWithoutExtension(file).toLowerCase().startsWith("python");
+    return FileUtil.getNameWithoutExtension(file).toLowerCase().startsWith("php");
   }
 
   @Nullable
