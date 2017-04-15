@@ -26,21 +26,23 @@ import org.jetbrains.kotlin.js.sourceMap.SourceMapBuilder;
 import org.jetbrains.kotlin.psi.KtCallExpression;
 import org.jetbrains.kotlin.psi.KtConstantExpression;
 import vgrechka.DebugKt;
+import vgrechka.FileLineColumn;
 
-class SourceMapBuilderConsumer implements PairConsumer<SourceMapBuilder, Object> {
+import java.util.HashSet;
+
+public class SourceMapBuilderConsumer implements PairConsumer<SourceMapBuilder, Object> {
     @Override
     public void consume(SourceMapBuilder builder, Object sourceInfo) {
-        if (!(sourceInfo instanceof PsiElement)) {
-            return;
-        }
+        FileLineColumn flc = null;
 
-        PsiElement element = (PsiElement) sourceInfo;
-        PsiFile file = element.getContainingFile();
-        int offset = element.getNode().getStartOffset();
-        Document document = file.getViewProvider().getDocument();
-        assert document != null;
-        int line = document.getLineNumber(offset);
-        int column = offset - document.getLineStartOffset(line);
+        if (sourceInfo instanceof PsiElement) {
+            PsiElement element = (PsiElement) sourceInfo;
+            PsiFile file = element.getContainingFile();
+            int offset = element.getNode().getStartOffset();
+            Document document = file.getViewProvider().getDocument();
+            assert document != null;
+            int line = document.getLineNumber(offset);
+            int column = offset - document.getLineStartOffset(line);
 
 //        { // @debug-3
 //            if ("dt-pizda".equals(DebugKt.getDebug_tag(sourceInfo))) {
@@ -57,35 +59,61 @@ class SourceMapBuilderConsumer implements PairConsumer<SourceMapBuilder, Object>
 //            }
 //        }
 
-        { // @debug-5
-            JsNode jsNode = (JsNode) DebugKt.debug_attachedShit(sourceInfo, "jsNode");
-            if (jsNode != null) {
-//                if (jsNode instanceof JsReturn) {
-//                    "break on me".toString();
-//                }
+            { // @debug-5
+                JsNode jsNode = (JsNode) DebugKt.debug_attachedShit(sourceInfo, "jsNode");
+                if (jsNode != null) {
+    //                if (jsNode instanceof JsReturn) {
+    //                    "break on me".toString();
+    //                }
 
-//                if (jsNode.toString().contains("QUERY_STRING")) {
-//                    "break on me".toString();
-//                }
+    //                if (jsNode.toString().contains("QUERY_STRING")) {
+    //                    "break on me".toString();
+    //                }
 
-//                if (jsNode instanceof JsReturn) {
-//                    JsReturn jsReturn = (JsReturn) jsNode;
-//                    if (jsReturn.toString().contains("QUERY_STRING")) {
-//                        "break on me".toString();
-//                    }
-//                }
+    //                if (jsNode instanceof JsReturn) {
+    //                    JsReturn jsReturn = (JsReturn) jsNode;
+    //                    if (jsReturn.toString().contains("QUERY_STRING")) {
+    //                        "break on me".toString();
+    //                    }
+    //                }
+                }
+            }
+
+            { // @debug-source-map
+    //            if (file.toString().contains("shared-back-php-impl.kt")) {
+    //                if (line == 166 - 1) {
+    //                    JsNode jsNode = (JsNode) DebugKt.debug_attachedShit(sourceInfo, "jsNode");
+    //                    "break on me".toString();
+    //                }
+    //            }
+            }
+
+            flc = new FileLineColumn(file.getViewProvider().getVirtualFile().getPath(), line, column);
+        }
+        else if (sourceInfo instanceof FileLineColumn) {
+            flc = (FileLineColumn) sourceInfo;
+        }
+
+        if (flc != null) {
+            if (!addedLines.contains(flc.getLine())) {
+                builder.addMapping(flc.getFile(), flc.getLine(), flc.getColumn());
+                addedLines.add(flc.getLine());
             }
         }
-
-        { // @debug-source-map
-//            if (file.toString().contains("shared-back-php-impl.kt")) {
-//                if (line == 166 - 1) {
-//                    JsNode jsNode = (JsNode) DebugKt.debug_attachedShit(sourceInfo, "jsNode");
-//                    "break on me".toString();
-//                }
-//            }
-        }
-
-        builder.addMapping(file.getViewProvider().getVirtualFile().getPath(), line, column);
     }
+
+    private HashSet<Integer> addedLines = new HashSet<>();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

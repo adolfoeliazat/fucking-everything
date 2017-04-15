@@ -503,9 +503,6 @@ fun filesFrom(dirPath: String): List<File> {
 }
 
 object MapPhizdetsStack {
-    private val mappingCache =
-        /*if (CACHE_MAPPINGS_BETWEEN_REQUESTS) sharedMappingCache
-        else*/ makeMappingCache()
 
     sealed class MapPath {
         class Just(val path: String) : MapPath()
@@ -524,11 +521,11 @@ object MapPhizdetsStack {
             is MapPath.Just -> fuck.path
         }
 
-        val sourceMapping = getMapping(mapPath)
+        val sourceMapping = SourceMappingCache.getMapping(mapPath)
 
         run { // @debug-source-map
             if (stackLine.line == 4469) {
-                val shit = sourceMapping.sourceMappingPenetration.generatedLineToDugEntry
+                val shit = sourceMapping.penetration.generatedLineToDugEntries
                 val shitForLine = shit[stackLine.line]
                 if (shitForLine != null) {
                     "break on me"
@@ -570,8 +567,6 @@ object MapPhizdetsStack {
             pizdaPath = pizdaPath.substring("file://".length)
         return FileLineColumn(pizdaPath, orig.lineNumber, orig.columnPosition)
     }
-
-    fun getMapping(mapFilePath: String) = mappingCache[mapFilePath]
 
     fun mapFuckingLineToFancyString(stackLine: FileLineColumn, getMapPath: (resource: String) -> MapPath): String? {
         val pizda = mapFuckingLine(stackLine, getMapPath) ?: return null
@@ -653,14 +648,6 @@ object MapPhizdetsStack {
 //    }
 
 
-    private fun makeMappingCache(): LoadingCache<String, SourceMapping> {
-        return CacheBuilder.newBuilder().build(object:CacheLoader<String, SourceMapping>() {
-            override fun load(mapPath: String): SourceMapping {
-                return SourceMapConsumerFactory.parse(File(mapPath).readText())
-            }
-        })
-    }
-
     inline fun dwarnStriking(vararg xs: Any?) = dwarn("\n\n", "**********", *xs, "\n")
 
     fun dwarn(vararg xs: Any?) = clog(xs.joinToString(" "))
@@ -682,93 +669,7 @@ object MapPhizdetsStack {
 
 }
 
-fun <T> lazy2(initializer: (thisRef: Any) -> T) = SynchronizedLazyImpl2(initializer)
 
-class SynchronizedLazyImpl2<out T>(initializer: (thisRef: Any) -> T, lock: Any? = null) {
-    private object UNINITIALIZED_VALUE
-
-    private var initializer: ((thisRef: Any) -> T)? = initializer
-    @Volatile private var _value: Any? = UNINITIALIZED_VALUE
-    // final field is required to enable safe publication of constructed instance
-    private val lock = lock ?: this
-
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
-        val _v1 = _value
-        if (_v1 !== UNINITIALIZED_VALUE) {
-            @Suppress("UNCHECKED_CAST")
-            return _v1 as T
-        }
-
-        return synchronized(lock) {
-            val _v2 = _value
-            if (_v2 !== UNINITIALIZED_VALUE) {
-                @Suppress("UNCHECKED_CAST") (_v2 as T)
-            }
-            else {
-                val typedValue = initializer!!(thisRef!!)
-                _value = typedValue
-                initializer = null
-                typedValue
-            }
-        }
-    }
-}
-
-class SourceMapConsumerPenetration {
-    val generatedLineToDugEntry = mutableMapOf<Int, MutableList<DugEntry>>()
-
-    class DugEntry(val file: String,
-                   val generatedLine: Int,
-                   val sourceLine: Int,
-                   val sourceColumn: Int)
-}
-
-val SourceMapping.sourceMappingPenetration by lazy2 {sourceMapping->
-    val penetration = SourceMapConsumerPenetration()
-
-    val privateLines = run {
-        val f = sourceMapping.javaClass.getDeclaredField("lines")
-        f.isAccessible = true
-        f.get(sourceMapping) as List<List<Any>?>
-    }
-    val privateSources = run {
-        val f = sourceMapping.javaClass.getDeclaredField("sources")
-        f.isAccessible = true
-        f.get(sourceMapping) as Array<String>
-    }
-
-    for ((generatedLine, privateLine) in privateLines.withIndex()) {
-        if (privateLine != null) {
-            for (privateEntry in privateLine) {
-                val sourceLine = run {
-                    val m = privateEntry.javaClass.getMethod("getSourceLine")
-                    m.isAccessible = true
-                    m.invoke(privateEntry) as Int
-                }
-                val sourceColumn = run {
-                    val m = privateEntry.javaClass.getMethod("getSourceColumn")
-                    m.isAccessible = true
-                    m.invoke(privateEntry) as Int
-                }
-                val sourceFileId = run {
-                    val m = privateEntry.javaClass.getMethod("getSourceFileId")
-                    m.isAccessible = true
-                    m.invoke(privateEntry) as Int
-                }
-
-                val entry = SourceMapConsumerPenetration.DugEntry(
-                    file = privateSources[sourceFileId],
-                    generatedLine = generatedLine + 1,
-                    sourceLine = sourceLine + 1,
-                    sourceColumn = sourceColumn + 1)
-
-                val entries = penetration.generatedLineToDugEntry.getOrPut(generatedLine + 1) {mutableListOf()}
-                entries += entry
-            }
-        }
-    }
-    penetration
-}
 
 fun getAPSBackPHPMapPath(resource: String): MapPhizdetsStack.MapPath = when {
     resource == "aps-back.php"

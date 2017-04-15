@@ -4,6 +4,8 @@ import vgrechka.*
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.debugging.sourcemap.SourceMapping
+import com.google.debugging.sourcemap.proto.Mapping
 import org.jetbrains.kotlin.cli.js.K2PhizdetsCompiler
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.SimpleFunctionDescriptor
@@ -30,8 +32,15 @@ import jdk.nashorn.internal.runtime.Context
 import jdk.nashorn.internal.runtime.ErrorManager
 import jdk.nashorn.internal.runtime.Source
 import jdk.nashorn.internal.runtime.options.Options
+import org.jetbrains.kotlin.incremental.makeModuleFile
+import org.jetbrains.kotlin.js.config.JSConfigurationKeys
+import org.jetbrains.kotlin.js.facade.SourceMapBuilderConsumer
 import org.jetbrains.kotlin.js.sourceMap.PhizdetsSourceGenerationVisitor
+import org.jetbrains.kotlin.js.sourceMap.SourceMap3Builder
 import org.jetbrains.kotlin.js.util.TextOutputImpl
+import org.junit.Assert
+import org.junit.Assert.fail
+import org.junit.Test
 
 object JS2Phizdets {
     @JvmStatic
@@ -54,8 +63,14 @@ object JS2Phizdets {
 
 class Barbos(val inputFilePath: String, val outputFilePath: String, val copyPhiEngine: Boolean, val copyPhiStdlib: Boolean) {
     private var jsProgram by notNullOnce<JsProgram>()
+    private var source by notNullOnce<Source>()
+    private var jsMapping by notNullOnce<SourceMapping>()
 
     fun ignite() {
+        val jsMapFile = File(inputFilePath + ".map")
+        check(jsMapFile.exists()) {"6a5793bb-2a14-4039-a7ac-98f0a61615e5"}
+        jsMapping = SourceMappingCache.getMapping(jsMapFile.path)
+
         PhizdetscGlobal.debugTagPrefix = "s"
         val inFile = File(inputFilePath)
         val options = Options("nashorn")
@@ -66,7 +81,7 @@ class Barbos(val inputFilePath: String, val outputFilePath: String, val copyPhiE
         val errors = ErrorManager()
         val context = Context(options, errors, Thread.currentThread().contextClassLoader)
         val origSourceCode = inFile.readText()
-        val source = Source.sourceFor(inFile.name, origSourceCode)
+        source = Source.sourceFor(inFile.name, origSourceCode)
         val parser = Parser(context.env, source, errors)
         val nhProgram = parser.parse()
 
@@ -95,8 +110,11 @@ class Barbos(val inputFilePath: String, val outputFilePath: String, val copyPhiE
             phpifier.stage2()
             val output = TextOutputImpl()
             val taggedGenOutput = TextOutputImpl()
-            jsProgram.accept(PhizdetsSourceGenerationVisitor(output, taggedGenOutput, /*sourceMapBuilder*/ null))
+            val sourceMapBuilder = SourceMap3Builder(outputFile, output, SourceMapBuilderConsumer())
+            jsProgram.accept(PhizdetsSourceGenerationVisitor(output, taggedGenOutput, sourceMapBuilder))
             outputFile.writeText(output.toString())
+            val mapFile = File("$outputFilePath.map")
+            mapFile.writeText(sourceMapBuilder.build())
         }
 
         if (copyPhiEngine) {
@@ -226,12 +244,39 @@ class Barbos(val inputFilePath: String, val outputFilePath: String, val copyPhiE
                     wtf("${nhs::class.simpleName}    6956184e-e142-49a2-a182-9cc995c058e5")
                 }
             }
+
+            if (jsStatement !is JsExpressionStatement) {
+                fillSourcePosition(jsStatement, nhs)
+            }
+
             jsBlock.statements += jsStatement
         }
     }
 
+//    private val jsLineToKtLine = mutableMapOf<Int, Int>()
+    private fun fillSourcePosition(to: JsNode, from: Node) {
+        val pos = from.position()
+        val jsLine = source.getLine(pos)
+        val jsColumn = source.getColumn(pos) + 1
+        val ktPlace: Mapping.OriginalMapping?
+        ktPlace = jsMapping.getMappingForLine(jsLine, jsColumn)
+        if (ktPlace != null) {
+            val ktLine = ktPlace.lineNumber - 1
+//            if (ktLine == 5) {
+//                "fuck"
+//            }
+//            val existingKtLine = jsLineToKtLine[jsLine]
+//            if (existingKtLine != null && existingKtLine != ktLine) {
+//                "qwe"
+//            } else {
+//                jsLineToKtLine[jsLine] = ktLine
+//            }
+            to.source(FileLineColumn(inputFilePath, ktLine, ktPlace.columnPosition))
+        }
+    }
+
     private fun mapExpression(nhe: Expression): JsExpression {
-        return when (nhe) {
+        val jsExpression = when (nhe) {
             is IdentNode -> {
                 JsNameRef(nhe.name)
             }
@@ -264,7 +309,7 @@ class Barbos(val inputFilePath: String, val outputFilePath: String, val copyPhiE
             }
             is FunctionNode -> {
                 val body = mapBlock(nhe.body)
-                JsFunction(JsFunctionScope(jsProgram.rootScope, "boobs"), body, "boobs")-{o->
+                JsFunction(JsFunctionScope(jsProgram.rootScope, "boobs"), body, "boobs") - {o ->
                     for (nhParam in nhe.parameters) {
                         o.parameters += JsParameter(jsProgram.scope.declareName(nhParam.name))
                     }
@@ -363,6 +408,8 @@ class Barbos(val inputFilePath: String, val outputFilePath: String, val copyPhiE
                 wtf("${nhe::class.simpleName}    a422c443-7e15-4714-8080-1bea0f4db5bc")
             }
         }
+        fillSourcePosition(jsExpression, nhe)
+        return jsExpression
     }
 
     private fun mapBlock(nhBlock: Block): JsBlock {
@@ -371,6 +418,61 @@ class Barbos(val inputFilePath: String, val outputFilePath: String, val copyPhiE
         return jsBlock
     }
 }
+
+class BarbosTests {
+    @Test
+    fun test1() {
+        val jsFileName = "fuck.js"
+        val scuko = this::class.qualifiedName!!.replace(".", "/") + "_files/" + this::test1.name
+        val shit = scuko + "/" + jsFileName
+        val jsFile = File(javaClass.classLoader.getResource(shit).path)
+        val mapFile = File(jsFile.path + ".map")
+        val outDir = File(System.getProperty("java.io.tmpdir") + "/" + scuko.replace("/", "."))
+        if (outDir.exists()) {
+            outDir.listFiles().forEach {
+                check(it.delete()) {"2f1288a5-e95c-4647-bad6-59835d718ebc"}
+            }
+        } else {
+            check(outDir.mkdir()) {"856e0f03-a79e-4e40-98d4-7261f05da9c4"}
+        }
+
+        val outputFilePath = outDir.path + "/" + jsFileName + ".php"
+        Barbos(inputFilePath = jsFile.path,
+               outputFilePath = outputFilePath,
+               copyPhiEngine = true,
+               copyPhiStdlib = true)
+            .ignite()
+
+        fun dumpMapFile(path: String) {
+            clog(path + ":")
+            val mapping = SourceMappingCache.getMapping(path)
+            val penetration = mapping.penetration
+            penetration.dumpSourceLineToGeneratedLine()
+        }
+
+        dumpMapFile(mapFile.absolutePath)
+        dumpMapFile(outputFilePath + ".map")
+
+        // TODO:vgrechka Maybe some assertions? :)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

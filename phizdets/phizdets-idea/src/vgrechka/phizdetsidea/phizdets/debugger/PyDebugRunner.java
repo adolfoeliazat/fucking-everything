@@ -240,54 +240,62 @@ public class PyDebugRunner extends GenericProgramRunner {
   private CommandLinePatcher createDebugServerPatcher(final Project project,
                                                              final PhizdetsCommandLineState pyState,
                                                              final int serverLocalPort) {
+      // @phidea-1
     return new CommandLinePatcher() {
-
-      private void patchExeParams(ParametersList parametersList) {
-        // we should remove '-m' parameter, but notify debugger of it
-        // but we can't remove one parameter from group, so we create new parameters group
-        ParamsGroup newExeParams = new ParamsGroup(PhizdetsCommandLineState.GROUP_EXE_OPTIONS);
-        int exeParamsIndex = parametersList.getParamsGroups().indexOf(
-          parametersList.getParamsGroup(PhizdetsCommandLineState.GROUP_EXE_OPTIONS));
-        ParamsGroup exeParamsOld = parametersList.removeParamsGroup(exeParamsIndex);
-        isModule = false;
-        for (String param : exeParamsOld.getParameters()) {
-          if (!param.equals("-m")) {
-            newExeParams.addParameter(param);
-          }
-          else {
-            isModule = true;
-          }
-        }
-
-        parametersList.addParamsGroupAt(exeParamsIndex, newExeParams);
-      }
-
-
       @Override
       public void patchCommandLine(GeneralCommandLine commandLine) {
-        // script name is the last parameter; all other params are for phizdets interpreter; insert just before name
-        ParametersList parametersList = commandLine.getParametersList();
-
-        @SuppressWarnings("ConstantConditions") @NotNull
-        ParamsGroup debugParams = parametersList.getParamsGroup(PhizdetsCommandLineState.GROUP_DEBUGGER);
-
-        patchExeParams(parametersList);
-
-        @SuppressWarnings("ConstantConditions") @NotNull
-        ParamsGroup exeParams = parametersList.getParamsGroup(PhizdetsCommandLineState.GROUP_EXE_OPTIONS);
-
-        final PhizdetsSdkFlavor flavor = pyState.getSdkFlavor();
-        if (flavor != null) {
-          assert exeParams != null;
-          for (String option : flavor.getExtraDebugOptions()) {
-            exeParams.addParameter(option);
-          }
-        }
-
-        assert debugParams != null;
-        fillDebugParameters(project, debugParams, serverLocalPort, pyState, commandLine);
+          commandLine.getEnvironment().put("XDEBUG_CONFIG", "idekey=phizdets");
       }
     };
+
+//    return new CommandLinePatcher() {
+//
+//      private void patchExeParams(ParametersList parametersList) {
+//        // we should remove '-m' parameter, but notify debugger of it
+//        // but we can't remove one parameter from group, so we create new parameters group
+//        ParamsGroup newExeParams = new ParamsGroup(PhizdetsCommandLineState.GROUP_EXE_OPTIONS);
+//        int exeParamsIndex = parametersList.getParamsGroups().indexOf(
+//          parametersList.getParamsGroup(PhizdetsCommandLineState.GROUP_EXE_OPTIONS));
+//        ParamsGroup exeParamsOld = parametersList.removeParamsGroup(exeParamsIndex);
+//        isModule = false;
+//        for (String param : exeParamsOld.getParameters()) {
+//          if (!param.equals("-m")) {
+//            newExeParams.addParameter(param);
+//          }
+//          else {
+//            isModule = true;
+//          }
+//        }
+//
+//        parametersList.addParamsGroupAt(exeParamsIndex, newExeParams);
+//      }
+//
+//
+//      @Override
+//      public void patchCommandLine(GeneralCommandLine commandLine) {
+//        // script name is the last parameter; all other params are for phizdets interpreter; insert just before name
+//        ParametersList parametersList = commandLine.getParametersList();
+//
+//        @SuppressWarnings("ConstantConditions") @NotNull
+//        ParamsGroup debugParams = parametersList.getParamsGroup(PhizdetsCommandLineState.GROUP_DEBUGGER);
+//
+//        patchExeParams(parametersList);
+//
+//        @SuppressWarnings("ConstantConditions") @NotNull
+//        ParamsGroup exeParams = parametersList.getParamsGroup(PhizdetsCommandLineState.GROUP_EXE_OPTIONS);
+//
+//        final PhizdetsSdkFlavor flavor = pyState.getSdkFlavor();
+//        if (flavor != null) {
+//          assert exeParams != null;
+//          for (String option : flavor.getExtraDebugOptions()) {
+//            exeParams.addParameter(option);
+//          }
+//        }
+//
+//        assert debugParams != null;
+//        fillDebugParameters(project, debugParams, serverLocalPort, pyState, commandLine);
+//      }
+//    };
   }
 
   private void fillDebugParameters(@NotNull Project project,

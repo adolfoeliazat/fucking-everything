@@ -1,5 +1,6 @@
 package vgrechka.phizdetsidea
 
+import com.intellij.debugger.DebuggerManager
 import com.intellij.ide.actions.ShowStructureSettingsAction
 import com.intellij.ide.plugins.PluginManager
 import com.intellij.openapi.actionSystem.ActionManager
@@ -21,16 +22,23 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
 import com.intellij.util.PlatformUtils
 import com.intellij.util.lang.UrlClassLoader
+import com.intellij.xdebugger.XDebuggerManager
+import com.intellij.xdebugger.breakpoints.XLineBreakpointType
+import com.intellij.xdebugger.impl.breakpoints.XBreakpointManagerImpl
+import com.intellij.xdebugger.impl.breakpoints.XLineBreakpointImpl
 import com.sun.jna.platform.win32.User32
+//import phizdets.MapPhizdetsStack
 import vgrechka.*
 import vgrechka.idea.*
 import java.io.File
 import kotlin.concurrent.thread
 import vgrechka.*
+import vgrechka.phizdetsidea.phizdets.debugger.*
 import java.awt.MouseInfo
 import java.awt.Robot
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
+import kotlin.properties.Delegates.notNull
 
 class PhizdetsIDEAPlugin : ApplicationComponent {
     override fun getComponentName(): String {
@@ -54,11 +62,36 @@ class PhizdetsIDEAPlugin : ApplicationComponent {
 
         run {
             val action = object : AnAction("Phizdets: _Mess Around") {
+                var event by notNull<AnActionEvent>()
                 val robot = Robot()
 
                 override fun actionPerformed(event: AnActionEvent) {
+                    this.event = event
 //                    testAddSDK()
-                    testCreateRunConfiguration()
+//                    testCreateRunConfiguration()
+//                    testFindBreakpoints()
+                    fuckAroundWithSourceMap()
+                }
+
+                private fun fuckAroundWithSourceMap() {
+                    val mapping = SourceMappingCache.getMapping("E:\\fegh\\aps\\aps-back-phi\\out\\production\\aps-back-phi\\aps-back-phi.js.map")
+                    val penetration = mapping.penetration
+                    penetration.dumpSourceLineToGeneratedLine()
+                    "break on me"
+                }
+
+
+                private fun testFindBreakpoints() {
+                    val bm = XDebuggerManager.getInstance(event.project!!).breakpointManager as XBreakpointManagerImpl
+                    for (point in bm.allBreakpoints) {
+                        if (point is XLineBreakpointImpl) {
+                            if (point.type.id == "kotlin-line") {
+                                val file = point.fileUrl
+                                val line = point.line
+                                "break on me"
+                            }
+                        }
+                    }
                 }
 
                 fun key(code: Int) {

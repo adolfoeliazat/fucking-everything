@@ -38,8 +38,8 @@ object MapPhizdetsStackTool {
 object JerkMapPhizdetsStackTool5 {
     @JvmStatic
     fun main(args: Array<String>) {
-        val mapping = MapPhizdetsStack.getMapping("E:/fegh/out/phi-tests/aps-back/aps-back.php.map")
-        val penetration = mapping.sourceMappingPenetration
+        val mapping = SourceMappingCache.getMapping("E:/fegh/out/phi-tests/aps-back/aps-back.php.map")
+        val penetration = mapping.penetration
         clog(mapping.getMappingForLine(46, 9999999))
         "break on me"
     }

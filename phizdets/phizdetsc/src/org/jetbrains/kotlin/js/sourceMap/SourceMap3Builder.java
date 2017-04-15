@@ -84,7 +84,7 @@ public class SourceMap3Builder implements SourceMapBuilder {
             else {
                 isNotFirst = true;
             }
-            sb.append('"').append("file://").append(source).append('"');
+            sb.append('"').append("file://").append(source.replace("\\", "/")).append('"');
         }
         sb.append(']');
     }
@@ -126,6 +126,7 @@ public class SourceMap3Builder implements SourceMapBuilder {
         return sourceIndex;
     }
 
+    // @debug-source-map
     @Override
     public void addMapping(String source, int sourceLine, int sourceColumn) {
         if (previousGeneratedColumn == -1) {
