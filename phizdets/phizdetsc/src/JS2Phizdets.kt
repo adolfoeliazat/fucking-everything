@@ -253,7 +253,6 @@ class Barbos(val inputFilePath: String, val outputFilePath: String, val copyPhiE
         }
     }
 
-//    private val jsLineToKtLine = mutableMapOf<Int, Int>()
     private fun fillSourcePosition(to: JsNode, from: Node) {
         val pos = from.position()
         val jsLine = source.getLine(pos)
@@ -262,16 +261,10 @@ class Barbos(val inputFilePath: String, val outputFilePath: String, val copyPhiE
         ktPlace = jsMapping.getMappingForLine(jsLine, jsColumn)
         if (ktPlace != null) {
             val ktLine = ktPlace.lineNumber - 1
-//            if (ktLine == 5) {
-//                "fuck"
-//            }
-//            val existingKtLine = jsLineToKtLine[jsLine]
-//            if (existingKtLine != null && existingKtLine != ktLine) {
-//                "qwe"
-//            } else {
-//                jsLineToKtLine[jsLine] = ktLine
-//            }
-            to.source(FileLineColumn(inputFilePath, ktLine, ktPlace.columnPosition))
+            var file = ktPlace.originalFile
+            if (file.startsWith("file://"))
+                file = file.substring("file://".length)
+            to.source(FileLineColumn(file, ktLine, ktPlace.columnPosition))
         }
     }
 

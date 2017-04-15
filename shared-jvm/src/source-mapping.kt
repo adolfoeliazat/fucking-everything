@@ -63,25 +63,42 @@ class SourceMapConsumerPenetration {
                    val sourceLine: Int,
                    val sourceColumn: Int)
 
-    val sourceLineToGeneratedLine: MutableMap<Int, Int> by lazy {
-        val res = mutableMapOf<Int, Int>()
+    val sourceFileLineToGeneratedLine: MutableMap<FileLine, Int> by lazy {
+        val res = mutableMapOf<FileLine, Int>()
         for ((generatedLine, entries) in generatedLineToDugEntries) {
-            val sourceLine = entries.first().sourceLine
+            val firstEntry = entries.first()
             for (entry in entries) {
-                if (entry.sourceLine != sourceLine || entry.generatedLine != generatedLine)
+                if (entry.sourceLine != firstEntry.sourceLine
+                    || entry.file != firstEntry.file
+                    || entry.generatedLine != generatedLine)
                     wtf("8ea09bef-be33-4a6f-8eb4-5cd2b8502e02")
             }
-            res[sourceLine] = generatedLine
+            res[FileLine(firstEntry.file, firstEntry.sourceLine)] = generatedLine
         }
         res
     }
 
     fun dumpSourceLineToGeneratedLine() {
-        if (sourceLineToGeneratedLine.isEmpty()) return clog("Freaking source map is empty")
-        val entries = sourceLineToGeneratedLine.entries.toMutableList()
-        entries.sortBy {it.key}
-        for ((sourceLine, generatedLine) in entries) {
-            clog("sourceLine = $sourceLine; generatedLine = $generatedLine")
+        if (sourceFileLineToGeneratedLine.isEmpty()) return clog("Freaking source map is empty")
+        val entries = sourceFileLineToGeneratedLine.entries.toMutableList()
+        entries.sortWith(Comparator<Map.Entry<FileLine, Int>> {a, b ->
+            val c = a.key.file.compareTo(b.key.file)
+            if (c != 0)
+                c
+            else
+                a.key.line.compareTo(b.key.line)
+        })
+        for ((sourceFileLine, generatedLine) in entries) {
+            val fullFilePath = true
+            val fileDesignator = when {
+                fullFilePath -> sourceFileLine.file
+                else -> {
+                    val sourceFile = File(sourceFileLine.file)
+                    sourceFile.name
+                }
+            }
+            val source = fileDesignator + ":" + sourceFileLine.line
+            clog("source = $source; generatedLine = $generatedLine")
         }
     }
 }

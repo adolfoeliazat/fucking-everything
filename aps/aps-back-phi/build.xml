@@ -8,8 +8,8 @@
                 <pathelement location="E:\fegh\out\production\phizdetsc"/>
                 <pathelement location="E:\fegh\lib\kotlin-runtime.jar"/>
                 <pathelement location="E:\fegh\lib\kotlin-reflect.jar"/>
-                <pathelement location="E:\fegh\lib-gradle\kotlin-compiler-1.1.0.jar"/>
                 <pathelement location="E:\fegh\lib-gradle\guava-21.0.jar"/>
+                <pathelement location="E:\fegh\lib-gradle\kotlin-compiler-1.1.0.jar"/>
                 <pathelement location="E:\fegh\lib-gradle\closure-compiler-v20170218.jar"/>
             </classpath>
             <arg value="E:\fegh\aps\aps-back-phi\out\production\aps-back-phi\aps-back-phi.js"/>
