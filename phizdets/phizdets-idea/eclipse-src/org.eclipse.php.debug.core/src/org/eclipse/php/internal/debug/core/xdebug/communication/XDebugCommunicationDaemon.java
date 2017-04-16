@@ -12,9 +12,8 @@
 package org.eclipse.php.internal.debug.core.xdebug.communication;
 
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -468,10 +467,12 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 			defaultPortListener = new DefaultPortListener();
 			InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID).addPreferenceChangeListener(defaultPortListener);
 		}
-		if (debuggerSettingsListener == null) {
-			debuggerSettingsListener = new DebuggerSettingsListener();
-			DebuggerSettingsManager.INSTANCE.addSettingsListener(debuggerSettingsListener);
-		}
+
+		// @pdt-1
+//		if (debuggerSettingsListener == null) {
+//			debuggerSettingsListener = new DebuggerSettingsListener();
+//			DebuggerSettingsManager.INSTANCE.addSettingsListener(debuggerSettingsListener);
+//		}
 	}
 
 	private void unregisterListeners() {
@@ -501,6 +502,10 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 			}
 		}
 		// Start new daemons if there should be any
+
+		// @pdt-2
+		ports = new HashSet<>(Collections.singletonList(9000));
+
 		for (int port : ports) {
 			boolean isRunning = false;
 			for (AbstractDebuggerCommunicationDaemon daemon : daemons) {

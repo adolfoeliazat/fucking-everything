@@ -27,6 +27,8 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpointType
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointManagerImpl
 import com.intellij.xdebugger.impl.breakpoints.XLineBreakpointImpl
 import com.sun.jna.platform.win32.User32
+import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon
+import org.eclipse.php.internal.debug.daemon.DaemonPlugin
 //import phizdets.MapPhizdetsStack
 import vgrechka.*
 import vgrechka.idea.*
@@ -53,6 +55,10 @@ class PhizdetsIDEAPlugin : ApplicationComponent {
         pm.addProjectManagerListener(object : ProjectManagerListener {
             override fun projectOpened(project: Project) {
                 clog("Opened project", project.name)
+
+                val daemon = XDebugCommunicationDaemon()
+                daemon.init()
+                daemon.startListen()
             }
         })
 
@@ -69,8 +75,15 @@ class PhizdetsIDEAPlugin : ApplicationComponent {
                     this.event = event
 //                    testAddSDK()
 //                    testCreateRunConfiguration()
-                    testPreparePHPDebugger()
+//                    testPreparePHPDebugger()
 //                    fuckAroundWithSourceMap()
+//                    fuckAroundWithPDT()
+                }
+
+                private fun fuckAroundWithPDT() {
+                    val daemon = XDebugCommunicationDaemon()
+                    daemon.init()
+                    daemon.startListen()
                 }
 
                 private fun fuckAroundWithSourceMap() {

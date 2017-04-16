@@ -50,7 +50,10 @@ public class DaemonsRegistry {
 	/**
 	 * The name of extension point to read daemons from
 	 */
-	public static final String EXTENSION_POINT_ID = DaemonPlugin.getDefault().getBundle().getSymbolicName()
+	public static final String EXTENSION_POINT_ID = DaemonPlugin
+			.getDefault()
+			.getBundle()
+			.getSymbolicName()
 			+ ".debugCommunicationDaemon"; //$NON-NLS-1$
 
 	/**

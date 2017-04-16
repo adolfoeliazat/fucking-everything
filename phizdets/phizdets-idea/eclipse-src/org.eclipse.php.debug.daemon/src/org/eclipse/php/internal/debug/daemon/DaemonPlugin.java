@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
+import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon;
 import org.eclipse.php.internal.debug.daemon.communication.DaemonsRegistry;
 import org.osgi.framework.BundleContext;
 

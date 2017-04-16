@@ -151,6 +151,9 @@ public class PHPDebuggersRegistry {
 	// Load the debuggers into the map.
 	// Do this only once.
 	private void loadDebuggers() {
+		// @pdt-1
+		if (true) return;
+
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
 		final IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(),
 				EXTENSION_POINT_NAME);
