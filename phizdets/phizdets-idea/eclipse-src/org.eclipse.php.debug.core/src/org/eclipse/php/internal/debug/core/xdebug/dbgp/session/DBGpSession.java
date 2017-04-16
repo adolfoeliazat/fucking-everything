@@ -336,6 +336,7 @@ public class DBGpSession {
 	private DataInputStream DBGpReader;
 	private boolean sessionActive = false;
 	private DBGpTarget debugTarget;
+	public FuckingDebugTarget fuckingDebugTarget;
 	private Hashtable<Integer, Object> savedResponses = new Hashtable<Integer, Object>();
 	private String ideKey;
 	private String sessionId;
@@ -517,6 +518,11 @@ public class DBGpSession {
 		if (debugTarget != null) {
 			debugTarget.sessionEnded();
 			debugTarget = null;
+		}
+		// @pdt-debug-target
+		if (fuckingDebugTarget != null) {
+			fuckingDebugTarget.sessionEnded();
+			fuckingDebugTarget = null;
 		}
 	}
 

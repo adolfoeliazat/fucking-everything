@@ -2337,6 +2337,7 @@ public class DBGpTarget extends DBGpElement
 		this.session = session;
 	}
 
+	@Override
 	public DebugOutput getOutputBuffer() {
 		return this.debugOutput;
 	}

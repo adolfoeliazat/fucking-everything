@@ -37,6 +37,7 @@ import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugProcessStarter;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
+import vgrechka.phizdetsidea.XDebug;
 import vgrechka.phizdetsidea.phizdets.PhizdetsHelper;
 import vgrechka.phizdetsidea.phizdets.console.PydevConsoleRunnerFactory;
 import vgrechka.phizdetsidea.phizdets.console.PhizdetsConsoleView;
@@ -48,7 +49,6 @@ import vgrechka.phizdetsidea.phizdets.run.AbstractPhizdetsRunConfiguration;
 import vgrechka.phizdetsidea.phizdets.run.CommandLinePatcher;
 import vgrechka.phizdetsidea.phizdets.run.DebugAwareConfiguration;
 import vgrechka.phizdetsidea.phizdets.run.PhizdetsCommandLineState;
-import vgrechka.phizdetsidea.phizdets.sdk.flavors.PhizdetsSdkFlavor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -134,6 +134,9 @@ public class PyDebugRunner extends GenericProgramRunner {
     RunProfile profile = environment.getRunProfile();
     final ExecutionResult result =
       pyState.execute(environment.getExecutor(), createCommandLinePatchers(environment.getProject(), pyState, profile, serverLocalPort));
+
+    // @phi-running-shit
+      XDebug.INSTANCE.init();
 
     return XDebuggerManager.getInstance(environment.getProject()).
       startSession(environment, new XDebugProcessStarter() {
@@ -240,7 +243,7 @@ public class PyDebugRunner extends GenericProgramRunner {
   private CommandLinePatcher createDebugServerPatcher(final Project project,
                                                              final PhizdetsCommandLineState pyState,
                                                              final int serverLocalPort) {
-      // @phidea-1
+    // @phi-running-shit
     return new CommandLinePatcher() {
       @Override
       public void patchCommandLine(GeneralCommandLine commandLine) {

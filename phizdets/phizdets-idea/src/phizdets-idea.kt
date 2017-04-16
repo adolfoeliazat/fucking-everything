@@ -33,9 +33,12 @@ import org.eclipse.core.runtime.IStatus
 import org.eclipse.debug.core.DebugPlugin
 import org.eclipse.debug.core.IDebugEventSetListener
 import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpCommand
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.FuckingDebugTarget
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin
 import org.osgi.framework.Bundle
@@ -65,25 +68,6 @@ class PhizdetsIDEAPlugin : ApplicationComponent {
         pm.addProjectManagerListener(object : ProjectManagerListener {
             override fun projectOpened(project: Project) {
                 clog("Opened project", project.name)
-
-                DebugPlugin()
-                val debugPlugin = DebugPlugin.getDefault()
-                debugPlugin.addDebugEventListener {events->
-                    "break here"
-                }
-
-                DBGpSessionHandler.getInstance().addSessionListener(object:IDBGpSessionListener {
-                    override fun SessionCreated(session: DBGpSession): Boolean {
-                        clog("--- SessionCreated")
-                        session.startSession()
-                        session.sendSyncCmd(DBGpCommand.run)
-                        return true
-                    }
-                })
-
-                val daemon = XDebugCommunicationDaemon()
-                daemon.init()
-                daemon.startListen()
             }
         })
 
@@ -267,6 +251,7 @@ class PhizdetsIDEAPlugin : ApplicationComponent {
             group.add(action)
         }
     }
+
 }
 
 val kindaEclipseLog: ILog by lazy {object:ILog {
@@ -294,6 +279,56 @@ val kindaEclipseLog: ILog by lazy {object:ILog {
         clog("$statusString: ${shit.message}")
     }
 }}
+
+object XDebug {
+    val debugReinitializeAllShitEveryTime = true
+    var initialized = false
+    var sessionListener by notNull<IDBGpSessionListener>()
+    var daemon by notNull<XDebugCommunicationDaemon>()
+
+    @Synchronized
+    fun init() {
+        if (initialized && debugReinitializeAllShitEveryTime) {
+            DBGpSessionHandler.getInstance().removeSessionListener(sessionListener)
+            daemon.stopListen()
+            initialized = false
+        }
+
+        if (!initialized) {
+            sessionListener = IDBGpSessionListener {session->
+                clog("--- SessionCreated")
+                session.fuckingDebugTarget = FuckingDebugTarget {
+                    ApplicationManager.getApplication().invokeLater {
+                        Messages.showInfoMessage("It's over. Completely fucking over...", "Yeah")
+                    }
+                }
+                session.startSession()
+
+                val res = session.sendSyncCmd(DBGpCommand.breakPointSet,
+                    "-t line" +
+                    " -f file://E:/fegh/aps/aps-back-phi/out/production/aps-back-phi/aps-back-phi.php" +
+                    " -n 7")
+                if (res.errorCode != DBGpResponse.ERROR_OK) {
+                    ApplicationManager.getApplication().invokeLater {
+                        Messages.showErrorDialog("errorCode = ${res.errorCode}\n" +
+                                                 "errorMessage = ${res.errorMessage}",
+                                                 "Fuck...")
+                    }
+                    return@IDBGpSessionListener true
+                }
+
+                session.sendSyncCmd(DBGpCommand.run)
+                true
+            }
+            DBGpSessionHandler.getInstance().addSessionListener(sessionListener)
+
+            daemon = XDebugCommunicationDaemon()
+            daemon.init()
+            daemon.startListen()
+        }
+    }
+}
+
 
 
 
