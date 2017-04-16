@@ -18,32 +18,33 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import vgrechka.phizdetsidea.Phizdets_ideaKt;
 
 /**
  * A set of useful utilities
  */
 public class DBGpLogger {
 
-	private static boolean debugOn = false;
+	private static boolean debugOn = true;
 
 	public static boolean debugState() {
-		return false;
+		return true;
 	}
 
 	public static boolean debugCmd() {
-		return false;
+		return true;
 	}
 
 	public static boolean debugResp() {
-		return false;
+		return true;
 	}
 
 	public static boolean debugBP() {
-		return false;
+		return true;
 	}
 
 	public static boolean debugSession() {
-		return false;
+		return true;
 	}
 
 	/**
@@ -75,7 +76,7 @@ public class DBGpLogger {
 	}
 
 	public static void logException(String info, Object obj, Throwable exc) {
-		ILog theLog = PHPDebugPlugin.getDefault().getLog();
+		ILog theLog = getLog();
 		StringBuilder msg = new StringBuilder();
 		if (obj != null) {
 			msg.append(obj.getClass().toString());
@@ -99,6 +100,12 @@ public class DBGpLogger {
 		}
 		IStatus stat = new Status(IStatus.ERROR, PHPDebugPlugin.ID, IStatus.ERROR, msg + "\n" + bs.toString(), null); //$NON-NLS-1$
 		theLog.log(stat);
+	}
+
+	private static ILog getLog() {
+	    // @pdt-3
+		return Phizdets_ideaKt.getKindaEclipseLog();
+//		return PHPDebugPlugin.getDefault().getLog();
 	}
 
 	/**
@@ -166,7 +173,7 @@ public class DBGpLogger {
 	 * @param type type of log message, ERROR, WARNING,INFO
 	 */
 	private static void doLog(String info, Object obj, Throwable exc, int type) {
-		ILog theLog = PHPDebugPlugin.getDefault().getLog();
+		ILog theLog = getLog();
 		StringBuffer msg = new StringBuffer();
 		if (obj != null) {
 			msg.append(obj.getClass().toString());

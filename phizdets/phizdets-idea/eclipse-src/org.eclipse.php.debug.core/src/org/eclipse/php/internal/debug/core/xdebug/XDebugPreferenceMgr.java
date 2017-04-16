@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpPreferences;
+import vgrechka.Shared_jvmKt;
 
 public class XDebugPreferenceMgr {
 
@@ -174,11 +175,19 @@ public class XDebugPreferenceMgr {
 	}
 
 	private static boolean getBoolean(String key) {
-		return Platform.getPreferencesService().getBoolean(PHPDebugPlugin.ID, key, false, null);
+		// @pdt-3
+		if (XDEBUG_PREF_WARN_NO_LOCALHOST_SESSION.equals(key)) return false;
+		throw new IllegalStateException("boolean key = " + key + "    bf5fca71-c171-4039-ae9f-7416c697e22d");
+
+//		return Platform.getPreferencesService().getBoolean(PHPDebugPlugin.ID, key, false, null);
 	}
 
 	private static int getInt(String key) {
-		return Platform.getPreferencesService().getInt(PHPDebugPlugin.ID, key, 0, null);
+		// @pdt-3
+		if (XDEBUG_PREF_REMOTESESSION.equals(key)) return AcceptRemoteSession.localhost.ordinal();
+		throw new IllegalStateException("int key = " + key + "    5996be2c-8af0-4b12-81d6-33a0da01c36f");
+
+//		return Platform.getPreferencesService().getInt(PHPDebugPlugin.ID, key, 0, null);
 	}
 
 	// the defaults for the UI preferences

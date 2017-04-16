@@ -27,8 +27,18 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpointType
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointManagerImpl
 import com.intellij.xdebugger.impl.breakpoints.XLineBreakpointImpl
 import com.sun.jna.platform.win32.User32
+import org.eclipse.core.runtime.ILog
+import org.eclipse.core.runtime.ILogListener
+import org.eclipse.core.runtime.IStatus
+import org.eclipse.debug.core.DebugPlugin
+import org.eclipse.debug.core.IDebugEventSetListener
 import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpCommand
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin
+import org.osgi.framework.Bundle
 //import phizdets.MapPhizdetsStack
 import vgrechka.*
 import vgrechka.idea.*
@@ -55,6 +65,21 @@ class PhizdetsIDEAPlugin : ApplicationComponent {
         pm.addProjectManagerListener(object : ProjectManagerListener {
             override fun projectOpened(project: Project) {
                 clog("Opened project", project.name)
+
+                DebugPlugin()
+                val debugPlugin = DebugPlugin.getDefault()
+                debugPlugin.addDebugEventListener {events->
+                    "break here"
+                }
+
+                DBGpSessionHandler.getInstance().addSessionListener(object:IDBGpSessionListener {
+                    override fun SessionCreated(session: DBGpSession): Boolean {
+                        clog("--- SessionCreated")
+                        session.startSession()
+                        session.sendSyncCmd(DBGpCommand.run)
+                        return true
+                    }
+                })
 
                 val daemon = XDebugCommunicationDaemon()
                 daemon.init()
@@ -244,7 +269,31 @@ class PhizdetsIDEAPlugin : ApplicationComponent {
     }
 }
 
+val kindaEclipseLog: ILog by lazy {object:ILog {
+    override fun removeLogListener(p0: ILogListener?) {
+        throw UnsupportedOperationException("Implement me, please, fuck you")
+    }
 
+    override fun addLogListener(p0: ILogListener?) {
+        throw UnsupportedOperationException("Implement me, please, fuck you")
+    }
+
+    override fun getBundle(): Bundle {
+        throw UnsupportedOperationException("Implement me, please, fuck you")
+    }
+
+    override fun log(shit: IStatus) {
+        val statusString = when (shit.severity) {
+            IStatus.OK -> "OK"
+            IStatus.INFO -> "INFO"
+            IStatus.WARNING -> "WARNING"
+            IStatus.ERROR -> "ERROR"
+            IStatus.CANCEL -> "CANCEL"
+            else -> wtf("faed31ba-f73e-49a7-943d-3de7ba1b8e54")
+        }
+        clog("$statusString: ${shit.message}")
+    }
+}}
 
 
 

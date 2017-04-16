@@ -3,9 +3,7 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/phizdets/phizdets-idea/eclipse-lib/com.ibm.icu_56.1.0.v201601250100.jar!/" />
       <root url="jar://$PROJECT_DIR$/phizdets/phizdets-idea/eclipse-lib/javax.inject_1.0.0.v20091030.jar!/" />
-      <root url="jar://$PROJECT_DIR$/phizdets/phizdets-idea/eclipse-lib/javax.xml_1.3.4.v201005080400.jar!/" />
       <root url="jar://$PROJECT_DIR$/phizdets/phizdets-idea/eclipse-lib/org.apache.commons.lang3_3.1.0.v201403281430.jar!/" />
-      <root url="jar://$PROJECT_DIR$/phizdets/phizdets-idea/eclipse-lib/org.apache.xerces_2.9.0.v201101211617.jar!/" />
       <root url="jar://$PROJECT_DIR$/phizdets/phizdets-idea/eclipse-lib/org.apache.xml.resolver_1.2.0.v201005080400.jar!/" />
       <root url="jar://$PROJECT_DIR$/phizdets/phizdets-idea/eclipse-lib/org.eclipse.compare.core_3.6.0.v20160418-1534.jar!/" />
       <root url="jar://$PROJECT_DIR$/phizdets/phizdets-idea/eclipse-lib/org.eclipse.compare_3.7.1.v20170103-1805.jar!/" />

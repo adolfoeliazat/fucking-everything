@@ -40,15 +40,18 @@ public class PHPProjectPreferences {
 	}
 
 	public static boolean getStopAtFirstLine(IProject project) {
-		boolean stop = Platform.getPreferencesService().getBoolean(PHPDebugPlugin.ID,
-				PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, true, null);
-		if (project != null && getElementSettingsForProject(project)) {
-			IScopeContext projectScope = getProjectScope(project);
-			stop = projectScope.getNode(getPreferenceNodeQualifier())
-					.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, stop);
-		}
-		return stop;
+		// @pdt-3
+		return false;
 
+
+//		boolean stop = Platform.getPreferencesService().getBoolean(PHPDebugPlugin.ID,
+//				PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, true, null);
+//		if (project != null && getElementSettingsForProject(project)) {
+//			IScopeContext projectScope = getProjectScope(project);
+//			stop = projectScope.getNode(getPreferenceNodeQualifier())
+//					.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, stop);
+//		}
+//		return stop;
 	}
 
 	public static boolean isSortByName() {
