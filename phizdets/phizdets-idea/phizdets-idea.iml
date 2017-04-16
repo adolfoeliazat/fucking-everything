@@ -7,6 +7,14 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/eclipse-src/org.eclipse.php.debug.core/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/eclipse-src/org.eclipse.php.debug.daemon/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/eclipse-src/org.eclipse.equinox.common/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/eclipse-src/org.eclipse.php.core/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/eclipse-src/org.eclipse.php.core.parser/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/eclipse-src/org.eclipse.php.server.core/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/eclipse-src/org.eclipse.php.core.parser/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/eclipse-src/org.eclipse.php.ui/src" isTestSource="false" />
     </content>
     <orderEntry type="jdk" jdkName="idea-sdk-4-phizdets" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -32,5 +40,6 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="eclipse-shit-5" level="project" />
   </component>
 </module>
