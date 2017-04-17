@@ -132,11 +132,10 @@ public class PyDebugRunner extends GenericProgramRunner {
     final ServerSocket serverSocket = PhizdetsCommandLineState.createServerSocket();
     final int serverLocalPort = serverSocket.getLocalPort();
     RunProfile profile = environment.getRunProfile();
+
     final ExecutionResult result =
       pyState.execute(environment.getExecutor(), createCommandLinePatchers(environment.getProject(), pyState, profile, serverLocalPort));
 
-    // @phi-running-shit
-      XDebug.INSTANCE.init(environment.getProject());
 
     return XDebuggerManager.getInstance(environment.getProject()).
       startSession(environment, new XDebugProcessStarter() {
@@ -164,7 +163,10 @@ public class PyDebugRunner extends GenericProgramRunner {
   @Override
   protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull final ExecutionEnvironment environment)
     throws ExecutionException {
-    XDebugSession session = createSession(state, environment);
+      // @phi-running-shit
+      XDebug.INSTANCE.init(environment.getProject());
+
+      XDebugSession session = createSession(state, environment);
     initSession(session, state, environment.getExecutor());
     return session.getRunContentDescriptor();
   }

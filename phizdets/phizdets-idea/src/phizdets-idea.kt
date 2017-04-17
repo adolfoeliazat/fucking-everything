@@ -1,6 +1,7 @@
 package vgrechka.phizdetsidea
 
 import com.intellij.debugger.DebuggerManager
+import com.intellij.execution.ExecutionException
 import com.intellij.ide.actions.ShowStructureSettingsAction
 import com.intellij.ide.plugins.PluginManager
 import com.intellij.openapi.actionSystem.ActionManager
@@ -294,7 +295,7 @@ object XDebug {
                     if (point.type.id == "kotlin-line") {
                         val fileLine = FileLine(point.fileUrl, point.line + 1)
                         val generatedLine = mapping.penetration.sourceFileLineToGeneratedLine[fileLine] ?: run {
-                            return Messages.showErrorDialog("No fucking mapping for $fileLine", "Fuck You")
+                            throw ExecutionException("No fucking mapping for $fileLine")
                         }
                         res += Breakpoint(generatedLine, "breakpoint at PHP line $generatedLine <-- $fileLine")-{o->
                             clog("Will set ${o.descr}")
