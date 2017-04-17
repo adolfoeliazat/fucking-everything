@@ -136,7 +136,7 @@ public class PyDebugRunner extends GenericProgramRunner {
       pyState.execute(environment.getExecutor(), createCommandLinePatchers(environment.getProject(), pyState, profile, serverLocalPort));
 
     // @phi-running-shit
-      XDebug.INSTANCE.init();
+      XDebug.INSTANCE.init(environment.getProject());
 
     return XDebuggerManager.getInstance(environment.getProject()).
       startSession(environment, new XDebugProcessStarter() {

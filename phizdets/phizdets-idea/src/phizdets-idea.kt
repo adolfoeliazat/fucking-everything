@@ -103,10 +103,6 @@ class PhizdetsIDEAPlugin : ApplicationComponent {
                 }
 
                 private fun testPreparePHPDebugger() {
-                    preparePHPDebugger()
-                }
-
-                fun preparePHPDebugger(): Boolean {
                     val mapping = SourceMappingCache.getMapping("E:\\fegh\\aps\\aps-back-phi\\out\\production\\aps-back-phi\\aps-back-phi.php.map")
                     val bm = XDebuggerManager.getInstance(event.project!!).breakpointManager as XBreakpointManagerImpl
                     for (point in bm.allBreakpoints) {
@@ -115,14 +111,12 @@ class PhizdetsIDEAPlugin : ApplicationComponent {
                                 val fileLine = FileLine(point.fileUrl, point.line + 1)
                                 val generatedLine = mapping.penetration.sourceFileLineToGeneratedLine[fileLine] ?: run {
                                     Messages.showErrorDialog("No fucking mapping for $fileLine", "Fuck You")
-                                    return false
                                 }
                                 clog("Setting breakpoint at line $generatedLine <-- $fileLine")
                             }
                         }
                     }
                     Messages.showInfoMessage("Fuck, yeah", "Cool")
-                    return true
                 }
 
                 fun key(code: Int) {
@@ -287,7 +281,30 @@ object XDebug {
     var daemon by notNull<XDebugCommunicationDaemon>()
 
     @Synchronized
-    fun init() {
+    fun init(project: Project) {
+        // TODO:vgrechka Support multiple debug sessions
+
+        class Breakpoint(val phpLine: Int, val descr: String)
+        val phpLineBreakpoints = run {
+            val res = mutableListOf<Breakpoint>()
+            val mapping = SourceMappingCache.getMapping("E:\\fegh\\aps\\aps-back-phi\\out\\production\\aps-back-phi\\aps-back-phi.php.map")
+            val bm = XDebuggerManager.getInstance(project).breakpointManager as XBreakpointManagerImpl
+            for (point in bm.allBreakpoints) {
+                if (point is XLineBreakpointImpl) {
+                    if (point.type.id == "kotlin-line") {
+                        val fileLine = FileLine(point.fileUrl, point.line + 1)
+                        val generatedLine = mapping.penetration.sourceFileLineToGeneratedLine[fileLine] ?: run {
+                            return Messages.showErrorDialog("No fucking mapping for $fileLine", "Fuck You")
+                        }
+                        res += Breakpoint(generatedLine, "breakpoint at PHP line $generatedLine <-- $fileLine")-{o->
+                            clog("Will set ${o.descr}")
+                        }
+                    }
+                }
+            }
+            res
+        }
+
         if (initialized && debugReinitializeAllShitEveryTime) {
             DBGpSessionHandler.getInstance().removeSessionListener(sessionListener)
             daemon.stopListen()
@@ -304,17 +321,22 @@ object XDebug {
                 }
                 session.startSession()
 
-                val res = session.sendSyncCmd(DBGpCommand.breakPointSet,
-                    "-t line" +
-                    " -f file://E:/fegh/aps/aps-back-phi/out/production/aps-back-phi/aps-back-phi.php" +
-                    " -n 7")
-                if (res.errorCode != DBGpResponse.ERROR_OK) {
-                    ApplicationManager.getApplication().invokeLater {
-                        Messages.showErrorDialog("errorCode = ${res.errorCode}\n" +
-                                                 "errorMessage = ${res.errorMessage}",
-                                                 "Fuck...")
+                phpLineBreakpoints.forEach {breakpoint->
+                    val res = session.sendSyncCmd(DBGpCommand.breakPointSet, "" +
+                        "-t line" +
+                        " -f file://E:/fegh/aps/aps-back-phi/out/production/aps-back-phi/aps-back-phi.php" +
+                        " -n ${breakpoint.phpLine}")
+                    if (res.errorCode != DBGpResponse.ERROR_OK) {
+                        ApplicationManager.getApplication().invokeLater {
+                            Messages.showErrorDialog(
+                                "Can't set ${breakpoint.descr}\n\n" +
+                                    "errorCode = ${res.errorCode}\n" +
+                                    "errorMessage = ${res.errorMessage}",
+                                "Fuck...")
+                        }
+                        session.endSession()
+                        return@IDBGpSessionListener true
                     }
-                    return@IDBGpSessionListener true
                 }
 
                 session.sendSyncCmd(DBGpCommand.run)
@@ -325,6 +347,8 @@ object XDebug {
             daemon = XDebugCommunicationDaemon()
             daemon.init()
             daemon.startListen()
+
+            initialized = true
         }
     }
 }
