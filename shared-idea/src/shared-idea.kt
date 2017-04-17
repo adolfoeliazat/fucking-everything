@@ -16,10 +16,14 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.wm.IdeFocusManager
+import com.intellij.openapi.wm.ToolWindowId
+import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.unscramble.AnnotateStackTraceAction
+import com.intellij.util.ui.UIUtil
 import java.awt.BorderLayout
 import javax.swing.JPanel
 import vgrechka.*
@@ -133,6 +137,29 @@ fun openFile(project: Project, path: String, line: Int): Boolean {
     IdeFocusManager.getGlobalInstance().requestFocus(editor.contentComponent, true)
     return true
 }
+
+object IDEAStuff {
+    fun showErrorBalloonForDebugToolWindow(project: Project, fullMessage: String) {
+        val toolWindowManager = ToolWindowManager.getInstance(project)
+        val toolWindowId = ToolWindowId.DEBUG
+        if (toolWindowManager.canShowNotification(toolWindowId)) {
+            toolWindowManager.notifyByBalloon(toolWindowId, MessageType.ERROR, fullMessage, null, null)
+        } else {
+            Messages.showErrorDialog(project, UIUtil.toHtml(fullMessage), "")
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

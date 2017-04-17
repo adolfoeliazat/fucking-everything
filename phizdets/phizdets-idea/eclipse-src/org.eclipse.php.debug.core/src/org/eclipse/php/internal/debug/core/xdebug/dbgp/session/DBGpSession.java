@@ -278,12 +278,18 @@ public class DBGpSession {
 									lineno = Integer.parseInt(line);
 									String filename = DBGpUtils
 											.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename")); //$NON-NLS-1$
-									filename = debugTarget.mapToWorkspaceFileIfRequired(filename);
+
+                                    // @phi-debug-1
+									// filename = debugTarget.mapToWorkspaceFileIfRequired(filename);
+
 									// Debug target might be already
 									// disconnected
 									if (debugTarget != null) {
 										debugTarget.breakpointHit(filename, lineno, exception);
 									}
+									if (fuckingDebugTarget != null) {
+                                        fuckingDebugTarget.breakpointHit(filename, lineno, exception);
+                                    }
 								} catch (NumberFormatException nfe) {
 									DBGpLogger.logException("Unexpected number format exception", //$NON-NLS-1$
 											this, nfe);
@@ -293,9 +299,12 @@ public class DBGpSession {
 					} else if (cmd.equals(DBGpCommand.stepInto) || cmd.equals(DBGpCommand.StepOut)
 							|| cmd.equals(DBGpCommand.stepOver)) {
 						// Debug target might be already disconnected
-						if (debugTarget != null) {
-							debugTarget.suspended(DebugEvent.STEP_END);
-						}
+                        if (debugTarget != null) {
+                            debugTarget.suspended(DebugEvent.STEP_END);
+                        }
+                        if (fuckingDebugTarget != null) {
+                            fuckingDebugTarget.suspended(DebugEvent.STEP_END);
+                        }
 					} else {
 						/*
 						 * we got another status response, probably due to

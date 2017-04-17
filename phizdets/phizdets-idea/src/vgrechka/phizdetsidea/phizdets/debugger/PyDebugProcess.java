@@ -97,6 +97,7 @@ public class PyDebugProcess extends XDebugProcess implements IPyDebugProcess, Pr
   private static final Logger LOG = Logger.getInstance("#vgrechka.phizdetsidea.phizdets.debugger.PyDebugProcess");
   private static final int CONNECTION_TIMEOUT = 60000;
 
+  public volatile FuckingSession fuckingSession;
   private final ProcessDebugger myDebugger;
   private final XBreakpointHandler[] myBreakpointHandlers;
   private final PyDebuggerEditorsProvider myEditorsProvider;
@@ -561,7 +562,10 @@ public class PyDebugProcess extends XDebugProcess implements IPyDebugProcess, Pr
 
   @Override
   public void resume(@Nullable XSuspendContext context) {
-    passToAllThreads(ResumeOrStepCommand.Mode.RESUME);
+      // @phi-debug-1
+      fuckingSession.resume();
+
+      // passToAllThreads(ResumeOrStepCommand.Mode.RESUME);
   }
 
   @Override

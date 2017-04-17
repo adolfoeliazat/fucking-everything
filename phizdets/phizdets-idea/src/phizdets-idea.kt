@@ -20,11 +20,18 @@ import com.intellij.openapi.project.ProjectManagerListener
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable
 import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.wm.ToolWindowId
+import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.util.PlatformUtils
 import com.intellij.util.lang.UrlClassLoader
+import com.intellij.util.ui.UIUtil
+import com.intellij.xdebugger.XDebugSession
 import com.intellij.xdebugger.XDebuggerManager
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType
+import com.intellij.xdebugger.frame.XSuspendContext
+import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointManagerImpl
 import com.intellij.xdebugger.impl.breakpoints.XLineBreakpointImpl
 import com.sun.jna.platform.win32.User32
@@ -55,6 +62,11 @@ import java.awt.Robot
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import kotlin.properties.Delegates.notNull
+
+// TODO:vgrechka Support multiple debug sessions
+
+// TODO:vgrechka First debug run sometimes doesn't result in sessionListener invocation.
+//               Hence no breakpoints are sent, etc. Maybe daemon.startListen() should be called beforehand
 
 class PhizdetsIDEAPlugin : ApplicationComponent {
     override fun getComponentName(): String {
@@ -282,10 +294,8 @@ object XDebug {
     var daemon by notNull<XDebugCommunicationDaemon>()
 
     @Synchronized
-    fun init(project: Project) {
-        // TODO:vgrechka Support multiple debug sessions
-
-        class Breakpoint(val phpLine: Int, val descr: String)
+    fun init(project: Project, xsession: XDebugSession, debugProcess: PyDebugProcess) {
+        class Breakpoint(val phpLine: Int, val descr: String, val xbreakpoint: XBreakpointBase<*, *, *>)
         val phpLineBreakpoints = run {
             val res = mutableListOf<Breakpoint>()
             val mapping = SourceMappingCache.getMapping("E:\\fegh\\aps\\aps-back-phi\\out\\production\\aps-back-phi\\aps-back-phi.php.map")
@@ -297,7 +307,7 @@ object XDebug {
                         val generatedLine = mapping.penetration.sourceFileLineToGeneratedLine[fileLine] ?: run {
                             throw ExecutionException("No fucking mapping for $fileLine")
                         }
-                        res += Breakpoint(generatedLine, "breakpoint at PHP line $generatedLine <-- $fileLine")-{o->
+                        res += Breakpoint(generatedLine, "breakpoint at PHP line $generatedLine <-- $fileLine", point)-{o->
                             clog("Will set ${o.descr}")
                         }
                     }
@@ -314,12 +324,45 @@ object XDebug {
 
         if (!initialized) {
             sessionListener = IDBGpSessionListener {session->
-                clog("--- SessionCreated")
-                session.fuckingDebugTarget = FuckingDebugTarget {
-                    ApplicationManager.getApplication().invokeLater {
-                        Messages.showInfoMessage("It's over. Completely fucking over...", "Yeah")
+                fun noise(s: String) {
+                    clog("NOISE: " + s)
+                }
+
+                noise("SessionCreated")
+
+                debugProcess.fuckingSession = object:FuckingSession {
+                    override fun resume() {
+                        val res = session.sendSyncCmd(DBGpCommand.run)
+                        if (res.errorCode != DBGpResponse.ERROR_OK) {
+                            wtfBalloon(project,
+                                       "Can't fucking resume\n\n" +
+                                           "errorCode = ${res.errorCode}\n" +
+                                           "errorMessage = ${res.errorMessage}")
+                        }
                     }
                 }
+
+                session.fuckingDebugTarget = object:FuckingDebugTarget {
+                    override fun suspended(detail: Int) {
+                        noise("suspended: detail = $detail")
+                    }
+
+                    override fun breakpointHit(fileName: String, lineNo: Int, exception: String) {
+                        noise("breakpointHit: fileName = $fileName; lineNo = $lineNo; exception = $exception")
+                        val xbreakpoint = phpLineBreakpoints.find {it.phpLine == lineNo}?.xbreakpoint
+                            ?: return wtfBalloon(project, "f86f657c-2f0e-4b61-8253-086fe33ce6c0")
+                        xsession.breakpointReached(xbreakpoint, null, object:XSuspendContext() {
+                        })
+                    }
+
+                    override fun sessionEnded() {
+                        noise("sessionEnded")
+                        ApplicationManager.getApplication().invokeLater {
+                            Messages.showInfoMessage("It's over. Completely fucking over...", "Yeah")
+                        }
+                    }
+                }
+
                 session.startSession()
 
                 phpLineBreakpoints.forEach {breakpoint->
@@ -328,13 +371,10 @@ object XDebug {
                         " -f file://E:/fegh/aps/aps-back-phi/out/production/aps-back-phi/aps-back-phi.php" +
                         " -n ${breakpoint.phpLine}")
                     if (res.errorCode != DBGpResponse.ERROR_OK) {
-                        ApplicationManager.getApplication().invokeLater {
-                            Messages.showErrorDialog(
-                                "Can't set ${breakpoint.descr}\n\n" +
-                                    "errorCode = ${res.errorCode}\n" +
-                                    "errorMessage = ${res.errorMessage}",
-                                "Fuck...")
-                        }
+                        wtfBalloon(project,
+                                   "Can't set ${breakpoint.descr}\n\n" +
+                                       "errorCode = ${res.errorCode}\n" +
+                                       "errorMessage = ${res.errorMessage}")
                         session.endSession()
                         return@IDBGpSessionListener true
                     }
@@ -354,6 +394,11 @@ object XDebug {
     }
 }
 
+private fun wtfBalloon(project: Project, message: String) {
+    ApplicationManager.getApplication().invokeLater {
+        IDEAStuff.showErrorBalloonForDebugToolWindow(project, "WTF: " + message)
+    }
+}
 
 
 

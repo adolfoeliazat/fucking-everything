@@ -33,10 +33,7 @@ import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.xdebugger.XDebugProcess;
-import com.intellij.xdebugger.XDebugProcessStarter;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerManager;
+import com.intellij.xdebugger.*;
 import vgrechka.phizdetsidea.XDebug;
 import vgrechka.phizdetsidea.phizdets.PhizdetsHelper;
 import vgrechka.phizdetsidea.phizdets.console.PydevConsoleRunnerFactory;
@@ -144,6 +141,8 @@ public class PyDebugRunner extends GenericProgramRunner {
         public XDebugProcess start(@NotNull final XDebugSession session) {
           PyDebugProcess pyDebugProcess =
             createDebugProcess(session, serverSocket, result, pyState);
+            // @phi-running-shit
+            XDebug.INSTANCE.init(environment.getProject(), session, pyDebugProcess);
 
           createConsoleCommunicationAndSetupActions(environment.getProject(), result, pyDebugProcess, session);
           return pyDebugProcess;
@@ -163,15 +162,16 @@ public class PyDebugRunner extends GenericProgramRunner {
   @Override
   protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull final ExecutionEnvironment environment)
     throws ExecutionException {
-      // @phi-running-shit
-      XDebug.INSTANCE.init(environment.getProject());
-
       XDebugSession session = createSession(state, environment);
+
     initSession(session, state, environment.getExecutor());
     return session.getRunContentDescriptor();
   }
 
   protected void initSession(XDebugSession session, RunProfileState state, Executor executor) {
+//      session.addSessionListener(new XDebugSessionListener() {
+//
+//      });
   }
 
   public static int findIndex(List<String> paramList, String paramName) {
