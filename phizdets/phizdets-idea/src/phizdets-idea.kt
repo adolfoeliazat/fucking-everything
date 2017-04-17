@@ -22,14 +22,19 @@ import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
+import com.intellij.pom.Navigatable
 import com.intellij.util.PlatformUtils
 import com.intellij.util.lang.UrlClassLoader
 import com.intellij.util.ui.UIUtil
 import com.intellij.xdebugger.XDebugSession
 import com.intellij.xdebugger.XDebuggerManager
+import com.intellij.xdebugger.XSourcePosition
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType
+import com.intellij.xdebugger.frame.XExecutionStack
+import com.intellij.xdebugger.frame.XStackFrame
 import com.intellij.xdebugger.frame.XSuspendContext
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointManagerImpl
@@ -351,7 +356,42 @@ object XDebug {
                         noise("breakpointHit: fileName = $fileName; lineNo = $lineNo; exception = $exception")
                         val xbreakpoint = phpLineBreakpoints.find {it.phpLine == lineNo}?.xbreakpoint
                             ?: return wtfBalloon(project, "f86f657c-2f0e-4b61-8253-086fe33ce6c0")
+
+                        val frame = object:XStackFrame() {
+                            override fun getSourcePosition(): XSourcePosition {
+                                return object:XSourcePosition {
+                                    override fun getFile(): VirtualFile {
+                                        return IDEAStuff.getVirtualFileByPath("E:/fegh/aps/aps-back-phi/src/aps-back-phi.kt")!!
+                                    }
+
+                                    override fun getOffset(): Int {
+                                        return 0
+                                    }
+
+                                    override fun getLine(): Int {
+                                        return 0
+                                    }
+
+                                    override fun createNavigatable(project: Project): Navigatable {
+                                        return phpLineBreakpoints.first().xbreakpoint.getNavigatable()!!
+                                    }
+                                }
+                            }
+                        }
+
+                        val executionStack = object:XExecutionStack("Pizda") {
+                            override fun getTopFrame(): XStackFrame? {
+                                return frame
+                            }
+
+                            override fun computeStackFrames(firstFrameIndex: Int, container: XStackFrameContainer) {
+                            }
+                        }
+//                        xsession.setCurrentStackFrame(executionStack, frame, true)
                         xsession.breakpointReached(xbreakpoint, null, object:XSuspendContext() {
+                            override fun getActiveExecutionStack(): XExecutionStack? {
+                                return executionStack
+                            }
                         })
                     }
 

@@ -19,6 +19,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
@@ -147,6 +148,10 @@ object IDEAStuff {
         } else {
             Messages.showErrorDialog(project, UIUtil.toHtml(fullMessage), "")
         }
+    }
+
+    fun getVirtualFileByPath(path: String): VirtualFile? {
+        return LocalFileSystem.getInstance().findFileByPath(path)
     }
 }
 
