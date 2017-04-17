@@ -359,23 +359,7 @@ object XDebug {
 
                         val frame = object:XStackFrame() {
                             override fun getSourcePosition(): XSourcePosition {
-                                return object:XSourcePosition {
-                                    override fun getFile(): VirtualFile {
-                                        return IDEAStuff.getVirtualFileByPath("E:/fegh/aps/aps-back-phi/src/aps-back-phi.kt")!!
-                                    }
-
-                                    override fun getOffset(): Int {
-                                        return 0
-                                    }
-
-                                    override fun getLine(): Int {
-                                        return 0
-                                    }
-
-                                    override fun createNavigatable(project: Project): Navigatable {
-                                        return phpLineBreakpoints.first().xbreakpoint.getNavigatable()!!
-                                    }
-                                }
+                                return xbreakpoint.getSourcePosition()!!
                             }
                         }
 
@@ -387,7 +371,7 @@ object XDebug {
                             override fun computeStackFrames(firstFrameIndex: Int, container: XStackFrameContainer) {
                             }
                         }
-//                        xsession.setCurrentStackFrame(executionStack, frame, true)
+
                         xsession.breakpointReached(xbreakpoint, null, object:XSuspendContext() {
                             override fun getActiveExecutionStack(): XExecutionStack? {
                                 return executionStack
