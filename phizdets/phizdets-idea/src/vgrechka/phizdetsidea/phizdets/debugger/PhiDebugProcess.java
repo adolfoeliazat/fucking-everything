@@ -529,14 +529,17 @@ public class PhiDebugProcess extends XDebugProcess implements IPyDebugProcess, P
   @Override
   public void startStepOver(@Nullable XSuspendContext context) {
       // @phi-debug-1
-      xDebugDaemonAndShit.ideaSays_stepOverFrom();
+      xDebugDaemonAndShit.ideaSays_stepOver();
 
       // passToCurrentThread(context, ResumeOrStepCommand.Mode.STEP_OVER);
   }
 
   @Override
   public void startStepInto(@Nullable XSuspendContext context) {
-    passToCurrentThread(context, ResumeOrStepCommand.Mode.STEP_INTO);
+      // @phi-debug-1
+      xDebugDaemonAndShit.ideaSays_stepInto();
+
+      // passToCurrentThread(context, ResumeOrStepCommand.Mode.STEP_INTO);
   }
 
   public void startStepIntoMyCode(@Nullable XSuspendContext context) {

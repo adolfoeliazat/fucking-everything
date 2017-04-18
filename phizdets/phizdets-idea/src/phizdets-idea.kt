@@ -32,6 +32,7 @@ import com.intellij.util.lang.UrlClassLoader
 import com.intellij.util.ui.UIUtil
 import com.intellij.xdebugger.XDebugSession
 import com.intellij.xdebugger.XDebuggerManager
+import com.intellij.xdebugger.XDebuggerUtil
 import com.intellij.xdebugger.XSourcePosition
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType
 import com.intellij.xdebugger.frame.XExecutionStack
@@ -368,8 +369,12 @@ class XDebugDaemonAndShit(val project: Project) {
         dbgpSend(DBGpCommand.run)
     }
 
-    fun ideaSays_stepOverFrom() {
+    fun ideaSays_stepOver() {
         dbgpSend(DBGpCommand.stepOver)
+    }
+
+    fun ideaSays_stepInto() {
+        dbgpSend(DBGpCommand.stepInto)
     }
 
     private fun dbgpSend(cmd: String) {
@@ -391,25 +396,28 @@ class XDebugDaemonAndShit(val project: Project) {
                     return
                 }
 
-                val frame = object:XStackFrame() {
-                    override fun getSourcePosition(): XSourcePosition {
-                        return object:XSourcePosition {
-                            override fun getFile(): VirtualFile {
-                                return IDEAStuff.getVirtualFileByPath(fileLine.file)!!
-                            }
+                var virtualFile = IDEAStuff.getVirtualFileByPath(fileLine.file)!!
+                var line = fileLine.line - 1
 
-                            override fun getOffset(): Int {
-                                return 0
-                            }
-
-                            override fun getLine(): Int {
-                                return fileLine.line - 1
-                            }
-
-                            override fun createNavigatable(project: Project): Navigatable {
-                                return NonNavigatable.INSTANCE
-                            }
+                val mapFilePath = virtualFile.path + ".map"
+                if (File(mapFilePath).exists()) {
+                    val mapping = SourceMappingCache.getMapping(mapFilePath)
+                    val originalMapping = mapping.getMappingForLine(fileLine.line, 1)
+                    if (originalMapping != null) {
+                        val originalFilePath = originalMapping.originalFile.replace(Regex("^file://"), "")
+                        val originalVirtualFile = IDEAStuff.getVirtualFileByPath(originalFilePath)
+                        if (originalVirtualFile == null) {
+                            wtfBalloon("50f8d771-a7ff-4c42-9ac9-aa0326529e70")
+                        } else {
+                            virtualFile = originalVirtualFile
+                            line = originalMapping.lineNumber
                         }
+                    }
+                }
+
+                val frame = object:XStackFrame() {
+                    override fun getSourcePosition(): XSourcePosition? {
+                        return XDebuggerUtil.getInstance().createPosition(virtualFile, line)
                     }
                 }
 

@@ -108,7 +108,7 @@ object SourceMappingCache {
         /*if (CACHE_MAPPINGS_BETWEEN_REQUESTS) sharedMappingCache
         else*/ makeMappingCache()
 
-    fun getMapping(mapFilePath: String) = mappingCache[mapFilePath]
+    fun getMapping(mapFilePath: String) = mappingCache[mapFilePath.replace("\\", "/")]
 
     private fun makeMappingCache(): LoadingCache<String, SourceMapping> {
         return CacheBuilder.newBuilder().build(object:CacheLoader<String, SourceMapping>() {
