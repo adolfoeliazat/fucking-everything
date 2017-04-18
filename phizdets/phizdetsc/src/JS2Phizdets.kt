@@ -69,7 +69,7 @@ class Barbos(val inputFilePath: String, val outputFilePath: String, val copyPhiE
     fun ignite() {
         val jsMapFile = File(inputFilePath + ".map")
         check(jsMapFile.exists()) {"6a5793bb-2a14-4039-a7ac-98f0a61615e5"}
-        jsMapping = SourceMappingCache.getMapping(jsMapFile.path)
+        jsMapping = theSourceMappings.getCached(jsMapFile.path)
 
         PhizdetscGlobal.debugTagPrefix = "s"
         val inFile = File(inputFilePath)
@@ -438,7 +438,7 @@ class BarbosTests {
 
         fun dumpMapFile(path: String) {
             clog(path + ":")
-            val mapping = SourceMappingCache.getMapping(path)
+            val mapping = theSourceMappings.getCached(path)
             val penetration = mapping.penetration
             penetration.dumpSourceLineToGeneratedLine()
         }

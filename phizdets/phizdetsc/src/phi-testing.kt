@@ -521,7 +521,7 @@ object MapPhizdetsStack {
             is MapPath.Just -> fuck.path
         }
 
-        val sourceMapping = SourceMappingCache.getMapping(mapPath)
+        val sourceMapping = theSourceMappings.getCached(mapPath)
 
         run { // @debug-source-map
             if (stackLine.line == 4469) {

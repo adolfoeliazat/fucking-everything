@@ -1,6 +1,10 @@
 package aps.back
 
 fun main(args: Array<String>) {
+    goBananas()
+}
+
+private fun goBananas() {
     printSomeShit("Fuck")
     printSomeShit("Shit")
     printSomeShit("Bitch")

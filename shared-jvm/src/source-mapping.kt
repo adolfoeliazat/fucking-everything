@@ -6,7 +6,6 @@ import com.google.common.cache.LoadingCache
 import com.google.debugging.sourcemap.SourceMapConsumerFactory
 import com.google.debugging.sourcemap.SourceMapping
 import java.io.File
-import kotlin.reflect.KProperty
 
 val SourceMapping.penetration by AttachedComputedShit<SourceMapping, SourceMapConsumerPenetration> {sourceMapping->
     val penetration = SourceMapConsumerPenetration()
@@ -103,20 +102,16 @@ class SourceMapConsumerPenetration {
     }
 }
 
-object SourceMappingCache {
-    private val mappingCache =
-        /*if (CACHE_MAPPINGS_BETWEEN_REQUESTS) sharedMappingCache
-        else*/ makeMappingCache()
+val theSourceMappings = SourceMappings()
 
-    fun getMapping(mapFilePath: String) = mappingCache[mapFilePath.replace("\\", "/")]
+class SourceMappings {
+    private val cache = CacheBuilder.newBuilder().build(object:CacheLoader<String, SourceMapping>() {
+        override fun load(mapFilePath: String): SourceMapping {
+            return SourceMapConsumerFactory.parse(File(mapFilePath).readText())
+        }
+    })
 
-    private fun makeMappingCache(): LoadingCache<String, SourceMapping> {
-        return CacheBuilder.newBuilder().build(object:CacheLoader<String, SourceMapping>() {
-            override fun load(mapPath: String): SourceMapping {
-                return SourceMapConsumerFactory.parse(File(mapPath).readText())
-            }
-        })
-    }
+    fun getCached(mapFilePath: String): SourceMapping = cache[mapFilePath.replace("\\", "/")]
 }
 
 

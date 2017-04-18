@@ -118,14 +118,14 @@ class PhizdetsIDEAPlugin : ApplicationComponent {
                 }
 
                 private fun fuckAroundWithSourceMap() {
-                    val mapping = SourceMappingCache.getMapping("E:\\fegh\\aps\\aps-back-phi\\out\\production\\aps-back-phi\\aps-back-phi.php.map")
+                    val mapping = SourceMappings().getCached("E:\\fegh\\aps\\aps-back-phi\\out\\production\\aps-back-phi\\aps-back-phi.php.map")
                     val penetration = mapping.penetration
                     penetration.dumpSourceLineToGeneratedLine()
                     "break on me"
                 }
 
                 private fun testPreparePHPDebugger() {
-                    val mapping = SourceMappingCache.getMapping("E:\\fegh\\aps\\aps-back-phi\\out\\production\\aps-back-phi\\aps-back-phi.php.map")
+                    val mapping = SourceMappings().getCached("E:\\fegh\\aps\\aps-back-phi\\out\\production\\aps-back-phi\\aps-back-phi.php.map")
                     val bm = XDebuggerManager.getInstance(event.project!!).breakpointManager as XBreakpointManagerImpl
                     for (point in bm.allBreakpoints) {
                         if (point is XLineBreakpointImpl) {
@@ -299,6 +299,12 @@ val kindaEclipseLog: ILog by lazy {object:ILog {
 class XDebugDaemonAndShit(val project: Project) {
     class Breakpoint(val phpLine: Int, val descr: String, val xbreakpoint: XBreakpointBase<*, *, *>)
 
+    enum class StepMode {
+        Kotlin, PHP
+    }
+
+    val stepMode = StepMode.Kotlin
+
     companion object {
         @Volatile var instance: XDebugDaemonAndShit? = null
     }
@@ -308,6 +314,7 @@ class XDebugDaemonAndShit(val project: Project) {
     private var phpLineBreakpoints by notNullOnce<MutableList<Breakpoint>>()
     private var sessionListener by notNullOnce<IDBGpSessionListener>()
     private var daemon by notNullOnce<XDebugCommunicationDaemon>()
+    private val sourceMappings = SourceMappings()
 
     init {
         if (instance != null)
@@ -316,7 +323,7 @@ class XDebugDaemonAndShit(val project: Project) {
 
         phpLineBreakpoints = run {
             val res = mutableListOf<Breakpoint>()
-            val mapping = SourceMappingCache.getMapping("E:\\fegh\\aps\\aps-back-phi\\out\\production\\aps-back-phi\\aps-back-phi.php.map")
+            val mapping = sourceMappings.getCached("E:\\fegh\\aps\\aps-back-phi\\out\\production\\aps-back-phi\\aps-back-phi.php.map")
             val bm = XDebuggerManager.getInstance(project).breakpointManager as XBreakpointManagerImpl
             for (point in bm.allBreakpoints) {
                 if (point is XLineBreakpointImpl) {
@@ -374,15 +381,32 @@ class XDebugDaemonAndShit(val project: Project) {
     }
 
     fun ideaSays_stepInto() {
-        dbgpSend(DBGpCommand.stepInto)
+        when (stepMode) {
+            XDebugDaemonAndShit.StepMode.Kotlin -> {
+                dbgpSend(DBGpCommand.breakPointSet, "" +
+                    "-t call" +
+                    " -m phiExpressionStatement") || return
+
+                dbgpSend(DBGpCommand.run) || return
+                // TODO:vgrechka Remove function breakpoint
+            }
+
+            XDebugDaemonAndShit.StepMode.PHP -> {
+                dbgpSend(DBGpCommand.stepInto)
+            }
+        }
     }
 
-    private fun dbgpSend(cmd: String) {
-        val res = dbgpSession.sendSyncCmd(cmd)
-        if (res.errorCode != DBGpResponse.ERROR_OK) {
-            wtfBalloon("Can't fucking `$cmd`\n\n" +
-                           "errorCode = ${res.errorCode}\n" +
-                           "errorMessage = ${res.errorMessage}")
+    private fun dbgpSend(cmd: String, args: String? = null): Boolean {
+        val res = dbgpSession.sendSyncCmd(cmd, args)
+        return when (res.errorCode) {
+            DBGpResponse.ERROR_OK -> true
+            else -> {
+                wtfBalloon("Can't fucking `$cmd`\n\n" +
+                               "errorCode = ${res.errorCode}\n" +
+                               "errorMessage = ${res.errorMessage}")
+                false
+            }
         }
     }
 
@@ -390,108 +414,55 @@ class XDebugDaemonAndShit(val project: Project) {
         noise("dbgpSessionSays_suspended: detail = $detail")
         when (detail) {
             DebugEvent.STEP_END -> {
-                val fileLine = getCurrentFileLine()
-                if (fileLine == null) {
-                    clog("2e35e98d-1a4c-4b53-bbf4-331aebe842e5")
-                    return
-                }
-
-                var virtualFile = IDEAStuff.getVirtualFileByPath(fileLine.file)!!
-                var line = fileLine.line - 1
-
-                val mapFilePath = virtualFile.path + ".map"
-                if (File(mapFilePath).exists()) {
-                    val mapping = SourceMappingCache.getMapping(mapFilePath)
-                    val originalMapping = mapping.getMappingForLine(fileLine.line, 1)
-                    if (originalMapping != null) {
-                        val originalFilePath = originalMapping.originalFile.replace(Regex("^file://"), "")
-                        val originalVirtualFile = IDEAStuff.getVirtualFileByPath(originalFilePath)
-                        if (originalVirtualFile == null) {
-                            wtfBalloon("50f8d771-a7ff-4c42-9ac9-aa0326529e70")
-                        } else {
-                            virtualFile = originalVirtualFile
-                            line = originalMapping.lineNumber
-                        }
-                    }
-                }
-
-                val frame = object:XStackFrame() {
-                    override fun getSourcePosition(): XSourcePosition? {
-                        return XDebuggerUtil.getInstance().createPosition(virtualFile, line)
-                    }
-                }
-
-                val executionStack = object:XExecutionStack("Pizda") {
-                    override fun getTopFrame(): XStackFrame? {
-                        return frame
-                    }
-
-                    override fun computeStackFrames(firstFrameIndex: Int, container: XStackFrameContainer) {
-                    }
-                }
-
-                val suspendContext: XSuspendContext = object : XSuspendContext() {
-                    override fun getActiveExecutionStack(): XExecutionStack? {
-                        return executionStack
-                    }
-                }
-
-                ideaDebugSession.positionReached(suspendContext)
+                fuckingSuspended()
             }
             else -> wtfBalloon("detail = $detail    e75b3bfb-4418-46fb-a3d8-d5d106676fb9")
         }
     }
 
-    fun getCurrentFileLine(): FileLine? {
-        val response = dbgpSession.sendSyncCmd(DBGpCommand.stackGet)
-        if (response == null) {
-            wtfBalloon("96e254f7-ef02-4d1b-8abb-0a45446662ce")
-            return null
-        }
-
-        if (response.status == DBGpResponse.STATUS_STOPPED) {
-            noise("Received STATUS_STOPPED when trying to get stack -- disposing shit")
-            disposeShit()
-            return null
-        }
-
-        val stackData = response.parentNode.firstChild
-        val line = DBGpResponse.getAttribute(stackData, "lineno")
-        val lineno = try {
-            Integer.parseInt(line)
-        } catch (nfe: NumberFormatException) {
-            wtfBalloon("96e254f7-ef02-4d1b-8abb-0a45446662ce")
-            return null
-        }
-
-        val filename = DBGpUtils.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename"))
-        return FileLine(filename, lineno)
-    }
-
-    fun dbgpSessionSays_breakpointHit() {
-        noise("dbgpSessionSays_breakpointHit")
-
-        val fileLine = getCurrentFileLine()
-        if (fileLine == null) {
-            clog("45dc483a-1975-4f13-ae20-0ae7e80cde9d")
+    private fun fuckingSuspended() {
+        val filesLines = getCurrentStack() ?: run {
+            clog("2e35e98d-1a4c-4b53-bbf4-331aebe842e5")
             return
         }
 
-        val xbreakpoint = phpLineBreakpoints.find {it.phpLine == fileLine.line}?.xbreakpoint
-            ?: return wtfBalloon("f86f657c-2f0e-4b61-8253-086fe33ce6c0")
+        val frames = mutableListOf<XStackFrame>()
+        for (fileLine in filesLines) {
+            var virtualFile = IDEAStuff.getVirtualFileByPath(fileLine.file)!!
+            var line = fileLine.line - 1
 
-        val frame = object:XStackFrame() {
-            override fun getSourcePosition(): XSourcePosition {
-                return xbreakpoint.getSourcePosition()!!
+            val mapFilePath = virtualFile.path + ".map"
+            if (File(mapFilePath).exists()) {
+                val mapping = sourceMappings.getCached(mapFilePath)
+                val originalMapping = mapping.getMappingForLine(fileLine.line, 1)
+                if (originalMapping != null) {
+                    val originalFilePath = originalMapping.originalFile.replace(Regex("^file://"), "")
+                    val originalVirtualFile = IDEAStuff.getVirtualFileByPath(originalFilePath)
+                    if (originalVirtualFile == null) {
+                        wtfBalloon("50f8d771-a7ff-4c42-9ac9-aa0326529e70")
+                    } else {
+                        virtualFile = originalVirtualFile
+                        line = originalMapping.lineNumber
+                    }
+                }
             }
+
+            val frame = object : XStackFrame() {
+                override fun getSourcePosition(): XSourcePosition? {
+                    return XDebuggerUtil.getInstance().createPosition(virtualFile, line)
+                }
+            }
+
+            frames += frame
         }
 
-        val executionStack = object:XExecutionStack("Pizda") {
+        val executionStack = object : XExecutionStack("Pizda") {
             override fun getTopFrame(): XStackFrame? {
-                return frame
+                return frames.first()
             }
 
             override fun computeStackFrames(firstFrameIndex: Int, container: XStackFrameContainer) {
+                container.addStackFrames(frames, true)
             }
         }
 
@@ -500,7 +471,74 @@ class XDebugDaemonAndShit(val project: Project) {
                 return executionStack
             }
         }
-        ideaDebugSession.breakpointReached(xbreakpoint, null, suspendContext)
+
+        ideaDebugSession.positionReached(suspendContext)
+    }
+
+    fun getCurrentStack(): List<FileLine>? {
+        val response = dbgpSession.sendSyncCmd(DBGpCommand.stackGet) ?: run {
+            wtfBalloon("96e254f7-ef02-4d1b-8abb-0a45446662ce")
+            return null
+        }
+
+        if (response.status == DBGpResponse.STATUS_STOPPED) {
+            noise("Received STATUS_STOPPED when trying to get the stack -- disposing shit")
+            disposeShit()
+            return null
+        }
+
+        return mutableListOf<FileLine>()-{res->
+            val nodes = response.parentNode.childNodes
+            for (i in 0 until nodes.length) {
+                val stackData = nodes.item(i)
+                val line = DBGpResponse.getAttribute(stackData, "lineno")
+                val lineno = try {
+                    Integer.parseInt(line)}
+                catch (nfe: NumberFormatException) {
+                    wtfBalloon("96e254f7-ef02-4d1b-8abb-0a45446662ce")
+                    return null
+                }
+
+                val filename = DBGpUtils.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename"))
+                res += FileLine(filename, lineno)
+            }
+        }
+    }
+
+    fun dbgpSessionSays_breakpointHit() {
+        noise("dbgpSessionSays_breakpointHit")
+
+        fuckingSuspended()
+
+//        val fileLine = getCurrentFileLine() ?: run {
+//            clog("45dc483a-1975-4f13-ae20-0ae7e80cde9d")
+//            return
+//        }
+//
+//        val xbreakpoint = phpLineBreakpoints.find {it.phpLine == fileLine.line}?.xbreakpoint
+//            ?: return wtfBalloon("f86f657c-2f0e-4b61-8253-086fe33ce6c0")
+//
+//        val frame = object:XStackFrame() {
+//            override fun getSourcePosition(): XSourcePosition {
+//                return xbreakpoint.getSourcePosition()!!
+//            }
+//        }
+//
+//        val executionStack = object:XExecutionStack("Pizda") {
+//            override fun getTopFrame(): XStackFrame? {
+//                return frame
+//            }
+//
+//            override fun computeStackFrames(firstFrameIndex: Int, container: XStackFrameContainer) {
+//            }
+//        }
+//
+//        val suspendContext: XSuspendContext = object : XSuspendContext() {
+//            override fun getActiveExecutionStack(): XExecutionStack? {
+//                return executionStack
+//            }
+//        }
+//        ideaDebugSession.breakpointReached(xbreakpoint, null, suspendContext)
     }
 
     fun dbgpSessionSays_sessionEnded() {
