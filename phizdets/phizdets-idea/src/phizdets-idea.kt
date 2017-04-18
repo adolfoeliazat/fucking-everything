@@ -314,7 +314,7 @@ class XDebugDaemonAndShit(val project: Project) {
     private var phpLineBreakpoints by notNullOnce<MutableList<Breakpoint>>()
     private var sessionListener by notNullOnce<IDBGpSessionListener>()
     private var daemon by notNullOnce<XDebugCommunicationDaemon>()
-    private val sourceMappings = SourceMappings()
+    private val sourceMappings = SourceMappings(allowInexactMatches = false)
 
     init {
         if (instance != null)
@@ -434,7 +434,7 @@ class XDebugDaemonAndShit(val project: Project) {
             val mapFilePath = virtualFile.path + ".map"
             if (File(mapFilePath).exists()) {
                 val mapping = sourceMappings.getCached(mapFilePath)
-                val originalMapping = mapping.getMappingForLine(fileLine.line, 1)
+                val originalMapping = mapping.getMappingForLine(fileLine.line, 999999)
                 if (originalMapping != null) {
                     val originalFilePath = originalMapping.originalFile.replace(Regex("^file://"), "")
                     val originalVirtualFile = IDEAStuff.getVirtualFileByPath(originalFilePath)
@@ -442,7 +442,7 @@ class XDebugDaemonAndShit(val project: Project) {
                         wtfBalloon("50f8d771-a7ff-4c42-9ac9-aa0326529e70")
                     } else {
                         virtualFile = originalVirtualFile
-                        line = originalMapping.lineNumber
+                        line = originalMapping.lineNumber - 1
                     }
                 }
             }

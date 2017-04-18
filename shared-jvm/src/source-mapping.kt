@@ -3,8 +3,7 @@ package vgrechka
 import com.google.common.cache.CacheBuilder
 import com.google.common.cache.CacheLoader
 import com.google.common.cache.LoadingCache
-import com.google.debugging.sourcemap.SourceMapConsumerFactory
-import com.google.debugging.sourcemap.SourceMapping
+import com.google.debugging.sourcemap.*
 import java.io.File
 
 val SourceMapping.penetration by AttachedComputedShit<SourceMapping, SourceMapConsumerPenetration> {sourceMapping->
@@ -104,15 +103,65 @@ class SourceMapConsumerPenetration {
 
 val theSourceMappings = SourceMappings()
 
-class SourceMappings {
+class SourceMappings(val allowInexactMatches: Boolean = true) {
     private val cache = CacheBuilder.newBuilder().build(object:CacheLoader<String, SourceMapping>() {
         override fun load(mapFilePath: String): SourceMapping {
-            return SourceMapConsumerFactory.parse(File(mapFilePath).readText())
+            val text = File(mapFilePath).readText()
+            return when {
+                allowInexactMatches -> SourceMapConsumerFactory.parse(text)
+                else -> parse(text, null)
+            }
         }
     })
 
     fun getCached(mapFilePath: String): SourceMapping = cache[mapFilePath.replace("\\", "/")]
+
+    private fun parse(contents: String, supplier: SourceMapSupplier?): SourceMapping {
+        // Version 1, starts with a magic string
+        if (contents.startsWith("/** Begin line maps. **/")) {
+            throw SourceMapParseException(
+                "This appears to be a V1 SourceMap, which is not supported.")
+        } else if (contents.startsWith("{")) {
+            val sourceMapObject = SourceMapObjectParser.parse(contents)
+
+            // Check basic assertions about the format.
+            when (sourceMapObject.version) {
+                3 -> {
+                    val consumer = SourceMapConsumerV3Hack()
+                    consumer.allowInexactMatches = allowInexactMatches
+                    consumer.parse(sourceMapObject, supplier)
+                    return consumer
+                }
+                else -> throw SourceMapParseException(
+                    "Unknown source map version:" + sourceMapObject.version)
+            }
+        }
+
+        throw SourceMapParseException("unable to detect source map format")
+    }
 }
+
+object DumpSourceMapTool {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val mapFilePath = args[0]
+        val mapping = SourceMappings().getCached(mapFilePath)
+        mapping.penetration.dumpSourceLineToGeneratedLine()
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
