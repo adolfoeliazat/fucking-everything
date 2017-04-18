@@ -34,7 +34,7 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.*;
-import vgrechka.phizdetsidea.XDebug;
+import vgrechka.phizdetsidea.XDebugDaemonAndShit;
 import vgrechka.phizdetsidea.phizdets.PhizdetsHelper;
 import vgrechka.phizdetsidea.phizdets.console.PydevConsoleRunnerFactory;
 import vgrechka.phizdetsidea.phizdets.console.PhizdetsConsoleView;
@@ -130,6 +130,9 @@ public class PyDebugRunner extends GenericProgramRunner {
     final int serverLocalPort = serverSocket.getLocalPort();
     RunProfile profile = environment.getRunProfile();
 
+      // @phi-running-shit
+      XDebugDaemonAndShit xDebugDaemonAndShit = new XDebugDaemonAndShit(environment.getProject());
+
     final ExecutionResult result =
       pyState.execute(environment.getExecutor(), createCommandLinePatchers(environment.getProject(), pyState, profile, serverLocalPort));
 
@@ -139,10 +142,12 @@ public class PyDebugRunner extends GenericProgramRunner {
         @Override
         @NotNull
         public XDebugProcess start(@NotNull final XDebugSession session) {
-          PyDebugProcess pyDebugProcess =
+          PhiDebugProcess pyDebugProcess =
             createDebugProcess(session, serverSocket, result, pyState);
+
             // @phi-running-shit
-            XDebug.INSTANCE.init(environment.getProject(), session, pyDebugProcess);
+            pyDebugProcess.xDebugDaemonAndShit = xDebugDaemonAndShit;
+            xDebugDaemonAndShit.setIdeaDebugSession(session);
 
           createConsoleCommunicationAndSetupActions(environment.getProject(), result, pyDebugProcess, session);
           return pyDebugProcess;
@@ -151,11 +156,11 @@ public class PyDebugRunner extends GenericProgramRunner {
   }
 
   @NotNull
-  protected PyDebugProcess createDebugProcess(@NotNull XDebugSession session,
-                                              ServerSocket serverSocket,
-                                              ExecutionResult result,
-                                              PhizdetsCommandLineState pyState) {
-    return new PyDebugProcess(session, serverSocket, result.getExecutionConsole(), result.getProcessHandler(),
+  protected PhiDebugProcess createDebugProcess(@NotNull XDebugSession session,
+                                               ServerSocket serverSocket,
+                                               ExecutionResult result,
+                                               PhizdetsCommandLineState pyState) {
+    return new PhiDebugProcess(session, serverSocket, result.getExecutionConsole(), result.getProcessHandler(),
                               pyState.isMultiprocessDebug());
   }
 
@@ -185,7 +190,7 @@ public class PyDebugRunner extends GenericProgramRunner {
 
   public static void createConsoleCommunicationAndSetupActions(@NotNull final Project project,
                                                                @NotNull final ExecutionResult result,
-                                                               @NotNull PyDebugProcess debugProcess, @NotNull XDebugSession session) {
+                                                               @NotNull PhiDebugProcess debugProcess, @NotNull XDebugSession session) {
     ExecutionConsole console = result.getExecutionConsole();
     if (console instanceof PhizdetsDebugLanguageConsoleView) {
       ProcessHandler processHandler = result.getProcessHandler();
@@ -195,7 +200,7 @@ public class PyDebugRunner extends GenericProgramRunner {
   }
 
   public static PhizdetsDebugConsoleCommunication initDebugConsoleView(Project project,
-                                                                     PyDebugProcess debugProcess,
+                                                                     PhiDebugProcess debugProcess,
                                                                      PhizdetsDebugLanguageConsoleView console,
                                                                      ProcessHandler processHandler, final XDebugSession session) {
     PhizdetsConsoleView phizdetsConsoleView = console.getPydevConsoleView();

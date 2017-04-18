@@ -26,9 +26,9 @@ import org.jetbrains.annotations.NotNull;
  */
 abstract public class ExceptionBreakpointHandler<T extends ExceptionBreakpointProperties> extends XBreakpointHandler<XBreakpoint<T>> {
 
-  private final PyDebugProcess myDebugProcess;
+  private final PhiDebugProcess myDebugProcess;
 
-  public ExceptionBreakpointHandler(@NotNull final PyDebugProcess debugProcess, @NotNull Class<? extends XBreakpointType<XBreakpoint<T>, T>> breakpointTypeClass) {
+  public ExceptionBreakpointHandler(@NotNull final PhiDebugProcess debugProcess, @NotNull Class<? extends XBreakpointType<XBreakpoint<T>, T>> breakpointTypeClass) {
     super(breakpointTypeClass);
     myDebugProcess = debugProcess;
   }

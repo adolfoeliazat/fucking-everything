@@ -292,16 +292,25 @@ val kindaEclipseLog: ILog by lazy {object:ILog {
     }
 }}
 
-object XDebug {
-    val debugReinitializeAllShitEveryTime = true
-    var initialized = false
-    var sessionListener by notNull<IDBGpSessionListener>()
-    var daemon by notNull<XDebugCommunicationDaemon>()
+class XDebugDaemonAndShit(val project: Project) {
+    class Breakpoint(val phpLine: Int, val descr: String, val xbreakpoint: XBreakpointBase<*, *, *>)
 
-    @Synchronized
-    fun init(project: Project, xsession: XDebugSession, debugProcess: PyDebugProcess) {
-        class Breakpoint(val phpLine: Int, val descr: String, val xbreakpoint: XBreakpointBase<*, *, *>)
-        val phpLineBreakpoints = run {
+    companion object {
+        @Volatile var instance: XDebugDaemonAndShit? = null
+    }
+
+    var ideaDebugSession by notNullOnce<XDebugSession>()
+    private var dbgpSession by notNullOnce<DBGpSession>()
+    private var phpLineBreakpoints by notNullOnce<MutableList<Breakpoint>>()
+    private var sessionListener by notNullOnce<IDBGpSessionListener>()
+    private var daemon by notNullOnce<XDebugCommunicationDaemon>()
+
+    init {
+        if (instance != null)
+            throw ExecutionException("Another instance of XDebugDaemonAndShit is active    e9083cfd-1e5d-4cb4-8dd5-c14b4908793f")
+        instance = this
+
+        phpLineBreakpoints = run {
             val res = mutableListOf<Breakpoint>()
             val mapping = SourceMappingCache.getMapping("E:\\fegh\\aps\\aps-back-phi\\out\\production\\aps-back-phi\\aps-back-phi.php.map")
             val bm = XDebuggerManager.getInstance(project).breakpointManager as XBreakpointManagerImpl
@@ -321,99 +330,95 @@ object XDebug {
             res
         }
 
-        if (initialized && debugReinitializeAllShitEveryTime) {
-            DBGpSessionHandler.getInstance().removeSessionListener(sessionListener)
-            daemon.stopListen()
-            initialized = false
-        }
 
-        if (!initialized) {
-            sessionListener = IDBGpSessionListener {session->
-                fun noise(s: String) {
-                    clog("NOISE: " + s)
-                }
-
-                noise("SessionCreated")
-
-                debugProcess.fuckingSession = object:FuckingSession {
-                    override fun resume() {
-                        val res = session.sendSyncCmd(DBGpCommand.run)
-                        if (res.errorCode != DBGpResponse.ERROR_OK) {
-                            wtfBalloon(project,
-                                       "Can't fucking resume\n\n" +
-                                           "errorCode = ${res.errorCode}\n" +
-                                           "errorMessage = ${res.errorMessage}")
-                        }
-                    }
-                }
-
-                session.fuckingDebugTarget = object:FuckingDebugTarget {
-                    override fun suspended(detail: Int) {
-                        noise("suspended: detail = $detail")
-                    }
-
-                    override fun breakpointHit(fileName: String, lineNo: Int, exception: String) {
-                        noise("breakpointHit: fileName = $fileName; lineNo = $lineNo; exception = $exception")
-                        val xbreakpoint = phpLineBreakpoints.find {it.phpLine == lineNo}?.xbreakpoint
-                            ?: return wtfBalloon(project, "f86f657c-2f0e-4b61-8253-086fe33ce6c0")
-
-                        val frame = object:XStackFrame() {
-                            override fun getSourcePosition(): XSourcePosition {
-                                return xbreakpoint.getSourcePosition()!!
-                            }
-                        }
-
-                        val executionStack = object:XExecutionStack("Pizda") {
-                            override fun getTopFrame(): XStackFrame? {
-                                return frame
-                            }
-
-                            override fun computeStackFrames(firstFrameIndex: Int, container: XStackFrameContainer) {
-                            }
-                        }
-
-                        xsession.breakpointReached(xbreakpoint, null, object:XSuspendContext() {
-                            override fun getActiveExecutionStack(): XExecutionStack? {
-                                return executionStack
-                            }
-                        })
-                    }
-
-                    override fun sessionEnded() {
-                        noise("sessionEnded")
-                        ApplicationManager.getApplication().invokeLater {
-                            Messages.showInfoMessage("It's over. Completely fucking over...", "Yeah")
-                        }
-                    }
-                }
-
-                session.startSession()
-
-                phpLineBreakpoints.forEach {breakpoint->
-                    val res = session.sendSyncCmd(DBGpCommand.breakPointSet, "" +
-                        "-t line" +
-                        " -f file://E:/fegh/aps/aps-back-phi/out/production/aps-back-phi/aps-back-phi.php" +
-                        " -n ${breakpoint.phpLine}")
-                    if (res.errorCode != DBGpResponse.ERROR_OK) {
-                        wtfBalloon(project,
-                                   "Can't set ${breakpoint.descr}\n\n" +
-                                       "errorCode = ${res.errorCode}\n" +
-                                       "errorMessage = ${res.errorMessage}")
-                        session.endSession()
-                        return@IDBGpSessionListener true
-                    }
-                }
-
-                session.sendSyncCmd(DBGpCommand.run)
-                true
+        sessionListener = IDBGpSessionListener {_session->
+            fun noise(s: String) {
+                clog("NOISE: " + s)
             }
-            DBGpSessionHandler.getInstance().addSessionListener(sessionListener)
 
-            daemon = XDebugCommunicationDaemon()
-            daemon.init()
-            daemon.startListen()
+            noise("SessionCreated")
+            dbgpSession = _session
 
-            initialized = true
+            dbgpSession.fuckingDebugTarget = object:FuckingDebugTarget {
+                override fun suspended(detail: Int) {
+                    noise("suspended: detail = $detail")
+                }
+
+                override fun breakpointHit(fileName: String, lineNo: Int, exception: String) {
+                    noise("breakpointHit: fileName = $fileName; lineNo = $lineNo; exception = $exception")
+                    val xbreakpoint = phpLineBreakpoints.find {it.phpLine == lineNo}?.xbreakpoint
+                        ?: return wtfBalloon(project, "f86f657c-2f0e-4b61-8253-086fe33ce6c0")
+
+                    val frame = object:XStackFrame() {
+                        override fun getSourcePosition(): XSourcePosition {
+                            return xbreakpoint.getSourcePosition()!!
+                        }
+                    }
+
+                    val executionStack = object:XExecutionStack("Pizda") {
+                        override fun getTopFrame(): XStackFrame? {
+                            return frame
+                        }
+
+                        override fun computeStackFrames(firstFrameIndex: Int, container: XStackFrameContainer) {
+                        }
+                    }
+
+                    ideaDebugSession.breakpointReached(xbreakpoint, null, object:XSuspendContext() {
+                        override fun getActiveExecutionStack(): XExecutionStack? {
+                            return executionStack
+                        }
+                    })
+                }
+
+                override fun sessionEnded() {
+                    noise("sessionEnded")
+
+                    DBGpSessionHandler.getInstance().removeSessionListener(sessionListener)
+                    daemon.stopListen()
+                    instance = null
+
+                    ApplicationManager.getApplication().invokeLater {
+                        Messages.showInfoMessage("It's over. Completely fucking over...", "Yeah")
+                    }
+                }
+            }
+
+            dbgpSession.startSession()
+
+
+            phpLineBreakpoints.forEach {breakpoint->
+                val res = dbgpSession.sendSyncCmd(DBGpCommand.breakPointSet, "" +
+                    "-t line" +
+                    " -f file://E:/fegh/aps/aps-back-phi/out/production/aps-back-phi/aps-back-phi.php" +
+                    " -n ${breakpoint.phpLine}")
+                if (res.errorCode != DBGpResponse.ERROR_OK) {
+                    wtfBalloon(project,
+                               "Can't set ${breakpoint.descr}\n\n" +
+                                   "errorCode = ${res.errorCode}\n" +
+                                   "errorMessage = ${res.errorMessage}")
+                    dbgpSession.endSession()
+                    return@IDBGpSessionListener true
+                }
+            }
+
+            dbgpSession.sendSyncCmd(DBGpCommand.run)
+            true
+        }
+        DBGpSessionHandler.getInstance().addSessionListener(sessionListener)
+
+        daemon = XDebugCommunicationDaemon()
+        daemon.init()
+        daemon.startListen()
+    }
+
+    fun resumeFromPhiDebugProcess() {
+        val res = dbgpSession.sendSyncCmd(DBGpCommand.run)
+        if (res.errorCode != DBGpResponse.ERROR_OK) {
+            wtfBalloon(project,
+                       "Can't fucking resume\n\n" +
+                           "errorCode = ${res.errorCode}\n" +
+                           "errorMessage = ${res.errorMessage}")
         }
     }
 }

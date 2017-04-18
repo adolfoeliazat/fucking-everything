@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.remote.RemoteProcessControl;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebugSession;
-import vgrechka.phizdetsidea.phizdets.debugger.PyDebugProcess;
+import vgrechka.phizdetsidea.phizdets.debugger.PhiDebugProcess;
 import vgrechka.phizdetsidea.phizdets.debugger.PyDebugRunner;
 import vgrechka.phizdetsidea.phizdets.debugger.PyDebuggerOptionsProvider;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * @author traff
  */
-public class PyConsoleDebugProcess extends PyDebugProcess {
+public class PyConsoleDebugProcess extends PhiDebugProcess {
   private final int myLocalPort;
   private final PyConsoleDebugProcessHandler myConsoleDebugProcessHandler;
 

@@ -35,7 +35,7 @@ import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.xdebugger.XDebuggerManager;
 import vgrechka.phizdetsidea.phizdets.console.PydevConsoleCommunication;
-import vgrechka.phizdetsidea.phizdets.debugger.PyDebugProcess;
+import vgrechka.phizdetsidea.phizdets.debugger.PhiDebugProcess;
 import vgrechka.phizdetsidea.phizdets.debugger.PyDebugValue;
 import vgrechka.phizdetsidea.phizdets.debugger.PyFrameAccessor;
 import icons.PhizdetsIcons;
@@ -97,10 +97,10 @@ public class PyDataView implements DumbAware {
     for (TabInfo info : myTabs.getTabs()) {
       PyDataViewerPanel panel = getPanel(info);
       PyFrameAccessor accessor = panel.getFrameAccessor();
-      if (!(accessor instanceof PyDebugProcess)) {
+      if (!(accessor instanceof PhiDebugProcess)) {
         continue;
       }
-      boolean shouldBeShown = Comparing.equal(handler, ((PyDebugProcess)accessor).getProcessHandler());
+      boolean shouldBeShown = Comparing.equal(handler, ((PhiDebugProcess)accessor).getProcessHandler());
       info.setHidden(!shouldBeShown);
     }
     restoreSelectedInfo(handler);
@@ -124,15 +124,15 @@ public class PyDataView implements DumbAware {
     TabInfo selectedInfo = myTabs.getSelectedInfo();
     if (!hasOnlyEmptyTab() && selectedInfo != null) {
       PyFrameAccessor accessor = getPanel(selectedInfo).getFrameAccessor();
-      if (accessor instanceof PyDebugProcess) {
-        mySelectedInfos.put(((PyDebugProcess)accessor).getProcessHandler(), selectedInfo);
+      if (accessor instanceof PhiDebugProcess) {
+        mySelectedInfos.put(((PhiDebugProcess)accessor).getProcessHandler(), selectedInfo);
       }
     }
   }
 
   @Nullable
   private PyFrameAccessor getFrameAccessor(@NotNull ProcessHandler handler) {
-    for (PyDebugProcess process : XDebuggerManager.getInstance(myProject).getDebugProcesses(PyDebugProcess.class)) {
+    for (PhiDebugProcess process : XDebuggerManager.getInstance(myProject).getDebugProcesses(PhiDebugProcess.class)) {
       if (Comparing.equal(handler, process.getProcessHandler())) {
         return process;
       }
@@ -189,9 +189,9 @@ public class PyDataView implements DumbAware {
       info.setIcon(PhizdetsIcons.Phizdets.PhizdetsConsole);
       info.setTooltipText("Connected to Phizdets Console");
     }
-    if (frameAccessor instanceof PyDebugProcess) {
+    if (frameAccessor instanceof PhiDebugProcess) {
       info.setIcon(AllIcons.Toolwindows.ToolWindowDebugger);
-      String name = ((PyDebugProcess)frameAccessor).getSession().getSessionName();
+      String name = ((PhiDebugProcess)frameAccessor).getSession().getSessionName();
       info.setTooltipText("Connected to debug session '"+  name + "'");
     }
     info.setText(EMPTY_TAB_NAME);

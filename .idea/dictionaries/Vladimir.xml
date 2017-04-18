@@ -6,6 +6,7 @@
       <w>binop</w>
       <w>bunchofshit</w>
       <w>cell;</w>
+      <w>dbgp</w>
       <w>devtools</w>
       <w>dirname</w>
       <w>env;</w>
@@ -27,6 +28,8 @@
       <w>pizdatron</w>
       <w>pvalue</w>
       <w>vbox</w>
+      <w>xbreakpoint</w>
+      <w>xsession</w>
     </words>
   </dictionary>
 </component>

@@ -24,5 +24,5 @@ import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
 public abstract class PyBreakpointHandlerFactory {
   public static final ExtensionPointName<PyBreakpointHandlerFactory> EP_NAME = ExtensionPointName.create("Phizdetsid.breakpointHandler");
 
-  public abstract XBreakpointHandler createBreakpointHandler(PyDebugProcess process);
+  public abstract XBreakpointHandler createBreakpointHandler(PhiDebugProcess process);
 }

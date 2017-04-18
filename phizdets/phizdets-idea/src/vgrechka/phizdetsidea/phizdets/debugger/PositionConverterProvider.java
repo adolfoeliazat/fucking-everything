@@ -22,5 +22,5 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface PositionConverterProvider {
   @Nullable
-  PyPositionConverter createPositionConverter(PyDebugProcess debugProcess);
+  PyPositionConverter createPositionConverter(PhiDebugProcess debugProcess);
 }

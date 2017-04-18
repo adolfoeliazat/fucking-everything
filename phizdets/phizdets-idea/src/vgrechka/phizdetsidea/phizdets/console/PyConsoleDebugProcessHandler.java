@@ -18,7 +18,7 @@ package vgrechka.phizdetsidea.phizdets.console;
 import com.intellij.execution.process.*;
 import com.intellij.openapi.util.Key;
 import vgrechka.phizdetsidea.phizdets.debugger.PositionConverterProvider;
-import vgrechka.phizdetsidea.phizdets.debugger.PyDebugProcess;
+import vgrechka.phizdetsidea.phizdets.debugger.PhiDebugProcess;
 import vgrechka.phizdetsidea.phizdets.debugger.PyLocalPositionConverter;
 import vgrechka.phizdetsidea.phizdets.debugger.PyPositionConverter;
 import org.jetbrains.annotations.NotNull;
@@ -90,7 +90,7 @@ public class PyConsoleDebugProcessHandler extends ProcessHandler implements Posi
 
   @Nullable
   @Override
-  public PyPositionConverter createPositionConverter(PyDebugProcess debugProcess) {
+  public PyPositionConverter createPositionConverter(PhiDebugProcess debugProcess) {
     if (myConsoleProcessHandler instanceof PositionConverterProvider) {
       return ((PositionConverterProvider)myConsoleProcessHandler).createPositionConverter(debugProcess);
     }

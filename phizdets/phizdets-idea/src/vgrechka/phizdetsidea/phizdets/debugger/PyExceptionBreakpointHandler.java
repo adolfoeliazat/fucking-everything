@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  * @author traff
  */
 public class PyExceptionBreakpointHandler extends ExceptionBreakpointHandler<PyExceptionBreakpointProperties> {
-   public PyExceptionBreakpointHandler(@NotNull final PyDebugProcess debugProcess) {
+   public PyExceptionBreakpointHandler(@NotNull final PhiDebugProcess debugProcess) {
     super(debugProcess, PyExceptionBreakpointType.class);
   }
 }

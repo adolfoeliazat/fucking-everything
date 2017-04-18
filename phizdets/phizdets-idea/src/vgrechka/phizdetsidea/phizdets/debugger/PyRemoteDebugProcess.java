@@ -6,8 +6,6 @@ import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebugSession;
-import vgrechka.phizdetsidea.phizdets.debugger.PyDebugProcess;
-import vgrechka.phizdetsidea.phizdets.debugger.PyRemoteDebugProcessAware;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +14,7 @@ import java.net.ServerSocket;
 /**
  * @author traff
  */
-public class PyRemoteDebugProcess extends PyDebugProcess {
+public class PyRemoteDebugProcess extends PhiDebugProcess {
   private final int myLocalPort;
   private final String mySettraceCall;
 

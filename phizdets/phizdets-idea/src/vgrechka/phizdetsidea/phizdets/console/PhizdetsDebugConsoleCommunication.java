@@ -23,7 +23,7 @@ import com.intellij.util.Function;
 import vgrechka.phizdetsidea.phizdets.console.pydev.AbstractConsoleCommunication;
 import vgrechka.phizdetsidea.phizdets.console.pydev.InterpreterResponse;
 import vgrechka.phizdetsidea.phizdets.console.pydev.PydevCompletionVariant;
-import vgrechka.phizdetsidea.phizdets.debugger.PyDebugProcess;
+import vgrechka.phizdetsidea.phizdets.debugger.PhiDebugProcess;
 import vgrechka.phizdetsidea.phizdets.debugger.PyDebuggerException;
 import vgrechka.phizdetsidea.phizdets.debugger.pydev.PyDebugCallback;
 import org.jetbrains.annotations.NotNull;
@@ -38,10 +38,10 @@ import java.util.List;
  */
 public class PhizdetsDebugConsoleCommunication extends AbstractConsoleCommunication {
   private static final Logger LOG = Logger.getInstance("#vgrechka.phizdetsidea.phizdets.console.pydev.PhizdetsDebugConsoleCommunication");
-  private final PyDebugProcess myDebugProcess;
+  private final PhiDebugProcess myDebugProcess;
   private boolean myNeedsMore = false;
 
-  public PhizdetsDebugConsoleCommunication(Project project, PyDebugProcess debugProcess) {
+  public PhizdetsDebugConsoleCommunication(Project project, PhiDebugProcess debugProcess) {
     super(project);
     myDebugProcess = debugProcess;
   }

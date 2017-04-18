@@ -31,12 +31,12 @@ import java.util.Map;
  * @author traff
  */
 public class AbstractLineBreakpointHandler extends XBreakpointHandler<XLineBreakpoint<XBreakpointProperties>> {
-  protected final PyDebugProcess myDebugProcess;
+  protected final PhiDebugProcess myDebugProcess;
   private final Map<XLineBreakpoint<XBreakpointProperties>, XSourcePosition> myBreakPointPositions = Maps.newHashMap();
 
   public AbstractLineBreakpointHandler(
     Class<? extends XBreakpointType<XLineBreakpoint<XBreakpointProperties>, ?>> breakpointTypeClass,
-    @NotNull final PyDebugProcess debugProcess) {
+    @NotNull final PhiDebugProcess debugProcess) {
     super(breakpointTypeClass);
     myDebugProcess = debugProcess;
   }

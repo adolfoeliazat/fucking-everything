@@ -36,7 +36,7 @@ import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XDebuggerManagerListener;
 import vgrechka.phizdetsidea.phizdets.console.PhizdetsConsoleToolWindowFactory;
-import vgrechka.phizdetsidea.phizdets.debugger.PyDebugProcess;
+import vgrechka.phizdetsidea.phizdets.debugger.PhiDebugProcess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -119,8 +119,8 @@ public class PyDataViewToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void processStopped(@NotNull XDebugProcess debugProcess) {
-      if (debugProcess instanceof PyDebugProcess) {
-        PyDataView.getInstance(myProject).closeTabs(frameAccessor -> frameAccessor instanceof PyDebugProcess && frameAccessor == debugProcess);
+      if (debugProcess instanceof PhiDebugProcess) {
+        PyDataView.getInstance(myProject).closeTabs(frameAccessor -> frameAccessor instanceof PhiDebugProcess && frameAccessor == debugProcess);
       }
     }
   }

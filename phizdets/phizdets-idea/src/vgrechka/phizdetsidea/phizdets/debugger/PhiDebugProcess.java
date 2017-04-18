@@ -62,6 +62,7 @@ import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XSuspendContext;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.stepping.XSmartStepIntoHandler;
+import vgrechka.phizdetsidea.XDebugDaemonAndShit;
 import vgrechka.phizdetsidea.phizdets.PhizdetsFileType;
 import vgrechka.phizdetsidea.phizdets.console.PhizdetsConsoleView;
 import vgrechka.phizdetsidea.phizdets.console.PhizdetsDebugLanguageConsoleView;
@@ -92,12 +93,12 @@ import static javax.swing.SwingUtilities.invokeLater;
  */
 // todo: bundle messages
 // todo: pydevd supports module reloading - look for a way to use the feature
-public class PyDebugProcess extends XDebugProcess implements IPyDebugProcess, ProcessListener {
+public class PhiDebugProcess extends XDebugProcess implements IPyDebugProcess, ProcessListener {
 
   private static final Logger LOG = Logger.getInstance("#vgrechka.phizdetsidea.phizdets.debugger.PyDebugProcess");
   private static final int CONNECTION_TIMEOUT = 60000;
 
-  public volatile FuckingSession fuckingSession;
+  public XDebugDaemonAndShit xDebugDaemonAndShit;
   private final ProcessDebugger myDebugger;
   private final XBreakpointHandler[] myBreakpointHandlers;
   private final PyDebuggerEditorsProvider myEditorsProvider;
@@ -121,26 +122,26 @@ public class PyDebugProcess extends XDebugProcess implements IPyDebugProcess, Pr
   private PyReferrersLoader myReferrersProvider;
   private final List<PyFrameListener> myFrameListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  public PyDebugProcess(@NotNull XDebugSession session,
-                        @NotNull ServerSocket serverSocket,
-                        @NotNull ExecutionConsole executionConsole,
-                        @Nullable ProcessHandler processHandler, boolean multiProcess) {
+  public PhiDebugProcess(@NotNull XDebugSession session,
+                         @NotNull ServerSocket serverSocket,
+                         @NotNull ExecutionConsole executionConsole,
+                         @Nullable ProcessHandler processHandler, boolean multiProcess) {
     this(session, multiProcess ? process -> process.createMultiprocessDebugger(serverSocket)
                                : process -> new RemoteDebugger(process, serverSocket, process.getConnectTimeout()),
          executionConsole, processHandler);
   }
 
-  public PyDebugProcess(final @NotNull XDebugSession session,
-                        @NotNull final ExecutionConsole executionConsole,
-                        @Nullable final ProcessHandler processHandler,
-                        @NotNull String serverHost, int serverPort) {
+  public PhiDebugProcess(final @NotNull XDebugSession session,
+                         @NotNull final ExecutionConsole executionConsole,
+                         @Nullable final ProcessHandler processHandler,
+                         @NotNull String serverHost, int serverPort) {
     this(session, process -> new ClientModeMultiProcessDebugger(process, serverHost, serverPort), executionConsole, processHandler);
   }
 
-  private PyDebugProcess(@NotNull XDebugSession session,
-                        @NotNull DebuggerFactory debuggerFactory,
-                        @NotNull ExecutionConsole executionConsole,
-                        @Nullable ProcessHandler processHandler) {
+  private PhiDebugProcess(@NotNull XDebugSession session,
+                          @NotNull DebuggerFactory debuggerFactory,
+                          @NotNull ExecutionConsole executionConsole,
+                          @Nullable ProcessHandler processHandler) {
     super(session);
 
     session.setPauseActionSupported(true);
@@ -453,10 +454,10 @@ public class PyDebugProcess extends XDebugProcess implements IPyDebugProcess, Pr
 
   private static class WatchReturnValuesAction extends ToggleAction {
     private volatile boolean myWatchesReturnValues;
-    private final PyDebugProcess myProcess;
+    private final PhiDebugProcess myProcess;
     private final String myText;
 
-    public WatchReturnValuesAction(@NotNull PyDebugProcess debugProcess) {
+    public WatchReturnValuesAction(@NotNull PhiDebugProcess debugProcess) {
       super("", "Enables watching executed functions return values", null);
       myWatchesReturnValues = PyDebuggerSettings.getInstance().isWatchReturnValues();
       myProcess = debugProcess;
@@ -490,10 +491,10 @@ public class PyDebugProcess extends XDebugProcess implements IPyDebugProcess, Pr
 
   private static class SimplifiedView extends ToggleAction {
     private volatile boolean mySimplifiedView;
-    private final PyDebugProcess myProcess;
+    private final PhiDebugProcess myProcess;
     private final String myText;
 
-    public SimplifiedView(@NotNull PyDebugProcess debugProcess) {
+    public SimplifiedView(@NotNull PhiDebugProcess debugProcess) {
       super("", "Disables watching classes, functions and modules objects", null);
       mySimplifiedView = PyDebuggerSettings.getInstance().isSimplifiedView();
       myProcess = debugProcess;
@@ -563,7 +564,7 @@ public class PyDebugProcess extends XDebugProcess implements IPyDebugProcess, Pr
   @Override
   public void resume(@Nullable XSuspendContext context) {
       // @phi-debug-1
-      fuckingSession.resume();
+      xDebugDaemonAndShit.resumeFromPhiDebugProcess();
 
       // passToAllThreads(ResumeOrStepCommand.Mode.RESUME);
   }
@@ -1198,6 +1199,6 @@ public class PyDebugProcess extends XDebugProcess implements IPyDebugProcess, Pr
   }
 
   private interface DebuggerFactory {
-    @NotNull ProcessDebugger createDebugger(@NotNull PyDebugProcess process);
+    @NotNull ProcessDebugger createDebugger(@NotNull PhiDebugProcess process);
   }
 }

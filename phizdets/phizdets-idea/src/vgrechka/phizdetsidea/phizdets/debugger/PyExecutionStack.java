@@ -28,17 +28,17 @@ import java.util.List;
 
 public class PyExecutionStack extends XExecutionStack {
 
-  private final PyDebugProcess myDebugProcess;
+  private final PhiDebugProcess myDebugProcess;
   private final PyThreadInfo myThreadInfo;
   private PyStackFrame myTopFrame;
 
-  public PyExecutionStack(@NotNull final PyDebugProcess debugProcess, @NotNull final PyThreadInfo threadInfo) {
+  public PyExecutionStack(@NotNull final PhiDebugProcess debugProcess, @NotNull final PyThreadInfo threadInfo) {
     super(threadInfo.getName());
     myDebugProcess = debugProcess;
     myThreadInfo = threadInfo;
   }
 
-  public PyExecutionStack(@NotNull final PyDebugProcess debugProcess, @NotNull final PyThreadInfo threadInfo, final @Nullable Icon icon) {
+  public PyExecutionStack(@NotNull final PhiDebugProcess debugProcess, @NotNull final PyThreadInfo threadInfo, final @Nullable Icon icon) {
     super(threadInfo.getName(), icon);
     myDebugProcess = debugProcess;
     myThreadInfo = threadInfo;
@@ -75,7 +75,7 @@ public class PyExecutionStack extends XExecutionStack {
     }
   }
 
-  private static PyStackFrame convert(final PyDebugProcess debugProcess, final PyStackFrameInfo frameInfo) {
+  private static PyStackFrame convert(final PhiDebugProcess debugProcess, final PyStackFrameInfo frameInfo) {
     return debugProcess.createStackFrame(frameInfo);
   }
 

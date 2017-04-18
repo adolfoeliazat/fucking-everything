@@ -21,7 +21,6 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XSourcePosition;
@@ -42,9 +41,9 @@ import java.util.Set;
  */
 public class PySmartStepIntoHandler extends XSmartStepIntoHandler<PySmartStepIntoHandler.PySmartStepIntoVariant> {
   private final XDebugSession mySession;
-  private PyDebugProcess myProcess;
+  private PhiDebugProcess myProcess;
 
-  public PySmartStepIntoHandler(final PyDebugProcess process) {
+  public PySmartStepIntoHandler(final PhiDebugProcess process) {
     mySession = process.getSession();
     myProcess = process;
   }

@@ -66,6 +66,7 @@ import org.eclipse.ui.PlatformUI;
 import org.osgi.service.prefs.BackingStoreException;
 
 import com.ibm.icu.text.MessageFormat;
+import vgrechka.Shared_jvmKt;
 
 /**
  * XDebug communication daemon.
@@ -215,6 +216,8 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 				DBGpSession session = new DBGpSession(socket);
 				if (session.isActive()) {
 					if (!DBGpSessionHandler.getInstance().fireSessionAdded(session)) {
+					    Shared_jvmKt.wtf("bdc42921-57fb-415d-8f49-73b519456e24");
+
 						// Session not taken, we want to create a launch
 						(new RequestVerifier()).verify(session);
 						AcceptRemoteSession aSess = XDebugPreferenceMgr.getAcceptRemoteSession();

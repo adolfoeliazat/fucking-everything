@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PyLineBreakpointHandler extends AbstractLineBreakpointHandler {
 
-  public PyLineBreakpointHandler(@NotNull final PyDebugProcess debugProcess) {
+  public PyLineBreakpointHandler(@NotNull final PhiDebugProcess debugProcess) {
     super(PyLineBreakpointType.class, debugProcess);
   }
 }
