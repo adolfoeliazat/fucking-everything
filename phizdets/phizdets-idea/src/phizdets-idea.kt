@@ -26,6 +26,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.pom.Navigatable
+import com.intellij.pom.NonNavigatable
 import com.intellij.util.PlatformUtils
 import com.intellij.util.lang.UrlClassLoader
 import com.intellij.util.ui.UIUtil
@@ -43,15 +44,17 @@ import com.sun.jna.platform.win32.User32
 import org.eclipse.core.runtime.ILog
 import org.eclipse.core.runtime.ILogListener
 import org.eclipse.core.runtime.IStatus
+import org.eclipse.debug.core.DebugEvent
 import org.eclipse.debug.core.DebugPlugin
 import org.eclipse.debug.core.IDebugEventSetListener
 import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpCommand
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.FuckingDebugTarget
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin
 import org.osgi.framework.Bundle
@@ -332,60 +335,10 @@ class XDebugDaemonAndShit(val project: Project) {
 
 
         sessionListener = IDBGpSessionListener {_session->
-            fun noise(s: String) {
-                clog("NOISE: " + s)
-            }
-
             noise("SessionCreated")
             dbgpSession = _session
-
-            dbgpSession.fuckingDebugTarget = object:FuckingDebugTarget {
-                override fun suspended(detail: Int) {
-                    noise("suspended: detail = $detail")
-                }
-
-                override fun breakpointHit(fileName: String, lineNo: Int, exception: String) {
-                    noise("breakpointHit: fileName = $fileName; lineNo = $lineNo; exception = $exception")
-                    val xbreakpoint = phpLineBreakpoints.find {it.phpLine == lineNo}?.xbreakpoint
-                        ?: return wtfBalloon(project, "f86f657c-2f0e-4b61-8253-086fe33ce6c0")
-
-                    val frame = object:XStackFrame() {
-                        override fun getSourcePosition(): XSourcePosition {
-                            return xbreakpoint.getSourcePosition()!!
-                        }
-                    }
-
-                    val executionStack = object:XExecutionStack("Pizda") {
-                        override fun getTopFrame(): XStackFrame? {
-                            return frame
-                        }
-
-                        override fun computeStackFrames(firstFrameIndex: Int, container: XStackFrameContainer) {
-                        }
-                    }
-
-                    ideaDebugSession.breakpointReached(xbreakpoint, null, object:XSuspendContext() {
-                        override fun getActiveExecutionStack(): XExecutionStack? {
-                            return executionStack
-                        }
-                    })
-                }
-
-                override fun sessionEnded() {
-                    noise("sessionEnded")
-
-                    DBGpSessionHandler.getInstance().removeSessionListener(sessionListener)
-                    daemon.stopListen()
-                    instance = null
-
-                    ApplicationManager.getApplication().invokeLater {
-                        Messages.showInfoMessage("It's over. Completely fucking over...", "Yeah")
-                    }
-                }
-            }
-
+            dbgpSession.xDebugDaemonAndShit = this
             dbgpSession.startSession()
-
 
             phpLineBreakpoints.forEach {breakpoint->
                 val res = dbgpSession.sendSyncCmd(DBGpCommand.breakPointSet, "" +
@@ -393,8 +346,7 @@ class XDebugDaemonAndShit(val project: Project) {
                     " -f file://E:/fegh/aps/aps-back-phi/out/production/aps-back-phi/aps-back-phi.php" +
                     " -n ${breakpoint.phpLine}")
                 if (res.errorCode != DBGpResponse.ERROR_OK) {
-                    wtfBalloon(project,
-                               "Can't set ${breakpoint.descr}\n\n" +
+                    wtfBalloon("Can't set ${breakpoint.descr}\n\n" +
                                    "errorCode = ${res.errorCode}\n" +
                                    "errorMessage = ${res.errorMessage}")
                     dbgpSession.endSession()
@@ -412,22 +364,163 @@ class XDebugDaemonAndShit(val project: Project) {
         daemon.startListen()
     }
 
-    fun resumeFromPhiDebugProcess() {
-        val res = dbgpSession.sendSyncCmd(DBGpCommand.run)
+    fun ideaSays_resume() {
+        dbgpSend(DBGpCommand.run)
+    }
+
+    fun ideaSays_stepOverFrom() {
+        dbgpSend(DBGpCommand.stepOver)
+    }
+
+    private fun dbgpSend(cmd: String) {
+        val res = dbgpSession.sendSyncCmd(cmd)
         if (res.errorCode != DBGpResponse.ERROR_OK) {
-            wtfBalloon(project,
-                       "Can't fucking resume\n\n" +
+            wtfBalloon("Can't fucking `$cmd`\n\n" +
                            "errorCode = ${res.errorCode}\n" +
                            "errorMessage = ${res.errorMessage}")
         }
     }
-}
 
-private fun wtfBalloon(project: Project, message: String) {
-    ApplicationManager.getApplication().invokeLater {
-        IDEAStuff.showErrorBalloonForDebugToolWindow(project, "WTF: " + message)
+    fun dbgpSessionSays_suspended(detail: Int) {
+        noise("dbgpSessionSays_suspended: detail = $detail")
+        when (detail) {
+            DebugEvent.STEP_END -> {
+                val fileLine = getCurrentFileLine()
+                if (fileLine == null) {
+                    clog("2e35e98d-1a4c-4b53-bbf4-331aebe842e5")
+                    return
+                }
+
+                val frame = object:XStackFrame() {
+                    override fun getSourcePosition(): XSourcePosition {
+                        return object:XSourcePosition {
+                            override fun getFile(): VirtualFile {
+                                return IDEAStuff.getVirtualFileByPath(fileLine.file)!!
+                            }
+
+                            override fun getOffset(): Int {
+                                return 0
+                            }
+
+                            override fun getLine(): Int {
+                                return fileLine.line - 1
+                            }
+
+                            override fun createNavigatable(project: Project): Navigatable {
+                                return NonNavigatable.INSTANCE
+                            }
+                        }
+                    }
+                }
+
+                val executionStack = object:XExecutionStack("Pizda") {
+                    override fun getTopFrame(): XStackFrame? {
+                        return frame
+                    }
+
+                    override fun computeStackFrames(firstFrameIndex: Int, container: XStackFrameContainer) {
+                    }
+                }
+
+                val suspendContext: XSuspendContext = object : XSuspendContext() {
+                    override fun getActiveExecutionStack(): XExecutionStack? {
+                        return executionStack
+                    }
+                }
+
+                ideaDebugSession.positionReached(suspendContext)
+            }
+            else -> wtfBalloon("detail = $detail    e75b3bfb-4418-46fb-a3d8-d5d106676fb9")
+        }
+    }
+
+    fun getCurrentFileLine(): FileLine? {
+        val response = dbgpSession.sendSyncCmd(DBGpCommand.stackGet)
+        if (response == null) {
+            wtfBalloon("96e254f7-ef02-4d1b-8abb-0a45446662ce")
+            return null
+        }
+
+        if (response.status == DBGpResponse.STATUS_STOPPED) {
+            noise("Received STATUS_STOPPED when trying to get stack -- disposing shit")
+            disposeShit()
+            return null
+        }
+
+        val stackData = response.parentNode.firstChild
+        val line = DBGpResponse.getAttribute(stackData, "lineno")
+        val lineno = try {
+            Integer.parseInt(line)
+        } catch (nfe: NumberFormatException) {
+            wtfBalloon("96e254f7-ef02-4d1b-8abb-0a45446662ce")
+            return null
+        }
+
+        val filename = DBGpUtils.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename"))
+        return FileLine(filename, lineno)
+    }
+
+    fun dbgpSessionSays_breakpointHit() {
+        noise("dbgpSessionSays_breakpointHit")
+
+        val fileLine = getCurrentFileLine()
+        if (fileLine == null) {
+            clog("45dc483a-1975-4f13-ae20-0ae7e80cde9d")
+            return
+        }
+
+        val xbreakpoint = phpLineBreakpoints.find {it.phpLine == fileLine.line}?.xbreakpoint
+            ?: return wtfBalloon("f86f657c-2f0e-4b61-8253-086fe33ce6c0")
+
+        val frame = object:XStackFrame() {
+            override fun getSourcePosition(): XSourcePosition {
+                return xbreakpoint.getSourcePosition()!!
+            }
+        }
+
+        val executionStack = object:XExecutionStack("Pizda") {
+            override fun getTopFrame(): XStackFrame? {
+                return frame
+            }
+
+            override fun computeStackFrames(firstFrameIndex: Int, container: XStackFrameContainer) {
+            }
+        }
+
+        val suspendContext: XSuspendContext = object : XSuspendContext() {
+            override fun getActiveExecutionStack(): XExecutionStack? {
+                return executionStack
+            }
+        }
+        ideaDebugSession.breakpointReached(xbreakpoint, null, suspendContext)
+    }
+
+    fun dbgpSessionSays_sessionEnded() {
+        noise("dbgpSessionSays_sessionEnded")
+        disposeShit()
+    }
+
+    private fun disposeShit() {
+        DBGpSessionHandler.getInstance().removeSessionListener(sessionListener)
+        daemon.stopListen()
+        instance = null
+
+        ApplicationManager.getApplication().invokeLater {
+            Messages.showInfoMessage("It's over. Completely fucking over...", "Yeah")
+        }
+    }
+
+    fun noise(s: String) {
+        clog("NOISE: " + s)
+    }
+
+    private fun wtfBalloon(message: String) {
+        ApplicationManager.getApplication().invokeLater {
+            IDEAStuff.showErrorBalloonForDebugToolWindow(project, "WTF: " + message)
+        }
     }
 }
+
 
 
 

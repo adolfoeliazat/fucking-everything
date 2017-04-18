@@ -528,7 +528,10 @@ public class PhiDebugProcess extends XDebugProcess implements IPyDebugProcess, P
 
   @Override
   public void startStepOver(@Nullable XSuspendContext context) {
-    passToCurrentThread(context, ResumeOrStepCommand.Mode.STEP_OVER);
+      // @phi-debug-1
+      xDebugDaemonAndShit.ideaSays_stepOverFrom();
+
+      // passToCurrentThread(context, ResumeOrStepCommand.Mode.STEP_OVER);
   }
 
   @Override
@@ -564,7 +567,7 @@ public class PhiDebugProcess extends XDebugProcess implements IPyDebugProcess, P
   @Override
   public void resume(@Nullable XSuspendContext context) {
       // @phi-debug-1
-      xDebugDaemonAndShit.resumeFromPhiDebugProcess();
+      xDebugDaemonAndShit.ideaSays_resume();
 
       // passToAllThreads(ResumeOrStepCommand.Mode.RESUME);
   }

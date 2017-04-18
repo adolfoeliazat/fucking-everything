@@ -36,6 +36,7 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.*;
 import org.w3c.dom.Node;
+import vgrechka.phizdetsidea.XDebugDaemonAndShit;
 
 /**
  * DBGp session.
@@ -271,29 +272,30 @@ public class DBGpSession {
 							if (response.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
 								handleStop();
 							} else {
-								Node stackData = response.getParentNode().getFirstChild();
-								String line = DBGpResponse.getAttribute(stackData, "lineno"); //$NON-NLS-1$
-								int lineno = 0;
-								try {
-									lineno = Integer.parseInt(line);
-									String filename = DBGpUtils
-											.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename")); //$NON-NLS-1$
+                                xDebugDaemonAndShit.dbgpSessionSays_breakpointHit();
 
-                                    // @phi-debug-1
-									// filename = debugTarget.mapToWorkspaceFileIfRequired(filename);
-
-									// Debug target might be already
-									// disconnected
-									if (debugTarget != null) {
-										debugTarget.breakpointHit(filename, lineno, exception);
-									}
-									if (fuckingDebugTarget != null) {
-                                        fuckingDebugTarget.breakpointHit(filename, lineno, exception);
-                                    }
-								} catch (NumberFormatException nfe) {
-									DBGpLogger.logException("Unexpected number format exception", //$NON-NLS-1$
-											this, nfe);
-								}
+//								Node stackData = response.getParentNode().getFirstChild();
+//								String line = DBGpResponse.getAttribute(stackData, "lineno"); //$NON-NLS-1$
+//								int lineno = 0;
+//								try {
+//									lineno = Integer.parseInt(line);
+//									String filename = DBGpUtils
+//											.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename")); //$NON-NLS-1$
+//
+//                                    // @phi-debug-1
+//									// filename = debugTarget.mapToWorkspaceFileIfRequired(filename);
+//
+//									// Debug target might be already
+//									// disconnected
+//									if (debugTarget != null) {
+////										debugTarget.breakpointHit(filename, lineno, exception);
+//									}
+//									if (xDebugDaemonAndShit != null) {
+//                                    }
+//								} catch (NumberFormatException nfe) {
+//									DBGpLogger.logException("Unexpected number format exception", //$NON-NLS-1$
+//											this, nfe);
+//								}
 							}
 						}
 					} else if (cmd.equals(DBGpCommand.stepInto) || cmd.equals(DBGpCommand.StepOut)
@@ -302,8 +304,8 @@ public class DBGpSession {
                         if (debugTarget != null) {
                             debugTarget.suspended(DebugEvent.STEP_END);
                         }
-                        if (fuckingDebugTarget != null) {
-                            fuckingDebugTarget.suspended(DebugEvent.STEP_END);
+                        if (xDebugDaemonAndShit != null) {
+                            xDebugDaemonAndShit.dbgpSessionSays_suspended(DebugEvent.STEP_END);
                         }
 					} else {
 						/*
@@ -345,7 +347,7 @@ public class DBGpSession {
 	private DataInputStream DBGpReader;
 	private boolean sessionActive = false;
 	private DBGpTarget debugTarget;
-	public FuckingDebugTarget fuckingDebugTarget;
+	public XDebugDaemonAndShit xDebugDaemonAndShit;
 	private Hashtable<Integer, Object> savedResponses = new Hashtable<Integer, Object>();
 	private String ideKey;
 	private String sessionId;
@@ -529,9 +531,9 @@ public class DBGpSession {
 			debugTarget = null;
 		}
 		// @pdt-debug-target
-		if (fuckingDebugTarget != null) {
-			fuckingDebugTarget.sessionEnded();
-			fuckingDebugTarget = null;
+		if (xDebugDaemonAndShit != null) {
+			xDebugDaemonAndShit.dbgpSessionSays_sessionEnded();
+			xDebugDaemonAndShit = null;
 		}
 	}
 
