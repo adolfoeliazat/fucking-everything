@@ -396,11 +396,13 @@ class XDebugDaemonAndShit(val project: Project) {
                 dbgpSend(DBGpCommand.breakPointSet, "" +
                     "-t line" +
                     " -f E:/fegh/aps/aps-back-phi/out/production/aps-back-phi/phi-engine.php" +
-                    " -n 2129" +
+                    " -n 2130" +
                     " -- ${base64Encode("@\$GLOBALS['phiExpressionStatement_counter'] === 1")}") || return
 
                 dbgpSend(DBGpCommand.run) || return
+                // TODO:vgrechka Unhardcode line
                 // TODO:vgrechka Remove function breakpoint
+
             }
 
             XDebugDaemonAndShit.StepMode.PHP -> {

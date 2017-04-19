@@ -2125,7 +2125,13 @@ class PhiString extends PhiValue {
 /**
  * @param PhiExpression $expr
  */
-function phiExpressionStatement($expr) {
+function phiExpressionStatement($expr, $opts = array()) {
+    if (!(array_key_exists('skipDebugging', $opts) && $opts['skipDebugging'])) {
+        strval("phiExpressionStatement_entry");
+        // phiPrintln('phiExpressionStatement_counter = ' . (@$GLOBALS['phiExpressionStatement_counter'] ?: 0));
+        $GLOBALS['phiExpressionStatement_counter'] = (@$GLOBALS['phiExpressionStatement_counter'] ?: 0) + 1;
+    }
+
     $debug_exprToString = strval($expr);
     $debug_env = Phi::getCurrentEnv()->deepClone();
 

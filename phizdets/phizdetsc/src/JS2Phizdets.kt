@@ -61,15 +61,24 @@ object JS2Phizdets {
     }
 }
 
-class Barbos(val inputFilePath: String, val outputFilePath: String, val copyPhiEngine: Boolean, val copyPhiStdlib: Boolean) {
+class Barbos(
+    val inputFilePath: String,
+    val outputFilePath: String,
+    val copyPhiEngine: Boolean,
+    val copyPhiStdlib: Boolean,
+    val useMap: Boolean = true,
+    val phpifierOpts: Phpifier.Opts = Phpifier.Opts()
+) {
     private var jsProgram by notNullOnce<JsProgram>()
     private var source by notNullOnce<Source>()
     private var jsMapping by notNullOnce<SourceMapping>()
 
     fun ignite() {
-        val jsMapFile = File(inputFilePath + ".map")
-        check(jsMapFile.exists()) {"6a5793bb-2a14-4039-a7ac-98f0a61615e5"}
-        jsMapping = theSourceMappings.getCached(jsMapFile.path)
+        if (useMap) {
+            val jsMapFile = File(inputFilePath + ".map")
+            check(jsMapFile.exists()) {"6a5793bb-2a14-4039-a7ac-98f0a61615e5"}
+            jsMapping = theSourceMappings.getCached(jsMapFile.path)
+        }
 
         PhizdetscGlobal.debugTagPrefix = "s"
         val inFile = File(inputFilePath)
@@ -95,7 +104,7 @@ class Barbos(val inputFilePath: String, val outputFilePath: String, val copyPhiE
             File("$outputFilePath--0").writeText(output.toString())
         }
 
-        val phpifier = Phpifier(jsProgram)
+        val phpifier = Phpifier(jsProgram, phpifierOpts)
 
         run {
             phpifier.stage1()
@@ -113,8 +122,11 @@ class Barbos(val inputFilePath: String, val outputFilePath: String, val copyPhiE
             val sourceMapBuilder = SourceMap3Builder(outputFile, output, SourceMapBuilderConsumer())
             jsProgram.accept(PhizdetsSourceGenerationVisitor(output, taggedGenOutput, sourceMapBuilder))
             outputFile.writeText(output.toString())
-            val mapFile = File("$outputFilePath.map")
-            mapFile.writeText(sourceMapBuilder.build())
+
+            if (useMap) {
+                val mapFile = File("$outputFilePath.map")
+                mapFile.writeText(sourceMapBuilder.build())
+            }
         }
 
         if (copyPhiEngine) {
@@ -254,6 +266,8 @@ class Barbos(val inputFilePath: String, val outputFilePath: String, val copyPhiE
     }
 
     private fun fillSourcePosition(to: JsNode, from: Node) {
+        if (!useMap) return
+
         val pos = from.position()
         val jsLine = source.getLine(pos)
         val jsColumn = source.getColumn(pos) + 1

@@ -41,7 +41,10 @@ fun phpify(program: JsProgram) {
     PhizdetscGlobal.reportTranslationStage(2, program)
 }
 
-class Phpifier(val program: JsProgram) {
+class Phpifier(val program: JsProgram, val opts: Opts = Opts()) {
+    class Opts(
+        val skipDebuggingOptionInExpressionStatements: Boolean = false)
+
     var nextDebugTag = 1L
 
     val shitToShit = mutableMapOf<Any, Any?>()
@@ -430,7 +433,12 @@ class Phpifier(val program: JsProgram) {
 //                    }
 //                }
 
-                ctx.replaceMe(invocation("phiExpressionStatement", listOf(expr)).makeStmt())
+                val args = mutableListOf(expr)
+                if (opts.skipDebuggingOptionInExpressionStatements)
+                    args += JsNameRef("array('skipDebugging' => true)")-{o->
+                        o.skipTransformation = true
+                    }
+                ctx.replaceMe(invocation("phiExpressionStatement", args).makeStmt())
 
 //            ctx.replaceMe(invocation("\$GLOBALS['shit'] = ${++shitCounter}; phiExpressionStatement", listOf(x.expression)).makeStmt())
 

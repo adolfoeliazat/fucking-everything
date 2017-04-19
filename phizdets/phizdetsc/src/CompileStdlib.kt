@@ -42,7 +42,9 @@ object CompileStdlib {
         Barbos(inputFilePath = adaptedKotlinJSFilePath,
                outputFilePath = stdlibPHPFilePath,
                copyPhiEngine = false,
-               copyPhiStdlib = false)
+               copyPhiStdlib = false,
+               useMap = false,
+               phpifierOpts = Phpifier.Opts(skipDebuggingOptionInExpressionStatements = true))
             .ignite()
         println(" OK, strange")
     }
