@@ -11,8 +11,13 @@ private fun goBananas() {
 }
 
 fun printSomeShit(shit: String) {
+    yetAnotherShit()
     println("First " + shit)
     println("Second " + shit)
+}
+
+fun yetAnotherShit() {
+    println("I am yet another shit")
 }
 
 

@@ -2126,20 +2126,38 @@ class PhiString extends PhiValue {
  * @param PhiExpression $expr
  */
 function phiExpressionStatement($expr, $opts = array()) {
-    if (!(array_key_exists('skipDebugging', $opts) && $opts['skipDebugging'])) {
-        strval("phiExpressionStatement_entry");
-        // phiPrintln('phiExpressionStatement_counter = ' . (@$GLOBALS['phiExpressionStatement_counter'] ?: 0));
-        $GLOBALS['phiExpressionStatement_counter'] = (@$GLOBALS['phiExpressionStatement_counter'] ?: 0) + 1;
-    }
+    // print('(entry) level == ' . @$GLOBALS['phiExpressionStatement_level']);
+    // print('; maxLevelToBreakOn == ' . @$GLOBALS['phiExpressionStatement_maxLevelToBreakOn']);
+    // print('; counter == ' . @$GLOBALS['phiExpressionStatement_counter']);
+    // print('; breakOnCounter == ' . @$GLOBALS['phiExpressionStatement_breakOnCounter']);
+    // print("\n");
 
-    $debug_exprToString = strval($expr);
-    $debug_env = Phi::getCurrentEnv()->deepClone();
+    $GLOBALS['phiExpressionStatement_level'] = (@$GLOBALS['phiExpressionStatement_level'] ?: 0) + 1;
+    // phiPrintln('level = ' . $GLOBALS['phiExpressionStatement_level']);
 
-    Phi::$phiExpressionStatement_expr = $expr;
-    if ($expr instanceof PhiFunctionExpression) {
-        Phi::getCurrentEnv()->setVar($expr->getName(), $expr->evaluate());
-    } else {
-        $expr->evaluate();
+    try {
+        if (!(array_key_exists('skipDebugging', $opts) && $opts['skipDebugging'])) {
+            if ($GLOBALS['phiExpressionStatement_level'] <= (@$GLOBALS['phiExpressionStatement_maxLevelToBreakOn'] ?: INF)) {
+                if (@$GLOBALS['phiExpressionStatement_counter'] === @$GLOBALS['phiExpressionStatement_breakOnCounter']) {
+                    strval("phiExpressionStatement: break here");
+                }
+                $GLOBALS['phiExpressionStatement_counter'] = (@$GLOBALS['phiExpressionStatement_counter'] ?: 0) + 1;
+                // phiPrintln('counter = ' . $GLOBALS['phiExpressionStatement_counter']);
+            }
+        }
+
+        $debug_exprToString = strval($expr);
+        $debug_env = Phi::getCurrentEnv()->deepClone();
+
+        Phi::$phiExpressionStatement_expr = $expr;
+        if ($expr instanceof PhiFunctionExpression) {
+            Phi::getCurrentEnv()->setVar($expr->getName(), $expr->evaluate());
+        } else {
+            $expr->evaluate();
+        }
+    } finally {
+        $GLOBALS['phiExpressionStatement_level'] = (@$GLOBALS['phiExpressionStatement_level'] ?: 0) - 1;
+        // phiPrintln('(exit) level == ' . $GLOBALS['phiExpressionStatement_level']);
     }
 }
 

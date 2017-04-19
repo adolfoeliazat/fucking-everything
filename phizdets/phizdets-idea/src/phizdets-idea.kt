@@ -41,6 +41,7 @@ import com.intellij.xdebugger.frame.XSuspendContext
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointManagerImpl
 import com.intellij.xdebugger.impl.breakpoints.XLineBreakpointImpl
+import com.siyeh.ig.memory.ZeroLengthArrayInitializationInspectionBase
 import com.sun.jna.platform.win32.User32
 import org.eclipse.core.runtime.ILog
 import org.eclipse.core.runtime.ILogListener
@@ -378,37 +379,57 @@ class XDebugDaemonAndShit(val project: Project) {
     }
 
     fun ideaSays_stepOver() {
-        dbgpSend(DBGpCommand.stepOver)
+        when (stepMode) {
+            XDebugDaemonAndShit.StepMode.Kotlin -> {
+                var expr = "\$GLOBALS['phiExpressionStatement_level']"
+                if (!standingInsidePhiExpressionStatement()) {
+                    expr += " + 1"
+                }
+                fuckingStep(maxLevelToBreakOnExpr = expr)
+            }
+            XDebugDaemonAndShit.StepMode.PHP -> {
+                dbgpSend(DBGpCommand.stepOver)
+            }
+        }
+    }
+
+    private val phiExpressionStatementBreakpointLineZeroBased by lazy {
+        // TODO:vgrechka Unhardcode phi-engine.php
+        val phiFile = File("E:/fegh/aps/aps-back-phi/out/production/aps-back-phi/phi-engine.php")
+        val res = phiFile.readLines().indexOfFirst {it.trim() == "strval(\"phiExpressionStatement: break here\");"}
+        check(res != -1) {"6d7e5f6a-4b0e-4c5b-bfe3-f46a8ddc81c5"}
+        res
     }
 
     fun ideaSays_stepInto() {
         when (stepMode) {
             XDebugDaemonAndShit.StepMode.Kotlin -> {
-//                dbgpSend(DBGpCommand.breakPointSet, "" +
-//                    "-t call" +
-//                    " -m phiExpressionStatement" +
-//                    " -- base64(false)") || return
-
-                dbgpSend(DBGpCommand.eval, "" +
-                    "-- ${base64Encode("@\$GLOBALS['phiExpressionStatement_counter'] = 0;")}"
-                ) || return
-
-                dbgpSend(DBGpCommand.breakPointSet, "" +
-                    "-t line" +
-                    " -f E:/fegh/aps/aps-back-phi/out/production/aps-back-phi/phi-engine.php" +
-                    " -n 2130" +
-                    " -- ${base64Encode("@\$GLOBALS['phiExpressionStatement_counter'] === 1")}") || return
-
-                dbgpSend(DBGpCommand.run) || return
-                // TODO:vgrechka Unhardcode line
-                // TODO:vgrechka Remove function breakpoint
-
+                fuckingStep(maxLevelToBreakOnExpr = "INF")
             }
-
             XDebugDaemonAndShit.StepMode.PHP -> {
                 dbgpSend(DBGpCommand.stepInto)
             }
         }
+    }
+
+    private var shitWasSet = false
+    private fun fuckingStep(maxLevelToBreakOnExpr: String) {
+        dbgpSend(DBGpCommand.eval, "-- ${base64Encode(
+            "array(" +
+                "@\$GLOBALS['phiExpressionStatement_counter'] = 0," +
+                "@\$GLOBALS['phiExpressionStatement_maxLevelToBreakOn'] = $maxLevelToBreakOnExpr," +
+                "@\$GLOBALS['phiExpressionStatement_breakOnCounter'] = 1);")}") || (return)
+
+        // TODO:vgrechka Unhardcode phi-engine.php
+        if (!shitWasSet) {
+            dbgpSend(DBGpCommand.breakPointSet, "" +
+                "-t line" +
+                " -f E:/fegh/aps/aps-back-phi/out/production/aps-back-phi/phi-engine.php" +
+                " -n ${phiExpressionStatementBreakpointLineZeroBased + 1}") || (return)
+            shitWasSet = true
+        }
+
+        dbgpSend(DBGpCommand.run) || (return)
     }
 
     private fun base64Encode(s: String) = Base64.getEncoder().encodeToString(s.toByteArray(Charsets.UTF_8))
@@ -436,13 +457,22 @@ class XDebugDaemonAndShit(val project: Project) {
         }
     }
 
+    class MyStackFrame(val virtualFile: VirtualFile, val line: Int) : XStackFrame() {
+        override fun getSourcePosition(): XSourcePosition? {
+            return XDebuggerUtil.getInstance().createPosition(virtualFile, line)
+        }
+    }
+
+    private var frames by notNull<List<MyStackFrame>>()
+
     private fun fuckingSuspended() {
         val filesLines = getCurrentStack() ?: run {
             clog("2e35e98d-1a4c-4b53-bbf4-331aebe842e5")
             return
         }
 
-        val frames = mutableListOf<XStackFrame>()
+        frames = mutableListOf<MyStackFrame>()
+
         for (fileLine in filesLines) {
             var virtualFile = IDEAStuff.getVirtualFileByPath(fileLine.file)!!
             var line = fileLine.line - 1
@@ -450,7 +480,7 @@ class XDebugDaemonAndShit(val project: Project) {
             val mapFilePath = virtualFile.path + ".map"
             if (File(mapFilePath).exists()) {
                 val mapping = sourceMappings.getCached(mapFilePath)
-                val originalMapping = mapping.getMappingForLine(fileLine.line, 999999)
+                val originalMapping = mapping.getMappingForLine(fileLine.line, 1)
                 if (originalMapping != null) {
                     val originalFilePath = originalMapping.originalFile.replace(Regex("^file://"), "")
                     val originalVirtualFile = IDEAStuff.getVirtualFileByPath(originalFilePath)
@@ -463,22 +493,23 @@ class XDebugDaemonAndShit(val project: Project) {
                 }
             }
 
-            val frame = object : XStackFrame() {
-                override fun getSourcePosition(): XSourcePosition? {
-                    return XDebuggerUtil.getInstance().createPosition(virtualFile, line)
-                }
-            }
+            frames += MyStackFrame(virtualFile, line)
+        }
 
-            frames += frame
+        var framesToShow = frames
+        if (stepMode == StepMode.Kotlin) {
+            if (standingInsidePhiExpressionStatement()) {
+                framesToShow = frames.drop(1)
+            }
         }
 
         val executionStack = object : XExecutionStack("Pizda") {
             override fun getTopFrame(): XStackFrame? {
-                return frames.first()
+                return framesToShow.first()
             }
 
             override fun computeStackFrames(firstFrameIndex: Int, container: XStackFrameContainer) {
-                container.addStackFrames(frames, true)
+                container.addStackFrames(framesToShow, true)
             }
         }
 
@@ -489,6 +520,11 @@ class XDebugDaemonAndShit(val project: Project) {
         }
 
         ideaDebugSession.positionReached(suspendContext)
+    }
+
+    private fun standingInsidePhiExpressionStatement(): Boolean {
+        val first = frames.first()
+        return first.virtualFile.name == "phi-engine.php" && first.line == phiExpressionStatementBreakpointLineZeroBased
     }
 
     fun getCurrentStack(): List<FileLine>? {
