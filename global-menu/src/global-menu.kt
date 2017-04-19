@@ -1,14 +1,17 @@
 package vgrechka.globalmenu
 
+import com.sun.javafx.fxml.builder.JavaFXSceneBuilder
 import com.sun.jna.platform.win32.User32
 import javafx.application.Application
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.concurrent.Task
+import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.input.*
+import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import javafx.stage.StageStyle
@@ -35,6 +38,9 @@ import java.util.concurrent.TimeUnit
 import java.util.ArrayList
 import java.util.concurrent.AbstractExecutorService
 import kotlin.concurrent.thread
+import kotlin.reflect.KFunction
+import kotlin.reflect.KFunction0
+import kotlin.reflect.jvm.isAccessible
 
 
 object JFXStuff {
@@ -60,12 +66,12 @@ object JFXStuff {
     }
 }
 
-interface MenuItem {
-    fun makeDetailsControl(): Control?
-    fun run()
+abstract class MenuItem {
+    abstract fun run()
+    open fun makeDetailsControl(): Control? = null
 }
 
-object FuckItem : MenuItem {
+object FuckItem : MenuItem() {
     override fun toString() = "Fuck"
     override fun makeDetailsControl() = Label("I am the Fuck item")
 
@@ -74,7 +80,7 @@ object FuckItem : MenuItem {
     }
 }
 
-object ShitItem : MenuItem {
+object ShitItem : MenuItem() {
     override fun toString() = "Shit"
     override fun makeDetailsControl() = null
 
@@ -83,7 +89,7 @@ object ShitItem : MenuItem {
     }
 }
 
-object BitchItem : MenuItem {
+object BitchItem : MenuItem() {
     override fun toString() = "Bitch"
     override fun makeDetailsControl() = Label("I am the Bitch item")
 
@@ -92,7 +98,7 @@ object BitchItem : MenuItem {
     }
 }
 
-object GlobalMenuItem_Phizdets_MakeSenseOfPHPSpew : MenuItem {
+object GlobalMenuItem_Phizdets_MakeSenseOfPHPSpew : MenuItem() {
     var spew by notNull<String>()
 
     override fun toString() = "Phizdets: Make sense of PHP spew"
@@ -126,51 +132,45 @@ object GlobalMenuGlobal {
     var primaryStage by notNull<Stage>()
 }
 
-private class VoidDispatchService : AbstractExecutorService() {
-    private var running = false
-
-    init {
-        running = true
-    }
-
-    override fun shutdown() {
-        running = false
-    }
-
-    override fun shutdownNow(): List<Runnable> {
-        running = false
-        return ArrayList(0)
-    }
-
-    override fun isShutdown(): Boolean {
-        return !running
-    }
-
-    override fun isTerminated(): Boolean {
-        return !running
-    }
-
-    @Throws(InterruptedException::class)
-    override fun awaitTermination(timeout: Long, unit: TimeUnit): Boolean {
-        return true
-    }
-
-    override fun execute(r: Runnable) {
-        r.run()
-    }
-}
+//private class VoidDispatchService : AbstractExecutorService() {
+//    private var running = false
+//
+//    init {
+//        running = true
+//    }
+//
+//    override fun shutdown() {
+//        running = false
+//    }
+//
+//    override fun shutdownNow(): List<Runnable> {
+//        running = false
+//        return ArrayList(0)
+//    }
+//
+//    override fun isShutdown(): Boolean {
+//        return !running
+//    }
+//
+//    override fun isTerminated(): Boolean {
+//        return !running
+//    }
+//
+//    @Throws(InterruptedException::class)
+//    override fun awaitTermination(timeout: Long, unit: TimeUnit): Boolean {
+//        return true
+//    }
+//
+//    override fun execute(r: Runnable) {
+//        r.run()
+//    }
+//}
 
 class StartGlobalMenu : Application() {
-    var vbox by notNull<VBox>()
-    var listView by notNull<ListView<MenuItem>>()
-
-    fun syncSelectedItem() {
-        vbox.children.remove(1, vbox.children.size)
-        val item = listView.selectionModel.selectedItem
-        if (item != null) {
-            item.makeDetailsControl()?.let {vbox.children += it}
-        }
-    }
+    private val config: GlobalMenuConfig = BotinokGlobalMenuConfig()
+    private var vbox by notNullOnce<VBox>()
+    private var listView by notNullOnce<ListView<MenuItem>>()
+    private var scene by notNullOnce<Scene>()
 
     override fun start(primaryStage: Stage) {
         GlobalMenuGlobal.primaryStage = primaryStage
@@ -188,26 +188,25 @@ class StartGlobalMenu : Application() {
                 override fun nativeKeyPressed(e: NativeKeyEvent) {
                     try {
                         if (e.modifiers.and(NativeMouseEvent.CTRL_L_MASK) == NativeMouseEvent.CTRL_L_MASK) {
-                            if (e.keyCode == NativeKeyEvent.VC_1) {
-                                try {
-//                                    robot.keyPress(java.awt.event.KeyEvent.VK_CONTROL)
-                                    robot.keyPress('C'.toInt())
-                                    // clog("Copied to clipboard")
-                                } finally {
-                                    robot.keyRelease('C'.toInt())
-//                                    robot.keyRelease(java.awt.event.KeyEvent.VK_CONTROL)
-                                }
+                            for (face in config.faces) {
+                                if (e.keyCode == face.keyCode) {
+                                    if (face.shouldCtrlCWhenInvoked) {
+                                        try {
+                                            robot.keyPress('C'.toInt())
+                                        } finally {
+                                            robot.keyRelease('C'.toInt())
+                                        }
+                                    }
 
-                                Platform.runLater {
-                                    try {
-//                                        val loc = MouseInfo.getPointerInfo().location
-//                                        primaryStage.x = loc.x.toDouble()
-//                                        primaryStage.y = loc.y.toDouble()
-                                        primaryStage.isIconified = true
-                                        primaryStage.isIconified = false
-                                        syncSelectedItem()
-                                    } catch(e: Exception) {
-                                        e.printStackTrace()
+                                    Platform.runLater {
+                                        try {
+                                            primaryStage.isIconified = true
+                                            scene.root = face.rootControl
+                                            primaryStage.isIconified = false
+                                            face.onDeiconified()
+                                        } catch(e: Exception) {
+                                            e.printStackTrace()
+                                        }
                                     }
                                 }
                             }
@@ -223,34 +222,7 @@ class StartGlobalMenu : Application() {
             exitProcess(0)
         }
 
-        vbox = VBox()
-        listView = ListView<MenuItem>(FXCollections.observableArrayList(
-            GlobalMenuItem_Phizdets_MakeSenseOfPHPSpew,
-            FuckItem,
-            ShitItem,
-            BitchItem))
-        vbox.children += listView
-
-        listView.selectionModel.selectedItemProperty().addListener {observable, oldValue, newValue ->
-            syncSelectedItem()
-        }
-
-        listView.selectionModel.selectFirst()
-        listView.addEventHandler(KeyEvent.KEY_PRESSED) {e->
-            if (e.code == KeyCode.ENTER) {
-                listView.selectionModel.selectedItem.run()
-            }
-            else if (e.code == KeyCode.ESCAPE) {
-                primaryStage.isIconified = true
-            }
-        }
-        listView.addEventHandler(MouseEvent.MOUSE_CLICKED) {e->
-            if (e.clickCount == 2) {
-                listView.selectionModel.selectedItem.run()
-            }
-        }
-
-        val scene = Scene(vbox, 300.0, 250.0)
+        scene = Scene(config.faces.first().rootControl, 300.0, 250.0)
 
         primaryStage.title = "Global Menu"
         primaryStage.scene = scene
@@ -265,5 +237,152 @@ class StartGlobalMenu : Application() {
         }
     }
 }
+
+
+
+
+private interface GlobalMenuConfig {
+    val faces: List<GlobalMenuFace>
+}
+
+private interface GlobalMenuFace {
+    val shouldCtrlCWhenInvoked: Boolean
+    val keyCode: Int // NativeKeyEvent.VC_*
+    val rootControl: Parent
+    fun onDeiconified()
+}
+
+private fun makeFuckingFace(keyCode: Int,
+                            items: List<MenuItem>,
+                            shouldCtrlCWhenInvoked: Boolean = false): GlobalMenuFace {
+    return object : GlobalMenuFace {
+        val vbox = VBox()
+        val listView = ListView<MenuItem>(FXCollections.observableArrayList(items))
+
+        init {
+            vbox.children += listView
+
+            listView.selectionModel.selectedItemProperty().addListener {observable, oldValue, newValue ->
+                syncSelectedItem()
+            }
+
+            listView.selectionModel.selectFirst()
+            listView.addEventHandler(KeyEvent.KEY_PRESSED) {e->
+                if (e.code == KeyCode.ENTER) {
+                    listView.selectionModel.selectedItem.run()
+                }
+                else if (e.code == KeyCode.ESCAPE) {
+                    GlobalMenuGlobal.primaryStage.isIconified = true
+                }
+            }
+            listView.addEventHandler(MouseEvent.MOUSE_CLICKED) {e->
+                if (e.clickCount == 2) {
+                    listView.selectionModel.selectedItem.run()
+                }
+            }
+        }
+
+        override val keyCode = keyCode
+        override val shouldCtrlCWhenInvoked = shouldCtrlCWhenInvoked
+
+        override fun onDeiconified() {
+            syncSelectedItem()
+        }
+
+        override val rootControl = vbox
+
+        fun syncSelectedItem() {
+            vbox.children.remove(1, vbox.children.size)
+            val item = listView.selectionModel.selectedItem
+            if (item != null) {
+                item.makeDetailsControl()?.let {vbox.children += it}
+            }
+        }
+    }
+}
+
+private class PhizdetsGlobalMenuConfig : GlobalMenuConfig {
+    override val faces = listOf(
+        makeFuckingFace(
+            keyCode = NativeKeyEvent.VC_1,
+            shouldCtrlCWhenInvoked = true,
+            items = listOf(
+                GlobalMenuItem_Phizdets_MakeSenseOfPHPSpew,
+                FuckItem,
+                ShitItem,
+                BitchItem
+            )
+        )
+    )
+}
+
+private class BotinokGlobalMenuConfig : GlobalMenuConfig {
+    override val faces = listOf(
+        makeFuckingFace(
+            keyCode = NativeKeyEvent.VC_1,
+            items = listOf(
+                object:MenuItem() {
+                    private var textArea by notNull<TextArea>()
+
+                    override fun toString() = "Get mouse location"
+
+                    override fun run() {
+                        showDamnLocation()
+                    }
+
+                    override fun makeDetailsControl(): TextArea {
+                        textArea = TextArea()
+                        textArea.minHeight = 100.0
+                        showDamnLocation()
+                        return textArea
+                    }
+
+                    private fun showDamnLocation() {
+                        val location = MouseInfo.getPointerInfo().location
+                        textArea.text = "${location.x}, ${location.y}"
+                    }
+                }
+            )
+        ),
+
+        makeFuckingFace(
+            keyCode = NativeKeyEvent.VC_2,
+            items = listOf(
+                fuckingSimpleMenuItem(this::playScenario1)
+            )
+        )
+    )
+
+    fun playScenario1() {
+        JFXStuff.errorAlert("Not now, hoser")
+    }
+
+}
+
+private fun fuckingSimpleMenuItem(function: KFunction0<Unit>): MenuItem {
+    return object:MenuItem() {
+        override fun toString() = function.name
+
+        override fun run() {
+            function.isAccessible = true
+            function.call()
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
