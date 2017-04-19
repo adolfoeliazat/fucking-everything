@@ -70,6 +70,7 @@ import java.awt.MouseInfo
 import java.awt.Robot
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
+import java.util.*
 import kotlin.properties.Delegates.notNull
 
 // TODO:vgrechka Support multiple debug sessions
@@ -383,9 +384,20 @@ class XDebugDaemonAndShit(val project: Project) {
     fun ideaSays_stepInto() {
         when (stepMode) {
             XDebugDaemonAndShit.StepMode.Kotlin -> {
+//                dbgpSend(DBGpCommand.breakPointSet, "" +
+//                    "-t call" +
+//                    " -m phiExpressionStatement" +
+//                    " -- base64(false)") || return
+
+                dbgpSend(DBGpCommand.eval, "" +
+                    "-- ${base64Encode("@\$GLOBALS['phiExpressionStatement_counter'] = 0;")}"
+                ) || return
+
                 dbgpSend(DBGpCommand.breakPointSet, "" +
-                    "-t call" +
-                    " -m phiExpressionStatement") || return
+                    "-t line" +
+                    " -f E:/fegh/aps/aps-back-phi/out/production/aps-back-phi/phi-engine.php" +
+                    " -n 2129" +
+                    " -- ${base64Encode("@\$GLOBALS['phiExpressionStatement_counter'] === 1")}") || return
 
                 dbgpSend(DBGpCommand.run) || return
                 // TODO:vgrechka Remove function breakpoint
@@ -396,6 +408,8 @@ class XDebugDaemonAndShit(val project: Project) {
             }
         }
     }
+
+    private fun base64Encode(s: String) = Base64.getEncoder().encodeToString(s.toByteArray(Charsets.UTF_8))
 
     private fun dbgpSend(cmd: String, args: String? = null): Boolean {
         val res = dbgpSession.sendSyncCmd(cmd, args)
