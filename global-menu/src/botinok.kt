@@ -1,6 +1,7 @@
 package vgrechka.botinok
 
 import javafx.event.EventType
+import javafx.geometry.Rectangle2D
 import javafx.scene.canvas.Canvas
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.control.Button
@@ -80,33 +81,81 @@ internal class BotinokGlobalMenuConfig : GlobalMenuConfig() {
 
 internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace() {
     data class Box(var x: Int = 0, var y: Int = 0, var w: Int = 0, var h: Int = 0) {
-        fun isOnInterior(px: Double, py: Double): Boolean {
-            return px >= x && px <= x + w - 1 && py >= y && py <= y + h - 1
-        }
+        fun isHit(e: MouseEvent) =
+            e.x >= x && e.x <= x + w - 1 && e.y >= y && e.y <= y + h - 1
     }
 
-    enum class SelectionMode(val edgePaint: Paint, val handlePaint: Paint) {
-        NORMAL(edgePaint = Color(1.0, 0.0, 0.0, 0.5),
-               handlePaint = Color(1.0, 0.0, 0.0, 0.5)),
+    class BoxPoints(var minX: Int, var minY: Int, var maxX: Int, var maxY: Int)
 
-        OPERATING(edgePaint = Color(0.0, 0.0, 1.0, 0.8),
-                  handlePaint = Color(0.0, 0.0, 1.0, 0.8))
+    enum class DragMutator {
+        TOP {override fun mutate(points: BoxPoints, dx: Int, dy: Int) {points.minY += dy}},
+        RIGHT {override fun mutate(points: BoxPoints, dx: Int, dy: Int) {points.maxX += dx}},
+        BOTTOM {override fun mutate(points: BoxPoints, dx: Int, dy: Int) {points.maxY += dy}},
+        LEFT {override fun mutate(points: BoxPoints, dx: Int, dy: Int) {points.minX += dx}};
+
+        abstract fun mutate(points: BoxPoints, dx: Int, dy: Int)
     }
 
-    enum class OperatingOn {ALL, TOP, RIGHT, BOTTOM, LEFT}
+    enum class SelectionMode {NORMAL, OPERATING}
+
+    enum class Handle {
+        TOP_LEFT {
+            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - d + q - handleSize + boxEdgeSize, box.y.toDouble() - d - q, handleSize, handleSize)
+            override val dragMutators = setOf(DragMutator.TOP, DragMutator.LEFT)
+        },
+        TOP {
+            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - d + q + boxEdgeSize + box.w / 2 - handleSize / 2, box.y.toDouble() - d - q, handleSize, handleSize)
+            override val dragMutators = setOf(DragMutator.TOP)
+        },
+        TOP_RIGHT {
+            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - d + q + boxEdgeSize + box.w, box.y.toDouble() - d - q, handleSize, handleSize)
+            override val dragMutators = setOf(DragMutator.TOP, DragMutator.RIGHT)
+        },
+        RIGHT {
+            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - d + q + boxEdgeSize + box.w, box.y.toDouble() - d - q + box.h / 2 + handleSize / 2, handleSize, handleSize)
+            override val dragMutators = setOf(DragMutator.RIGHT)
+        },
+        BOTTOM_RIGHT {
+            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - d + q + boxEdgeSize + box.w, box.y.toDouble() - d - q + box.h + handleSize, handleSize, handleSize)
+            override val dragMutators = setOf(DragMutator.BOTTOM, DragMutator.RIGHT)
+        },
+        BOTTOM {
+            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - d + q + boxEdgeSize + box.w / 2 - handleSize / 2, box.y.toDouble() - d - q + box.h + handleSize, handleSize, handleSize)
+            override val dragMutators = setOf(DragMutator.BOTTOM)
+        },
+        BOTTOM_LEFT {
+            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - d + q - handleSize + boxEdgeSize, box.y.toDouble() - d - q + box.h + handleSize, handleSize, handleSize)
+            override val dragMutators = setOf(DragMutator.BOTTOM, DragMutator.LEFT)
+        },
+        LEFT {
+            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - d + q - handleSize + boxEdgeSize, box.y.toDouble() - d - q + box.h / 2 + handleSize / 2, handleSize, handleSize)
+            override val dragMutators = setOf(DragMutator.LEFT)
+        };
+
+        abstract fun rectForBox(box: Box): Rectangle2D
+        abstract val dragMutators: Set<DragMutator>
+    }
+
+    companion object {
+        val boxEdgeSize = 5.0
+        val handleSize = boxEdgeSize * 2
+        val q = (handleSize - boxEdgeSize) / 2
+        val d = boxEdgeSize + q
+    }
 
     val vbox = VBox(8.0)
     override val rootControl = vbox
     private val tmpImgPath = "$tmpDirPath/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
     private var stackPane: StackPane
     private val boxes = mutableListOf<Box>()
-    private val frectLineWidth = 5.0
     private var selectedBox: Box? = null
     private var selectionMode = SelectionMode.NORMAL
-    private var operatingOn = OperatingOn.ALL
+    private var selectedHandles = setOf<Handle>()
     private var operationStartMouseX = 0.0
     private var operationStartMouseY = 0.0
     private var operationStartBoxParams by notNull<Box>()
+    val darkPaint = Color(0.5, 0.0, 0.0, 1.0)
+    val brightPaint = Color(1.0, 0.0, 0.0, 1.0)
 
     init {
         // clog("tmpImgPath = $tmpImgPath")
@@ -135,6 +184,7 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         boxes += Box()-{o->
             o.x = 25; o.y = 25
             o.w = 200; o.h = 100
+            selectedBox = o // TODO:vgrechka @kill
         }
 
         image = Image("file:///$tmpImgPath")
@@ -147,23 +197,31 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED) {e->
             if (e.button == MouseButton.PRIMARY) {
                 selectedBox = null
-                for (box in boxes) {
-                    if (box.isOnInterior(e.x, e.y)) {
-                        selectedBox = box
-                        operationStartBoxParams = box.copy()
-                        operationStartMouseX = e.x
-                        operationStartMouseY = e.y
-                        selectionMode = SelectionMode.OPERATING
-                        operatingOn = OperatingOn.ALL
-                        break
+                o@for (box in boxes) {
+                    for (handle in Handle.values()) {
+                        if (handle.rectForBox(box).contains(e.x, e.y)) {
+                            selectedBox = box
+                            selectedHandles = setOf(handle)
+                            break@o
+                        }
                     }
+                    if (box.isHit(e)) {
+                        selectedBox = box
+                        selectedHandles = Handle.values().toSet()
+                        break@o
+                    }
+                }
+                selectedBox?.let {
+                    operationStartBoxParams = it.copy()
+                    operationStartMouseX = e.x
+                    operationStartMouseY = e.y
+                    selectionMode = SelectionMode.OPERATING
                 }
             }
             drawShit()
         }
 
         canvas.addEventHandler(MouseEvent.MOUSE_RELEASED) {e->
-            selectedBox = null
             selectionMode = SelectionMode.NORMAL
             drawShit()
         }
@@ -171,18 +229,15 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED) {e->
             val selectedBox = this.selectedBox
             if (selectedBox != null && selectionMode == SelectionMode.OPERATING) {
-                val dx = e.x - operationStartMouseX
-                val dy = e.y - operationStartMouseY
-                when (operatingOn) {
-                    BotinokScreenshotFace.OperatingOn.ALL -> {
-                        selectedBox.x = Math.round(operationStartBoxParams.x + dx).toInt()
-                        selectedBox.y = Math.round(operationStartBoxParams.y + dy).toInt()
-                    }
-                    BotinokScreenshotFace.OperatingOn.TOP -> TODO()
-                    BotinokScreenshotFace.OperatingOn.RIGHT -> TODO()
-                    BotinokScreenshotFace.OperatingOn.BOTTOM -> TODO()
-                    BotinokScreenshotFace.OperatingOn.LEFT -> TODO()
-                }
+                val dx = Math.round(e.x - operationStartMouseX).toInt()
+                val dy = Math.round(e.y - operationStartMouseY).toInt()
+                val dragMutators = selectedHandles.flatMap{it.dragMutators}.toSet()
+                val points = BoxPoints(operationStartBoxParams.x, operationStartBoxParams.y, operationStartBoxParams.x + operationStartBoxParams.w - 1, operationStartBoxParams.y + operationStartBoxParams.h - 1)
+                dragMutators.forEach {it.mutate(points, dx, dy)}
+                selectedBox.x = points.minX
+                selectedBox.y = points.minY
+                selectedBox.w = points.maxX - points.minX + 1
+                selectedBox.h = points.maxY - points.minY + 1
                 drawShit()
             }
         }
@@ -191,35 +246,34 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
     private fun drawShit() {
         printState()
         gc.drawImage(image, 0.0, 0.0)
-        boxes.forEach {r->
+        boxes.forEach {box->
             // gc.fill = Color.BLUE
-            // gc.fillRect(r.x.toDouble(), r.y.toDouble(), r.w.toDouble(), r.h.toDouble())
+            // gc.fillRect(box.x.toDouble(), box.y.toDouble(), box.w.toDouble(), box.h.toDouble())
 
-            gc.stroke = selectionMode.edgePaint
-            gc.lineWidth = frectLineWidth
-            gc.strokeRect(r.x.toDouble() - frectLineWidth / 2, r.y.toDouble() - frectLineWidth / 2, r.w.toDouble() + frectLineWidth, r.h.toDouble() + frectLineWidth)
+            gc.stroke = when {
+                box === selectedBox -> darkPaint
+                else -> brightPaint
+            }
+            gc.lineWidth = boxEdgeSize
+            gc.strokeRect(box.x.toDouble() - boxEdgeSize / 2, box.y.toDouble() - boxEdgeSize / 2, box.w.toDouble() + boxEdgeSize, box.h.toDouble() + boxEdgeSize)
 
-            if (r === selectedBox) {
-                gc.fill = selectionMode.handlePaint
-                val handleSize = frectLineWidth * 1.5
-                val q = (handleSize - frectLineWidth) / 2
-                val d = frectLineWidth + q
-                // top
-                gc.fillRect(r.x.toDouble() - d + q + frectLineWidth + r.w / 2 - handleSize / 2, r.y.toDouble() - d - q, handleSize, handleSize)
-                // left
-                gc.fillRect(r.x.toDouble() - d + q - handleSize + frectLineWidth, r.y.toDouble() - d - q + r.h / 2 + handleSize / 2, handleSize, handleSize)
-                // right
-                gc.fillRect(r.x.toDouble() - d + q + frectLineWidth + r.w, r.y.toDouble() - d - q + r.h / 2 + handleSize / 2, handleSize, handleSize)
-                // bottom
-                gc.fillRect(r.x.toDouble() - d + q + frectLineWidth + r.w / 2 - handleSize / 2, r.y.toDouble() - d - q + r.h + handleSize, handleSize, handleSize)
+            if (box === selectedBox) {
+                for (handle in Handle.values()) {
+                    gc.fill = when {
+                        handle in selectedHandles -> brightPaint
+                        else -> darkPaint
+                    }
+                    val rect = handle.rectForBox(box)
+                    gc.fillRect(rect.minX, rect.minY, rect.width, rect.height)
+                }
             }
         }
     }
 
     fun printState() {
-        clog("selectedBox = ${if (selectedBox != null) "<something>" else "null"}"
-             + "; selectionMode = $selectionMode"
-             + "; operatingOn = $operatingOn")
+//        clog("selectedBox = ${if (selectedBox != null) "<something>" else "null"}"
+//                 + "; selectedHandles = $selectedHandles"
+//                 + "; selectionMode = $selectionMode")
     }
 }
 
