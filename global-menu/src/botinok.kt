@@ -1,6 +1,7 @@
 package vgrechka.botinok
 
 import javafx.scene.canvas.Canvas
+import javafx.scene.canvas.GraphicsContext
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
@@ -72,11 +73,21 @@ internal class BotinokGlobalMenuConfig : GlobalMenuConfig() {
 
 }
 
+private class FuckingRectangle {
+    var x = 0
+    var y = 0
+    var w = 0
+    var h = 0
+}
+
 internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace() {
     val vbox = VBox(8.0)
     override val rootControl = vbox
     private val tmpImgPath = "$tmpDirPath/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
     private var stackPane: StackPane
+    private val fuckingRectangles = mutableListOf<FuckingRectangle>()
+    private var activeFuckingRectangle: FuckingRectangle? = null
+    private val frectLineWidth = 5.0
 
     init {
         // clog("tmpImgPath = $tmpImgPath")
@@ -94,19 +105,51 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         ImageIO.write(image, "png", File(tmpImgPath))
     }
 
+    private var gc by notNull<GraphicsContext>()
+
     override fun onDeiconified() {
         GlobalMenuPile.resizePrimaryStage(1000, 500)
         stackPane.children.clear()
+        fuckingRectangles.clear()
+        fuckingRectangles += FuckingRectangle()-{o->
+            o.x = 25; o.y = 25
+            o.w = 200; o.h = 100
+            activeFuckingRectangle = o
+        }
 
         val image = Image("file:///$tmpImgPath")
 
         val canvas = Canvas(image.width, image.height)
         stackPane.children += canvas
-        val gc = canvas.graphicsContext2D
+        gc = canvas.graphicsContext2D
+        drawShit(image)
+    }
+
+    private fun drawShit(image: Image) {
         gc.drawImage(image, 0.0, 0.0)
-        gc.stroke = Color(1.0, 0.0, 0.0, 0.5)
-        gc.lineWidth = 5.0
-        gc.strokeRect(10.0, 10.0, 50.0, 30.0)
+        fuckingRectangles.forEach {r->
+            // gc.fill = Color.BLUE
+            // gc.fillRect(r.x.toDouble(), r.y.toDouble(), r.w.toDouble(), r.h.toDouble())
+
+            gc.stroke = Color(1.0, 0.0, 0.0, 0.5)
+            gc.lineWidth = frectLineWidth
+            gc.strokeRect(r.x.toDouble() - frectLineWidth / 2, r.y.toDouble() - frectLineWidth / 2, r.w.toDouble() + frectLineWidth, r.h.toDouble() + frectLineWidth)
+
+            if (r === activeFuckingRectangle) {
+                gc.fill = Color(0.5, 0.0, 0.0, 0.8)
+                val handleSize = frectLineWidth * 1.5
+                val q = (handleSize - frectLineWidth) / 2
+                val d = frectLineWidth + q
+                // top
+                gc.fillRect(r.x.toDouble() - d + q + frectLineWidth + r.w / 2 - handleSize / 2, r.y.toDouble() - d - q, handleSize, handleSize)
+                // left
+                gc.fillRect(r.x.toDouble() - d + q - handleSize + frectLineWidth, r.y.toDouble() - d - q + r.h / 2 + handleSize / 2, handleSize, handleSize)
+                // right
+                gc.fillRect(r.x.toDouble() - d + q + frectLineWidth + r.w, r.y.toDouble() - d - q + r.h / 2 + handleSize / 2, handleSize, handleSize)
+                // bottom
+                gc.fillRect(r.x.toDouble() - d + q + frectLineWidth + r.w / 2 - handleSize / 2, r.y.toDouble() - d - q + r.h + handleSize, handleSize, handleSize)
+            }
+        }
     }
 }
 
