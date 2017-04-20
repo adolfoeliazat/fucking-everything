@@ -33,6 +33,7 @@ import java.lang.reflect.AccessibleObject.setAccessible
 import org.jnativehook.NativeInputEvent
 import org.jnativehook.keyboard.NativeKeyAdapter
 import org.jnativehook.keyboard.NativeKeyEvent
+import vgrechka.botinok.*
 import java.awt.MouseInfo
 import java.util.concurrent.TimeUnit
 import java.util.ArrayList
@@ -119,21 +120,30 @@ object GlobalMenuItem_Phizdets_MakeSenseOfPHPSpew : MenuItem() {
 
     override fun run() {
         try {
-            GlobalMenuGlobal.primaryStage.isIconified = true
+            GlobalMenuPile.primaryStage.isIconified = true
             sendCommandToIDEABackdoor(Command_PhiMakeSenseOfPHPSpew(spew))
-            GlobalMenuGlobal.primaryStage.isIconified = true
+            GlobalMenuPile.primaryStage.isIconified = true
         } catch(e: Exception) {
             JFXStuff.errorAlert(e)
         }
     }
 }
 
-object GlobalMenuGlobal {
+object GlobalMenuPile {
     var primaryStage by notNull<Stage>()
+
+    fun resizePrimaryStage(width: Int, height: Int) {
+        primaryStage.width = width.toDouble()
+        primaryStage.height = height.toDouble()
+    }
+
+    fun resizePrimaryStageToDefault() {
+        resizePrimaryStage(300, 250)
+    }
 }
 
-//private class VoidDispatchService : AbstractExecutorService() {
-//    private var running = false
+//internal class VoidDispatchService : AbstractExecutorService() {
+//    internal var running = false
 //
 //    init {
 //        running = true
@@ -173,7 +183,7 @@ class StartGlobalMenu : Application() {
     private var scene by notNullOnce<Scene>()
 
     override fun start(primaryStage: Stage) {
-        GlobalMenuGlobal.primaryStage = primaryStage
+        GlobalMenuPile.primaryStage = primaryStage
         val robot = Robot()
 
         run { // Install hook
@@ -202,7 +212,9 @@ class StartGlobalMenu : Application() {
                                         try {
                                             primaryStage.isIconified = true
                                             scene.root = face.rootControl
+                                            face.onBeforeDeiconified()
                                             primaryStage.isIconified = false
+                                            GlobalMenuPile.resizePrimaryStageToDefault()
                                             face.onDeiconified()
                                         } catch(e: Exception) {
                                             e.printStackTrace()
@@ -222,13 +234,20 @@ class StartGlobalMenu : Application() {
             exitProcess(0)
         }
 
-        scene = Scene(config.faces.first().rootControl, 300.0, 250.0)
+//        initFaces()
+        scene = Scene(config.faces.first().rootControl) // , 300.0, 250.0)
 
         primaryStage.title = "Global Menu"
         primaryStage.scene = scene
         primaryStage.initStyle(StageStyle.DECORATED)
+        GlobalMenuPile.resizePrimaryStageToDefault()
         primaryStage.show()
     }
+
+//    private fun initFaces() {
+//        for (face in config.faces) {
+//        }
+//    }
 
     companion object {
         @JvmStatic
@@ -241,21 +260,22 @@ class StartGlobalMenu : Application() {
 
 
 
-private interface GlobalMenuConfig {
+internal interface GlobalMenuConfig {
     val faces: List<GlobalMenuFace>
 }
 
-private interface GlobalMenuFace {
-    val shouldCtrlCWhenInvoked: Boolean
-    val keyCode: Int // NativeKeyEvent.VC_*
-    val rootControl: Parent
-    fun onDeiconified()
+internal abstract class GlobalMenuFace {
+    open val shouldCtrlCWhenInvoked: Boolean = false
+    abstract val keyCode: Int // NativeKeyEvent.VC_*
+    abstract val rootControl: Parent
+    open fun onDeiconified() {}
+    open fun onBeforeDeiconified() {}
 }
 
-private fun makeFuckingFace(keyCode: Int,
-                            items: List<MenuItem>,
-                            shouldCtrlCWhenInvoked: Boolean = false): GlobalMenuFace {
-    return object : GlobalMenuFace {
+internal fun makeListFace(keyCode: Int,
+                         items: List<MenuItem>,
+                         shouldCtrlCWhenInvoked: Boolean = false): GlobalMenuFace {
+    return object : GlobalMenuFace() {
         val vbox = VBox()
         val listView = ListView<MenuItem>(FXCollections.observableArrayList(items))
 
@@ -272,7 +292,7 @@ private fun makeFuckingFace(keyCode: Int,
                     listView.selectionModel.selectedItem.run()
                 }
                 else if (e.code == KeyCode.ESCAPE) {
-                    GlobalMenuGlobal.primaryStage.isIconified = true
+                    GlobalMenuPile.primaryStage.isIconified = true
                 }
             }
             listView.addEventHandler(MouseEvent.MOUSE_CLICKED) {e->
@@ -301,9 +321,9 @@ private fun makeFuckingFace(keyCode: Int,
     }
 }
 
-private class PhizdetsGlobalMenuConfig : GlobalMenuConfig {
+internal class PhizdetsGlobalMenuConfig : GlobalMenuConfig {
     override val faces = listOf(
-        makeFuckingFace(
+        makeListFace(
             keyCode = NativeKeyEvent.VC_1,
             shouldCtrlCWhenInvoked = true,
             items = listOf(
@@ -316,50 +336,8 @@ private class PhizdetsGlobalMenuConfig : GlobalMenuConfig {
     )
 }
 
-private class BotinokGlobalMenuConfig : GlobalMenuConfig {
-    override val faces = listOf(
-        makeFuckingFace(
-            keyCode = NativeKeyEvent.VC_1,
-            items = listOf(
-                object:MenuItem() {
-                    private var textArea by notNull<TextArea>()
 
-                    override fun toString() = "Get mouse location"
-
-                    override fun run() {
-                        showDamnLocation()
-                    }
-
-                    override fun makeDetailsControl(): TextArea {
-                        textArea = TextArea()
-                        textArea.minHeight = 100.0
-                        showDamnLocation()
-                        return textArea
-                    }
-
-                    private fun showDamnLocation() {
-                        val location = MouseInfo.getPointerInfo().location
-                        textArea.text = "${location.x}, ${location.y}"
-                    }
-                }
-            )
-        ),
-
-        makeFuckingFace(
-            keyCode = NativeKeyEvent.VC_2,
-            items = listOf(
-                fuckingSimpleMenuItem(this::playScenario1)
-            )
-        )
-    )
-
-    fun playScenario1() {
-        JFXStuff.errorAlert("Not now, hoser")
-    }
-
-}
-
-private fun fuckingSimpleMenuItem(function: KFunction0<Unit>): MenuItem {
+internal fun fuckingSimpleMenuItem(function: KFunction0<Unit>): MenuItem {
     return object:MenuItem() {
         override fun toString() = function.name
 
