@@ -211,6 +211,7 @@ operator fun StringBuilder.plusAssign(x: Any?) {
     this.append(x)
 }
 
+val tmpDirPath get() = System.getProperty("java.io.tmpdir")
 
 
 

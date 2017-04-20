@@ -129,7 +129,7 @@ object GlobalMenuItem_Phizdets_MakeSenseOfPHPSpew : MenuItem() {
     }
 }
 
-object GlobalMenuPile {
+internal object GlobalMenuPile {
     var primaryStage by notNull<Stage>()
 
     fun resizePrimaryStage(width: Int, height: Int) {
@@ -139,6 +139,30 @@ object GlobalMenuPile {
 
     fun resizePrimaryStageToDefault() {
         resizePrimaryStage(300, 250)
+    }
+
+    fun switchToFace(face: GlobalMenuFace) {
+        if (face.shouldCtrlCWhenInvoked) {
+            val robot = Robot()
+            try {
+                robot.keyPress('C'.toInt())
+            } finally {
+                robot.keyRelease('C'.toInt())
+            }
+        }
+
+        Platform.runLater {
+            try {
+                primaryStage.isIconified = true
+                primaryStage.scene.root = face.rootControl
+                face.onBeforeDeiconified()
+                primaryStage.isIconified = false
+                GlobalMenuPile.resizePrimaryStageToDefault()
+                face.onDeiconified()
+            } catch(e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }
 
@@ -200,26 +224,7 @@ class StartGlobalMenu : Application() {
                         if (e.modifiers.and(NativeMouseEvent.CTRL_L_MASK) == NativeMouseEvent.CTRL_L_MASK) {
                             for (face in config.faces) {
                                 if (e.keyCode == face.keyCode) {
-                                    if (face.shouldCtrlCWhenInvoked) {
-                                        try {
-                                            robot.keyPress('C'.toInt())
-                                        } finally {
-                                            robot.keyRelease('C'.toInt())
-                                        }
-                                    }
-
-                                    Platform.runLater {
-                                        try {
-                                            primaryStage.isIconified = true
-                                            scene.root = face.rootControl
-                                            face.onBeforeDeiconified()
-                                            primaryStage.isIconified = false
-                                            GlobalMenuPile.resizePrimaryStageToDefault()
-                                            face.onDeiconified()
-                                        } catch(e: Exception) {
-                                            e.printStackTrace()
-                                        }
-                                    }
+                                    GlobalMenuPile.switchToFace(face)
                                 }
                             }
                         }
@@ -235,14 +240,18 @@ class StartGlobalMenu : Application() {
         }
 
 //        initFaces()
-        scene = Scene(config.faces.first().rootControl) // , 300.0, 250.0)
+        // scene = Scene(config.faces.first().rootControl) // , 300.0, 250.0)
+        scene = Scene(Label(""))
 
         primaryStage.title = "Global Menu"
         primaryStage.scene = scene
         primaryStage.initStyle(StageStyle.DECORATED)
         GlobalMenuPile.resizePrimaryStageToDefault()
         primaryStage.show()
+
+        GlobalMenuPile.switchToFace(config.faces[config.initialFaceIndex])
     }
+
 
 //    private fun initFaces() {
 //        for (face in config.faces) {
@@ -260,8 +269,9 @@ class StartGlobalMenu : Application() {
 
 
 
-internal interface GlobalMenuConfig {
-    val faces: List<GlobalMenuFace>
+internal abstract class GlobalMenuConfig {
+    open val initialFaceIndex = 0
+    abstract val faces: List<GlobalMenuFace>
 }
 
 internal abstract class GlobalMenuFace {
@@ -321,7 +331,7 @@ internal fun makeListFace(keyCode: Int,
     }
 }
 
-internal class PhizdetsGlobalMenuConfig : GlobalMenuConfig {
+internal class PhizdetsGlobalMenuConfig : GlobalMenuConfig() {
     override val faces = listOf(
         makeListFace(
             keyCode = NativeKeyEvent.VC_1,
