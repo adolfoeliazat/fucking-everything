@@ -1,5 +1,6 @@
 package vgrechka.botinok
 
+import javafx.event.EventType
 import javafx.scene.canvas.Canvas
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.control.Button
@@ -8,10 +9,13 @@ import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextArea
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
+import javafx.scene.input.MouseButton
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.HBox
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
+import javafx.scene.paint.Paint
 import org.jnativehook.keyboard.NativeKeyEvent
 import vgrechka.*
 import vgrechka.globalmenu.*
@@ -73,21 +77,36 @@ internal class BotinokGlobalMenuConfig : GlobalMenuConfig() {
 
 }
 
-private class FuckingRectangle {
-    var x = 0
-    var y = 0
-    var w = 0
-    var h = 0
-}
 
 internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace() {
+    data class Box(var x: Int = 0, var y: Int = 0, var w: Int = 0, var h: Int = 0) {
+        fun isOnInterior(px: Double, py: Double): Boolean {
+            return px >= x && px <= x + w - 1 && py >= y && py <= y + h - 1
+        }
+    }
+
+    enum class SelectionMode(val edgePaint: Paint, val handlePaint: Paint) {
+        NORMAL(edgePaint = Color(1.0, 0.0, 0.0, 0.5),
+               handlePaint = Color(1.0, 0.0, 0.0, 0.5)),
+
+        OPERATING(edgePaint = Color(0.0, 0.0, 1.0, 0.8),
+                  handlePaint = Color(0.0, 0.0, 1.0, 0.8))
+    }
+
+    enum class OperatingOn {ALL, TOP, RIGHT, BOTTOM, LEFT}
+
     val vbox = VBox(8.0)
     override val rootControl = vbox
     private val tmpImgPath = "$tmpDirPath/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
     private var stackPane: StackPane
-    private val fuckingRectangles = mutableListOf<FuckingRectangle>()
-    private var activeFuckingRectangle: FuckingRectangle? = null
+    private val boxes = mutableListOf<Box>()
     private val frectLineWidth = 5.0
+    private var selectedBox: Box? = null
+    private var selectionMode = SelectionMode.NORMAL
+    private var operatingOn = OperatingOn.ALL
+    private var operationStartMouseX = 0.0
+    private var operationStartMouseY = 0.0
+    private var operationStartBoxParams by notNull<Box>()
 
     init {
         // clog("tmpImgPath = $tmpImgPath")
@@ -107,36 +126,81 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
 
     private var gc by notNull<GraphicsContext>()
 
+    private var image by notNull<Image>()
+
     override fun onDeiconified() {
         GlobalMenuPile.resizePrimaryStage(1000, 500)
         stackPane.children.clear()
-        fuckingRectangles.clear()
-        fuckingRectangles += FuckingRectangle()-{o->
+        boxes.clear()
+        boxes += Box()-{o->
             o.x = 25; o.y = 25
             o.w = 200; o.h = 100
-            activeFuckingRectangle = o
         }
 
-        val image = Image("file:///$tmpImgPath")
+        image = Image("file:///$tmpImgPath")
 
         val canvas = Canvas(image.width, image.height)
         stackPane.children += canvas
         gc = canvas.graphicsContext2D
-        drawShit(image)
+        drawShit()
+
+        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED) {e->
+            if (e.button == MouseButton.PRIMARY) {
+                selectedBox = null
+                for (box in boxes) {
+                    if (box.isOnInterior(e.x, e.y)) {
+                        selectedBox = box
+                        operationStartBoxParams = box.copy()
+                        operationStartMouseX = e.x
+                        operationStartMouseY = e.y
+                        selectionMode = SelectionMode.OPERATING
+                        operatingOn = OperatingOn.ALL
+                        break
+                    }
+                }
+            }
+            drawShit()
+        }
+
+        canvas.addEventHandler(MouseEvent.MOUSE_RELEASED) {e->
+            selectedBox = null
+            selectionMode = SelectionMode.NORMAL
+            drawShit()
+        }
+
+        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED) {e->
+            val selectedBox = this.selectedBox
+            if (selectedBox != null && selectionMode == SelectionMode.OPERATING) {
+                val dx = e.x - operationStartMouseX
+                val dy = e.y - operationStartMouseY
+                when (operatingOn) {
+                    BotinokScreenshotFace.OperatingOn.ALL -> {
+                        selectedBox.x = Math.round(operationStartBoxParams.x + dx).toInt()
+                        selectedBox.y = Math.round(operationStartBoxParams.y + dy).toInt()
+                    }
+                    BotinokScreenshotFace.OperatingOn.TOP -> TODO()
+                    BotinokScreenshotFace.OperatingOn.RIGHT -> TODO()
+                    BotinokScreenshotFace.OperatingOn.BOTTOM -> TODO()
+                    BotinokScreenshotFace.OperatingOn.LEFT -> TODO()
+                }
+                drawShit()
+            }
+        }
     }
 
-    private fun drawShit(image: Image) {
+    private fun drawShit() {
+        printState()
         gc.drawImage(image, 0.0, 0.0)
-        fuckingRectangles.forEach {r->
+        boxes.forEach {r->
             // gc.fill = Color.BLUE
             // gc.fillRect(r.x.toDouble(), r.y.toDouble(), r.w.toDouble(), r.h.toDouble())
 
-            gc.stroke = Color(1.0, 0.0, 0.0, 0.5)
+            gc.stroke = selectionMode.edgePaint
             gc.lineWidth = frectLineWidth
             gc.strokeRect(r.x.toDouble() - frectLineWidth / 2, r.y.toDouble() - frectLineWidth / 2, r.w.toDouble() + frectLineWidth, r.h.toDouble() + frectLineWidth)
 
-            if (r === activeFuckingRectangle) {
-                gc.fill = Color(0.5, 0.0, 0.0, 0.8)
+            if (r === selectedBox) {
+                gc.fill = selectionMode.handlePaint
                 val handleSize = frectLineWidth * 1.5
                 val q = (handleSize - frectLineWidth) / 2
                 val d = frectLineWidth + q
@@ -150,6 +214,12 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
                 gc.fillRect(r.x.toDouble() - d + q + frectLineWidth + r.w / 2 - handleSize / 2, r.y.toDouble() - d - q + r.h + handleSize, handleSize, handleSize)
             }
         }
+    }
+
+    fun printState() {
+        clog("selectedBox = ${if (selectedBox != null) "<something>" else "null"}"
+             + "; selectionMode = $selectionMode"
+             + "; operatingOn = $operatingOn")
     }
 }
 
