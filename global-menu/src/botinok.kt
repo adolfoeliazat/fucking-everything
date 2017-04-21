@@ -83,19 +83,39 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
     override val rootControl = vbox
     private val tmpImgPath = "$tmpDirPath/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
     private var stackPane: StackPane
-    private val boxes = mutableListOf<Box>()
-    private var selectedBox: Box? = null
     private var selectedHandles = setOf<Handle>()
     private var operationStartMouseX = 0.0
     private var operationStartMouseY = 0.0
     private var operationStartBoxParams by notNull<Box>()
     private val darkPaint = Color(0.5, 0.0, 0.0, 1.0)
     private val brightPaint = Color(1.0, 0.0, 0.0, 1.0)
-    private var gc by notNull<GraphicsContext>()
+//    private var gc by notNull<GraphicsContext>()
     private var image by notNull<Image>()
     private var newBoxX by notNull<Int>()
     private var newBoxY by notNull<Int>()
+    private var canvasContextMenu by notNull<ContextMenu>()
+    private var boxContextMenu by notNull<ContextMenu>()
+    private var play by notNull<Play>()
+    private var canvas by notNull<Canvas>()
 
+    class Play {
+        val arenas = mutableListOf<Arena>()
+        @Transient val editing = PlayEditing()
+    }
+
+    class PlayEditing {
+        var selectedArena: Arena? = null
+    }
+
+    class Arena {
+        var title = "Unfuckingtitled"
+        val boxes = mutableListOf<Box>()
+        @Transient val editing = ArenaEditing()
+    }
+
+    class ArenaEditing {
+        var selectedBox: Box? = null
+    }
 
     data class Box(var x: Int = 0, var y: Int = 0, var w: Int = 0, var h: Int = 0) {
         fun isHit(testX: Double, testY: Double) =
@@ -177,49 +197,63 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
     override fun onDeiconified() {
         GlobalMenuPile.resizePrimaryStage(1000, 500)
         stackPane.children.clear()
-        boxes.clear()
 
-        run { // Initial boxes
-            boxes += Box()-{o->
-                o.x = 25; o.y = 25
-                o.w = 200; o.h = 100
+        run { // Test initial shit
+            play = Play()
+
+            addNewArena()
+            play.arenas.last()-{o->
+                o.boxes-{a->
+                    a += Box()-{o->
+                        o.x = 25; o.y = 25
+                        o.w = 200; o.h = 100
+                    }
+                    a += Box()-{o->
+                        o.x = 400; o.y = 150
+                        o.w = 50; o.h = 150
+                    }
+                }
             }
-            boxes += Box()-{o->
-                o.x = 400; o.y = 150
-                o.w = 50; o.h = 150
+
+            addNewArena()
+            play.arenas.last()-{o->
+                o.boxes-{a->
+                    a += Box()-{o->
+                        o.x = 200; o.y = 100
+                        o.w = 150; o.h = 250
+                    }
+                }
             }
         }
 
         image = Image("file:///$tmpImgPath")
 
-        val canvas = Canvas(image.width, image.height)
+        canvas = Canvas(image.width, image.height)
         stackPane.children += canvas
 
-        val canvasContextMenu = ContextMenu()
-        canvasContextMenu.items += MenuItem("Create Box")-{o->
-            o.onAction = EventHandler {e->
-                boxes += Box()-{o->
-                    o.x = newBoxX; o.y = newBoxY
-                    o.w = 100; o.h = 100
-                }
-                drawShit()
+        canvasContextMenu = ContextMenu()
+        canvasContextMenu.items += makeMenuItem {
+            selectedArenaBang().boxes += Box()-{o->
+                o.x = newBoxX; o.y = newBoxY
+                o.w = 100; o.h = 100
             }
+            drawShit()
         }
 
-        val boxContextMenu = ContextMenu()
+        boxContextMenu = ContextMenu()
         boxContextMenu.items += MenuItem("Delete")-{o->
             o.onAction = EventHandler {e->
-                boxes -= selectedBox!!
+                selectedArenaBang().boxes -= selectedArenaBang().editing.selectedBox!!
                 drawShit()
             }
         }
 
         canvas.setOnContextMenuRequested {e->
             val p = canvas.screenToLocal(e.screenX, e.screenY)
-            val hitBox = boxes.find {it.isHit(p.x, p.y)}
+            val hitBox = selectedArenaBang().boxes.find {it.isHit(p.x, p.y)}
             val menuToShow = when {
                 hitBox != null -> {
-                    selectedBox = hitBox
+                    selectedArenaBang().editing.selectedBox = hitBox
                     drawShit()
                     boxContextMenu
                 }
@@ -230,32 +264,31 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
                 }
             }
 
-            canvasContextMenu.hide()
-            boxContextMenu.hide()
+            hideContextMenus()
             menuToShow.show(canvas, e.screenX, e.screenY)
         }
 
-        gc = canvas.graphicsContext2D
         drawShit()
 
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED) {e->
             if (e.button == MouseButton.PRIMARY) {
-                selectedBox = null
-                o@for (box in boxes) {
+                hideContextMenus()
+                selectedArenaBang().editing.selectedBox = null
+                o@for (box in selectedArenaBang().boxes) {
                     for (handle in Handle.values()) {
                         if (handle.rectForBox(box).contains(e.x, e.y)) {
-                            selectedBox = box
+                            selectedArenaBang().editing.selectedBox = box
                             selectedHandles = setOf(handle)
                             break@o
                         }
                     }
                     if (box.isHit(e.x, e.y)) {
-                        selectedBox = box
+                        selectedArenaBang().editing.selectedBox = box
                         selectedHandles = Handle.values().toSet()
                         break@o
                     }
                 }
-                selectedBox?.let {
+                selectedArenaBang().editing.selectedBox?.let {
                     operationStartBoxParams = it.copy()
                     operationStartMouseX = e.x
                     operationStartMouseY = e.y
@@ -270,7 +303,7 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
 
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED) {e->
             if (e.button == MouseButton.PRIMARY) {
-                val selectedBox = this.selectedBox
+                val selectedBox = selectedArenaBang().editing.selectedBox
                 if (selectedBox != null) {
                     val dx = Math.round(e.x - operationStartMouseX).toInt()
                     val dy = Math.round(e.y - operationStartMouseY).toInt()
@@ -287,23 +320,50 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         }
     }
 
+    private fun addNewArenaAndUpdateUI() {
+        addNewArena()
+        drawShit()
+    }
+
+    private fun addNewArena() {
+        val arena = Arena() - {o ->
+            o.title = "Unfuckingtitled arena ${play.arenas.size + 1}"
+        }
+        play.arenas += arena
+        play.editing.selectedArena = arena
+    }
+
+    private fun hideContextMenus() {
+        canvasContextMenu.hide()
+        boxContextMenu.hide()
+    }
+
+    private fun makeMenuItem(onAction: () -> Unit): MenuItem {
+        return MenuItem("Create Box")-{o->
+            o.onAction = EventHandler {e->
+                onAction()
+            }
+        }
+    }
+
     private fun drawShit() {
         printState()
+        val gc = canvas.graphicsContext2D
         gc.drawImage(image, 0.0, 0.0)
-        boxes.forEach {box->
+        selectedArenaBang().boxes.forEach {box->
 //            run { // Area to be captured by the box
 //                gc.fill = Color.BLUE
 //                gc.fillRect(box.x.toDouble(), box.y.toDouble(), box.w.toDouble(), box.h.toDouble())
 //            }
 
             gc.stroke = when {
-                box === selectedBox -> darkPaint
+                box === selectedArenaBang().editing.selectedBox -> darkPaint
                 else -> brightPaint
             }
             gc.lineWidth = boxEdgeSize
             gc.strokeRect(box.x.toDouble() - boxEdgeSize / 2, box.y.toDouble() - boxEdgeSize / 2, box.w.toDouble() + boxEdgeSize, box.h.toDouble() + boxEdgeSize)
 
-            if (box === selectedBox) {
+            if (box === selectedArenaBang().editing.selectedBox) {
                 for (handle in Handle.values()) {
                     gc.fill = when {
                         handle in selectedHandles -> brightPaint
@@ -315,6 +375,8 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
             }
         }
     }
+
+    private fun selectedArenaBang() = play.editing.selectedArena!!
 
     fun printState() {
 //        clog("selectedBox = ${if (selectedBox != null) "<something>" else "null"}"
