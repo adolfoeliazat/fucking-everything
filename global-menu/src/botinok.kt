@@ -98,8 +98,8 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
 
 
     data class Box(var x: Int = 0, var y: Int = 0, var w: Int = 0, var h: Int = 0) {
-        fun isHit(e: MouseEvent) =
-            e.x >= x && e.x <= x + w - 1 && e.y >= y && e.y <= y + h - 1
+        fun isHit(testX: Double, testY: Double) =
+            testX >= x && testX <= x + w - 1 && testY >= y && testY <= y + h - 1
     }
 
     class BoxPoints(var minX: Int, var minY: Int, var maxX: Int, var maxY: Int)
@@ -195,8 +195,8 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         val canvas = Canvas(image.width, image.height)
         stackPane.children += canvas
 
-        val contextMenu = ContextMenu()
-        contextMenu.items += MenuItem("Create Box")-{o->
+        val canvasContextMenu = ContextMenu()
+        canvasContextMenu.items += MenuItem("Create Box")-{o->
             o.onAction = EventHandler {e->
                 boxes += Box()-{o->
                     o.x = newBoxX; o.y = newBoxY
@@ -206,11 +206,33 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
             }
         }
 
+        val boxContextMenu = ContextMenu()
+        boxContextMenu.items += MenuItem("Delete")-{o->
+            o.onAction = EventHandler {e->
+                boxes -= selectedBox!!
+                drawShit()
+            }
+        }
+
         canvas.setOnContextMenuRequested {e->
             val p = canvas.screenToLocal(e.screenX, e.screenY)
-            newBoxX = Math.round(p.x).toInt()
-            newBoxY = Math.round(p.y).toInt()
-            contextMenu.show(canvas, e.screenX, e.screenY)
+            val hitBox = boxes.find {it.isHit(p.x, p.y)}
+            val menuToShow = when {
+                hitBox != null -> {
+                    selectedBox = hitBox
+                    drawShit()
+                    boxContextMenu
+                }
+                else -> {
+                    newBoxX = Math.round(p.x).toInt()
+                    newBoxY = Math.round(p.y).toInt()
+                    canvasContextMenu
+                }
+            }
+
+            canvasContextMenu.hide()
+            boxContextMenu.hide()
+            menuToShow.show(canvas, e.screenX, e.screenY)
         }
 
         gc = canvas.graphicsContext2D
@@ -227,7 +249,7 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
                             break@o
                         }
                     }
-                    if (box.isHit(e)) {
+                    if (box.isHit(e.x, e.y)) {
                         selectedBox = box
                         selectedHandles = Handle.values().toSet()
                         break@o
