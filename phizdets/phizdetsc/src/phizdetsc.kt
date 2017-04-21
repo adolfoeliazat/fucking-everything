@@ -50,7 +50,7 @@ object PhizdetscGlobal {
 }
 
 
-
+// TODO:vgrechka Move to shared-jvm
 class AttachedShit<T>(val shitToShit: MutableMap<Any, Any?>) : ReadWriteProperty<Any, T> {
     data class Key(val obj: Any, val prop: String)
 

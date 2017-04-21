@@ -1,5 +1,9 @@
 package vgrechka.botinok
 
+import javafx.beans.property.SimpleObjectProperty
+import javafx.beans.property.SimpleStringProperty
+import javafx.beans.property.StringProperty
+import javafx.collections.FXCollections
 import javafx.event.EventHandler
 import javafx.event.EventType
 import javafx.geometry.Rectangle2D
@@ -28,6 +32,8 @@ import javax.imageio.ImageIO
 import java.awt.Toolkit.getDefaultToolkit
 import java.awt.image.BufferedImage
 import java.io.File
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 
 internal class BotinokGlobalMenuConfig : GlobalMenuConfig() {
@@ -99,7 +105,7 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
     private var canvas by notNull<Canvas>()
 
     class Play {
-        val arenas = mutableListOf<Arena>()
+        val arenas = FXCollections.observableArrayList<Arena>(JFXPropertyObservableExtractor())
         @Transient val editing = PlayEditing()
     }
 
@@ -108,9 +114,12 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
     }
 
     class Arena {
-        var title = "Unfuckingtitled"
+        var title by JFXProperty("Unfuckingtitled")
+
         val boxes = mutableListOf<Box>()
         @Transient val editing = ArenaEditing()
+
+        override fun toString() = title
     }
 
     class ArenaEditing {
@@ -178,16 +187,30 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         val obscureConst2 = boxEdgeSize + obscureConst1
     }
 
+    private var arenaListView: ListView<Arena>
+
     init {
         // clog("tmpImgPath = $tmpImgPath")
         val buttonBox = HBox(8.0)
         vbox.children += buttonBox
+        buttonBox.children += Button("Fuck Around")-{o->
+            o.onAction = EventHandler {
+                play.arenas.first().title = "Fuck"
+            }
+        }
         buttonBox.children += Button("Save")
         stackPane = StackPane()
         val scrollPane = ScrollPane()
         scrollPane.content = stackPane
-        vbox.children += scrollPane
+        val splitPane = SplitPane()
+        arenaListView = ListView<Arena>()
+        splitPane.items += arenaListView
+        splitPane.items += scrollPane
+        splitPane.setDividerPosition(0, 0.2)
+        vbox.children += splitPane
     }
+
+    class ArenaListItem
 
     override fun onBeforeDeiconified() {
         val image = Robot().createScreenCapture(Rectangle(getDefaultToolkit().screenSize))
@@ -198,9 +221,10 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         GlobalMenuPile.resizePrimaryStage(1000, 500)
         stackPane.children.clear()
 
-        run { // Test initial shit
-            play = Play()
+        play = Play()
+        arenaListView.items = play.arenas
 
+        run { // Test initial shit
             addNewArena()
             play.arenas.last()-{o->
                 o.boxes-{a->

@@ -44,28 +44,6 @@ import kotlin.reflect.KFunction0
 import kotlin.reflect.jvm.isAccessible
 
 
-object JFXStuff {
-    fun infoAlert(headerText: String) {
-        val alert = Alert(AlertType.INFORMATION)
-        alert.title = "Fucking Information"
-        alert.headerText = headerText
-        alert.showAndWait()
-    }
-
-    fun errorAlert(e: Throwable) {
-        errorAlert(e.message ?: "Obscure exception", e.stackTraceString, width = 1000)
-    }
-
-    fun errorAlert(headerText: String, contentText: String? = null, width: Int? = null) {
-        val alert = Alert(AlertType.ERROR)
-        alert.title = "Bloody Error"
-        alert.headerText = headerText
-        alert.contentText = contentText
-        alert.isResizable = true
-        width?.let {alert.dialogPane.prefWidth = it.toDouble()}
-        alert.showAndWait()
-    }
-}
 
 abstract class GlobalMenuItem {
     abstract fun run()
