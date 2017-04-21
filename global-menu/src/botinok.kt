@@ -80,6 +80,22 @@ internal class BotinokGlobalMenuConfig : GlobalMenuConfig() {
 
 
 internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace() {
+    val vbox = VBox(8.0)
+    override val rootControl = vbox
+    private val tmpImgPath = "$tmpDirPath/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
+    private var stackPane: StackPane
+    private val boxes = mutableListOf<Box>()
+    private var selectedBox: Box? = null
+    private var selectedHandles = setOf<Handle>()
+    private var operationStartMouseX = 0.0
+    private var operationStartMouseY = 0.0
+    private var operationStartBoxParams by notNull<Box>()
+    val darkPaint = Color(0.5, 0.0, 0.0, 1.0)
+    val brightPaint = Color(1.0, 0.0, 0.0, 1.0)
+    private var gc by notNull<GraphicsContext>()
+    private var image by notNull<Image>()
+
+
     data class Box(var x: Int = 0, var y: Int = 0, var w: Int = 0, var h: Int = 0) {
         fun isHit(e: MouseEvent) =
             e.x >= x && e.x <= x + w - 1 && e.y >= y && e.y <= y + h - 1
@@ -96,39 +112,37 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         abstract fun mutate(points: BoxPoints, dx: Int, dy: Int)
     }
 
-    enum class SelectionMode {NORMAL, OPERATING}
-
     enum class Handle {
         TOP_LEFT {
-            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - d + q - handleSize + boxEdgeSize, box.y.toDouble() - d - q, handleSize, handleSize)
+            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - obscureConst2 + obscureConst1 - handleSize + boxEdgeSize, box.y.toDouble() - obscureConst2 - obscureConst1, handleSize, handleSize)
             override val dragMutators = setOf(DragMutator.TOP, DragMutator.LEFT)
         },
         TOP {
-            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - d + q + boxEdgeSize + box.w / 2 - handleSize / 2, box.y.toDouble() - d - q, handleSize, handleSize)
+            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - obscureConst2 + obscureConst1 + boxEdgeSize + box.w / 2 - handleSize / 2, box.y.toDouble() - obscureConst2 - obscureConst1, handleSize, handleSize)
             override val dragMutators = setOf(DragMutator.TOP)
         },
         TOP_RIGHT {
-            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - d + q + boxEdgeSize + box.w, box.y.toDouble() - d - q, handleSize, handleSize)
+            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - obscureConst2 + obscureConst1 + boxEdgeSize + box.w, box.y.toDouble() - obscureConst2 - obscureConst1, handleSize, handleSize)
             override val dragMutators = setOf(DragMutator.TOP, DragMutator.RIGHT)
         },
         RIGHT {
-            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - d + q + boxEdgeSize + box.w, box.y.toDouble() - d - q + box.h / 2 + handleSize / 2, handleSize, handleSize)
+            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - obscureConst2 + obscureConst1 + boxEdgeSize + box.w, box.y.toDouble() - obscureConst2 - obscureConst1 + box.h / 2 + handleSize / 2, handleSize, handleSize)
             override val dragMutators = setOf(DragMutator.RIGHT)
         },
         BOTTOM_RIGHT {
-            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - d + q + boxEdgeSize + box.w, box.y.toDouble() - d - q + box.h + handleSize, handleSize, handleSize)
+            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - obscureConst2 + obscureConst1 + boxEdgeSize + box.w, box.y.toDouble() - obscureConst2 - obscureConst1 + box.h + handleSize, handleSize, handleSize)
             override val dragMutators = setOf(DragMutator.BOTTOM, DragMutator.RIGHT)
         },
         BOTTOM {
-            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - d + q + boxEdgeSize + box.w / 2 - handleSize / 2, box.y.toDouble() - d - q + box.h + handleSize, handleSize, handleSize)
+            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - obscureConst2 + obscureConst1 + boxEdgeSize + box.w / 2 - handleSize / 2, box.y.toDouble() - obscureConst2 - obscureConst1 + box.h + handleSize, handleSize, handleSize)
             override val dragMutators = setOf(DragMutator.BOTTOM)
         },
         BOTTOM_LEFT {
-            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - d + q - handleSize + boxEdgeSize, box.y.toDouble() - d - q + box.h + handleSize, handleSize, handleSize)
+            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - obscureConst2 + obscureConst1 - handleSize + boxEdgeSize, box.y.toDouble() - obscureConst2 - obscureConst1 + box.h + handleSize, handleSize, handleSize)
             override val dragMutators = setOf(DragMutator.BOTTOM, DragMutator.LEFT)
         },
         LEFT {
-            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - d + q - handleSize + boxEdgeSize, box.y.toDouble() - d - q + box.h / 2 + handleSize / 2, handleSize, handleSize)
+            override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - obscureConst2 + obscureConst1 - handleSize + boxEdgeSize, box.y.toDouble() - obscureConst2 - obscureConst1 + box.h / 2 + handleSize / 2, handleSize, handleSize)
             override val dragMutators = setOf(DragMutator.LEFT)
         };
 
@@ -139,23 +153,9 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
     companion object {
         val boxEdgeSize = 5.0
         val handleSize = boxEdgeSize * 2
-        val q = (handleSize - boxEdgeSize) / 2
-        val d = boxEdgeSize + q
+        val obscureConst1 = (handleSize - boxEdgeSize) / 2
+        val obscureConst2 = boxEdgeSize + obscureConst1
     }
-
-    val vbox = VBox(8.0)
-    override val rootControl = vbox
-    private val tmpImgPath = "$tmpDirPath/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
-    private var stackPane: StackPane
-    private val boxes = mutableListOf<Box>()
-    private var selectedBox: Box? = null
-    private var selectionMode = SelectionMode.NORMAL
-    private var selectedHandles = setOf<Handle>()
-    private var operationStartMouseX = 0.0
-    private var operationStartMouseY = 0.0
-    private var operationStartBoxParams by notNull<Box>()
-    val darkPaint = Color(0.5, 0.0, 0.0, 1.0)
-    val brightPaint = Color(1.0, 0.0, 0.0, 1.0)
 
     init {
         // clog("tmpImgPath = $tmpImgPath")
@@ -173,18 +173,20 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         ImageIO.write(image, "png", File(tmpImgPath))
     }
 
-    private var gc by notNull<GraphicsContext>()
-
-    private var image by notNull<Image>()
-
     override fun onDeiconified() {
         GlobalMenuPile.resizePrimaryStage(1000, 500)
         stackPane.children.clear()
         boxes.clear()
-        boxes += Box()-{o->
-            o.x = 25; o.y = 25
-            o.w = 200; o.h = 100
-            selectedBox = o // TODO:vgrechka @kill
+
+        run { // Initial boxes
+            boxes += Box()-{o->
+                o.x = 25; o.y = 25
+                o.w = 200; o.h = 100
+            }
+            boxes += Box()-{o->
+                o.x = 400; o.y = 150
+                o.w = 50; o.h = 150
+            }
         }
 
         image = Image("file:///$tmpImgPath")
@@ -215,20 +217,18 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
                     operationStartBoxParams = it.copy()
                     operationStartMouseX = e.x
                     operationStartMouseY = e.y
-                    selectionMode = SelectionMode.OPERATING
                 }
             }
             drawShit()
         }
 
         canvas.addEventHandler(MouseEvent.MOUSE_RELEASED) {e->
-            selectionMode = SelectionMode.NORMAL
             drawShit()
         }
 
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED) {e->
             val selectedBox = this.selectedBox
-            if (selectedBox != null && selectionMode == SelectionMode.OPERATING) {
+            if (selectedBox != null) {
                 val dx = Math.round(e.x - operationStartMouseX).toInt()
                 val dy = Math.round(e.y - operationStartMouseY).toInt()
                 val dragMutators = selectedHandles.flatMap{it.dragMutators}.toSet()
@@ -247,8 +247,10 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         printState()
         gc.drawImage(image, 0.0, 0.0)
         boxes.forEach {box->
-            // gc.fill = Color.BLUE
-            // gc.fillRect(box.x.toDouble(), box.y.toDouble(), box.w.toDouble(), box.h.toDouble())
+//            run { // Area to be captured by the box
+//                gc.fill = Color.BLUE
+//                gc.fillRect(box.x.toDouble(), box.y.toDouble(), box.w.toDouble(), box.h.toDouble())
+//            }
 
             gc.stroke = when {
                 box === selectedBox -> darkPaint
