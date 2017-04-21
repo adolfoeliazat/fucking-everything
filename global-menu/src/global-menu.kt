@@ -67,12 +67,12 @@ object JFXStuff {
     }
 }
 
-abstract class MenuItem {
+abstract class GlobalMenuItem {
     abstract fun run()
     open fun makeDetailsControl(): Control? = null
 }
 
-object FuckItem : MenuItem() {
+object FuckItem : GlobalMenuItem() {
     override fun toString() = "Fuck"
     override fun makeDetailsControl() = Label("I am the Fuck item")
 
@@ -81,7 +81,7 @@ object FuckItem : MenuItem() {
     }
 }
 
-object ShitItem : MenuItem() {
+object ShitItem : GlobalMenuItem() {
     override fun toString() = "Shit"
     override fun makeDetailsControl() = null
 
@@ -90,7 +90,7 @@ object ShitItem : MenuItem() {
     }
 }
 
-object BitchItem : MenuItem() {
+object BitchItem : GlobalMenuItem() {
     override fun toString() = "Bitch"
     override fun makeDetailsControl() = Label("I am the Bitch item")
 
@@ -99,7 +99,7 @@ object BitchItem : MenuItem() {
     }
 }
 
-object GlobalMenuItem_Phizdets_MakeSenseOfPHPSpew : MenuItem() {
+object GlobalMenuItem_Phizdets_MakeSenseOfPHPSpew : GlobalMenuItem() {
     var spew by notNull<String>()
 
     override fun toString() = "Phizdets: Make sense of PHP spew"
@@ -203,7 +203,7 @@ internal object GlobalMenuPile {
 class StartGlobalMenu : Application() {
     private val config: GlobalMenuConfig = BotinokGlobalMenuConfig()
     private var vbox by notNullOnce<VBox>()
-    private var listView by notNullOnce<ListView<MenuItem>>()
+    private var listView by notNullOnce<ListView<GlobalMenuItem>>()
     private var scene by notNullOnce<Scene>()
 
     override fun start(primaryStage: Stage) {
@@ -283,11 +283,11 @@ internal abstract class GlobalMenuFace {
 }
 
 internal fun makeListFace(keyCode: Int,
-                         items: List<MenuItem>,
-                         shouldCtrlCWhenInvoked: Boolean = false): GlobalMenuFace {
+                          items: List<GlobalMenuItem>,
+                          shouldCtrlCWhenInvoked: Boolean = false): GlobalMenuFace {
     return object : GlobalMenuFace() {
         val vbox = VBox()
-        val listView = ListView<MenuItem>(FXCollections.observableArrayList(items))
+        val listView = ListView<GlobalMenuItem>(FXCollections.observableArrayList(items))
 
         init {
             vbox.children += listView
@@ -347,8 +347,8 @@ internal class PhizdetsGlobalMenuConfig : GlobalMenuConfig() {
 }
 
 
-internal fun fuckingSimpleMenuItem(function: KFunction0<Unit>): MenuItem {
-    return object:MenuItem() {
+internal fun fuckingSimpleMenuItem(function: KFunction0<Unit>): GlobalMenuItem {
+    return object: GlobalMenuItem() {
         override fun toString() = function.name
 
         override fun run() {

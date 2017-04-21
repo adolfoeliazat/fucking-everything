@@ -1,13 +1,11 @@
 package vgrechka.botinok
 
+import javafx.event.EventHandler
 import javafx.event.EventType
 import javafx.geometry.Rectangle2D
 import javafx.scene.canvas.Canvas
 import javafx.scene.canvas.GraphicsContext
-import javafx.scene.control.Button
-import javafx.scene.control.Label
-import javafx.scene.control.ScrollPane
-import javafx.scene.control.TextArea
+import javafx.scene.control.*
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.input.MouseButton
@@ -20,6 +18,7 @@ import javafx.scene.paint.Paint
 import org.jnativehook.keyboard.NativeKeyEvent
 import vgrechka.*
 import vgrechka.globalmenu.*
+import vgrechka.globalmenu.GlobalMenuItem
 import java.awt.MouseInfo
 import java.awt.Rectangle
 import java.awt.Robot
@@ -38,7 +37,7 @@ internal class BotinokGlobalMenuConfig : GlobalMenuConfig() {
         makeListFace(
             keyCode = NativeKeyEvent.VC_1,
             items = listOf(
-                object:MenuItem() {
+                object: GlobalMenuItem() {
                     private var textArea by notNull<TextArea>()
 
                     override fun toString() = "Get mouse location"
@@ -80,7 +79,7 @@ internal class BotinokGlobalMenuConfig : GlobalMenuConfig() {
 
 
 internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace() {
-    val vbox = VBox(8.0)
+    private val vbox = VBox(8.0)
     override val rootControl = vbox
     private val tmpImgPath = "$tmpDirPath/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
     private var stackPane: StackPane
@@ -90,10 +89,12 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
     private var operationStartMouseX = 0.0
     private var operationStartMouseY = 0.0
     private var operationStartBoxParams by notNull<Box>()
-    val darkPaint = Color(0.5, 0.0, 0.0, 1.0)
-    val brightPaint = Color(1.0, 0.0, 0.0, 1.0)
+    private val darkPaint = Color(0.5, 0.0, 0.0, 1.0)
+    private val brightPaint = Color(1.0, 0.0, 0.0, 1.0)
     private var gc by notNull<GraphicsContext>()
     private var image by notNull<Image>()
+    private var newBoxX by notNull<Int>()
+    private var newBoxY by notNull<Int>()
 
 
     data class Box(var x: Int = 0, var y: Int = 0, var w: Int = 0, var h: Int = 0) {
@@ -193,6 +194,25 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
 
         val canvas = Canvas(image.width, image.height)
         stackPane.children += canvas
+
+        val contextMenu = ContextMenu()
+        contextMenu.items += MenuItem("Create Box")-{o->
+            o.onAction = EventHandler {e->
+                boxes += Box()-{o->
+                    o.x = newBoxX; o.y = newBoxY
+                    o.w = 100; o.h = 100
+                }
+                drawShit()
+            }
+        }
+
+        canvas.setOnContextMenuRequested {e->
+            val p = canvas.screenToLocal(e.screenX, e.screenY)
+            newBoxX = Math.round(p.x).toInt()
+            newBoxY = Math.round(p.y).toInt()
+            contextMenu.show(canvas, e.screenX, e.screenY)
+        }
+
         gc = canvas.graphicsContext2D
         drawShit()
 
@@ -227,18 +247,20 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         }
 
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED) {e->
-            val selectedBox = this.selectedBox
-            if (selectedBox != null) {
-                val dx = Math.round(e.x - operationStartMouseX).toInt()
-                val dy = Math.round(e.y - operationStartMouseY).toInt()
-                val dragMutators = selectedHandles.flatMap{it.dragMutators}.toSet()
-                val points = BoxPoints(operationStartBoxParams.x, operationStartBoxParams.y, operationStartBoxParams.x + operationStartBoxParams.w - 1, operationStartBoxParams.y + operationStartBoxParams.h - 1)
-                dragMutators.forEach {it.mutate(points, dx, dy)}
-                selectedBox.x = points.minX
-                selectedBox.y = points.minY
-                selectedBox.w = points.maxX - points.minX + 1
-                selectedBox.h = points.maxY - points.minY + 1
-                drawShit()
+            if (e.button == MouseButton.PRIMARY) {
+                val selectedBox = this.selectedBox
+                if (selectedBox != null) {
+                    val dx = Math.round(e.x - operationStartMouseX).toInt()
+                    val dy = Math.round(e.y - operationStartMouseY).toInt()
+                    val dragMutators = selectedHandles.flatMap{it.dragMutators}.toSet()
+                    val points = BoxPoints(operationStartBoxParams.x, operationStartBoxParams.y, operationStartBoxParams.x + operationStartBoxParams.w - 1, operationStartBoxParams.y + operationStartBoxParams.h - 1)
+                    dragMutators.forEach {it.mutate(points, dx, dy)}
+                    selectedBox.x = points.minX
+                    selectedBox.y = points.minY
+                    selectedBox.w = points.maxX - points.minX + 1
+                    selectedBox.h = points.maxY - points.minY + 1
+                    drawShit()
+                }
             }
         }
     }
