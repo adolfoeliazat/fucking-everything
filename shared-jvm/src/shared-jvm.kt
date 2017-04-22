@@ -2,17 +2,26 @@ package vgrechka
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.common.base.Equivalence
+import com.google.common.cache.CacheBuilder
+import com.google.common.collect.MapMaker
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import org.junit.Assert.assertEquals
+import org.junit.Assert.fail
+import org.junit.Test
 import java.io.*
 import java.nio.charset.Charset
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 import kotlin.reflect.jvm.isAccessible
@@ -109,37 +118,79 @@ private class NotNullOnceVar<T: Any> : ReadWriteProperty<Any?, T> {
 }
 
 
+class AttachedComputedShit<in Host : Any, out Shit>(val weak: Boolean = false,
+                                                    val create: (Host) -> Shit) : ReadOnlyProperty<Host, Shit> {
+    private val NULL = Any()
 
-class AttachedComputedShit<in Host : Any, out Shit>(val create: (Host) -> Shit) : ReadOnlyProperty<Host, Shit> {
     override fun getValue(thisRef: Host, property: KProperty<*>): Shit {
+        val map = when {
+            weak -> weak_thisRefToPropertyNameToValue
+            else -> thisRefToPropertyNameToValue
+        }
+        val propertyNameToValue = map.computeIfAbsent(thisRef) {
+            MapMaker().makeMap()
+        }
+        val res = propertyNameToValue.computeIfAbsent(property.name) {
+            val xxx = create(thisRef) ?: NULL
+            xxx
+        }
         @Suppress("UNCHECKED_CAST")
-        return shitToShit.computeIfAbsent(Key(thisRef, property.name)) {create(thisRef)} as Shit
+        return (if (res === NULL) null else res) as Shit
     }
-
-    data class Key(val host: Any, val prop: String)
 
     companion object {
-        val shitToShit = ConcurrentHashMap<Key, Any?>()
+        private val thisRefToPropertyNameToValue = makeMap(weak = false)
+        private val weak_thisRefToPropertyNameToValue = makeMap(weak = true)
+
+        private fun makeMap(weak: Boolean): ConcurrentMap<Any, MutableMap<String, Any>> {
+            var mapMaker = MapMaker()
+
+            if (weak) {
+                mapMaker = mapMaker.weakKeys()
+            }
+
+            val keyEquivalenceMethod = mapMaker::class.java.getDeclaredMethod("keyEquivalence", Equivalence::class.java)
+            keyEquivalenceMethod.isAccessible = true
+            mapMaker = keyEquivalenceMethod.invoke(mapMaker, Equivalence.identity()) as MapMaker
+
+            return mapMaker.makeMap<Any, MutableMap<String, Any>>()
+        }
+
+        object debug {
+            val totalShitInMaps get() = thisRefToPropertyNameToValue.size + weak_thisRefToPropertyNameToValue.size
+
+            fun reset() {
+                thisRefToPropertyNameToValue.clear()
+                weak_thisRefToPropertyNameToValue.clear()
+            }
+
+            fun testGCReclaimsAllShit() {
+                System.gc()
+
+                // XXX After enough writes freaking map finally reclaims entries with GCed keys.
+                //     Using MapMakerInternalMap$CleanupMapTask is not reliable -- sometimes work, sometimes not
+                val enoughWrites = 1000
+
+                object {
+                    inner class Junk
+                    val Junk.moreJunk by AttachedComputedShit<Junk, String>(weak = true) {"more junk"}
+
+                    init {
+                        val refHolder = mutableListOf<Junk>()
+                        for (i in 1..enoughWrites) {
+                            val newShit = Junk()
+                            refHolder += newShit
+                            newShit.moreJunk // Puts new entry into the map
+                        }
+                    }
+                }
+
+                assertEquals("Only newly added junk is there", enoughWrites, totalShitInMaps)
+                reset() // Make it virgin again
+            }
+        }
     }
 }
-
-
-//class AttachedShit<in Host : Any, Shit>(val create: (Host) -> Shit) : ReadWriteProperty<Host, Shit> {
-//    override fun getValue(thisRef: Host, property: KProperty<*>): Shit {
-//        @Suppress("UNCHECKED_CAST")
-//        return shitToShit.computeIfAbsent(Key(thisRef, property.name)) {create(thisRef)} as Shit
-//    }
-//
-//    override fun setValue(thisRef: Host, property: KProperty<*>, value: Shit) {
-//        shitToShit[Key(thisRef, property.name)] = value
-//    }
-//
-//    data class Key(val host: Any, val prop: String)
-//
-//    companion object {
-//        val shitToShit = ConcurrentHashMap<Key, Any?>()
-//    }
-//}
 
 fun <T: Any> mere(value: T) = object:ReadOnlyProperty<Any?, T> {
     override fun getValue(thisRef: Any?, property: KProperty<*>): T = value
@@ -212,6 +263,21 @@ operator fun StringBuilder.plusAssign(x: Any?) {
 }
 
 val tmpDirPath get() = System.getProperty("java.io.tmpdir")
+
+fun assertThrown(check: (Throwable) -> Unit, block: () -> Unit) {
+    try {
+        block()
+        fail("Expected something to be thrown")
+    } catch (e: Throwable) {
+        check(e)
+    }
+}
+
+fun <T : Throwable> assertThrown(clazz: KClass<T>, block: () -> Unit) {
+    assertThrown({assertEquals(clazz, it::class)}, block)
+}
+
+
 
 
 

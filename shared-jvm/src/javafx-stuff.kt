@@ -1,11 +1,18 @@
 package vgrechka
 
+import com.google.common.collect.MapMaker
 import javafx.beans.Observable
 import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.control.Alert
 import javafx.util.Callback
+import org.junit.Assert.assertEquals
+import org.junit.Assert.fail
+import org.junit.Test
+import java.lang.ref.WeakReference
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
 object JFXStuff {
@@ -31,10 +38,9 @@ object JFXStuff {
     }
 }
 
-private val Any.observables by AttachedComputedShit<Any, MutableList<Observable>> {
+private val Any.observables by AttachedComputedShit<Any, MutableList<Observable>>(weak = true) {
     Collections.synchronizedList(mutableListOf())
 }
-
 
 class JFXProperty<T>(val initialValue: T) {
     val simpleObjectProperty = SimpleObjectProperty(initialValue)
