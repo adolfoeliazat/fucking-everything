@@ -208,12 +208,9 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
             }
         }
 
+        addButton("Save", this::action_save)
         addButton("Fuck Around 1", this::action_fuckAround1)
         addButton("Fuck Around 2", this::action_fuckAround2)
-
-        addButton("Save") {
-            noise("Fuck you. You are saved now :)")
-        }
 
         stackPane = StackPane()
         val scrollPane = ScrollPane()
@@ -279,6 +276,10 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         }
     }
 
+    private fun action_save() {
+        JFXStuff.infoAlert("Fuck you")
+    }
+
     private fun action_fuckAround1() {
         action_deleteArena()
     }
@@ -331,6 +332,7 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         run { // Test initial shit
             addNewArena()
             play.arenas.last()-{o->
+                o.title = "Fucking arena"
                 o.boxes-{a->
                     a += Box()-{o->
                         o.x = 25; o.y = 25
@@ -345,6 +347,7 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
 
             addNewArena()
             play.arenas.last()-{o->
+                o.title = "Shitty arena"
                 o.boxes-{a->
                     a += Box()-{o->
                         o.x = 200; o.y = 100

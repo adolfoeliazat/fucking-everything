@@ -1,3 +1,3 @@
 @echo off
-del lib-gradle\* & gradle importDeps
+gradle importDeps
 
