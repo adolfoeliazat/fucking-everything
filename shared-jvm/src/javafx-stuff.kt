@@ -4,6 +4,8 @@ import com.google.common.collect.MapMaker
 import javafx.beans.Observable
 import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.control.Alert
+import javafx.scene.control.ButtonType
+import javafx.scene.control.TextInputDialog
 import javafx.util.Callback
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
@@ -37,6 +39,21 @@ object JFXStuff {
         alert.isResizable = true
         width?.let {alert.dialogPane.prefWidth = it.toDouble()}
         alert.showAndWait()
+    }
+
+    fun inputBox(prompt: String, initialValue: String): String? {
+        val dialog = TextInputDialog(initialValue)
+        dialog.title = "Type Into Me"
+        dialog.headerText = prompt
+        return dialog.showAndWait().orElse(null)
+    }
+
+    fun confirm(prompt: String): Boolean {
+        val alert = Alert(Alert.AlertType.CONFIRMATION)
+        alert.title = "Confirm Me"
+        alert.headerText = "Are you fucking sure?"
+        alert.contentText = prompt
+        return alert.showAndWait().get() == ButtonType.OK
     }
 }
 

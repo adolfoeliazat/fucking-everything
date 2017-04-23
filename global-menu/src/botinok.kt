@@ -102,7 +102,6 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
     private var operationStartBoxParams by notNull<Box>()
     private val darkPaint = Color(0.5, 0.0, 0.0, 1.0)
     private val brightPaint = Color(1.0, 0.0, 0.0, 1.0)
-//    private var gc by notNull<GraphicsContext>()
     private var image by notNull<Image>()
     private var newBoxX by notNull<Int>()
     private var newBoxY by notNull<Int>()
@@ -110,6 +109,7 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
     private var boxContextMenu by notNull<ContextMenu>()
     private var play by notNull<Play>()
     private var canvas by notNull<Canvas>()
+    private var arenaListView by notNull<ListView<Arena>>()
 
     class Play {
         val arenas = FXCollections.observableArrayList<Arena>(JFXPropertyObservableExtractor())
@@ -195,10 +195,8 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         val obscureConst2 = boxEdgeSize + obscureConst1
     }
 
-    private var arenaListView: ListView<Arena>
-
     init {
-        // clog("tmpImgPath = $tmpImgPath")
+        // noise("tmpImgPath = $tmpImgPath")
         val buttonBox = HBox(8.0)
         vbox.children += buttonBox
 
@@ -210,26 +208,11 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
             }
         }
 
-        addButton("Fuck Around 1") {
-            selectedArenaBang().title = "Fuck"
-        }
-
-        addButton("Fuck Around 2") {
-            thread {
-                var index = 0
-                while (true) {
-                    Thread.sleep(1000)
-                    Platform.runLater {
-                        play.editing.selectedArena = play.arenas[index]
-                        if (++index > play.arenas.lastIndex)
-                            index = 0
-                    }
-                }
-            }
-        }
+        addButton("Fuck Around 1", this::action_fuckAround1)
+        addButton("Fuck Around 2", this::action_fuckAround2)
 
         addButton("Save") {
-            clog("Fuck you. You are saved now :)")
+            noise("Fuck you. You are saved now :)")
         }
 
         stackPane = StackPane()
@@ -237,13 +220,7 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         scrollPane.content = stackPane
         val splitPane = SplitPane()
 
-        arenaListView = ListView<Arena>()
-        arenaListView.selectionModel.selectedItems.addListener(ListChangeListener {e->
-            check(e.list.size == 1) {"029fd503-751a-4d02-889a-0eedbf68b468"}
-            val item = e.list.first()
-            clog("arenaListView selection changed: $item")
-            play.editing.selectedArena = item
-        })
+        initArenaListView()
 
         splitPane.items += arenaListView
         splitPane.items += scrollPane
@@ -251,23 +228,103 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         vbox.children += splitPane
     }
 
-    class ArenaListItem
+    private fun action_fuckAround2() {
+        thread {
+            var index = 0
+            while (true) {
+                Thread.sleep(1000)
+                Platform.runLater {
+                    play.editing.selectedArena = play.arenas[index]
+                    if (++index > play.arenas.lastIndex)
+                        index = 0
+                }
+            }
+        }
+    }
+
+    fun initArenaListView() {
+        arenaListView = ListView<Arena>()
+        arenaListView.selectionModel.selectedItems.addListener(ListChangeListener {e->
+            if (e.list.size == 0) {
+                play.editing.selectedArena = null
+            }
+            else if (e.list.size == 1) {
+                val item = e.list.first()
+                noise("arenaListView selection changed: $item")
+                play.editing.selectedArena = item
+            }
+            else {
+                wtf("19a359d5-77c2-4f2e-bb8f-2d36cc89d605")
+            }
+        })
+
+        fun addItem(menu: ContextMenu, title: String, handler: () -> Unit) {
+            menu.items += MenuItem(title)-{o->
+                o.onAction = EventHandler {e->
+                    handler()
+                }
+            }
+        }
+
+        arenaListView.setOnContextMenuRequested {e->
+            val menu = ContextMenu()
+            addItem(menu, "New", this::action_newArena)
+
+            if (arenaListView.selectionModel.selectedItems.isNotEmpty()) {
+                addItem(menu, "Rename", this::action_renameArena)
+                addItem(menu, "Delete", this::action_deleteArena)
+            }
+
+            menu.show(canvas, e.screenX, e.screenY)
+        }
+    }
+
+    private fun action_fuckAround1() {
+        action_deleteArena()
+    }
+
+    private fun action_newArena() {
+        addNewArena()
+    }
+
+    private fun action_renameArena() {
+        val arena = selectedArenaBang()
+        JFXStuff.inputBox("So, how it should be named?", arena.title)?.let {
+            arena.title = it
+        }
+    }
+
+    private fun action_deleteArena() {
+        val arena = selectedArenaBang()
+        if (JFXStuff.confirm("Arena will be deleted: ${arena.title}")) {
+            play.arenas -= arena
+        }
+    }
 
     override fun onBeforeDeiconified() {
         val image = Robot().createScreenCapture(Rectangle(getDefaultToolkit().screenSize))
         ImageIO.write(image, "png", File(tmpImgPath))
     }
 
+    fun noise(s: String) {
+        if (false) {
+            clog(s)
+        }
+    }
+
     override fun onDeiconified() {
         GlobalMenuPile.resizePrimaryStage(1000, 500)
         stackPane.children.clear()
 
+        initCanvas()
+
         play = Play()
-        jfxProperty(play.editing::selectedArena).addListener(ChangeListener {_, oldValue, newValue ->
-            // clog("selectedArena changed: $oldValue --> $newValue")
-            clog("selectedArena changed: $newValue")
+        jfxProperty(play.editing::selectedArena).addListener {_, oldValue, newValue ->
+            // noise("selectedArena changed: $oldValue --> $newValue")
+            noise("selectedArena changed: $newValue")
             arenaListView.selectionModel.select(newValue)
-        })
+            drawShit()
+        }
 
         arenaListView.items = play.arenas
 
@@ -296,11 +353,13 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
                 }
             }
 
-//            startFuckingAroundThread()
+            drawShit()
         }
 
-        image = Image("file:///$tmpImgPath")
+    }
 
+    fun initCanvas() {
+        image = Image("file:///$tmpImgPath")
         canvas = Canvas(image.width, image.height)
         stackPane.children += canvas
 
@@ -340,8 +399,6 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
             hideContextMenus()
             menuToShow.show(canvas, e.screenX, e.screenY)
         }
-
-        drawShit()
 
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED) {e->
             if (e.button == MouseButton.PRIMARY) {
@@ -394,7 +451,7 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
     }
 
     private fun addNewArena() {
-        val arena = Arena() - {o ->
+        val arena = Arena()-{o->
             o.title = "Unfuckingtitled arena ${play.arenas.size + 1}"
         }
         play.arenas += arena
@@ -417,21 +474,29 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
     private fun drawShit() {
         printState()
         val gc = canvas.graphicsContext2D
+
+        val arena = play.editing.selectedArena
+        if (arena == null) {
+            gc.fill = Color.WHITE
+            gc.fillRect(0.0, 0.0, canvas.width, canvas.height)
+            return
+        }
+
         gc.drawImage(image, 0.0, 0.0)
-        selectedArenaBang().boxes.forEach {box->
+        arena.boxes.forEach {box->
 //            run { // Area to be captured by the box
 //                gc.fill = Color.BLUE
 //                gc.fillRect(box.x.toDouble(), box.y.toDouble(), box.w.toDouble(), box.h.toDouble())
 //            }
 
             gc.stroke = when {
-                box === selectedArenaBang().editing.selectedBox -> darkPaint
+                box === arena.editing.selectedBox -> darkPaint
                 else -> brightPaint
             }
             gc.lineWidth = boxEdgeSize
             gc.strokeRect(box.x.toDouble() - boxEdgeSize / 2, box.y.toDouble() - boxEdgeSize / 2, box.w.toDouble() + boxEdgeSize, box.h.toDouble() + boxEdgeSize)
 
-            if (box === selectedArenaBang().editing.selectedBox) {
+            if (box === arena.editing.selectedBox) {
                 for (handle in Handle.values()) {
                     gc.fill = when {
                         handle in selectedHandles -> brightPaint
@@ -447,7 +512,7 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
     private fun selectedArenaBang() = play.editing.selectedArena!!
 
     fun printState() {
-//        clog("selectedBox = ${if (selectedBox != null) "<something>" else "null"}"
+//        noise("selectedBox = ${if (selectedBox != null) "<something>" else "null"}"
 //                 + "; selectedHandles = $selectedHandles"
 //                 + "; selectionMode = $selectionMode")
     }
