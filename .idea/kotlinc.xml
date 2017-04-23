@@ -13,6 +13,6 @@
     <option name="coroutinesEnable" value="true" />
   </component>
   <component name="KotlinCompilerSettings">
-    <option name="additionalArguments" value="-Xplugin C:\Users\Vladimir\.IdeaIC2017.1\config\plugins\Kotlin\kotlinc\lib\noarg-compiler-plugin.jar -P plugin:org.jetbrains.kotlin.noarg:annotation=vgrechka.Ser -Xplugin C:\Users\Vladimir\.IdeaIC2017.1\config\plugins\Kotlin\kotlinc\lib\allopen-compiler-plugin.jar -P plugin:org.jetbrains.kotlin.allopen:annotation=vgrechka.Ser -P plugin:org.jetbrains.kotlin.allopen:annotation=vgrechka.AllOpen -version" />
+    <option name="additionalArguments" value="-Xplugin C:\Users\Vladimir\.IdeaIC2017.1\config\plugins\Kotlin\kotlinc\lib\noarg-compiler-plugin.jar -P plugin:org.jetbrains.kotlin.noarg:annotation=vgrechka.Ser -P plugin:org.jetbrains.kotlin.noarg:annotation=javax.persistence.MappedSuperclass -P plugin:org.jetbrains.kotlin.noarg:annotation=javax.persistence.Entity -P plugin:org.jetbrains.kotlin.noarg:annotation=javax.persistence.Embeddable -Xplugin C:\Users\Vladimir\.IdeaIC2017.1\config\plugins\Kotlin\kotlinc\lib\allopen-compiler-plugin.jar -P plugin:org.jetbrains.kotlin.allopen:annotation=vgrechka.Ser -P plugin:org.jetbrains.kotlin.allopen:annotation=vgrechka.AllOpen -P plugin:org.jetbrains.kotlin.allopen:annotation=javax.persistence.MappedSuperclass -P plugin:org.jetbrains.kotlin.allopen:annotation=javax.persistence.Entity -P plugin:org.jetbrains.kotlin.allopen:annotation=javax.persistence.Embeddable -version" />
   </component>
 </project>

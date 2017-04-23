@@ -23,8 +23,23 @@ import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
+import org.hibernate.cfg.Environment
+import org.hibernate.dialect.SQLiteDialect
 import org.jnativehook.keyboard.NativeKeyEvent
+import org.springframework.context.annotation.AnnotationConfigApplicationContext
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.Configuration
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import org.springframework.orm.jpa.JpaTransactionManager
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
+import org.springframework.transaction.PlatformTransactionManager
+import org.springframework.transaction.annotation.EnableTransactionManagement
+import org.springframework.transaction.support.TransactionTemplate
+import org.sqlite.javax.SQLiteConnectionPoolDataSource
 import vgrechka.*
+import vgrechka.db.*
 import vgrechka.globalmenu.*
 import vgrechka.globalmenu.GlobalMenuItem
 import java.awt.MouseInfo
@@ -36,6 +51,8 @@ import javax.imageio.ImageIO
 import java.awt.Toolkit.getDefaultToolkit
 import java.awt.image.BufferedImage
 import java.io.File
+import javax.persistence.EntityManagerFactory
+import javax.sql.DataSource
 import kotlin.concurrent.thread
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KMutableProperty0
@@ -90,6 +107,34 @@ internal class BotinokGlobalMenuConfig : GlobalMenuConfig() {
 
 }
 
+class Play {
+    val arenas = FXCollections.observableArrayList<Arena>(JFXPropertyObservableExtractor())
+    @Transient val editing = PlayEditing()
+}
+
+class PlayEditing {
+    var selectedArena by JFXProperty<Arena?>(null)
+//        var selectedArena: Arena? = null
+}
+
+class Arena {
+    var title by JFXProperty("Unfuckingtitled")
+
+    val boxes = mutableListOf<Box>()
+    @Transient val editing = ArenaEditing()
+
+    override fun toString() = title
+}
+
+class ArenaEditing {
+    var selectedBox: Box? = null
+}
+
+data class Box(var x: Int = 0, var y: Int = 0, var w: Int = 0, var h: Int = 0) {
+    fun isHit(testX: Double, testY: Double) =
+        testX >= x && testX <= x + w - 1 && testY >= y && testY <= y + h - 1
+}
+
 
 internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace() {
     private val vbox = VBox(8.0)
@@ -111,33 +156,6 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
     private var canvas by notNull<Canvas>()
     private var arenaListView by notNull<ListView<Arena>>()
 
-    class Play {
-        val arenas = FXCollections.observableArrayList<Arena>(JFXPropertyObservableExtractor())
-        @Transient val editing = PlayEditing()
-    }
-
-    class PlayEditing {
-        var selectedArena by JFXProperty<Arena?>(null)
-//        var selectedArena: Arena? = null
-    }
-
-    class Arena {
-        var title by JFXProperty("Unfuckingtitled")
-
-        val boxes = mutableListOf<Box>()
-        @Transient val editing = ArenaEditing()
-
-        override fun toString() = title
-    }
-
-    class ArenaEditing {
-        var selectedBox: Box? = null
-    }
-
-    data class Box(var x: Int = 0, var y: Int = 0, var w: Int = 0, var h: Int = 0) {
-        fun isHit(testX: Double, testY: Double) =
-            testX >= x && testX <= x + w - 1 && testY >= y && testY <= y + h - 1
-    }
 
     class BoxPoints(var minX: Int, var minY: Int, var maxX: Int, var maxY: Int)
 
@@ -520,6 +538,49 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
 //                 + "; selectionMode = $selectionMode")
     }
 }
+
+object BotinokPile {
+    val springctx by lazy {AnnotationConfigApplicationContext(BotinokAppConfig::class.java)}
+}
+
+@Suppress("unused")
+@Configuration
+@EnableJpaRepositories
+@EnableTransactionManagement
+@ComponentScan(basePackages = arrayOf("vgrechka.botinok"))
+open class BotinokAppConfig {
+    @Bean open fun entityManagerFactory(dataSource: DataSource) = LocalContainerEntityManagerFactoryBean()-{o->
+        o.jpaVendorAdapter = HibernateJpaVendorAdapter()-{o->
+            o.setShowSql(true)
+        }
+//        o.jpaPropertyMap.put(Environment.HBM2DDL_AUTO, "create-drop")
+        o.jpaPropertyMap.put(Environment.DIALECT, SQLiteDialect::class.qualifiedName)
+        o.jpaPropertyMap.put(Environment.IMPLICIT_NAMING_STRATEGY, NiceHibernateNamingStrategy::class.qualifiedName)
+        o.setPackagesToScan("vgrechka.botinok")
+        o.dataSource = dataSource
+    }
+
+    @Bean open fun dataSource(): DataSource {
+        return SQLiteConnectionPoolDataSource()-{o->
+            o.url = "jdbc:sqlite:e:/febig/db/shebang.db"
+        }
+    }
+
+    @Bean open fun transactionManager(emf: EntityManagerFactory) = JpaTransactionManager()-{o->
+        o.entityManagerFactory = emf
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,19 +1,79 @@
-package vgrechka
+package vgrechka.db
 
-import java.sql.DriverManager
+import org.hibernate.boot.model.naming.Identifier
+import org.hibernate.boot.model.naming.ImplicitJoinColumnNameSource
+import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+import org.hibernate.boot.model.source.spi.AttributePath
+import org.hibernate.engine.spi.SharedSessionContractImplementor
+import org.hibernate.id.IdentityGenerator
+import vgrechka.*
 
-object Spike_SQLite_1 {
-    @JvmStatic
-    fun main(args: Array<String>) {
-        val con = DriverManager.getConnection("jdbc:sqlite:e:/febig/db/shebang.db")
-        val st = con.prepareStatement("select id, word, rank from nice_words")
-        val rs = st.executeQuery()
-        while (rs.next()) {
-            clog("ID:", rs.getLong(1))
-            clog("Word:", rs.getString(2))
-            clog("Rank:", rs.getInt(3))
-            clog("------------------------------")
+class NiceHibernateNamingStrategy : ImplicitNamingStrategyJpaCompliantImpl() {
+    override fun transformAttributePath(attributePath: AttributePath): String {
+        return attributePath.fullPath.replace(".", "_")
+    }
+
+    override fun determineJoinColumnName(source: ImplicitJoinColumnNameSource): Identifier {
+        val name: String
+        if (source.nature == ImplicitJoinColumnNameSource.Nature.ELEMENT_COLLECTION || source.attributePath == null ) {
+            name = transformEntityName(source.entityNaming) + "__" + source.referencedColumnName.text
+        } else {
+            name = transformAttributePath(source.attributePath) + "__" + source.referencedColumnName.text
         }
-        clog("OK")
+        return toIdentifier(name, source.buildingContext)
     }
 }
+
+@XMappedSuperclass
+abstract class ClitoralEntity0 {
+    @XId
+    @XGeneratedValue(strategy = XGenerationType.IDENTITY, generator = "IdentityIfNotSetGenerator")
+    @XGenericGenerator(name = "IdentityIfNotSetGenerator", strategy = "vgrechka.db.IdentityIfNotSetGenerator")
+    var id: Long? = null
+
+    @XTransient
+    var imposedIDToGenerate: Long? = null
+
+    @XPreUpdate
+    fun preFuckingUpdate() {
+//        if (backPlatform.isRequestThread() && !backPlatform.requestGlobus.shitIsDangerous) {
+//            if (this is User) {
+//                saveUserParamsHistory(this)
+//            }
+//        }
+    }
+}
+
+@Suppress("Unused")
+class IdentityIfNotSetGenerator : IdentityGenerator() {
+    private val logic = IdentityIfNotSetGeneratorLogic()
+
+    override fun generate(s: SharedSessionContractImplementor?, obj: Any?): XSerializable {
+        val id = logic.generate(obj)
+        return when {
+            id != null -> id
+            else -> super.generate(s, obj)
+        }
+    }
+}
+
+// TODO:vgrechka Why the fuck did I need this to be in a separate class?
+class IdentityIfNotSetGeneratorLogic {
+    /**
+     * @return null if default identity generator should be used
+     */
+    fun generate(obj: Any?): Long? {
+        val entity = obj as ClitoralEntity0
+        val id = entity.id
+        val imposedIDToGenerate = entity.imposedIDToGenerate
+        return when {
+            id != null -> id
+            imposedIDToGenerate != null -> imposedIDToGenerate
+            else -> null
+        }
+    }
+}
+
+
+
+
