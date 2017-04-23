@@ -201,12 +201,37 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         // clog("tmpImgPath = $tmpImgPath")
         val buttonBox = HBox(8.0)
         vbox.children += buttonBox
-        buttonBox.children += Button("Fuck Around")-{o->
-            o.onAction = EventHandler {
-                play.arenas.first().title = "Fuck"
+
+        fun addButton(title: String, handler: () -> Unit) {
+            buttonBox.children += Button(title)-{o->
+                o.onAction = EventHandler {
+                    handler()
+                }
             }
         }
-        buttonBox.children += Button("Save")
+
+        addButton("Fuck Around 1") {
+            selectedArenaBang().title = "Fuck"
+        }
+
+        addButton("Fuck Around 2") {
+            thread {
+                var index = 0
+                while (true) {
+                    Thread.sleep(1000)
+                    Platform.runLater {
+                        play.editing.selectedArena = play.arenas[index]
+                        if (++index > play.arenas.lastIndex)
+                            index = 0
+                    }
+                }
+            }
+        }
+
+        addButton("Save") {
+            clog("Fuck you. You are saved now :)")
+        }
+
         stackPane = StackPane()
         val scrollPane = ScrollPane()
         scrollPane.content = stackPane
@@ -215,7 +240,9 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         arenaListView = ListView<Arena>()
         arenaListView.selectionModel.selectedItems.addListener(ListChangeListener {e->
             check(e.list.size == 1) {"029fd503-751a-4d02-889a-0eedbf68b468"}
-            clog("Aaaaa")
+            val item = e.list.first()
+            clog("arenaListView selection changed: $item")
+            play.editing.selectedArena = item
         })
 
         splitPane.items += arenaListView
@@ -237,7 +264,8 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
 
         play = Play()
         jfxProperty(play.editing::selectedArena).addListener(ChangeListener {_, oldValue, newValue ->
-            clog("selectedArena changed: $oldValue --> $newValue")
+            // clog("selectedArena changed: $oldValue --> $newValue")
+            clog("selectedArena changed: $newValue")
             arenaListView.selectionModel.select(newValue)
         })
 
@@ -360,20 +388,6 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
                     selectedBox.w = points.maxX - points.minX + 1
                     selectedBox.h = points.maxY - points.minY + 1
                     drawShit()
-                }
-            }
-        }
-    }
-
-    private fun startFuckingAroundThread(): Thread {
-        return thread {
-            var index = 0
-            while (true) {
-                Thread.sleep(1000)
-                Platform.runLater {
-                    play.editing.selectedArena = play.arenas[index]
-                    if (++index > play.arenas.lastIndex)
-                        index = 0
                 }
             }
         }
