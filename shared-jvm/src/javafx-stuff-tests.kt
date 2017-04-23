@@ -3,38 +3,6 @@ package vgrechka
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class TestLogger {
-    val lines = mutableListOf<Line>()
-
-    class Line(val text: String, val uuid: String)
-
-    fun println(value: Any?, uuid: String) {
-        clog(value)
-        lines += Line(value.toString(), uuid)
-    }
-
-    fun shitWritten(): String {
-        val longestLine = lines.map{it.text}.maxBy{it.length} ?: return ""
-        return stringBuild {
-            val width = longestLine.length + 4
-            for (line in lines) {
-                val spaces = width - line.text.length
-                it += line.text + " ".repeat(spaces) + line.uuid + "\n"
-            }
-        }
-    }
-
-    fun assertEquals(expected: String) {
-        val shitted = shitWritten()
-        val preparedExpected = expected.trim().replace("\r\n", "\n")
-        val preparedActual = shitted.trim().replace("\r\n", "\n")
-        if (preparedExpected != preparedActual) {
-            clog("\n-------------- SHITTED TO LOG ------------------\n")
-            clog(shitted)
-        }
-        assertEquals(preparedExpected, preparedActual)
-    }
-}
 
 class JFXPropertyTests {
     val log = TestLogger()
@@ -86,26 +54,18 @@ Total shit in maps after GC: 0                                       96f55f72-56
         """)
     }
 
-//    @Test fun testWeakness() {
-//        assertEquals(0, WeakAttachedComputedShit.shitToShit.size())
-//
-//        assertEquals(1, WeakAttachedComputedShit.shitToShit.size())
-//        fuck!!.bitch = Bitch("another")
-//        assertEquals(Bitch("another"), fuck!!.bitch)
-//
-//        System.gc()
-//        assertEquals(1, WeakAttachedComputedShit.shitToShit.size())
-//        assertEquals(Bitch("another"), fuck!!.bitch)
-//
-////        fuck = null
-////        System.gc()
-////        Thread.sleep(1000)
-//        WeakAttachedComputedShit.shitToShit.cleanUp()
-//        while (true) {
-//            Thread.sleep(1000)
-//            clog(WeakAttachedComputedShit.shitToShit.size())
-//        }
-//        // assertEquals(0, WeakAttachedComputedShit.shitToShit.size)
-//    }
+    @Test fun test2() {
+
+
+    }
 }
+
+
+
+
+
+
+
+
+
 

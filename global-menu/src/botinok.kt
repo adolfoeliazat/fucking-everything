@@ -1,9 +1,13 @@
 package vgrechka.botinok
 
+import javafx.application.Platform
+import javafx.beans.property.IntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.property.StringProperty
+import javafx.beans.value.ChangeListener
 import javafx.collections.FXCollections
+import javafx.collections.ListChangeListener
 import javafx.event.EventHandler
 import javafx.event.EventType
 import javafx.geometry.Rectangle2D
@@ -32,8 +36,11 @@ import javax.imageio.ImageIO
 import java.awt.Toolkit.getDefaultToolkit
 import java.awt.image.BufferedImage
 import java.io.File
+import kotlin.concurrent.thread
 import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty
+import kotlin.reflect.jvm.isAccessible
 
 
 internal class BotinokGlobalMenuConfig : GlobalMenuConfig() {
@@ -110,7 +117,8 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
     }
 
     class PlayEditing {
-        var selectedArena: Arena? = null
+        var selectedArena by JFXProperty<Arena?>(null)
+//        var selectedArena: Arena? = null
     }
 
     class Arena {
@@ -203,7 +211,13 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         val scrollPane = ScrollPane()
         scrollPane.content = stackPane
         val splitPane = SplitPane()
+
         arenaListView = ListView<Arena>()
+        arenaListView.selectionModel.selectedItems.addListener(ListChangeListener {e->
+            check(e.list.size == 1) {"029fd503-751a-4d02-889a-0eedbf68b468"}
+            clog("Aaaaa")
+        })
+
         splitPane.items += arenaListView
         splitPane.items += scrollPane
         splitPane.setDividerPosition(0, 0.2)
@@ -222,6 +236,11 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         stackPane.children.clear()
 
         play = Play()
+        jfxProperty(play.editing::selectedArena).addListener(ChangeListener {_, oldValue, newValue ->
+            clog("selectedArena changed: $oldValue --> $newValue")
+            arenaListView.selectionModel.select(newValue)
+        })
+
         arenaListView.items = play.arenas
 
         run { // Test initial shit
@@ -248,6 +267,8 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
                     }
                 }
             }
+
+//            startFuckingAroundThread()
         }
 
         image = Image("file:///$tmpImgPath")
@@ -344,9 +365,18 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
         }
     }
 
-    private fun addNewArenaAndUpdateUI() {
-        addNewArena()
-        drawShit()
+    private fun startFuckingAroundThread(): Thread {
+        return thread {
+            var index = 0
+            while (true) {
+                Thread.sleep(1000)
+                Platform.runLater {
+                    play.editing.selectedArena = play.arenas[index]
+                    if (++index > play.arenas.lastIndex)
+                        index = 0
+                }
+            }
+        }
     }
 
     private fun addNewArena() {

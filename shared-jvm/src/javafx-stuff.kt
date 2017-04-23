@@ -13,7 +13,9 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KClass
+import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty
+import kotlin.reflect.jvm.isAccessible
 
 object JFXStuff {
     fun infoAlert(headerText: String) {
@@ -42,22 +44,32 @@ private val Any.observables by AttachedComputedShit<Any, MutableList<Observable>
     Collections.synchronizedList(mutableListOf())
 }
 
+fun <T> jfxProperty(p: KMutableProperty0<T>): SimpleObjectProperty<T> {
+    p.isAccessible = true
+    val delegate = p.getDelegate()
+    return (delegate as JFXProperty<T>.Delegate).simpleObjectProperty
+}
+
+
 class JFXProperty<T>(val initialValue: T) {
-    val simpleObjectProperty = SimpleObjectProperty(initialValue)
+    inner class Delegate(thisRef: Any) :ReadWriteProperty<Any, T> {
+        val simpleObjectProperty = SimpleObjectProperty(initialValue)
 
-    operator fun provideDelegate(thisRef: Any, prop: KProperty<*>): ReadWriteProperty<Any, T> {
-        thisRef.observables += simpleObjectProperty
+        init {
+            thisRef.observables += simpleObjectProperty
+        }
 
-        return object:ReadWriteProperty<Any, T> {
-            override fun setValue(thisRef: Any, property: KProperty<*>, value: T) {
-                simpleObjectProperty.value = value
-            }
+        override fun setValue(thisRef: Any, property: KProperty<*>, value: T) {
+            simpleObjectProperty.value = value
+        }
 
-            override fun getValue(thisRef: Any, property: KProperty<*>): T {
-                return simpleObjectProperty.value
-            }
+        override fun getValue(thisRef: Any, property: KProperty<*>): T {
+            return simpleObjectProperty.value
         }
     }
+
+    operator fun provideDelegate(thisRef: Any, prop: KProperty<*>) =
+        Delegate(thisRef)
 }
 
 class JFXPropertyObservableExtractor<T> : Callback<T, Array<Observable>> {

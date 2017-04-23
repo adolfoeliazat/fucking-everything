@@ -277,6 +277,38 @@ fun <T : Throwable> assertThrown(clazz: KClass<T>, block: () -> Unit) {
     assertThrown({assertEquals(clazz, it::class)}, block)
 }
 
+class TestLogger {
+    val lines = mutableListOf<Line>()
+
+    class Line(val text: String, val uuid: String)
+
+    fun println(value: Any?, uuid: String) {
+        clog(value)
+        lines += Line(value.toString(), uuid)
+    }
+
+    fun shitWritten(): String {
+        val longestLine = lines.map{it.text}.maxBy{it.length} ?: return ""
+        return stringBuild {
+            val width = longestLine.length + 4
+            for (line in lines) {
+                val spaces = width - line.text.length
+                it += line.text + " ".repeat(spaces) + line.uuid + "\n"
+            }
+        }
+    }
+
+    fun assertEquals(expected: String) {
+        val shitted = shitWritten()
+        val preparedExpected = expected.trim().replace("\r\n", "\n")
+        val preparedActual = shitted.trim().replace("\r\n", "\n")
+        if (preparedExpected != preparedActual) {
+            clog("\n-------------- SHITTED TO LOG ------------------\n")
+            clog(shitted)
+        }
+        assertEquals(preparedExpected, preparedActual)
+    }
+}
 
 
 

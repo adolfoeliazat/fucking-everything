@@ -188,6 +188,21 @@ class StartGlobalMenu : Application() {
         GlobalMenuPile.primaryStage = primaryStage
         val robot = Robot()
 
+        Thread.setDefaultUncaughtExceptionHandler {thread, exception ->
+            try {
+                Platform.runLater {
+                    JFXStuff.errorAlert(exception)
+                }
+//                if (Platform.isFxApplicationThread()) {
+//                    JFXStuff.errorAlert(exception)
+//                } else {
+//                    exception.printStackTrace()
+//                }
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
+        }
+
         run { // Install hook
             val logger = Logger.getLogger(GlobalScreen::class.java.`package`.name)
             logger.level = Level.WARNING

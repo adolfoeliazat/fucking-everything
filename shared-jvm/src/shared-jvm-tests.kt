@@ -3,7 +3,14 @@ package vgrechka
 import com.google.common.collect.MapMaker
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Suite
 import java.util.concurrent.ConcurrentHashMap
+
+@RunWith(Suite::class)
+@Suite.SuiteClasses(
+    FileLineTests::class, AttachedComputedShitTests::class, JFXPropertyTests::class)
+class TestAllShit
 
 class FileLineTests {
     @Test
