@@ -67,6 +67,12 @@
 
 
 
+========== SQLite ==========
+
+    sqlite3 e:\febig\db\shebang.db
+    .quit
+
+    sqlite3 e:\febig\db\shebang.db .dump
 
 
 

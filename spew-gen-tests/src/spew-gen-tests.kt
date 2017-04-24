@@ -65,9 +65,9 @@ object TestGeneratedEntitiesForAmazingWords {
 
 interface AmazingWordRepository : XCrudRepository<AmazingWord, Long>
 
-@XEntity @XTable(name = "nice_words")
+@XEntity @XTable(name = "amazing_words")
 data class AmazingWord(
-    @XEmbedded var niceWord: AmazingWordFields
+    @XEmbedded var amazingWord: AmazingWordFields
 ) : ClitoralEntity0()
 
 @XEmbeddable

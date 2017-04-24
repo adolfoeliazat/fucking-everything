@@ -1,0 +1,24 @@
+create table `nice_words` (
+    `id` integer primary key autoincrement,
+    `niceWord_word` text not null,
+    `niceWord_rank` integer not null,
+    `niceWord_common_createdAt` text not null,
+    `niceWord_common_updatedAt` text not null,
+    `niceWord_common_deleted` integer not null
+);
+
+create table `amazing_words` (
+    `id` integer primary key autoincrement,
+    `amazingWord_word` text not null,
+    `amazingWord_rank` integer not null,
+    `amazingWord_common_createdAt` text not null,
+    `amazingWord_common_updatedAt` text not null,
+    `amazingWord_common_deleted` integer not null
+);
+
+INSERT INTO amazing_words VALUES(1,'Fuck',15,'2017-01-02 15:23:51.555','2017-01-02 15:23:51.555',0);
+INSERT INTO amazing_words VALUES(2,'Shit',10,'2017-01-02 15:23:51.555','2017-01-02 15:23:51.555',0);
+INSERT INTO amazing_words VALUES(3,'Bitch',20,'2017-01-02 15:23:51.555','2017-01-02 15:23:51.555',0);
+
+
+
