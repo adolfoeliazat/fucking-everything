@@ -17,7 +17,9 @@ import vgrechka.db.*
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
-// TODO:vgrechka Test insertion of many-to-one entity
+// TODO:vgrechka Drop/create schema automatically
+
+// TODO:vgrechka Make this into test
 
 // TODO:vgrechka Go through following implementations and make sure semantics of backing objects is preserved:
 //     c3c230b5-ab1d-44bb-acbe-e9db123583b1
@@ -38,10 +40,14 @@ object TestGeneratedEntitiesForAmazingWords {
     private fun exerciseViaManuallyDefinedInterfaces() {
         clog("Fucking around with exerciseViaManuallyDefinedInterfaces()?")
         object:fuckAround<AmazingWord, AmazingComment>() {
-            override fun saveNewWordToRepo(word: String, rank: Int): AmazingWord {
+            override fun saveCommentToRepo(word: AmazingWord, author: String, content: String): AmazingComment {
+                return amazingCommentRepo.save(newAmazingComment(
+                    word = word, author = author, content = content))}
+
+            override fun saveWordToRepo(word: String, rank: Int): AmazingWord {
                 return amazingWordRepo.save(newAmazingWord(
-                    word = "Pizda",
-                    rank = 500))}
+                    word = word, rank = rank))}
+
             override fun findAllWords() = amazingWordRepo.findAll()
             override fun wordToString(word: AmazingWord) = word.toString()
             override fun getWordID(word: AmazingWord) = word.id
@@ -57,13 +63,18 @@ object TestGeneratedEntitiesForAmazingWords {
 
     private fun exerciseDirectlyViaGeneratedCode() {
         clog("Fucking around with exerciseDirectlyViaGeneratedCode()?")
-        val repo = backPlatform.springctx.getBean(Generated_AmazingWordRepository::class.java)!!
+        val wordRepo = backPlatform.springctx.getBean(Generated_AmazingWordRepository::class.java)!!
+        val commentRepo = backPlatform.springctx.getBean(Generated_AmazingCommentRepository::class.java)!!
         object:fuckAround<Generated_AmazingWord, Generated_AmazingComment>() {
-            override fun saveNewWordToRepo(word: String, rank: Int): Generated_AmazingWord {
-                return repo.save(Generated_AmazingWord(Generated_AmazingWordFields(
-                    word = "Pizda",
-                    rank = 500)))}
-            override fun findAllWords() = repo.findAll()
+            override fun saveWordToRepo(word: String, rank: Int): Generated_AmazingWord {
+                return wordRepo.save(Generated_AmazingWord(Generated_AmazingWordFields(
+                    word = word, rank = rank)))}
+
+            override fun saveCommentToRepo(word: Generated_AmazingWord, author: String, content: String): Generated_AmazingComment {
+                return commentRepo.save(Generated_AmazingComment(Generated_AmazingCommentFields(
+                    word = word, author = author, content = content)))}
+
+            override fun findAllWords() = wordRepo.findAll()
             override fun wordToString(word: Generated_AmazingWord) = word.toString()
             override fun getWordID(word: Generated_AmazingWord) = word.id!!
             override fun getWordWord(word: Generated_AmazingWord) = word.amazingWord.word
@@ -72,18 +83,19 @@ object TestGeneratedEntitiesForAmazingWords {
             override fun commentToString(comment: Generated_AmazingComment) = comment.toString()
             override fun getCommentContent(comment: Generated_AmazingComment) = comment.amazingComment.content
             override fun getCommentAuthor(comment: Generated_AmazingComment) = comment.amazingComment.author
-            override fun findWordsLikeIgnoreCase(pattern: String) = repo.findByAmazingWord_WordLikeIgnoreCase("%i%")
+            override fun findWordsLikeIgnoreCase(pattern: String) = wordRepo.findByAmazingWord_WordLikeIgnoreCase("%i%")
         }
     }
 
     abstract class fuckAround<Word, Comment> {
-        abstract fun saveNewWordToRepo(word: String, rank: Int): Word
+        abstract fun saveWordToRepo(word: String, rank: Int): Word
         abstract fun findAllWords(): Iterable<Word>
         abstract fun wordToString(word: Word): String
         abstract fun getWordID(word: Word): Long
         abstract fun getWordWord(word: Word): String
         abstract fun getWordRank(word: Word): Int
-        abstract fun getWordComments(word: Word): List<Comment>
+        abstract fun getWordComments(word: Word): MutableList<Comment>
+        abstract fun saveCommentToRepo(word: Word, author: String, content: String): Comment
         abstract fun commentToString(comment: Comment): String
         abstract fun findWordsLikeIgnoreCase(pattern: String): List<Word>
         abstract fun getCommentContent(comment: Comment): String
@@ -134,8 +146,13 @@ object TestGeneratedEntitiesForAmazingWords {
 
                     run {
                         clogSection("Adding another nice word")
-                        val addedWord = saveNewWordToRepo(word = "Pizda", rank = 500)
-                        clog("ID of newly added word is ${getWordID(addedWord)}")
+                        val newWord = saveWordToRepo(word = "Pizda", rank = 500)
+
+                        getWordComments(newWord).add(saveCommentToRepo(newWord, author = "Fucko", content = "Невзъебенно"))
+                        getWordComments(newWord).add(saveCommentToRepo(newWord, author = "Shmacko", content = "Мрак, бля"))
+                        getWordComments(newWord).add(saveCommentToRepo(newWord, author = "Pidoracko", content = "Пеши исчо"))
+
+                        clog("ID of newly added word is ${getWordID(newWord)}")
                     }
 
                     showShitContainingLetterI()
