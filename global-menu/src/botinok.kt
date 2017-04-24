@@ -63,6 +63,10 @@ import kotlin.reflect.jvm.isAccessible
 internal class BotinokGlobalMenuConfig : GlobalMenuConfig() {
     override val initialFaceIndex = 1
 
+    init {
+        backPlatform.springctx = AnnotationConfigApplicationContext(BotinokAppConfig::class.java)
+    }
+
     override val faces = listOf(
         makeListFace(
             keyCode = NativeKeyEvent.VC_1,
@@ -107,33 +111,6 @@ internal class BotinokGlobalMenuConfig : GlobalMenuConfig() {
 
 }
 
-class Play {
-    val arenas = FXCollections.observableArrayList<Arena>(JFXPropertyObservableExtractor())
-    @Transient val editing = PlayEditing()
-}
-
-class PlayEditing {
-    var selectedArena by JFXProperty<Arena?>(null)
-//        var selectedArena: Arena? = null
-}
-
-class Arena {
-    var title by JFXProperty("Unfuckingtitled")
-
-    val boxes = mutableListOf<Box>()
-    @Transient val editing = ArenaEditing()
-
-    override fun toString() = title
-}
-
-class ArenaEditing {
-    var selectedBox: Box? = null
-}
-
-data class Box(var x: Int = 0, var y: Int = 0, var w: Int = 0, var h: Int = 0) {
-    fun isHit(testX: Double, testY: Double) =
-        testX >= x && testX <= x + w - 1 && testY >= y && testY <= y + h - 1
-}
 
 
 internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace() {
@@ -539,10 +516,6 @@ internal class BotinokScreenshotFace(override val keyCode: Int) : GlobalMenuFace
     }
 }
 
-object BotinokPile {
-    val springctx by lazy {AnnotationConfigApplicationContext(BotinokAppConfig::class.java)}
-}
-
 @Suppress("unused")
 @Configuration
 @EnableJpaRepositories
@@ -562,7 +535,7 @@ open class BotinokAppConfig {
 
     @Bean open fun dataSource(): DataSource {
         return SQLiteConnectionPoolDataSource()-{o->
-            o.url = "jdbc:sqlite:e:/febig/db/shebang.db"
+            o.url = BigPile.localSQLiteShebangDBURL
         }
     }
 

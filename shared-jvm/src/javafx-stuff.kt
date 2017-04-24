@@ -69,7 +69,7 @@ fun <T> jfxProperty(p: KMutableProperty0<T>): SimpleObjectProperty<T> {
 
 
 class JFXProperty<T>(val initialValue: T) {
-    inner class Delegate(thisRef: Any) :ReadWriteProperty<Any, T> {
+    inner class Delegate(thisRef: Any) : ReadWriteProperty<Any, T> {
         val simpleObjectProperty = SimpleObjectProperty(initialValue)
 
         init {

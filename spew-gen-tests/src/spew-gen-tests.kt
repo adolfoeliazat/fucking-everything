@@ -1,4 +1,4 @@
-package vgrechka.db.tests
+package vgrechka.spewgentests
 
 import org.hibernate.cfg.Environment
 import org.hibernate.dialect.SQLiteDialect
@@ -11,75 +11,26 @@ import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.annotation.EnableTransactionManagement
-import org.sqlite.SQLiteDataSource
 import org.sqlite.javax.SQLiteConnectionPoolDataSource
 import vgrechka.*
 import vgrechka.db.*
-import java.sql.Connection
-import java.sql.DriverManager
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
-object Spike_SQLite_1 {
-    @JvmStatic
-    fun main(args: Array<String>) {
-        val con = DriverManager.getConnection(BigPile.localSQLiteShebangDBURL)
-        fuckAroundWithSQLiteConnection(con)
-        clog("OK")
-    }
-}
-
-object Spike_SQLite_DataSource {
-    @JvmStatic
-    fun main(args: Array<String>) {
-        clog("How about DataSource?")
-        val ds = SQLiteConnectionPoolDataSource()
-        ds.url = BigPile.localSQLiteShebangDBURL
-        val con = ds.connection
-        fuckAroundWithSQLiteConnection(con)
-        clog("OK")
-    }
-}
-
-private fun fuckAroundWithSQLiteConnection(con: Connection) {
-    val st = con.prepareStatement("select id, word, rank from nice_words")
-    val rs = st.executeQuery()
-    while (rs.next()) {
-        clog("ID:", rs.getLong(1))
-        clog("Word:", rs.getString(2))
-        clog("Rank:", rs.getInt(3))
-        clog("------------------------------")
-    }
-}
-
-
-interface NiceWordRepository : XCrudRepository<NiceWord, Long>
-
-@XEntity @XTable(name = "nice_words")
-data class NiceWord(
-    @XEmbedded var niceWord: NiceWordFields
-) : ClitoralEntity0()
-
-@XEmbeddable
-data class NiceWordFields(
-    @XEmbedded var common: CommonFields = CommonFields(),
-    @XColumn(columnDefinition = "text") var word: String,
-    @XColumn var rank: Integer
-)
-
-private object Spike_SaveShitToSQLiteAndLoadBackViaHibernate_1 {
+object TestGeneratedEntitiesForAmazingWords {
     @JvmStatic
     fun main(args: Array<String>) {
         backPlatform.springctx = AnnotationConfigApplicationContext(AppConfig::class.java)
 
         backPlatform.tx {
             clog("Fucking around?")
-            val repo = backPlatform.springctx.getBean(NiceWordRepository::class.java)!!
+            val repo = backPlatform.springctx.getBean(AmazingWordRepository::class.java)!!
             val items = repo.findAll()
             for (item in items) {
                 clog(item)
             }
         }
+
         clog("OK")
     }
 
@@ -87,7 +38,7 @@ private object Spike_SaveShitToSQLiteAndLoadBackViaHibernate_1 {
     @Configuration
     @EnableJpaRepositories
     @EnableTransactionManagement
-    @ComponentScan(basePackages = arrayOf("vgrechka.db.tests"))
+    @ComponentScan(basePackages = arrayOf("vgrechka.spewgentests"))
     open class AppConfig {
         @Bean open fun entityManagerFactory(dataSource: DataSource) = LocalContainerEntityManagerFactoryBean() -{o->
             o.jpaVendorAdapter = HibernateJpaVendorAdapter()-{o->
@@ -96,22 +47,35 @@ private object Spike_SaveShitToSQLiteAndLoadBackViaHibernate_1 {
 //        o.jpaPropertyMap.put(Environment.HBM2DDL_AUTO, "create-drop")
             o.jpaPropertyMap.put(Environment.DIALECT, SQLiteDialect::class.qualifiedName)
             o.jpaPropertyMap.put(Environment.IMPLICIT_NAMING_STRATEGY, NiceHibernateNamingStrategy::class.qualifiedName)
-            o.setPackagesToScan("vgrechka.db.tests")
+            o.setPackagesToScan("vgrechka.spewgentests")
             o.dataSource = dataSource
         }
 
         @Bean open fun dataSource(): DataSource {
             return SQLiteConnectionPoolDataSource()-{o->
-                o.url = "jdbc:sqlite:e:/febig/db/shebang.db"
+                o.url = BigPile.localSQLiteShebangDBURL
             }
         }
 
-        @Bean open fun transactionManager(emf: EntityManagerFactory) = JpaTransactionManager()-{o->
+        @Bean open fun transactionManager(emf: EntityManagerFactory) = JpaTransactionManager() -{o->
             o.entityManagerFactory = emf
         }
     }
 }
 
+interface AmazingWordRepository : XCrudRepository<AmazingWord, Long>
+
+@XEntity @XTable(name = "nice_words")
+data class AmazingWord(
+    @XEmbedded var niceWord: AmazingWordFields
+) : ClitoralEntity0()
+
+@XEmbeddable
+data class AmazingWordFields(
+    @XEmbedded var common: CommonFields = CommonFields(),
+    @XColumn(columnDefinition = "text") var word: String,
+    @XColumn var rank: Integer
+)
 
 
 

@@ -74,6 +74,23 @@ class IdentityIfNotSetGeneratorLogic {
     }
 }
 
+private fun currentTimestampForEntity(): XTimestamp {
+    return when {
+//        backPlatform.isRequestThread() -> backPlatform.requestGlobus.stamp
+        else -> XTimestamp(sharedPlatform.currentTimeMillis())
+    }
+}
+
+@XEmbeddable
+data class CommonFields(
+    var createdAt: XTimestamp = currentTimestampForEntity(),
+    var updatedAt: XTimestamp = createdAt,
+    var deleted: Boolean = false
+) {
+//    fun touch() {
+//        updatedAt = backPlatform.requestGlobus.stamp
+//    }
+}
 
 
 
