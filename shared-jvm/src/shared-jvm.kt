@@ -35,6 +35,8 @@ fun die(msg: String = "You've just killed me, motherfucker!"): Nothing = throw E
 fun imf(what: String = "me"): Nothing = throw Exception("Implement $what, please, fuck you")
 fun bitch(msg: String = "Just bitching..."): Nothing = throw Exception(msg)
 
+fun clogSection(vararg xs: Any?): Unit = println("\n------------- " + xs.joinToString(" ") + " -------------\n")
+
 data class RunProcessResult(
     val exitValue: Int,
     val stdout: String,
@@ -120,8 +122,6 @@ private class NotNullOnceVar<T: Any> : ReadWriteProperty<Any?, T> {
 
 class AttachedComputedShit<in Host : Any, out Shit>(val weak: Boolean = false,
                                                     val create: (Host) -> Shit) : ReadOnlyProperty<Host, Shit> {
-    private val NULL = Any()
-
     override fun getValue(thisRef: Host, property: KProperty<*>): Shit {
         val map = when {
             weak -> weak_thisRefToPropertyNameToValue
@@ -139,6 +139,7 @@ class AttachedComputedShit<in Host : Any, out Shit>(val weak: Boolean = false,
     }
 
     companion object {
+        private val NULL = Any()
         private val thisRefToPropertyNameToValue = makeMap(weak = false)
         private val weak_thisRefToPropertyNameToValue = makeMap(weak = true)
 

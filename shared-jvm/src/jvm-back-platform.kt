@@ -3,6 +3,7 @@ package vgrechka
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.springframework.context.ApplicationContext
 import org.springframework.transaction.PlatformTransactionManager
+import org.springframework.transaction.TransactionStatus
 import org.springframework.transaction.support.TransactionTemplate
 import java.util.*
 import javax.persistence.*
@@ -54,9 +55,9 @@ typealias XThreadLocal<T> = ThreadLocal<T>
 val backPlatform = object : XBackPlatform {
     override var springctx by notNullOnce<ApplicationContext>()
 
-    override fun tx(block: () -> Unit) {
+    override fun tx(block: (TransactionStatus) -> Unit) {
         TransactionTemplate(springctx.getBean(PlatformTransactionManager::class.java)).execute {
-            block()
+            block(it)
         }
     }
 }
