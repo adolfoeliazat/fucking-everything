@@ -18,8 +18,6 @@ import vgrechka.spew.*
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
-// TODO:vgrechka Drop/create schema automatically
-
 // TODO:vgrechka Make this into test
 
 object TestGeneratedEntitiesForAmazingWords {
@@ -98,6 +96,7 @@ object TestGeneratedEntitiesForAmazingWords {
         abstract fun getCommentAuthor(comment: Comment): String
 
         init {
+            recreateSchema()
             backPlatform.tx {tx->
                 try {
                     fun dumpComments(pile: List<Comment>, commentToString: (Comment) -> String) {
@@ -155,6 +154,51 @@ object TestGeneratedEntitiesForAmazingWords {
                 } finally {
                     tx.setRollbackOnly()
                 }
+            }
+        }
+
+        private fun recreateSchema() {
+            clog("Recreating schema")
+            val ds = backPlatform.springctx.getBean(DataSource::class.java)
+            val con = ds.connection
+            try {
+                val st = con.createStatement()
+                st.execute("drop table if exists amazing_comments;")
+                st.execute("drop table if exists amazing_words;")
+
+                st.execute("""
+                    create table `amazing_words` (
+                        `id` integer primary key autoincrement,
+                        `amazingWord_word` text not null,
+                        `amazingWord_rank` integer not null,
+                        `amazingWord_common_createdAt` text not null,
+                        `amazingWord_common_updatedAt` text not null,
+                        `amazingWord_common_deleted` integer not null
+                    );
+                """)
+                st.execute("INSERT INTO amazing_words VALUES(1, 'Fuck', 15, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);")
+                st.execute("INSERT INTO amazing_words VALUES(2, 'Shit', 10, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);")
+                st.execute("INSERT INTO amazing_words VALUES(3, 'Bitch', 20, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);")
+
+                st.execute("""
+                    create table `amazing_comments` (
+                        `id` integer primary key autoincrement,
+                        `amazingComment_author` text not null,
+                        `amazingComment_content` text not null,
+                        `amazingComment_word__id` bigint not null,
+                        `amazingComment_common_createdAt` text not null,
+                        `amazingComment_common_updatedAt` text not null,
+                        `amazingComment_common_deleted` integer not null,
+
+                        foreign key (amazingComment_word__id) references amazing_words(id)
+                    );
+                """)
+                st.execute("INSERT INTO amazing_comments VALUES(1, 'Ben', 'Wow', 1, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);")
+                st.execute("INSERT INTO amazing_comments VALUES(2, 'Peter', 'Very eloquent', 1, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);")
+                st.execute("INSERT INTO amazing_comments VALUES(3, 'Nick', 'Much swearing', 2, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);")
+                st.execute("INSERT INTO amazing_comments VALUES(4, 'Ronald', 'Such polite', 2, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);")
+            } finally {
+                con.close()
             }
         }
     }
