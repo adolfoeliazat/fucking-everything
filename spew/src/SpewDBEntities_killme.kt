@@ -11,7 +11,7 @@ import java.io.File
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 
-object SpewDBEntities {
+object SpewDBEntities_killme {
 
     @JvmStatic fun main(args: Array<String>) {
         generateSeparateShit()
@@ -98,9 +98,9 @@ object SpewDBEntities {
 
             check(filesLeft.isEmpty()){"c81d4e2f-d2b7-47ee-9485-0ef002c309bf"}
 
-            backupAndWrite(backOutFile, backCode.toString())
-            backupAndWrite(frontOutFile, frontCode.toString())
-            backupAndWrite(sharedOutFile, sharedCode.toString())
+            backUpAndWrite(backOutFile, backCode.toString())
+            backUpAndWrite(frontOutFile, frontCode.toString())
+            backUpAndWrite(sharedOutFile, sharedCode.toString())
         }
 
         fun shitHeaderComment(shit: Shitter, packageName: String) {
@@ -175,13 +175,13 @@ object SpewDBEntities {
         return engine
     }
 
-    private fun backupAndWrite(file: File, newCode: String) {
-        backup(file)
+    private fun backUpAndWrite(file: File, newCode: String) {
+        backUp(file)
         file.writeText(newCode)
     }
 
 
-    fun backup(file: File) {
+    fun backUp(file: File) {
         check(file.path.startsWith(const.file.APS_HOME)) {"9911cfc6-6435-4a54-aa74-ad492162181a"}
 
         val stamp = LocalDateTime.now().format(PG_LOCAL_DATE_TIME).replace(Regex("[ :\\.]"), "-")
@@ -227,7 +227,7 @@ object SpewDBEntities {
 
 
 
-private fun SpewDBEntities.generateSeparateShit.processRemoteFunction(function: KtNamedFunction) {
+private fun SpewDBEntities_killme.generateSeparateShit.processRemoteFunction(function: KtNamedFunction) {
     val fname = function.name ?: wtf("90c32afc-d7ae-4179-9f2e-77ef6d6c1bb9")
     when {
         fname.startsWith("miranda") -> processRemoteFunctionTemplate(
@@ -248,7 +248,7 @@ private fun SpewDBEntities.generateSeparateShit.processRemoteFunction(function: 
     }
 }
 
-private fun SpewDBEntities.generateSeparateShit.processRemoteFunctionTemplate(function: KtNamedFunction, humanName: String, genericFrontFunction: String, frontReturnType: (returnType: String) -> String, simplifyResponseOnFront: (String) -> String) {
+private fun SpewDBEntities_killme.generateSeparateShit.processRemoteFunctionTemplate(function: KtNamedFunction, humanName: String, genericFrontFunction: String, frontReturnType: (returnType: String) -> String, simplifyResponseOnFront: (String) -> String) {
     val fname = function.name!!
     clog("Generating $humanName function stub/skeleton for $fname")
 
@@ -304,7 +304,7 @@ private fun SpewDBEntities.generateSeparateShit.processRemoteFunctionTemplate(fu
     """)
 }
 
-private fun SpewDBEntities.generateSeparateShit.processSelectControlKey(decl: KtProperty) {
+private fun SpewDBEntities_killme.generateSeparateShit.processSelectControlKey(decl: KtProperty) {
     val initer = decl.initializer as KtCallExpression
     check(initer.calleeExpression?.text == "SelectKey"){"5f0fded2-1788-43b5-9d1b-0c0acc660790"}
 
@@ -361,34 +361,6 @@ object const {
     }
 }
 
-fun dedent(it: String): String {
-    var lines = it.split(Regex("\\r?\\n"))
-    if (lines.size > 0 && lines[0].isBlank()) {
-        lines = lines.drop(1)
-    }
-    if (lines.size > 0 && lines.last().isBlank()) {
-        lines = lines.dropLast(1)
-    }
-
-    var minIndent = 9999 // TODO:vgrechka Platform-specific max integer (for JS: Number.MAX_SAFE_INTEGER)
-    for (line in lines) {
-        if (!line.isBlank()) {
-            val lineIndent = line.length - line.trimStart().length
-            if (lineIndent < minIndent) {
-                minIndent = lineIndent
-            }
-        }
-    }
-
-    return lines.map {line ->
-        if (line.trim().isBlank()) ""
-        else line.substring(minIndent)
-    }.joinToString("\n")
-}
-
-fun reindent(newIndent: Int, it: String): String {
-    return dedent(it).split("\n").joinToString("\n") {" ".repeat(newIndent) + it}
-}
 
 operator fun StringBuilder.plusAssign(x: Any?) {
     this.append(x)
@@ -400,44 +372,6 @@ val PG_LOCAL_DATE_TIME = DateTimeFormatterBuilder()
     .appendLiteral(' ')
     .append(DateTimeFormatter.ISO_LOCAL_TIME)
     .toFormatter()!!
-
-fun bitch(msg: String = "Just bitching..."): Nothing = throw Exception(msg)
-
-fun stringBuild(block: (StringBuilder) -> Unit) =
-    StringBuilder().also(block).toString()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//for (ann in decl.annotationEntries) {
-//    if (ann.typeReference?.text == "SelectTesterEnums") {
-//        for (arg in ann.valueArgumentList!!.arguments) {
-//            testerEnums += arg.text.replace("::class", "")
-//        }
-//    }
-//}
-
-
-
-
-
-
-
-
-
-
 
 
 
