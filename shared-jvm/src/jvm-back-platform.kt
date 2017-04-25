@@ -51,8 +51,7 @@ typealias XHttpServletRequest = javax.servlet.http.HttpServletRequest
 typealias XHttpServletResponse = javax.servlet.http.HttpServletResponse
 typealias XThreadLocal<T> = ThreadLocal<T>
 
-
-val backPlatform = object : XBackPlatform {
+object JVMBackPlatform : XBackPlatform {
     override var springctx by notNullOnce<ApplicationContext>()
 
     override fun tx(block: (TransactionStatus) -> Unit) {
@@ -61,6 +60,8 @@ val backPlatform = object : XBackPlatform {
         }
     }
 }
+
+val backPlatform = JVMBackPlatform
 
 
 

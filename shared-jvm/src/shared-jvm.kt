@@ -12,6 +12,7 @@ import okhttp3.RequestBody
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 import org.junit.Test
+import org.springframework.context.ApplicationContext
 import java.io.*
 import java.nio.charset.Charset
 import java.util.*
@@ -22,6 +23,7 @@ import kotlin.concurrent.thread
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KClass
+import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 import kotlin.reflect.jvm.isAccessible
@@ -104,9 +106,10 @@ fun Boolean.ifOrEmpty(block: () -> String): String = when {
     else -> ""
 }
 
-fun <T: Any> notNullOnce(): ReadWriteProperty<Any?, T> = NotNullOnceVar()
+//fun <T: Any> notNullOnce(): ReadWriteProperty<Any?, T> = NotNullOnceVar()
 
-private class NotNullOnceVar<T: Any> : ReadWriteProperty<Any?, T> {
+//private class NotNullOnceVar<T: Any> : ReadWriteProperty<Any?, T> {
+class notNullOnce<T: Any> : ReadWriteProperty<Any?, T> {
     private var value: T? = null
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): T {
@@ -116,6 +119,14 @@ private class NotNullOnceVar<T: Any> : ReadWriteProperty<Any?, T> {
     override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
         check(this.value == null) {"Property `${property.name}` should be assigned only once"}
         this.value = value
+    }
+
+    companion object {
+        fun debugReset(prop: KMutableProperty0<*>) {
+            prop.isAccessible = true
+            val delegate = prop.getDelegate() as notNullOnce<*>
+            delegate.value = null
+        }
     }
 }
 
@@ -281,20 +292,47 @@ fun <T : Throwable> assertThrown(clazz: KClass<T>, block: () -> Unit) {
 class TestLogger {
     val lines = mutableListOf<Line>()
 
-    class Line(val text: String, val uuid: String)
+    interface Line {
+        fun usefulLength(): Int
+        fun renderTo(buf: StringBuilder, width: Int)
+    }
 
     fun println(value: Any?, uuid: String) {
         clog(value)
-        lines += Line(value.toString(), uuid)
+        val stringValue = value.toString() // Capture now, as `value` object may change later before rendering
+        lines += object:Line {
+            override fun usefulLength(): Int {
+                return stringValue.length
+            }
+
+            override fun renderTo(buf: StringBuilder, width: Int) {
+                val spaces = width - usefulLength()
+                buf += stringValue + " ".repeat(spaces) + uuid + "\n"
+            }
+        }
+    }
+
+    fun section(title: String, uuid: String) {
+        val content = "------------- $title -------------"
+        clog("\n$content\n")
+        lines += object:Line {
+            override fun usefulLength(): Int {
+                return content.length
+            }
+
+            override fun renderTo(buf: StringBuilder, width: Int) {
+                val spaces = width - usefulLength()
+                buf += "\n" + content + " ".repeat(spaces) + uuid + "\n\n"
+            }
+        }
     }
 
     fun shitWritten(): String {
-        val longestLine = lines.map{it.text}.maxBy{it.length} ?: return ""
+        val longestLine = lines.maxBy {it.usefulLength()} ?: return ""
         return stringBuild {
-            val width = longestLine.length + 4
+            val width = longestLine.usefulLength() + 4
             for (line in lines) {
-                val spaces = width - line.text.length
-                it += line.text + " ".repeat(spaces) + line.uuid + "\n"
+                line.renderTo(it, width)
             }
         }
     }

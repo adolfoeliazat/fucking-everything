@@ -19,6 +19,7 @@
       <module fileurl="file://$PROJECT_DIR$/shared-jvm/shared-jvm.iml" filepath="$PROJECT_DIR$/shared-jvm/shared-jvm.iml" />
       <module fileurl="file://$PROJECT_DIR$/spew/spew.iml" filepath="$PROJECT_DIR$/spew/spew.iml" />
       <module fileurl="file://$PROJECT_DIR$/spew-gen-tests/spew-gen-tests.iml" filepath="$PROJECT_DIR$/spew-gen-tests/spew-gen-tests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test-index/test-index.iml" filepath="$PROJECT_DIR$/test-index/test-index.iml" />
       <module fileurl="file://$PROJECT_DIR$/txt/txt.iml" filepath="$PROJECT_DIR$/txt/txt.iml" />
     </modules>
   </component>

@@ -2,6 +2,11 @@ package vgrechka.spewgentests
 
 import org.hibernate.cfg.Environment
 import org.hibernate.dialect.SQLiteDialect
+import org.junit.AfterClass
+import org.junit.BeforeClass
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Suite
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
@@ -18,21 +23,20 @@ import vgrechka.spew.*
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
-// TODO:vgrechka Make this into test
+class GeneratedEntitiesForAmazingWordsTest {
+    val log = TestLogger()
 
-object TestGeneratedEntitiesForAmazingWords {
-    @JvmStatic
-    fun main(args: Array<String>) {
-        backPlatform.springctx = AnnotationConfigApplicationContext(AppConfig::class.java)
+    companion object {
+        @BeforeClass @JvmStatic fun beforeClass() {
+            backPlatform.springctx = AnnotationConfigApplicationContext(AppConfig::class.java)
+        }
 
-        exerciseViaManuallyDefinedInterfaces()
-//        exerciseDirectlyViaGeneratedCode()
-
-        clog("OK")
+        @AfterClass @JvmStatic fun afterClass() {
+            notNullOnce.debugReset(JVMBackPlatform::springctx)
+        }
     }
 
-    private fun exerciseViaManuallyDefinedInterfaces() {
-        clog("Fucking around with exerciseViaManuallyDefinedInterfaces()?")
+    @Test fun exerciseViaManuallyDefinedInterfaces() {
         object:fuckAround<AmazingWord, AmazingComment>() {
             override fun saveCommentToRepo(word: AmazingWord, author: String, content: String): AmazingComment {
                 return amazingCommentRepo.save(newAmazingComment(
@@ -55,8 +59,7 @@ object TestGeneratedEntitiesForAmazingWords {
         }
     }
 
-    private fun exerciseDirectlyViaGeneratedCode() {
-        clog("Fucking around with exerciseDirectlyViaGeneratedCode()?")
+    @Test fun exerciseDirectlyViaGeneratedCode() {
         val wordRepo = backPlatform.springctx.getBean(Generated_AmazingWordRepository::class.java)!!
         val commentRepo = backPlatform.springctx.getBean(Generated_AmazingCommentRepository::class.java)!!
         object:fuckAround<Generated_AmazingWord, Generated_AmazingComment>() {
@@ -81,7 +84,7 @@ object TestGeneratedEntitiesForAmazingWords {
         }
     }
 
-    abstract class fuckAround<Word, Comment> {
+    abstract inner class fuckAround<Word, Comment> {
         abstract fun saveWordToRepo(word: String, rank: Int): Word
         abstract fun findAllWords(): Iterable<Word>
         abstract fun wordToString(word: Word): String
@@ -101,10 +104,10 @@ object TestGeneratedEntitiesForAmazingWords {
                 try {
                     fun dumpComments(pile: List<Comment>, commentToString: (Comment) -> String) {
                         if (pile.isEmpty()) {
-                            clog("    (No fucking comments)")
+                            log.println("    (No fucking comments)", "07c3b63d-8c1c-47ad-825e-c5efe8b16fe3")
                         } else {
-                            for (comment in pile) {
-                                clog("    ${commentToString(comment)}")
+                            for ((i, comment) in pile.withIndex()) {
+                                log.println("    ${commentToString(comment)}", "$i--93c0132a-e38d-4413-bde4-c63e7b81a465")
                             }
                         }
                     }
@@ -114,10 +117,10 @@ object TestGeneratedEntitiesForAmazingWords {
                                                    wordToString: (Word) -> String,
                                                    getComments: (Word) -> List<Comment>,
                                                    commentToString: (Comment) -> String) {
-                        clogSection(title)
+                        log.section(title, "d9e74c60-33bc-4758-b3fe-c456cfaeed6a")
                         val words = findWords()
                         for (word in words) {
-                            clog(wordToString(word))
+                            log.println(wordToString(word), "6efc12fd-1c41-43a4-b13d-d77b1c4a23e7")
                             dumpComments(getComments(word), commentToString = commentToString)
                         }
                     }
@@ -129,10 +132,10 @@ object TestGeneratedEntitiesForAmazingWords {
                                                commentToString = this::commentToString)
 
                     fun showShitContainingLetterI() {
-                        clogSection("Words containing letter 'i'")
+                        log.section("Words containing letter 'i'", "321c69fc-2a56-4b2e-8cc7-7817abb1203c")
                         val words = findWordsLikeIgnoreCase("%i%")
-                        for (word in words) {
-                            clog("#${getWordRank(word).toString().padEnd(5)}${getWordWord(word)}")
+                        for ((i, word) in words.withIndex()) {
+                            log.println("#${getWordRank(word).toString().padEnd(5)}${getWordWord(word)}", "$i--9ad63ec7-b4ad-4342-a1bb-91c3b7e2a816")
                             dumpComments(getWordComments(word), commentToString = {"Comment by ${getCommentAuthor(it)}: ${getCommentContent(it)}"})
                         }
                     }
@@ -140,25 +143,64 @@ object TestGeneratedEntitiesForAmazingWords {
                     showShitContainingLetterI()
 
                     run {
-                        clogSection("Adding another nice word")
+                        log.section("Adding another nice word", "072eecc9-8390-4efc-8fee-7286a7751020")
                         val newWord = saveWordToRepo(word = "Pizda", rank = 500)
 
                         getWordComments(newWord).add(saveCommentToRepo(newWord, author = "Fucko", content = "Невзъебенно"))
                         getWordComments(newWord).add(saveCommentToRepo(newWord, author = "Shmacko", content = "Мрак, бля"))
                         getWordComments(newWord).add(saveCommentToRepo(newWord, author = "Pidoracko", content = "Пеши исчо"))
 
-                        clog("ID of newly added word is ${getWordID(newWord)}")
+                        log.println("ID of newly added word is ${getWordID(newWord)}", "3b11683c-7979-4e65-af4e-1afed120503e")
                     }
 
                     showShitContainingLetterI()
                 } finally {
-                    tx.setRollbackOnly()
+//                    tx.setRollbackOnly()
                 }
             }
+
+            log.assertEquals("""
+Recreating schema                                          11e89c05-3db6-4b67-a111-2509625d7028
+
+------------- All words -------------                      d9e74c60-33bc-4758-b3fe-c456cfaeed6a
+
+AmazingWord(word=Fuck, rank=15)                            6efc12fd-1c41-43a4-b13d-d77b1c4a23e7
+    AmazingComment(author=Ben, content=Wow)                0--93c0132a-e38d-4413-bde4-c63e7b81a465
+    AmazingComment(author=Peter, content=Very eloquent)    1--93c0132a-e38d-4413-bde4-c63e7b81a465
+AmazingWord(word=Shit, rank=10)                            6efc12fd-1c41-43a4-b13d-d77b1c4a23e7
+    AmazingComment(author=Nick, content=Much swearing)     0--93c0132a-e38d-4413-bde4-c63e7b81a465
+    AmazingComment(author=Ronald, content=Such polite)     1--93c0132a-e38d-4413-bde4-c63e7b81a465
+AmazingWord(word=Bitch, rank=20)                           6efc12fd-1c41-43a4-b13d-d77b1c4a23e7
+    (No fucking comments)                                  07c3b63d-8c1c-47ad-825e-c5efe8b16fe3
+
+------------- Words containing letter 'i' -------------    321c69fc-2a56-4b2e-8cc7-7817abb1203c
+
+#10   Shit                                                 0--9ad63ec7-b4ad-4342-a1bb-91c3b7e2a816
+    Comment by Nick: Much swearing                         0--93c0132a-e38d-4413-bde4-c63e7b81a465
+    Comment by Ronald: Such polite                         1--93c0132a-e38d-4413-bde4-c63e7b81a465
+#20   Bitch                                                1--9ad63ec7-b4ad-4342-a1bb-91c3b7e2a816
+    (No fucking comments)                                  07c3b63d-8c1c-47ad-825e-c5efe8b16fe3
+
+------------- Adding another nice word -------------       072eecc9-8390-4efc-8fee-7286a7751020
+
+ID of newly added word is 4                                3b11683c-7979-4e65-af4e-1afed120503e
+
+------------- Words containing letter 'i' -------------    321c69fc-2a56-4b2e-8cc7-7817abb1203c
+
+#10   Shit                                                 0--9ad63ec7-b4ad-4342-a1bb-91c3b7e2a816
+    Comment by Nick: Much swearing                         0--93c0132a-e38d-4413-bde4-c63e7b81a465
+    Comment by Ronald: Such polite                         1--93c0132a-e38d-4413-bde4-c63e7b81a465
+#20   Bitch                                                1--9ad63ec7-b4ad-4342-a1bb-91c3b7e2a816
+    (No fucking comments)                                  07c3b63d-8c1c-47ad-825e-c5efe8b16fe3
+#500  Pizda                                                2--9ad63ec7-b4ad-4342-a1bb-91c3b7e2a816
+    Comment by Fucko: Невзъебенно                          0--93c0132a-e38d-4413-bde4-c63e7b81a465
+    Comment by Shmacko: Мрак, бля                          1--93c0132a-e38d-4413-bde4-c63e7b81a465
+    Comment by Pidoracko: Пеши исчо                        2--93c0132a-e38d-4413-bde4-c63e7b81a465
+            """)
         }
 
         private fun recreateSchema() {
-            clog("Recreating schema")
+            log.println("Recreating schema", "11e89c05-3db6-4b67-a111-2509625d7028")
             val ds = backPlatform.springctx.getBean(DataSource::class.java)
             val con = ds.connection
             try {
@@ -209,7 +251,7 @@ object TestGeneratedEntitiesForAmazingWords {
     @EnableTransactionManagement
     @ComponentScan(basePackages = arrayOf("vgrechka.spewgentests"))
     open class AppConfig {
-        @Bean open fun entityManagerFactory(dataSource: DataSource) = LocalContainerEntityManagerFactoryBean() -{o->
+        @Bean open fun entityManagerFactory(dataSource: DataSource) = LocalContainerEntityManagerFactoryBean()-{o->
             o.jpaVendorAdapter = HibernateJpaVendorAdapter()-{o->
                 o.setShowSql(false)
 //                o.setShowSql(true)
@@ -232,6 +274,7 @@ object TestGeneratedEntitiesForAmazingWords {
         }
     }
 }
+
 
 // =========================== DEFINED MANUALLY ============================
 

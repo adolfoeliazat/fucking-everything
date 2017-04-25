@@ -2,6 +2,8 @@ package vgrechka.db.tests
 
 import org.hibernate.cfg.Environment
 import org.hibernate.dialect.SQLiteDialect
+import org.junit.runner.RunWith
+import org.junit.runners.Suite
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
