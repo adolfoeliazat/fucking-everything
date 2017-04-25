@@ -2,6 +2,7 @@ package vgrechka.spew
 
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 import org.jetbrains.kotlin.psi.*
+import vgrechka.*
 import java.time.LocalDateTime
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
@@ -359,10 +360,6 @@ object const {
         val APS_TEMP = "c:/tmp/aps-tmp"
     }
 }
-
-fun clog(vararg xs: Any?): Unit = println(xs.joinToString(" "))
-
-fun wtf(msg: String = "...WTF didn't you describe this WTF?"): Nothing = throw Exception("WTF: $msg")
 
 fun dedent(it: String): String {
     var lines = it.split(Regex("\\r?\\n"))

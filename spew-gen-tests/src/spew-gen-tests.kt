@@ -14,17 +14,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 import org.sqlite.javax.SQLiteConnectionPoolDataSource
 import vgrechka.*
 import vgrechka.db.*
+import vgrechka.spew.*
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
 // TODO:vgrechka Drop/create schema automatically
 
 // TODO:vgrechka Make this into test
-
-// TODO:vgrechka Go through following implementations and make sure semantics of backing objects is preserved:
-//     c3c230b5-ab1d-44bb-acbe-e9db123583b1
-//     aae83eee-f0c9-42fb-9cd2-ab25b87cd4cd
-//     e42ac601-2330-4e6e-8bcb-9c631870b3dd
 
 object TestGeneratedEntitiesForAmazingWords {
     @JvmStatic
@@ -233,7 +229,8 @@ fun newAmazingWord(word: String,
     return backing.toManuallyDefinedInterface()
 }
 
-fun AmazingWord.toGeneratedBackingEntity() = (this as Generated_AmazingWordBackingProvider)._backing
+val AmazingWord._backing
+    get() = (this as Generated_AmazingWordBackingProvider)._backing
 
 val amazingWordRepo: AmazingWordRepository by lazy {
     val generatedRepo = backPlatform.springctx.getBean(Generated_AmazingWordRepository::class.java)!!
@@ -250,7 +247,7 @@ val amazingWordRepo: AmazingWordRepository by lazy {
         }
 
         override fun save(x: AmazingWord): AmazingWord {
-            val shit = generatedRepo.save(x.toGeneratedBackingEntity())
+            val shit = generatedRepo.save(x._backing)
             return shit.toManuallyDefinedInterface()
         }
     }
@@ -260,17 +257,17 @@ interface Generated_AmazingWordRepository : XCrudRepository<Generated_AmazingWor
     fun findByAmazingWord_WordLikeIgnoreCase(x: String): List<Generated_AmazingWord>
 }
 
-interface Generated_AmazingWordBackingProvider {
-    val _backing: Generated_AmazingWord
+interface Generated_AmazingWordBackingProvider : DBCodeGenUtils.GeneratedBackingEntityProvider<Generated_AmazingWord> {
+    override val _backing: Generated_AmazingWord
 }
 
 @XEntity @XTable(name = "amazing_words")
 class Generated_AmazingWord(
     @XEmbedded var amazingWord: Generated_AmazingWordFields
 )
-    : ClitoralEntity0()
+    : ClitoralEntity0(), DBCodeGenUtils.GeneratedEntity<AmazingWord>
 {
-    fun toManuallyDefinedInterface(): AmazingWord {
+    override fun toManuallyDefinedInterface(): AmazingWord {
         return object : AmazingWord, Generated_AmazingWordBackingProvider {
             override val _backing: Generated_AmazingWord
                 get() = this@Generated_AmazingWord
@@ -281,162 +278,14 @@ class Generated_AmazingWord(
 
             override var word: String
                 get() = _backing.amazingWord.word
-                set(value) {
-                    _backing.amazingWord.word = value}
+                set(value) {_backing.amazingWord.word = value}
 
             override var rank: Int
                 get() = _backing.amazingWord.rank
-                set(value) {
-                    _backing.amazingWord.rank = value}
+                set(value) {_backing.amazingWord.rank = value}
 
             override var comments: MutableList<AmazingComment>
-                get() {
-                    val backingList = _backing.amazingWord.comments
-                    return object:MutableList<AmazingComment> { // c3c230b5-ab1d-44bb-acbe-e9db123583b1
-                        override val size: Int
-                            get() = backingList.size
-
-                        override fun contains(element: AmazingComment): Boolean {
-                            return backingList.contains(element.toGeneratedBackingEntity())
-                        }
-
-                        override fun containsAll(elements: Collection<AmazingComment>): Boolean {
-                            return backingList.containsAll(elements.map {it.toGeneratedBackingEntity()})
-                        }
-
-                        override fun get(index: Int): AmazingComment {
-                            return backingList[index].toManuallyDefinedInterface()
-                        }
-
-                        override fun indexOf(element: AmazingComment): Int {
-                            return backingList.indexOf(element.toGeneratedBackingEntity())
-                        }
-
-                        override fun isEmpty(): Boolean {
-                            return backingList.isEmpty()
-                        }
-
-                        override fun iterator(): MutableIterator<AmazingComment> {
-                            return backingIteratorToIterator(backingList.iterator())
-                        }
-
-                        private fun backingIteratorToIterator(backingIterator: MutableIterator<Generated_AmazingComment>): MutableIterator<AmazingComment> {
-                            return object : MutableIterator<AmazingComment> { // e42ac601-2330-4e6e-8bcb-9c631870b3dd
-                                override fun remove() {
-                                    backingIterator.remove()
-                                }
-
-                                override fun hasNext(): Boolean {
-                                    return backingIterator.hasNext()
-                                }
-
-                                override fun next(): AmazingComment {
-                                    return backingIterator.next().toManuallyDefinedInterface()
-                                }
-                            }
-                        }
-
-                        override fun lastIndexOf(element: AmazingComment): Int {
-                            return backingList.lastIndexOf(element.toGeneratedBackingEntity())
-                        }
-
-                        override fun add(element: AmazingComment): Boolean {
-                            return backingList.add(element.toGeneratedBackingEntity())
-                        }
-
-                        override fun add(index: Int, element: AmazingComment) {
-                            return backingList.add(index, element.toGeneratedBackingEntity())
-                        }
-
-                        override fun addAll(index: Int, elements: Collection<AmazingComment>): Boolean {
-                            return backingList.addAll(index, elements.map {it.toGeneratedBackingEntity()})
-                        }
-
-                        override fun addAll(elements: Collection<AmazingComment>): Boolean {
-                            return backingList.addAll(elements.map {it.toGeneratedBackingEntity()})
-                        }
-
-                        override fun clear() {
-                            return backingList.clear()
-                        }
-
-                        override fun listIterator(): MutableListIterator<AmazingComment> {
-                            return backingListIteratorToListIterator(backingList.listIterator())
-                        }
-
-                        private fun backingListIteratorToListIterator(backingListIterator: MutableListIterator<Generated_AmazingComment>): MutableListIterator<AmazingComment> {
-                            return object : MutableListIterator<AmazingComment> { // aae83eee-f0c9-42fb-9cd2-ab25b87cd4cd
-                                override fun add(element: AmazingComment) {
-                                    return backingListIterator.add(element.toGeneratedBackingEntity())
-                                }
-
-                                override fun hasNext(): Boolean {
-                                    return backingListIterator.hasNext()
-                                }
-
-                                override fun next(): AmazingComment {
-                                    return backingListIterator.next().toManuallyDefinedInterface()
-                                }
-
-                                override fun remove() {
-                                    return backingListIterator.remove()
-                                }
-
-                                override fun set(element: AmazingComment) {
-                                    return backingListIterator.set(element.toGeneratedBackingEntity())
-                                }
-
-                                override fun hasPrevious(): Boolean {
-                                    return backingListIterator.hasPrevious()
-                                }
-
-                                override fun nextIndex(): Int {
-                                    return backingListIterator.nextIndex()
-                                }
-
-                                override fun previous(): AmazingComment {
-                                    return backingListIterator.previous().toManuallyDefinedInterface()
-                                }
-
-                                override fun previousIndex(): Int {
-                                    return backingListIterator.previousIndex()
-                                }
-                            }
-                        }
-
-                        override fun listIterator(index: Int): MutableListIterator<AmazingComment> {
-                            return backingListIteratorToListIterator(backingList.listIterator(index))
-                        }
-
-                        override fun remove(element: AmazingComment): Boolean {
-                            return backingList.remove(element.toGeneratedBackingEntity())
-                        }
-
-                        override fun removeAll(elements: Collection<AmazingComment>): Boolean {
-                            return backingList.removeAll(elements.map {it.toGeneratedBackingEntity()})
-                        }
-
-                        override fun removeAt(index: Int): AmazingComment {
-                            return backingList.removeAt(index).toManuallyDefinedInterface()
-                        }
-
-                        override fun retainAll(elements: Collection<AmazingComment>): Boolean {
-                            return backingList.retainAll(elements.map {it.toGeneratedBackingEntity()})
-                        }
-
-                        override fun set(index: Int, element: AmazingComment): AmazingComment {
-                            return backingList.set(index, element.toGeneratedBackingEntity()).toManuallyDefinedInterface()
-                        }
-
-                        override fun subList(fromIndex: Int, toIndex: Int): MutableList<AmazingComment> {
-                            imf("a7db4be2-40bc-4cc2-9541-0a8ba80eac43")
-                        }
-
-                    }
-                }
-                set(value) {
-                    imf("ca6c7f7a-8da5-4969-bbe8-eea87005a5e7")
-                }
+                by DBCodeGenUtils.FuckingList(getBackingList = {_backing.amazingWord.comments})
 
             override fun toString() = _backing.toString()
 
@@ -472,11 +321,12 @@ fun newAmazingComment(author: String,
     val backing = Generated_AmazingComment(
         Generated_AmazingCommentFields(author = author,
                                        content = content,
-                                       word = word.toGeneratedBackingEntity()))
+                                       word = word._backing))
     return backing.toManuallyDefinedInterface()
 }
 
-fun AmazingComment.toGeneratedBackingEntity() = (this as Generated_AmazingCommentBackingProvider)._backing
+val AmazingComment._backing
+    get() = (this as Generated_AmazingCommentBackingProvider)._backing
 
 val amazingCommentRepo: AmazingCommentRepository by lazy {
     val generatedRepo = backPlatform.springctx.getBean(Generated_AmazingCommentRepository::class.java)!!
@@ -488,27 +338,26 @@ val amazingCommentRepo: AmazingCommentRepository by lazy {
         }
 
         override fun save(x: AmazingComment): AmazingComment {
-            val shit = generatedRepo.save(x.toGeneratedBackingEntity())
+            val shit = generatedRepo.save(x._backing)
             return shit.toManuallyDefinedInterface()
         }
     }
 }
 
 interface Generated_AmazingCommentRepository : XCrudRepository<Generated_AmazingComment, Long> {
-    // TODO:vgrechka ...
 }
 
-interface Generated_AmazingCommentBackingProvider {
-    val _backing: Generated_AmazingComment
+interface Generated_AmazingCommentBackingProvider : DBCodeGenUtils.GeneratedBackingEntityProvider<Generated_AmazingComment> {
+    override val _backing: Generated_AmazingComment
 }
 
 @XEntity @XTable(name = "amazing_comments")
 class Generated_AmazingComment(
     @XEmbedded var amazingComment: Generated_AmazingCommentFields
 )
-    : ClitoralEntity0()
+    : ClitoralEntity0(), DBCodeGenUtils.GeneratedEntity<AmazingComment>
 {
-    fun toManuallyDefinedInterface(): AmazingComment {
+    override fun toManuallyDefinedInterface(): AmazingComment {
         return object : AmazingComment, Generated_AmazingCommentBackingProvider {
             override val _backing: Generated_AmazingComment
                 get() = this@Generated_AmazingComment

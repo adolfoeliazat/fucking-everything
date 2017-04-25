@@ -10,7 +10,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="kotlin-jvm" level="project" />
     <orderEntry type="module" module-name="shared-jvm" />
-
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -267,7 +266,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-
-
+    <orderEntry type="module" module-name="spew" />
   </component>
 </module>
