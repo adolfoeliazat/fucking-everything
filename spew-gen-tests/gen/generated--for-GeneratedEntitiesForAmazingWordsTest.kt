@@ -11,7 +11,7 @@ import vgrechka.*
 import vgrechka.spew.*
 import vgrechka.db.*
 
-// Fuck you    Wed Apr 26 17:13:46 EEST 2017
+// Fuck you    Wed Apr 26 21:05:06 EEST 2017
 
 // ------------------------------------------------------------------
 // AmazingWord

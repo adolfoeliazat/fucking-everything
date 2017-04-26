@@ -15,6 +15,9 @@ import org.junit.Test
 import org.springframework.context.ApplicationContext
 import java.io.*
 import java.nio.charset.Charset
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
@@ -384,9 +387,68 @@ fun Any?.toVerticalString(): String {
 //    return this.toString().replaceFirst("(", "(\n    ").replace(", ", ",\n    ")
 }
 
+fun dedent(it: String): String {
+    var lines = it.split(Regex("\\r?\\n"))
+    if (lines.isNotEmpty() && lines[0].isBlank()) {
+        lines = lines.drop(1)
+    }
+    if (lines.isNotEmpty() && lines.last().isBlank()) {
+        lines = lines.dropLast(1)
+    }
+
+    var minIndent = 9999 // TODO:vgrechka Platform-specific max integer (for JS: Number.MAX_SAFE_INTEGER)
+    for (line in lines) {
+        if (!line.isBlank()) {
+            val lineIndent = line.length - line.trimStart().length
+            if (lineIndent < minIndent) {
+                minIndent = lineIndent
+            }
+        }
+    }
+
+    return lines.map {line ->
+        if (line.trim().isBlank()) ""
+        else line.substring(minIndent)
+    }.joinToString("\n")
+}
+
+fun reindent(newIndent: Int, it: String): String {
+    return dedent(it).split("\n").joinToString("\n") {" ".repeat(newIndent) + it}
+}
+
+val PG_LOCAL_DATE_TIME = DateTimeFormatterBuilder()
+    .parseCaseInsensitive()
+    .append(DateTimeFormatter.ISO_LOCAL_DATE)
+    .appendLiteral(' ')
+    .append(DateTimeFormatter.ISO_LOCAL_TIME)
+    .toFormatter()!!
 
 
+fun File.backUpAndWrite(newCode: String) {
+    this.backUpIfExists()
+    writeText(newCode)
+    clog("Written $path")
+}
 
+fun File.backUpIfExists() {
+    if (!exists()) return
+
+    check(path.replace("\\", "/").startsWith(BigPile.fuckingEverythingRoot + "/")) {"9911cfc6-6435-4a54-aa74-ad492162181a"}
+
+    val stamp = LocalDateTime.now().format(PG_LOCAL_DATE_TIME).replace(Regex("[ :\\.]"), "-")
+    val outPath = (
+        BigPile.spewBak + "/" +
+            path
+                .substring(BigPile.fuckingEverythingRoot.length)
+                .replace("\\", "/")
+                .replace(Regex("^/"), "")
+                .replace("/", "--")
+            + "----$stamp"
+        )
+
+    // clog("Backing up: $outPath")
+    File(outPath).writeText(readText())
+}
 
 
 

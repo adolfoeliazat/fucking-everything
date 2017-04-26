@@ -5,7 +5,7 @@ import vgrechka.*
 object SpewSomeShit {
     @JvmStatic
     fun main(args: Array<String>) {
-        spewDBEntities()
+        spewAllDBEntities()
         clog("OK")
     }
 }
