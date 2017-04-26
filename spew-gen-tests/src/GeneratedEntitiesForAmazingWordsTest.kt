@@ -276,13 +276,22 @@ ID of newly added word is 4                                3b11683c-7979-4e65-af
     }
 }
 
-
-// =========================== DEFINED MANUALLY ============================
+// =========================== LIBRARY ============================
+// TODO:vgrechka Move out of tests
 
 annotation class PersistentShit
 
-@PersistentShit interface AmazingWord {
+interface CommonPersistentShitFields {
     var id: Long
+    var createdAt: XTimestamp
+    var updatedAt: XTimestamp
+    var deleted: Boolean
+}
+
+// =========================== DEFINED MANUALLY ============================
+
+
+@PersistentShit interface AmazingWord : CommonPersistentShitFields {
     var word: String
     var rank: Int
     var comments: MutableList<AmazingComment>
@@ -294,9 +303,10 @@ interface AmazingWordRepository {
     fun save(x: AmazingWord): AmazingWord
 }
 
-@PersistentShit interface AmazingComment {
+@PersistentShit interface AmazingComment : CommonPersistentShitFields {
     var author: String
     var content: String
+    var word: AmazingWord
 }
 
 interface AmazingCommentRepository {
@@ -307,12 +317,13 @@ interface AmazingCommentRepository {
 
 // =========================== SHOULD BE GENERATED ============================
 
+/*
 
 // ---------- AmazingWord ----------
 
 
 fun newAmazingWord(word: String,
-                   rank: Int) : AmazingWord {
+                   rank: Int): AmazingWord {
     val backing = Generated_AmazingWord(Generated_AmazingWordFields(word = word, rank = rank))
     return backing.toManuallyDefinedInterface()
 }
@@ -364,6 +375,18 @@ class Generated_AmazingWord(
                 get() = _backing.id!!
                 set(value) {_backing.id = value}
 
+            override var createdAt: XTimestamp
+                get() = _backing.amazingWord.common.createdAt
+                set(value) {_backing.amazingWord.common.createdAt = value}
+
+            override var updatedAt: XTimestamp
+                get() = _backing.amazingWord.common.updatedAt
+                set(value) {_backing.amazingWord.common.updatedAt = value}
+
+            override var deleted: Boolean
+                get() = _backing.amazingWord.common.deleted
+                set(value) {_backing.amazingWord.common.deleted = value}
+
             override var word: String
                 get() = _backing.amazingWord.word
                 set(value) {_backing.amazingWord.word = value}
@@ -405,7 +428,7 @@ class Generated_AmazingWordFields(
 
 fun newAmazingComment(author: String,
                       content: String,
-                      word: AmazingWord) : AmazingComment {
+                      word: AmazingWord): AmazingComment {
     val backing = Generated_AmazingComment(
         Generated_AmazingCommentFields(author = author,
                                        content = content,
@@ -450,6 +473,22 @@ class Generated_AmazingComment(
             override val _backing: Generated_AmazingComment
                 get() = this@Generated_AmazingComment
 
+            override var id: Long
+                get() = _backing.id!!
+                set(value) {_backing.id = value}
+
+            override var createdAt: XTimestamp
+                get() = _backing.amazingComment.common.createdAt
+                set(value) {_backing.amazingComment.common.createdAt = value}
+
+            override var updatedAt: XTimestamp
+                get() = _backing.amazingComment.common.updatedAt
+                set(value) {_backing.amazingComment.common.updatedAt = value}
+
+            override var deleted: Boolean
+                get() = _backing.amazingComment.common.deleted
+                set(value) {_backing.amazingComment.common.deleted = value}
+
             override var author: String
                 get() = _backing.amazingComment.author
                 set(value) {_backing.amazingComment.author = value}
@@ -457,6 +496,10 @@ class Generated_AmazingComment(
             override var content: String
                 get() = _backing.amazingComment.content
                 set(value) {_backing.amazingComment.content = value}
+
+            override var word: AmazingWord
+                get() = _backing.amazingComment.word.toManuallyDefinedInterface()
+                set(value) {_backing.amazingComment.word = value._backing}
 
             override fun toString() = _backing.toString()
 
@@ -481,6 +524,8 @@ class Generated_AmazingCommentFields(
     @XColumn(columnDefinition = "text") var content: String,
     @XManyToOne(fetch = XFetchType.LAZY) var word: Generated_AmazingWord
 )
+
+*/
 
 
 
