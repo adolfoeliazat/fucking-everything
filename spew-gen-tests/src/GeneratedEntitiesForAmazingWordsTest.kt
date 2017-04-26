@@ -279,9 +279,11 @@ ID of newly added word is 4                                3b11683c-7979-4e65-af
 // =========================== LIBRARY ============================
 // TODO:vgrechka Move out of tests
 
-annotation class PersistentShit
+annotation class GEntity(val table: String)
+annotation class GOneToMany(val mappedBy: String)
+annotation class GManyToOne
 
-interface CommonPersistentShitFields {
+interface GCommonEntityFields {
     var id: Long
     var createdAt: XTimestamp
     var updatedAt: XTimestamp
@@ -291,10 +293,11 @@ interface CommonPersistentShitFields {
 // =========================== DEFINED MANUALLY ============================
 
 
-@PersistentShit interface AmazingWord : CommonPersistentShitFields {
+@GEntity(table = "amazing_words")
+interface AmazingWord : GCommonEntityFields {
     var word: String
     var rank: Int
-    var comments: MutableList<AmazingComment>
+    @GOneToMany(mappedBy = "word") var comments: MutableList<AmazingComment>
 }
 
 interface AmazingWordRepository {
@@ -303,10 +306,11 @@ interface AmazingWordRepository {
     fun save(x: AmazingWord): AmazingWord
 }
 
-@PersistentShit interface AmazingComment : CommonPersistentShitFields {
+@GEntity(table = "amazing_comments")
+interface AmazingComment : GCommonEntityFields {
     var author: String
     var content: String
-    var word: AmazingWord
+    @GManyToOne var word: AmazingWord
 }
 
 interface AmazingCommentRepository {

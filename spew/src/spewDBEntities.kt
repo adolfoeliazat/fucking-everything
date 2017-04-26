@@ -1,39 +1,38 @@
 package vgrechka.spew
 
-import org.jetbrains.kotlin.psi.KtClass
-import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.psi.KtNamedFunction
-import org.jetbrains.kotlin.psi.KtVisitor
+import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.utils.addToStdlib.indexOfOrNull
 import vgrechka.*
 import java.io.File
 import java.time.LocalDateTime
 import java.util.*
+import javax.swing.text.html.parser.Entity
 
 sealed class FieldKind {
     class Simple : FieldKind()
     class One : FieldKind()
-    class Many(val mappedBy: String) : FieldKind()
+    data class Many(val mappedBy: String) : FieldKind()
 }
 
-class FieldSpec(val name: String,
-                val type: String,
-                val isEntity: Boolean,
-                val isInCtorParams: Boolean,
-                val isInToString: Boolean,
-                val kind: FieldKind)
+data class FieldSpec(val name: String,
+                     val type: String,
+                     val isEntity: Boolean,
+                     val isInCtorParams: Boolean,
+                     val isInToString: Boolean,
+                     val kind: FieldKind)
 
-class FinderParamSpec(val name: String,
-                      val type: String)
+data class FinderParamSpec(val name: String,
+                           val type: String)
 
-class FinderSpec(val definedFinderName: String,
-                 val generatedFinderName: String,
-                 val params: List<FinderParamSpec>,
-                 val returnsList: Boolean)
+data class FinderSpec(val definedFinderName: String,
+                      val generatedFinderName: String,
+                      val params: List<FinderParamSpec>,
+                      val returnsList: Boolean)
 
-class EntitySpec(val name: String,
-                 val tableName: String,
-                 val fields: List<FieldSpec>,
-                 val finders: List<FinderSpec>)
+data class EntitySpec(val name: String,
+                      val tableName: String,
+                      val fields: List<FieldSpec>,
+                      val finders: List<FinderSpec>)
 
 class spewDBEntities {
     init {
@@ -41,87 +40,11 @@ class spewDBEntities {
         val code = StringBuilder()
         val out = Shitter(code, indent = 0)
 
-        val analysisResult = try {
-            clog("Working like a dog, analyzing your crappy sources...")
-            FuckedCLICompiler.doMain(FuckedK2JVMCompiler(), arrayOf(
-                BigPile.fuckingEverythingRoot + "/spew-gen-tests/src/GeneratedEntitiesForAmazingWordsTest.kt"
-            ))
-            wtf("61ea9f24-7e40-45d8-a858-e357cccff2a0")
-        } catch (e: EnoughFuckedCompiling) {
-            e
-        }
-
-//        val filesLeft = analysisResult.environment.getSourceFiles().toMutableSet()
-//        val ktFile = filesLeft.first()
+//        val entities = fakeEntities()
+        val entities = analyzeSources()
 
         shitHeaderComment(out, "vgrechka.spewgentests")
-
-        val ktFile = analysisResult.environment.getSourceFiles().first()
-
-        ktFile.accept(object:KtVisitor<Unit, Unit>() {
-            override fun visitKtFile(file: KtFile, data: Unit?) {
-                for (decl in file.declarations) {
-                    decl.accept(this)
-                }
-            }
-
-            override fun visitClass(klass: KtClass, data: Unit?) {
-                if (klass.isInterface()) {
-                    for (annotationEntry in klass.annotationEntries) {
-                        val chars = annotationEntry.node.chars
-                        // clog("Annotation:", chars)
-                        if (chars == "@PersistentShit") {
-                            val fuckingName = klass.name
-                        }
-                    }
-                }
-            }
-
-//            override fun visitNamedFunction(function: KtNamedFunction, data: Unit?) {
-//                // clog("Function:", function.name)
-//                for (annotationEntry in function.annotationEntries) {
-//                    val chars = annotationEntry.node.chars
-//                    // clog("Annotation:", chars)
-//                    if (chars == "@Remote")
-//                        processRemoteFunction(function)
-//                }
-//            }
-        })
-
-//        check(filesLeft.isEmpty()){"489985a4-eeeb-4b83-bc0d-d704a77ed308"}
-
         out.linen("// Fuck you    ${Date()}")
-
-
-        val entities = listOf(
-            EntitySpec(name = "AmazingWord",
-                       tableName = "amazing_words",
-                       fields = listOf(
-                           FieldSpec(name = "word", type = "String", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
-                           FieldSpec(name = "rank", type = "Int", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
-                           FieldSpec(name = "comments", type = "AmazingComment", isEntity = true, isInCtorParams = false, isInToString = false, kind = FieldKind.Many(mappedBy = "amazingComment.word"))),
-                       finders = listOf(
-                           FinderSpec(definedFinderName = "findAll",
-                                      generatedFinderName = "findAll",
-                                      returnsList = true,
-                                      params = listOf()),
-                           FinderSpec(definedFinderName = "findByWordLikeIgnoreCase",
-                                      generatedFinderName = "findByAmazingWord_WordLikeIgnoreCase",
-                                      returnsList = true,
-                                      params = listOf(
-                                          FinderParamSpec(name = "x", type = "String")
-                                      )))),
-            EntitySpec(name = "AmazingComment",
-                       tableName = "amazing_comments",
-                       fields = listOf(
-                           FieldSpec(name = "author", type = "String", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
-                           FieldSpec(name = "content", type = "String", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
-                           FieldSpec(name = "word", type = "AmazingWord", isEntity = true, isInCtorParams = true, isInToString = false, kind = FieldKind.One())),
-                       finders = listOf(
-                           FinderSpec(definedFinderName = "findAll",
-                                      generatedFinderName = "findAll",
-                                      returnsList = true,
-                                      params = listOf()))))
 
         for (entity in entities) {
             val en = entity.name
@@ -328,6 +251,180 @@ class spewDBEntities {
         backUpAndWrite(file, code.toString())
     }
 
+    private fun noise(x: Any?) {
+        if (true) clog(x)
+    }
+
+    private fun analyzeSources(): List<EntitySpec> {
+
+        val analysisResult = try {
+            clog("Working like a dog, analyzing your crappy sources...")
+            FuckedCLICompiler.doMain(FuckedK2JVMCompiler(), arrayOf(
+                BigPile.fuckingEverythingRoot + "/spew-gen-tests/src/GeneratedEntitiesForAmazingWordsTest.kt"
+            ))
+            wtf("61ea9f24-7e40-45d8-a858-e357cccff2a0")
+        } catch (e: EnoughFuckedCompiling) {
+            e
+        }
+
+        val ktFile = analysisResult.environment.getSourceFiles().first()
+
+        val entities = mutableListOf<EntitySpec>()
+        val nameToKlass = mutableMapOf<String, KtClass>()
+
+        object {
+            init {
+                visitClasses {
+                    nameToKlass[it.name!!] = it
+                }
+
+                for (klass in nameToKlass.values) {
+                    if (klass.isInterface()) {
+                        for (annotationEntry in klass.annotationEntries) {
+                            val annotationType = annotationEntry.typeReference!!.text
+                            if (annotationType == "GEntity") {
+                                noise("")
+                                val entityName = klass.name!!
+                                noise("entityName = $entityName")
+                                val tableName = annotationEntry.freakingGetStringAttribute("table") ?: wtf("bf5e88ea-a756-4512-ad16-aeda4ec0e29a")
+                                noise("tableName = $tableName")
+                                val fields = mutableListOf<FieldSpec>()
+                                val finders = mutableListOf<FinderSpec>()
+
+                                for (decl in klass.declarations) {
+                                    if (decl is KtProperty) {
+                                        val prop = decl
+                                        val name = prop.name!!
+                                        var isInCtorParams = true
+                                        var kind: FieldKind = FieldKind.Simple()
+                                        var type = prop.typeReference!!.text
+
+                                        if (type.startsWith("MutableList<")) {
+                                            type = type.substring("MutableList<".length, type.lastIndexOf(">"))
+                                            val oneToManyAnnotationEntry = prop.freakingFindAnnotation("GOneToMany") ?: wtf("556650b2-91b5-45de-887f-81f87f701c49")
+                                            val mappedBy = oneToManyAnnotationEntry.freakingGetStringAttribute("mappedBy") ?: wtf("9aafe9de-9a02-49c9-b4db-2300055b0026")
+                                            kind = FieldKind.Many(mappedBy = type.decapitalize() + "." + mappedBy)
+                                            isInCtorParams = false
+                                        } else {
+                                            if (prop.freakingFindAnnotation("GManyToOne") != null) {
+                                                kind = FieldKind.One()
+                                            }
+                                        }
+
+                                        val isEntity = type !in setOf("Int", "Long", "Boolean", "String", "XTimestamp")
+                                        val isInToString = !isEntity
+
+                                        fields += FieldSpec(name = name,
+                                                            type = type,
+                                                            isEntity = isEntity,
+                                                            isInCtorParams = isInCtorParams,
+                                                            isInToString = isInToString,
+                                                            kind = kind)
+                                            .also {noise(it.toVerticalString())}
+                                    }
+                                }
+
+                                val repoKlass = nameToKlass[entityName + "Repository"] ?: wtf("3d2c6366-163a-448b-a4fb-9e231321107c")
+                                for (decl in repoKlass.declarations) {
+                                    if (decl is KtFunction) {
+                                        val func = decl
+                                        val definedFinderName = func.name!!
+
+                                        if (definedFinderName == "save") continue
+
+                                        var generatedFinderName by notNullOnce<String>()
+
+                                        if (definedFinderName == "findAll") {
+                                            generatedFinderName = definedFinderName
+                                        }
+                                        else if (definedFinderName.startsWith("findBy")) {
+                                            if (definedFinderName.contains("And")) imf("6653efd2-35ae-483a-b49d-0a6af6afac44")
+                                            var shit = definedFinderName.substring("findBy".length)
+                                            val operator = listOf(
+                                                "LikeIgnoreCase",
+                                                "Like").find {shit.endsWith(it)} ?: ""
+                                            shit = shit.dropLast(operator.length)
+                                            generatedFinderName = "findBy${entityName}_$shit$operator"
+                                        }
+                                        else {
+                                            wtf("52cd36a0-9de1-436f-be73-86b166f202cf")
+                                        }
+
+                                        val params = mutableListOf<FinderParamSpec>()
+                                        for (valueParameter in func.valueParameters) {
+                                            params += FinderParamSpec(name = valueParameter.name!!,
+                                                                      type = valueParameter.typeReference!!.text)
+                                        }
+
+                                        val returnsList = func.typeReference!!.text.startsWith("List<")
+
+                                        finders += FinderSpec(definedFinderName = definedFinderName,
+                                                              generatedFinderName = generatedFinderName,
+                                                              params = params,
+                                                              returnsList = returnsList)
+                                            .also {noise(it.toVerticalString())}
+                                    }
+                                }
+
+                                entities += EntitySpec(entityName, tableName, fields, finders)
+                            }
+                        }
+                    }
+                }
+            }
+
+            private fun visitClasses(onClass: (KtClass) -> Unit) {
+                ktFile.accept(object : KtVisitor<Unit, Unit>() {
+                    override fun visitKtFile(file: KtFile, data: Unit?) {
+                        for (decl in file.declarations) {
+                            decl.accept(this)
+                        }
+                    }
+
+                    override fun visitClass(klass: KtClass, data: Unit?) {
+                        onClass(klass)
+                    }
+                })
+            }
+        }
+
+
+        return entities
+    }
+
+
+    private fun fakeEntities(): List<EntitySpec> {
+        return listOf(
+            EntitySpec(name = "AmazingWord",
+                       tableName = "amazing_words",
+                       fields = listOf(
+                           FieldSpec(name = "word", type = "String", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
+                           FieldSpec(name = "rank", type = "Int", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
+                           FieldSpec(name = "comments", type = "AmazingComment", isEntity = true, isInCtorParams = false, isInToString = false, kind = FieldKind.Many(mappedBy = "amazingComment.word"))),
+                       finders = listOf(
+                           FinderSpec(definedFinderName = "findAll",
+                                      generatedFinderName = "findAll",
+                                      returnsList = true,
+                                      params = listOf()),
+                           FinderSpec(definedFinderName = "findByWordLikeIgnoreCase",
+                                      generatedFinderName = "findByAmazingWord_WordLikeIgnoreCase",
+                                      returnsList = true,
+                                      params = listOf(
+                                          FinderParamSpec(name = "x", type = "String")
+                                      )))),
+            EntitySpec(name = "AmazingComment",
+                       tableName = "amazing_comments",
+                       fields = listOf(
+                           FieldSpec(name = "author", type = "String", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
+                           FieldSpec(name = "content", type = "String", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
+                           FieldSpec(name = "word", type = "AmazingWord", isEntity = true, isInCtorParams = true, isInToString = false, kind = FieldKind.One())),
+                       finders = listOf(
+                           FinderSpec(definedFinderName = "findAll",
+                                      generatedFinderName = "findAll",
+                                      returnsList = true,
+                                      params = listOf()))))
+    }
+
     fun shitHeaderComment(shit: Shitter, packageName: String) {
         shit.line("""
                 /*
@@ -373,6 +470,20 @@ class spewDBEntities {
         File(outPath).writeText(file.readText())
     }
 }
+
+private fun KtAnnotationEntry.freakingGetStringAttribute(name: String): String? {
+    for (valueArgument in this.valueArguments) {
+        val ktValueArgument = valueArgument as KtValueArgument
+        val argName = ktValueArgument.getArgumentName()!!.text
+        if (argName == name) {
+            return (ktValueArgument.getArgumentExpression() as KtStringTemplateExpression).entries[0].text
+        }
+    }
+    return null
+}
+
+private fun KtAnnotated.freakingFindAnnotation(type: String) =
+    annotationEntries.find {it.typeReference!!.text == type}
 
 class Shitter(val output: StringBuilder, val indent: Int) {
     fun append(text: String) {

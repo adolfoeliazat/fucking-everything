@@ -349,6 +349,40 @@ class TestLogger {
     }
 }
 
+fun Any?.toVerticalString(): String {
+    val buf = StringBuilder()
+    val s = this.toString()
+    var indent = 0
+    var i = 0
+    while (i < s.length) {
+        if (s[i] == '(') {
+            ++indent
+            buf += "(\n" + "    ".repeat(indent)
+        }
+        else if (s[i] == '[') {
+            ++indent
+            buf += "[\n" + "    ".repeat(indent)
+        }
+        else if (s[i] == ')') {
+            --indent
+            buf += ")"
+        }
+        else if (s[i] == ']') {
+            --indent
+            buf += "]"
+        }
+        else if (s[i] == ',' && i + 1 <= s.lastIndex && s[i + 1] == ' ') {
+            ++i
+            buf += ",\n" + "    ".repeat(indent)
+        }
+        else {
+            buf += s[i]
+        }
+        ++i
+    }
+    return buf.toString()
+//    return this.toString().replaceFirst("(", "(\n    ").replace(", ", ",\n    ")
+}
 
 
 
