@@ -1,9 +1,12 @@
+@file:GSpit(spew = DBEntitySpew::class, output = "%FE%/global-menu/gen/generated--botinok-entities.kt")
+
 package vgrechka.botinok
 
 import javafx.collections.FXCollections
 import vgrechka.*
 import vgrechka.db.*
 import vgrechka.db.tests.*
+import vgrechka.spew.*
 
 
 class Play {

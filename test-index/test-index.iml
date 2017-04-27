@@ -28,5 +28,6 @@
     </orderEntry>
     <orderEntry type="module" module-name="shared-jvm" />
     <orderEntry type="module" module-name="spew-gen-tests" />
+    <orderEntry type="module" module-name="global-menu" />
   </component>
 </module>
