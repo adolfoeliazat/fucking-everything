@@ -34,6 +34,14 @@ private data class FieldSpec(
     val isInCtorParams: Boolean,
     val isInToString: Boolean,
     val kind: FieldKind)
+{
+    fun typeWithoutQuestion() = when {
+        type.endsWith("?") -> type.dropLast(1)
+        else -> type
+    }
+
+    fun isNullable() = type.endsWith("?")
+}
 
 private data class FinderParamSpec(
     val name: String,
@@ -58,9 +66,10 @@ class DBEntitySpew : Spew {
     private var outputFilePath by notNullOnce<String>()
     private var out by notNullOnce<CodeShitter>()
     private var entity by notNull<EntitySpec>()
-    private var en by notNullOnce<String>()
-    private var end by notNullOnce<String>()
+    private var en by notNull<String>()
+    private var end by notNull<String>()
     private var spewResults by notNullOnce<SpewResults>()
+    private var entities by notNull<List<EntitySpec>>()
 
     override fun ignite(ktFile: KtFile, outputFilePath: String, spewResults: SpewResults) {
         this.ktFile = ktFile
@@ -71,7 +80,7 @@ class DBEntitySpew : Spew {
         out = CodeShitter(code, indent = 0)
 
 //        val entities = fakeEntities()
-        val entities = analyzeSources()
+        entities = analyzeSources()
 
         val packageName = (ktFile.packageDirective
             ?: wtf("512f3d89-eb0d-4653-b04f-686c6100a900"))
@@ -309,13 +318,42 @@ class DBEntitySpew : Spew {
         append("    `${end}_common_createdAt` text not null,\n")
         append("    `${end}_common_updatedAt` text not null,\n")
         append("    `${end}_common_deleted` integer not null,\n")
-        for ((index, field) in entity.fields.withIndex()) {
-            append("    `${end}_${field.name}` text not null")
-            if (index < entity.fields.lastIndex)
-                append(",")
-            append("\n")
+        val fields = entity.fields.filter {it.kind !is FieldKind.Many}
+
+        for ((index, field) in fields.withIndex()) {
+            val sqlType = when (field.kind) {
+                is FieldKind.Simple -> {
+                    when (field.type) {
+                        "Int" -> "integer not null"
+                        "Int?" -> "integer"
+                        "Long" -> "bigint not null"
+                        "Long?" -> "bigint"
+                        "String" -> "text not null"
+                        "String?" -> "text"
+                        else -> wtf("field.type = ${field.type}    5e84c6fb-b523-43cc-aa45-bdef1dca7ff2")
+                    }
+                }
+                is FieldKind.One -> {
+                    "bigint" + (!field.isNullable()).thenElseEmpty{" not null"}
+                }
+                is FieldKind.Many -> wtf("0f79f787-be13-49ba-ac1d-6855476605da")
+            }
+
+            append("    `${end}_${field.name}${(field.kind is FieldKind.One).thenElseEmpty{"__id"}}` $sqlType")
+            if (index < fields.lastIndex) {
+                append(",\n")
+            }
         }
-        append(");\n")
+
+        val foreignKeyLines = entity.fields.filter {it.kind is FieldKind.One}.map {field->
+            val oneEntity = entities.find {it.name == field.typeWithoutQuestion()} ?: wtf("aa058895-cbce-453a-b0f0-e551abaf95e1")
+            "    foreign key (${end}_${field.name}__id) references ${oneEntity.tableName}(id)"
+        }
+        if (foreignKeyLines.isNotEmpty())
+            append(",\n")
+        append(foreignKeyLines.joinToString(",\n"))
+
+        append("\n);\n")
         out.append("*/")
 
         /*

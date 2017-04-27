@@ -15,11 +15,23 @@ interface BotinokBox : GCommonEntityFields {
     var y: Int
     var w: Int
     var h: Int
+    @GManyToOne var arena: BotinokArena
 }
 
 interface BotinokBoxRepository {
     fun findAll(): List<BotinokBox>
     fun save(x: BotinokBox): BotinokBox
+}
+
+@GEntity(table = "botinok_arenas")
+interface BotinokArena : GCommonEntityFields {
+    var name: String
+    @GOneToMany(mappedBy = "arena") var boxes: MutableList<BotinokBox>
+}
+
+interface BotinokArenaRepository {
+    fun findAll(): List<BotinokArena>
+    fun save(x: BotinokArena): BotinokArena
 }
 
 

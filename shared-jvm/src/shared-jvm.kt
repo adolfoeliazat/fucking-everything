@@ -104,7 +104,7 @@ annotation class AllOpen
 
 inline operator fun <T, FRet> T.minus(f: (T) -> FRet): T { f(this); return this }
 
-fun Boolean.ifOrEmpty(block: () -> String): String = when {
+fun Boolean.thenElseEmpty(block: () -> String): String = when {
     this -> block()
     else -> ""
 }
@@ -465,7 +465,6 @@ val Throwable.stackTraceStr: String
         PrintWriter(sw).use { printStackTrace(it) }
         return sw.toString()
     }
-
 
 
 
