@@ -9,6 +9,20 @@ import vgrechka.db.tests.*
 import vgrechka.spew.*
 
 
+@GEntity(table = "botinok_boxes")
+interface BotinokBox : GCommonEntityFields {
+    var x: Int
+    var y: Int
+    var w: Int
+    var h: Int
+}
+
+interface BotinokBoxRepository {
+    fun findAll(): List<BotinokBox>
+    fun save(x: BotinokBox): BotinokBox
+}
+
+
 class Play {
     val arenas = FXCollections.observableArrayList<Arena>(JFXPropertyObservableExtractor())
     @Transient val editing = PlayEditing()

@@ -13,7 +13,6 @@ class BotinokTests
 
 class BotinokTest1 {
     @Test fun test1() {
-        spewForInputFiles("%FE%/global-menu/src/botinok-entities.kt")
     }
 }
 

@@ -1,7 +1,6 @@
 package vgrechka.spew
 
 import org.jetbrains.kotlin.psi.*
-import org.jetbrains.kotlin.utils.addToStdlib.indexOfOrNull
 import vgrechka.*
 import kotlin.reflect.KClass
 
@@ -9,10 +8,14 @@ import kotlin.reflect.KClass
 annotation class GSpit(val spew: KClass<out Spew>, val output: String)
 
 interface Spew {
-    fun ignite(ktFile: KtFile, outputFilePath: String)
+    fun ignite(ktFile: KtFile, outputFilePath: String, spewResults: SpewResults)
 }
 
-fun spewForInputFiles(vararg paths: String) {
+class SpewResults {
+    val ddl = StringBuilder()
+}
+
+fun spewForInputFiles(paths: List<String>): SpewResults {
     val analysisResult = try {
         clog("Working like a dog, analyzing your crappy sources...")
         FuckedCLICompiler.doMain(FuckedK2JVMCompiler(), paths.map{it.substituteMyVars()}.toTypedArray())
@@ -22,6 +25,7 @@ fun spewForInputFiles(vararg paths: String) {
     }
 
     val ktFiles = analysisResult.environment.getSourceFiles()
+    val spewResults = SpewResults()
     for (ktFile in ktFiles) {
         for (ann in ktFile.freakingFindAnnotations(GSpit::class.simpleName!!)) {
             val spewAttributeText = ann.freakingGetClassAttributeText(GSpit::spew.name) ?: wtf("c301fe3f-a716-44c7-9931-70353676036b")
@@ -29,9 +33,11 @@ fun spewForInputFiles(vararg paths: String) {
             val spewClass = Class.forName("vgrechka.spew.${spewAttributeText.substring(0, colonColonIndex)}")
             val spew = spewClass.newInstance() as Spew
             val outputFilePath = ann.freakingGetStringAttribute(GSpit::output.name) ?: wtf("3af6ca59-bae4-4659-8806-28e0b1395a0c")
-            spew.ignite(ktFile, outputFilePath.substituteMyVars())
+            spew.ignite(ktFile, outputFilePath.substituteMyVars(), spewResults)
         }
     }
+
+    return spewResults
 }
 
 class CodeShitter(val output: StringBuilder, val indent: Int) {
