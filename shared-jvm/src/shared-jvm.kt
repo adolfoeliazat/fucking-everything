@@ -450,8 +450,14 @@ fun File.backUpIfExists() {
     File(outPath).writeText(readText())
 }
 
+fun String.substituteMyVars(): String {
+    return this.replace("%FE%", BigPile.fuckingEverythingRoot)
+}
 
-
+fun String.indexOfOrNull(needle: String, startIndex: Int = 0, ignoreCase: Boolean = false): Int? {
+    val index = indexOf(needle, startIndex, ignoreCase)
+    return if (index >= 0) index else null
+}
 
 
 

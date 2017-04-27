@@ -1,10 +1,24 @@
 package vgrechka.spew
 
-import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.psi.KtClass
+import org.jetbrains.kotlin.psi.KtFile
+import org.jetbrains.kotlin.psi.KtFunction
+import org.jetbrains.kotlin.psi.KtProperty
 import vgrechka.*
 import java.io.File
-import java.time.LocalDateTime
 import java.util.*
+
+annotation class GEntity(val table: String)
+annotation class GOneToMany(val mappedBy: String)
+annotation class GManyToOne
+
+interface GCommonEntityFields {
+    var id: Long
+    var createdAt: XTimestamp
+    var updatedAt: XTimestamp
+    var deleted: Boolean
+}
+
 
 private sealed class FieldKind {
     class Simple : FieldKind()
@@ -36,16 +50,16 @@ private data class EntitySpec(
     val fields: List<FieldSpec>,
     val finders: List<FinderSpec>)
 
-fun spewAllDBEntities() {
-    spewDBEntities(
-        readSpecsFromPaths = arrayOf(
-            BigPile.fuckingEverythingRoot + "/spew-gen-tests/src/GeneratedEntitiesForAmazingWordsTest.kt"),
-        writeToPath = BigPile.fuckingEverythingRoot + "/spew-gen-tests/gen/generated--for-GeneratedEntitiesForAmazingWordsTest.kt")
-}
 
-class spewDBEntities(val readSpecsFromPaths: Array<String>, val writeToPath: String) {
-    init {
-        val file = File(writeToPath)
+
+class DBEntitySpew : Spew {
+    private var ktFile by notNullOnce<KtFile>()
+    private var outputFilePath by notNullOnce<String>()
+
+    override fun ignite(ktFile: KtFile, outputFilePath: String) {
+        this.ktFile = ktFile
+        this.outputFilePath = outputFilePath
+        val file = File(outputFilePath)
         val code = StringBuilder()
         val out = CodeShitter(code, indent = 0)
 
@@ -265,16 +279,6 @@ class spewDBEntities(val readSpecsFromPaths: Array<String>, val writeToPath: Str
     }
 
     private fun analyzeSources(): List<EntitySpec> {
-        val analysisResult = try {
-            clog("Working like a dog, analyzing your crappy sources...")
-            FuckedCLICompiler.doMain(FuckedK2JVMCompiler(), readSpecsFromPaths)
-            wtf("61ea9f24-7e40-45d8-a858-e357cccff2a0")
-        } catch (e: EnoughFuckedCompiling) {
-            e
-        }
-
-        val ktFile = analysisResult.environment.getSourceFiles().first()
-
         val entities = mutableListOf<EntitySpec>()
         val nameToKlass = mutableMapOf<String, KtClass>()
 
@@ -431,9 +435,6 @@ class spewDBEntities(val readSpecsFromPaths: Array<String>, val writeToPath: Str
         out.line("")
     }
 }
-
-
-
 
 
 

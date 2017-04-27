@@ -1,9 +1,38 @@
 package vgrechka.spew
 
 import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.utils.addToStdlib.indexOfOrNull
 import vgrechka.*
-import java.io.File
-import java.time.LocalDateTime
+import kotlin.reflect.KClass
+
+@Target(AnnotationTarget.FILE)
+annotation class GSpit(val spew: KClass<out Spew>, val output: String)
+
+interface Spew {
+    fun ignite(ktFile: KtFile, outputFilePath: String)
+}
+
+fun spewForInputFiles(vararg paths: String) {
+    val analysisResult = try {
+        clog("Working like a dog, analyzing your crappy sources...")
+        FuckedCLICompiler.doMain(FuckedK2JVMCompiler(), paths.map{it.substituteMyVars()}.toTypedArray())
+        wtf("61ea9f24-7e40-45d8-a858-e357cccff2a0")
+    } catch (e: EnoughFuckedCompiling) {
+        e
+    }
+
+    val ktFiles = analysisResult.environment.getSourceFiles()
+    for (ktFile in ktFiles) {
+        for (ann in ktFile.freakingFindAnnotations(GSpit::class.simpleName!!)) {
+            val spewAttributeText = ann.freakingGetClassAttributeText(GSpit::spew.name) ?: wtf("c301fe3f-a716-44c7-9931-70353676036b")
+            val colonColonIndex = spewAttributeText.indexOfOrNull("::") ?: wtf("e194e277-2f5f-40f8-9664-fd9b162f69b6")
+            val spewClass = Class.forName("vgrechka.spew.${spewAttributeText.substring(0, colonColonIndex)}")
+            val spew = spewClass.newInstance() as Spew
+            val outputFilePath = ann.freakingGetStringAttribute(GSpit::output.name) ?: wtf("3af6ca59-bae4-4659-8806-28e0b1395a0c")
+            spew.ignite(ktFile, outputFilePath.substituteMyVars())
+        }
+    }
+}
 
 class CodeShitter(val output: StringBuilder, val indent: Int) {
     fun append(text: String) {
@@ -47,19 +76,34 @@ class CodeShitter(val output: StringBuilder, val indent: Int) {
 }
 
 fun KtAnnotationEntry.freakingGetStringAttribute(name: String): String? {
+    return this.freakingGetAttribute(name) {it.freakingSimpleStringValue()}
+}
+
+fun KtAnnotationEntry.freakingGetClassAttributeText(name: String): String? {
+    return this.freakingGetAttribute(name) {
+        (it.getArgumentExpression() as KtClassLiteralExpression).text
+    }
+}
+
+fun <T> KtAnnotationEntry.freakingGetAttribute(name: String, convert: (KtValueArgument) -> T): T? {
     for (valueArgument in this.valueArguments) {
         val ktValueArgument = valueArgument as KtValueArgument
         val argName = ktValueArgument.getArgumentName()!!.text
         if (argName == name) {
-            return (ktValueArgument.getArgumentExpression() as KtStringTemplateExpression).entries[0].text
+            return convert(ktValueArgument)
         }
     }
     return null
 }
 
+fun KtValueArgument.freakingSimpleStringValue(): String =
+    (getArgumentExpression() as KtStringTemplateExpression).entries[0].text
+
 fun KtAnnotated.freakingFindAnnotation(type: String) =
     annotationEntries.find {it.typeReference!!.text == type}
 
+fun KtAnnotated.freakingFindAnnotations(type: String) =
+    annotationEntries.filter {it.typeReference!!.text == type}
 
 fun KtFile.freakingVisitClasses(onClass: (KtClass) -> Unit) {
     accept(object : KtVisitor<Unit, Unit>() {

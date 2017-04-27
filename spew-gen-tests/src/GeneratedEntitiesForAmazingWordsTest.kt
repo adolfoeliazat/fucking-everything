@@ -1,13 +1,12 @@
+@file:GSpit(spew = DBEntitySpew::class, output = "%FE%/spew-gen-tests/gen/generated--for-GeneratedEntitiesForAmazingWordsTest.kt")
+
 package vgrechka.spewgentests
 
 import org.hibernate.cfg.Environment
 import org.hibernate.dialect.SQLiteDialect
 import org.junit.AfterClass
 import org.junit.BeforeClass
-import org.junit.Ignore
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.Suite
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
@@ -275,22 +274,6 @@ ID of newly added word is 4                                3b11683c-7979-4e65-af
         }
     }
 }
-
-// =========================== LIBRARY ============================
-// TODO:vgrechka Move out of tests
-
-annotation class GEntity(val table: String)
-annotation class GOneToMany(val mappedBy: String)
-annotation class GManyToOne
-
-interface GCommonEntityFields {
-    var id: Long
-    var createdAt: XTimestamp
-    var updatedAt: XTimestamp
-    var deleted: Boolean
-}
-
-// =========================== DEFINED MANUALLY ============================
 
 
 @GEntity(table = "amazing_words")

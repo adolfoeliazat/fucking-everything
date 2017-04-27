@@ -2,10 +2,10 @@ package vgrechka.spew
 
 import vgrechka.*
 
-object SpewSomeShit {
+object SpewSomeShit1 {
     @JvmStatic
     fun main(args: Array<String>) {
-        spewAllDBEntities()
+        spewForInputFiles("%FE%/spew-gen-tests/src/GeneratedEntitiesForAmazingWordsTest.kt")
         clog("OK")
     }
 }
