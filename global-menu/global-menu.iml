@@ -211,5 +211,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="spew" />
+    <orderEntry type="module" module-name="botinok-1" />
   </component>
 </module>

@@ -201,14 +201,11 @@ ID of newly added word is 4                                3b11683c-7979-4e65-af
 
         private fun recreateSchema() {
             log.println("Recreating schema", "11e89c05-3db6-4b67-a111-2509625d7028")
-            val ds = backPlatform.springctx.getBean(DataSource::class.java)
-            val con = ds.connection
-            try {
-                val st = con.createStatement()
-                st.execute("drop table if exists amazing_comments;")
-                st.execute("drop table if exists amazing_words;")
+            DBStuff.executeBunchOfSQLStatementsAndCloseConnection(listOf(
+                "drop table if exists amazing_comments;",
+                "drop table if exists amazing_words;",
 
-                st.execute("""
+                """
                     create table `amazing_words` (
                         `id` integer primary key autoincrement,
                         `amazingWord_word` text not null,
@@ -217,12 +214,13 @@ ID of newly added word is 4                                3b11683c-7979-4e65-af
                         `amazingWord_common_updatedAt` text not null,
                         `amazingWord_common_deleted` integer not null
                     );
-                """)
-                st.execute("INSERT INTO amazing_words VALUES(1, 'Fuck', 15, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);")
-                st.execute("INSERT INTO amazing_words VALUES(2, 'Shit', 10, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);")
-                st.execute("INSERT INTO amazing_words VALUES(3, 'Bitch', 20, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);")
+                """,
 
-                st.execute("""
+                "INSERT INTO amazing_words VALUES(1, 'Fuck', 15, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);",
+                "INSERT INTO amazing_words VALUES(2, 'Shit', 10, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);",
+                "INSERT INTO amazing_words VALUES(3, 'Bitch', 20, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);",
+
+                """
                     create table `amazing_comments` (
                         `id` integer primary key autoincrement,
                         `amazingComment_author` text not null,
@@ -234,14 +232,13 @@ ID of newly added word is 4                                3b11683c-7979-4e65-af
 
                         foreign key (amazingComment_word__id) references amazing_words(id)
                     );
-                """)
-                st.execute("INSERT INTO amazing_comments VALUES(1, 'Ben', 'Wow', 1, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);")
-                st.execute("INSERT INTO amazing_comments VALUES(2, 'Peter', 'Very eloquent', 1, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);")
-                st.execute("INSERT INTO amazing_comments VALUES(3, 'Nick', 'Much swearing', 2, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);")
-                st.execute("INSERT INTO amazing_comments VALUES(4, 'Ronald', 'Such polite', 2, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);")
-            } finally {
-                con.close()
-            }
+                """,
+
+                "INSERT INTO amazing_comments VALUES(1, 'Ben', 'Wow', 1, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);",
+                "INSERT INTO amazing_comments VALUES(2, 'Peter', 'Very eloquent', 1, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);",
+                "INSERT INTO amazing_comments VALUES(3, 'Nick', 'Much swearing', 2, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);",
+                "INSERT INTO amazing_comments VALUES(4, 'Ronald', 'Such polite', 2, '2017-01-02 15:23:51.555', '2017-01-02 15:23:51.555', 0);"
+            ))
         }
     }
 

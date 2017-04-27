@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/aps/back-php/aps-back-php.iml" filepath="$PROJECT_DIR$/aps/back-php/aps-back-php.iml" group="aps" />
       <module fileurl="file://$PROJECT_DIR$/aps/roots/aps-roots.iml" filepath="$PROJECT_DIR$/aps/roots/aps-roots.iml" group="aps" />
       <module fileurl="file://$PROJECT_DIR$/attic/attic.iml" filepath="$PROJECT_DIR$/attic/attic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/botinok-1/botinok-1.iml" filepath="$PROJECT_DIR$/botinok-1/botinok-1.iml" />
       <module fileurl="file://$PROJECT_DIR$/copyright/copyright.iml" filepath="$PROJECT_DIR$/copyright/copyright.iml" />
       <module fileurl="file://$PROJECT_DIR$/etc/etc.iml" filepath="$PROJECT_DIR$/etc/etc.iml" />
       <module fileurl="file://$PROJECT_DIR$/global-menu/global-menu.iml" filepath="$PROJECT_DIR$/global-menu/global-menu.iml" />

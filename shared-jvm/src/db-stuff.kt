@@ -7,6 +7,27 @@ import org.hibernate.boot.model.source.spi.AttributePath
 import org.hibernate.engine.spi.SharedSessionContractImplementor
 import org.hibernate.id.IdentityGenerator
 import vgrechka.*
+import javax.sql.DataSource
+
+object DBStuff {
+    fun executeBunchOfSQLStatementsAndCloseConnection(sql: String) {
+        val sqls = sql.split(";").filter {it.isNotBlank()}
+        executeBunchOfSQLStatementsAndCloseConnection(sqls)
+    }
+
+    fun executeBunchOfSQLStatementsAndCloseConnection(sqls: List<String>) {
+        val ds = backPlatform.springctx.getBean(DataSource::class.java)
+        val con = ds.connection
+        try {
+            val st = con.createStatement()
+            for (sql in sqls) {
+                st.execute(sql)
+            }
+        } finally {
+            con.close()
+        }
+    }
+}
 
 class NiceHibernateNamingStrategy : ImplicitNamingStrategyJpaCompliantImpl() {
     override fun transformAttributePath(attributePath: AttributePath): String {
