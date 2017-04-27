@@ -13,6 +13,7 @@ class BotinokTests
 
 class BotinokTest1 {
     @Test fun test1() {
+        clog("Fuck you, mister tester")
     }
 }
 

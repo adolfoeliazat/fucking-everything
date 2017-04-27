@@ -459,6 +459,12 @@ fun String.indexOfOrNull(needle: String, startIndex: Int = 0, ignoreCase: Boolea
     return if (index >= 0) index else null
 }
 
+val Throwable.stackTraceStr: String
+    get() {
+        val sw = StringWriter()
+        PrintWriter(sw).use { printStackTrace(it) }
+        return sw.toString()
+    }
 
 
 

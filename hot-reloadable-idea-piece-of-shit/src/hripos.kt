@@ -79,13 +79,28 @@ class Command_MessAround(val projectName: String) : Servant {
 //        val bs = Bullshitter(project, title = title)
 //        bs.mumble("Just messing around... (${Date()})")
 
+        try {
+//            serve1(project, title)
+            serve2(project)
+        } catch (e: Throwable ) {
+            IDEAStuff.errorDialog(e)
+        }
+    }
+
+    private fun serve2(project: Project) {
+        IDEAStuff.debugConfiguration(project, "BotinokTest1.test1")
+    }
+
+    private fun serve1(project: Project, title: String): Any {
         val p = HriposDebugOutput(project)
         p.println("Fuck")
         p.println("Shit")
         p.println("Bitch")
         p.println("Like that...")
         p.showDialog(title = title)
-        object {val output = p.output}
+        return object {
+            val output = p.output
+        }
     }
 }
 
@@ -125,26 +140,6 @@ class Command_PrintToBullshitter(val projectName: String, val message: String) :
 //
 //}
 
-private fun debugConfiguration(project: Project, configurationName: String) {
-    val executor = ExecutorRegistry.getInstance().getExecutorById(ToolWindowId.DEBUG)
-    val executorProvider = ExecutorProvider {executor}
-    val list = ChooseRunConfigurationPopup.createSettingsList(project, executorProvider, false)
-    for (item in list) {
-        val config = item.value
-        if (config is RunnerAndConfigurationSettings) {
-            if (config.name == configurationName) {
-                val runningDescriptors = ExecutionManagerImpl.getInstance(project).getRunningDescriptors {it == config}
-                if (runningDescriptors.size > 0) {
-                    ExecutionUtil.restart(runningDescriptors.first())
-                } else {
-                    ExecutionUtil.runConfiguration(config, executor)
-                }
-                return
-            }
-        }
-    }
-    bitch("No fucking debug configuration `$configurationName` in `${project.name}`")
-}
 
 @Ser @Suppress("Unused")
 class Command_Photlin_BreakOnDebugTag(val debugTag: String) : Servant {
@@ -166,7 +161,7 @@ class Command_Photlin_BreakOnDebugTag(val debugTag: String) : Servant {
                 }
             }
 
-            debugConfiguration(project, "photlinc.TryPhotlin")
+            IDEAStuff.debugConfiguration(project, "photlinc.TryPhotlin")
 
             //p.showDialog()
         }

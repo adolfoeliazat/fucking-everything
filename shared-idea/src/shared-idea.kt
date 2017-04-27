@@ -2,10 +2,16 @@ package vgrechka.idea
 
 import com.intellij.execution.ExecutionManager
 import com.intellij.execution.Executor
+import com.intellij.execution.ExecutorRegistry
+import com.intellij.execution.RunnerAndConfigurationSettings
+import com.intellij.execution.actions.ChooseRunConfigurationPopup
+import com.intellij.execution.actions.ExecutorProvider
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.filters.TextConsoleBuilderFactory
 import com.intellij.execution.impl.ConsoleViewImpl
 import com.intellij.execution.impl.ConsoleViewUtil
+import com.intellij.execution.impl.ExecutionManagerImpl
+import com.intellij.execution.runners.ExecutionUtil
 import com.intellij.execution.ui.*
 import com.intellij.execution.ui.actions.CloseAction
 import com.intellij.openapi.actionSystem.*
@@ -152,6 +158,35 @@ object IDEAStuff {
 
     fun getVirtualFileByPath(path: String): VirtualFile? {
         return LocalFileSystem.getInstance().findFileByPath(path)
+    }
+
+    fun debugConfiguration(project: Project, configurationName: String) {
+        val executor = ExecutorRegistry.getInstance().getExecutorById(ToolWindowId.DEBUG)
+        val executorProvider = ExecutorProvider {executor}
+        val list = ChooseRunConfigurationPopup.createSettingsList(project, executorProvider, false)
+        for (item in list) {
+            val config = item.value
+            if (config is RunnerAndConfigurationSettings) {
+                if (config.name == configurationName) {
+                    val runningDescriptors = ExecutionManagerImpl.getInstance(project).getRunningDescriptors {it == config}
+                    if (runningDescriptors.size > 0) {
+                        ExecutionUtil.restart(runningDescriptors.first())
+                    } else {
+                        ExecutionUtil.runConfiguration(config, executor)
+                    }
+                    return
+                }
+            }
+        }
+        bitch("No fucking debug configuration `$configurationName` in `${project.name}`")
+    }
+
+    fun errorDialog(e: Throwable) {
+        Messages.showErrorDialog(e.stackTraceStr, "Shit Didn't Work")
+    }
+
+    fun infoDialog(message: String) {
+        Messages.showInfoMessage(message, "Read This Shit")
     }
 }
 
