@@ -1,34 +1,23 @@
 package vgrechka.idea.hripos
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.intellij.execution.ExecutorRegistry
-import com.intellij.execution.RunnerAndConfigurationSettings
-import com.intellij.execution.actions.ChooseRunConfigurationPopup
-import com.intellij.execution.actions.ExecutorProvider
-import com.intellij.execution.impl.ExecutionManagerImpl
-import com.intellij.execution.runners.ExecutionUtil
-import com.intellij.ide.plugins.PluginManager
+import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.LocalFileSystem
-import com.intellij.openapi.wm.ToolWindowId
-import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiUtil
-import com.intellij.util.IconUtil
+import com.intellij.util.PlatformUtils
+import com.intellij.util.ui.UIUtil
 import org.jetbrains.kotlin.psi.*
-import org.jetbrains.kotlin.resolve.BindingContext
-import org.jetbrains.kotlin.resolve.jvm.KotlinJavaPsiFacade
-import org.jetbrains.kotlin.resolve.source.toSourceElement
 import vgrechka.*
 import vgrechka.idea.*
 import java.io.PrintWriter
 import java.io.StringWriter
-import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import kotlin.concurrent.thread
 
 @Suppress("Unused")
 class HotReloadableIdeaPieceOfShit {
@@ -79,16 +68,23 @@ class Command_MessAround(val projectName: String) : Servant {
 //        val bs = Bullshitter(project, title = title)
 //        bs.mumble("Just messing around... (${Date()})")
 
-        try {
+        IDEAStuff.showingErrorOnException {
 //            serve1(project, title)
             serve2(project)
-        } catch (e: Throwable ) {
-            IDEAStuff.errorDialog(e)
         }
     }
 
     private fun serve2(project: Project) {
-        IDEAStuff.debugConfiguration(project, "BotinokTest1.test1")
+        thread {
+            IDEAStuff.showingErrorOnException {
+                run { // Generate shit
+                    val name = "vgrechka.spew.SpewSomeShit2"
+                    IDEAStuff.runConfiguration(project, name, debug = false)
+                    IDEAStuff.waitForConfigurationToRunAndThenTerminate(project, name, debug = false, runTimeout = 5000, terminationTimeout = 10000)
+                }
+                IDEAStuff.runConfiguration(project, "BotinokTest1.test1", debug = true)
+            }
+        }
     }
 
     private fun serve1(project: Project, title: String): Any {
@@ -161,7 +157,7 @@ class Command_Photlin_BreakOnDebugTag(val debugTag: String) : Servant {
                 }
             }
 
-            IDEAStuff.debugConfiguration(project, "photlinc.TryPhotlin")
+            IDEAStuff.runConfiguration(project, "photlinc.TryPhotlin", debug = true)
 
             //p.showDialog()
         }

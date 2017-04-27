@@ -160,8 +160,28 @@ object IDEAStuff {
         return LocalFileSystem.getInstance().findFileByPath(path)
     }
 
-    fun debugConfiguration(project: Project, configurationName: String) {
-        val executor = ExecutorRegistry.getInstance().getExecutorById(ToolWindowId.DEBUG)
+    fun runConfiguration(project: Project, configurationName: String, debug: Boolean = false) {
+        val res = getRunningContentDescriptors(project, configurationName, debug)
+        val candy = when (res) {
+            is IDEAStuff.GetRunningDescriptorsResult.Poop -> bitch(res.error)
+            is IDEAStuff.GetRunningDescriptorsResult.Candy -> res
+        }
+
+        if (candy.descriptors.isNotEmpty()) {
+            ExecutionUtil.restart(candy.descriptors.first())
+        } else {
+            ExecutionUtil.runConfiguration(candy.config, getRunExecutor(debug))
+        }
+    }
+
+    sealed class GetRunningDescriptorsResult {
+        class Poop(val error: String) : GetRunningDescriptorsResult()
+        class Candy(val config: RunnerAndConfigurationSettings,
+                    val descriptors: List<RunContentDescriptor>) : GetRunningDescriptorsResult()
+    }
+
+    fun getRunningContentDescriptors(project: Project, configurationName: String, debug: Boolean = false): GetRunningDescriptorsResult {
+        val executor = getRunExecutor(debug)
         val executorProvider = ExecutorProvider {executor}
         val list = ChooseRunConfigurationPopup.createSettingsList(project, executorProvider, false)
         for (item in list) {
@@ -169,24 +189,77 @@ object IDEAStuff {
             if (config is RunnerAndConfigurationSettings) {
                 if (config.name == configurationName) {
                     val runningDescriptors = ExecutionManagerImpl.getInstance(project).getRunningDescriptors {it == config}
-                    if (runningDescriptors.size > 0) {
-                        ExecutionUtil.restart(runningDescriptors.first())
-                    } else {
-                        ExecutionUtil.runConfiguration(config, executor)
-                    }
-                    return
+                    return GetRunningDescriptorsResult.Candy(config, runningDescriptors)
                 }
             }
         }
-        bitch("No fucking debug configuration `$configurationName` in `${project.name}`")
+
+        return GetRunningDescriptorsResult.Poop("No fucking run configuration `$configurationName` in `${project.name}`")
+    }
+
+    private fun getRunExecutor(debug: Boolean): Executor {
+        val executorToolWindowID = when {
+            debug -> ToolWindowId.DEBUG
+            else -> ToolWindowId.RUN
+        }
+        val executor = ExecutorRegistry.getInstance().getExecutorById(executorToolWindowID)
+        return executor
     }
 
     fun errorDialog(e: Throwable) {
-        Messages.showErrorDialog(e.stackTraceStr, "Shit Didn't Work")
+        later {Messages.showErrorDialog(e.stackTraceStr, "Shit Didn't Work")}
     }
 
     fun infoDialog(message: String) {
-        Messages.showInfoMessage(message, "Read This Shit")
+        later {Messages.showInfoMessage(message, "Read This Shit")}
+    }
+
+    fun showingErrorOnException(block: () -> Unit) {
+        try {
+            block()
+        } catch (e: Throwable ) {
+            IDEAStuff.errorDialog(e)
+        }
+    }
+
+    private fun later(block: () -> Unit) {
+        ApplicationManager.getApplication().invokeLater(block)
+    }
+
+    /**
+     * Don't run this on UI thread
+     * @throws something if failed
+     */
+    fun waitForConfigurationToRunAndThenTerminate(project: Project, configurationName: String, debug: Boolean, runTimeout: Int, terminationTimeout: Int) {
+        val pollInterval = 100L
+
+        fun loopUntilTrueOrTimeout(timeout: Int, test: () -> Boolean): Boolean {
+            // We don't want accidental infinite loop due to some bug in return logic, as that will render whole IDE hosed.
+            // Approximate timeout is OK
+            val numIterations = timeout / pollInterval
+            check(numIterations in 1..100) {"fe6fbc28-db08-4754-a4b9-26b39cb7c5f2"}
+            for (i in 1..numIterations) {
+                Thread.sleep(pollInterval)
+                if (test())
+                    return true
+            }
+            return false
+        }
+
+        fun fuck(timeout: Int, errorMessage: String, condition: (List<RunContentDescriptor>) -> Boolean) {
+            val ok = loopUntilTrueOrTimeout(timeout) {
+                val descriptors = (getRunningContentDescriptors(project, configurationName, debug)
+                    as? GetRunningDescriptorsResult.Candy
+                    ?: bitch("d687999f-5597-45da-a282-637976a0bac4"))
+                    .descriptors
+                condition(descriptors)
+            }
+            if (!ok)
+                throw Exception(errorMessage)
+        }
+
+        fuck(runTimeout, "Sick of waiting for this shit to run: $configurationName") {it.isNotEmpty()}
+        fuck(terminationTimeout, "Sick of waiting for this shit to terminate: $configurationName") {it.isEmpty()}
     }
 }
 
