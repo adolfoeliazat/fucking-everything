@@ -1,6 +1,6 @@
 #!/bin/bash
 
-stamp=20170404
+stamp=20170427
 
 outdir=/mnt/e/bak/$stamp
 echo Backing shit up...
@@ -15,7 +15,8 @@ zip -r $outdir/fe-$stamp.zip . \
     -x /composer/vendor/* \
     -x /out/* \
     -x /lib-gradle/* \
-    -x /.gradle/*
+    -x /.gradle/* \
+    -x /phizdets/phizdets-idea/eclipse-lib/*
 
 cd /mnt/e/work/aps
 zip -r $outdir/aps-$stamp.zip . \
