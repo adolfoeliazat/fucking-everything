@@ -42,29 +42,6 @@ let sayHello () =
 
 let init_env () = ()
 
-let throw expr =
-    let phi_value = ref (evaluate expr) in
-    if not (Value.is_object phi_value) then
-        failwith "d6b5d1bf-c9d9-4aa7-b9f9-420bd0124b1f";
-
-    messagePhiValue = $phiValue->getProperty('message');
-//    if ($messagePhiValue instanceof PhiUndefined) { // TODO:vgrechka @kill
-//        $messagePhiValue = $phiValue->getProperty('message_ujvw20$_0');
-//    }
-
-    if ($messagePhiValue instanceof PhiString) {
-        $message = $messagePhiValue->getValue();
-    }
-    else if ($messagePhiValue instanceof PhiUndefined) {
-        $message = "";
-    }
-    else {
-        throw new PhiIllegalStateException("cbba8949-ba96-43d5-93f1-dd84bd002d67");
-    }
-
-    $exception = new PhiBloodyException($message, $phiValue);
-    throw $exception;
-}
 
 let assert_string_equals (expected : string) (actual : string) : unit =
     if not (actual = expected) then

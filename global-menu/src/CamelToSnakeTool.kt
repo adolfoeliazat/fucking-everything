@@ -3,6 +3,7 @@ package vgrechka
 import javafx.application.Application
 import javafx.scene.Scene
 import javafx.scene.control.TextArea
+import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import javafx.stage.WindowEvent
@@ -11,6 +12,10 @@ import org.parboiled.annotations.BuildParseTree
 import org.parboiled.parserunners.ReportingParseRunner
 import kotlin.system.exitProcess
 
+//
+// Java parser example:
+// https://github.com/sirthias/parboiled/blob/master/examples-java/src/main/java/org/parboiled/examples/java/JavaParser.java
+//
 class CamelToSnakeTool : Application() {
     @AllOpen @BuildParseTree
     class Parser : BaseParser<Any?>() {
@@ -23,8 +28,64 @@ class CamelToSnakeTool : Application() {
 
         fun spew(): Rule {
             return ZeroOrMore(FirstOf(
+                singleLineComment(),
+                multilineComment(),
+                stringLiteral(),
                 identifier(),
-                Sequence(ANY, action {items += Item.UnparsableShit(it.match)})))
+                otherShit()))
+        }
+
+        fun otherShit(): Rule {
+            return Sequence(ANY, action {items += Item.UnparsableShit(it.match)})
+        }
+
+        fun singleLineComment(): Rule {
+            return Sequence(
+                Sequence(
+                    "//",
+                    ZeroOrMore(TestNot(AnyOf("\r\n")), BaseParser.ANY),
+                    FirstOf("\r\n", '\r', '\n', BaseParser.EOI)
+                ),
+                action {items += Item.UnparsableShit(it.match)})
+        }
+
+        fun multilineComment(): Rule {
+            return Sequence(
+                Sequence("/*", ZeroOrMore(TestNot("*/"), BaseParser.ANY), "*/"),
+                action {items += Item.UnparsableShit(it.match)})
+        }
+
+        fun stringLiteral(): Rule {
+            return Sequence(
+                Sequence(
+                    '"',
+                    ZeroOrMore(
+                        FirstOf(
+                            escape(),
+                            Sequence(TestNot(AnyOf("\r\n\"\\")), BaseParser.ANY))
+                    ).suppressSubnodes(),
+                    '"'),
+                action {items += Item.UnparsableShit(it.match)})
+        }
+
+        fun escape(): Rule {
+            return Sequence('\\', FirstOf(AnyOf("btnfr\"\'\\"), octalEscape(), unicodeEscape()))
+        }
+
+        fun octalEscape(): Rule {
+            return FirstOf(
+                Sequence(CharRange('0', '3'), CharRange('0', '7'), CharRange('0', '7')),
+                Sequence(CharRange('0', '7'), CharRange('0', '7')),
+                CharRange('0', '7')
+            )
+        }
+
+        fun unicodeEscape(): Rule {
+            return Sequence(OneOrMore('u'), hexDigit(), hexDigit(), hexDigit(), hexDigit())
+        }
+
+        fun hexDigit(): Rule {
+            return FirstOf(CharRange('a', 'f'), CharRange('A', 'F'), CharRange('0', '9'))
         }
 
         fun identifier(): Rule {
@@ -83,13 +144,43 @@ class CamelToSnakeTool : Application() {
                 }
             }
         }
-        // camelArea.text = "fuckingBitch MotherFucker"
+        setTestInput(camelArea)
         vbox.children += snakeArea
+        VBox.setVgrow(camelArea, Priority.ALWAYS)
+        VBox.setVgrow(snakeArea, Priority.ALWAYS)
         val scene = Scene(vbox)
 
         primaryStage.title = "Camel to Snake"
         primaryStage.scene = scene
         primaryStage.show()
+    }
+
+    fun setTestInput(camelArea: TextArea) {
+//        camelArea.text = """
+//function phiThrow(${'$'}expr) {
+//    ${'$'}phiValue = ${'$'}expr->evaluate();
+//    if (!(${'$'}phiValue instanceof PhiObject))
+//        throw new PhiIllegalStateException("d6b5d1bf-c9d9-4aa7-b9f9-420bd0124b1f");
+//
+//    ${'$'}messagePhiValue = ${'$'}phiValue->getProperty('message');
+////    if (${'$'}messagePhiValue instanceof PhiUndefined) { // TODO:vgrechka @kill
+////        ${'$'}messagePhiValue = ${'$'}phiValue->getProperty('message_ujvw20${'$'}_0');
+////    }
+//
+//    if (${'$'}messagePhiValue instanceof PhiString) {
+//        ${'$'}message = ${'$'}messagePhiValue->getValue();
+//    }
+//    else if (${'$'}messagePhiValue instanceof PhiUndefined) {
+//        ${'$'}message = "";
+//    }
+//    else {
+//        throw new PhiIllegalStateException("cbba8949-ba96-43d5-93f1-dd84bd002d67");
+//    }
+//
+//    ${'$'}exception = new PhiBloodyException(${'$'}message, ${'$'}phiValue);
+//    throw ${'$'}exception;
+//}
+//        """
     }
 
     companion object {
