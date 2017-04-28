@@ -14,6 +14,7 @@
       <w>dirname</w>
       <w>env;</w>
       <w>exts</w>
+      <w>failwith</w>
       <w>febig</w>
       <w>fegh</w>
       <w>fekjs</w>
@@ -38,6 +39,7 @@
       <w>sqlite</w>
       <w>sqls</w>
       <w>vbox</w>
+      <w>vova</w>
       <w>xbreakpoint</w>
       <w>xsession</w>
     </words>
