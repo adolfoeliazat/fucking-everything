@@ -37,6 +37,8 @@ import vgrechka.*
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.util.*
+import java.util.concurrent.ArrayBlockingQueue
+import java.util.concurrent.TimeUnit
 
 //val Project.bullshitter by AttachedComputedShit(::Bullshitter)
 
@@ -161,16 +163,18 @@ object IDEAStuff {
     }
 
     fun runConfiguration(project: Project, configurationName: String, debug: Boolean = false) {
-        val res = getRunningContentDescriptors(project, configurationName, debug)
-        val candy = when (res) {
-            is IDEAStuff.GetRunningDescriptorsResult.Poop -> bitch(res.error)
-            is IDEAStuff.GetRunningDescriptorsResult.Candy -> res
-        }
+        later {
+            val res = getRunningContentDescriptors(project, configurationName, debug)
+            val candy = when (res) {
+                is IDEAStuff.GetRunningDescriptorsResult.Poop -> bitch(res.error)
+                is IDEAStuff.GetRunningDescriptorsResult.Candy -> res
+            }
 
-        if (candy.descriptors.isNotEmpty()) {
-            ExecutionUtil.restart(candy.descriptors.first())
-        } else {
-            ExecutionUtil.runConfiguration(candy.config, getRunExecutor(debug))
+            if (candy.descriptors.isNotEmpty()) {
+                ExecutionUtil.restart(candy.descriptors.first())
+            } else {
+                ExecutionUtil.runConfiguration(candy.config, getRunExecutor(debug))
+            }
         }
     }
 
@@ -178,6 +182,15 @@ object IDEAStuff {
         class Poop(val error: String) : GetRunningDescriptorsResult()
         class Candy(val config: RunnerAndConfigurationSettings,
                     val descriptors: List<RunContentDescriptor>) : GetRunningDescriptorsResult()
+    }
+
+    fun getRunningContentDescriptorsFromNonUIThread(project: Project, configurationName: String, debug: Boolean = false): GetRunningDescriptorsResult {
+        val queue = ArrayBlockingQueue<GetRunningDescriptorsResult>(1)
+        later {
+            val res = getRunningContentDescriptors(project, configurationName, debug)
+            queue.add(res)
+        }
+        return queue.poll(1, TimeUnit.SECONDS) ?: bitch("Sick of waiting for running content descriptors from UI thread")
     }
 
     fun getRunningContentDescriptors(project: Project, configurationName: String, debug: Boolean = false): GetRunningDescriptorsResult {
@@ -227,7 +240,7 @@ object IDEAStuff {
     }
 
     /**
-     * Don't run this on UI thread
+     * Don't call this on UI thread
      * @throws something if failed
      */
     fun waitForConfigurationToRunAndThenTerminate(project: Project, configurationName: String, debug: Boolean, runTimeout: Int, terminationTimeout: Int) {
@@ -248,7 +261,7 @@ object IDEAStuff {
 
         fun fuck(timeout: Int, errorMessage: String, condition: (List<RunContentDescriptor>) -> Boolean) {
             val ok = loopUntilTrueOrTimeout(timeout) {
-                val descriptors = (getRunningContentDescriptors(project, configurationName, debug)
+                val descriptors = (getRunningContentDescriptorsFromNonUIThread(project, configurationName, debug)
                     as? GetRunningDescriptorsResult.Candy
                     ?: bitch("d687999f-5597-45da-a282-637976a0bac4"))
                     .descriptors

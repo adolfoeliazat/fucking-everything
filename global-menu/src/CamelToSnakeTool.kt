@@ -15,7 +15,17 @@ import kotlin.system.exitProcess
 // Java parser example:
 // https://github.com/sirthias/parboiled/blob/master/examples-java/src/main/java/org/parboiled/examples/java/JavaParser.java
 
-class CamelToSnakeTool : Application() {
+class CamelToSnakePHPTool : CamelToSnakeTool() {
+
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            launch(CamelToSnakePHPTool::class.java, *args)
+        }
+    }
+}
+
+abstract class CamelToSnakeTool : Application() {
     @AllOpen @BuildParseTree
     class Parser : BaseParser<Any?>() {
         val items: MutableList<Item> = mutableListOf()
@@ -180,12 +190,5 @@ class CamelToSnakeTool : Application() {
 //    throw ${'$'}exception;
 //}
 //        """
-    }
-
-    companion object {
-        @JvmStatic
-        fun main(args: Array<String>) {
-            launch(CamelToSnakeTool::class.java, *args)
-        }
     }
 }

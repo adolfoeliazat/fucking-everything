@@ -14,24 +14,24 @@ let first_string_arg x =
     | _ -> assert false
     end
 
-let quickTest_1 () =
+let quick_test_1 () =
     Phi.init_env ();
     Phi.assert_exception "We are hosed, man..." (fun () ->
         let expr =
             Phi.Expression.New {
                 ctor = Phi.Expression.Name_ref {name = "pizda"};
                 args = [Phi.Expression.String_literal {value = "We are hosed, man..."}]} in
-        Phi.throw expr
+        Phi.throw expr;
     );
 
     Phi.println "phiQuickTest_1: PASSED"
 
-let runQuickTests () =
-    quickTest_1 ()
+let run_quick_tests () =
+    quick_test_1 ()
 
 let () =
-    Phi.sayHello ();
-    runQuickTests ()
+    Phi.say_hello ();
+    run_quick_tests ()
 
 
 

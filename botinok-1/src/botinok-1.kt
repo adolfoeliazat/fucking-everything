@@ -40,7 +40,7 @@ open class BotinokAppConfig {
         }
     }
 
-    @Bean open fun transactionManager(emf: EntityManagerFactory) = JpaTransactionManager() -{o->
+    @Bean open fun transactionManager(emf: EntityManagerFactory) = JpaTransactionManager()-{o->
         o.entityManagerFactory = emf
     }
 }
