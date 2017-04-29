@@ -12,10 +12,9 @@ import org.parboiled.annotations.BuildParseTree
 import org.parboiled.parserunners.ReportingParseRunner
 import kotlin.system.exitProcess
 
-//
 // Java parser example:
 // https://github.com/sirthias/parboiled/blob/master/examples-java/src/main/java/org/parboiled/examples/java/JavaParser.java
-//
+
 class CamelToSnakeTool : Application() {
     @AllOpen @BuildParseTree
     class Parser : BaseParser<Any?>() {

@@ -1,12 +1,26 @@
 open Core.Std
 
-module rec Expression : sig
+module Expression = struct
     type t =
     | New of New.t
     | Number_literal of Number_literal.t
     | String_literal of String_literal.t
     | Name_ref of Name_ref.t
-end = Expression
+end
+
+module rec Value : sig
+    type t =
+    | Object of Object.t
+    | String of String.t
+
+    (*module Object = struct
+        type t = unit
+    end
+
+    module String = struct
+        type t = unit
+    end*)
+end = Value
 
 and String_literal : sig
     type t = {
@@ -42,6 +56,21 @@ let sayHello () =
 
 let init_env () = ()
 
+let phi_throw expr =
+    let phi_value = Expression.evaluate expr in
+
+    match phi_value with
+    | Value.Object -> (
+        let message_phi_value = Value.Object.get_property phi_value "message" in
+
+        let message = match message_phi_value with
+        | Value.String -> message_phi_value.value
+        | Value.Undefined -> ""
+        | _ -> failwith "cbba8949-ba96-43d5-93f1-dd84bd002d67" in
+
+        raise (Bloody_exception {message; phi_value})
+    )
+    | _ -> failwith "d6b5d1bf-c9d9-4aa7-b9f9-420bd0124b1f"
 
 let assert_string_equals (expected : string) (actual : string) : unit =
     if not (actual = expected) then
