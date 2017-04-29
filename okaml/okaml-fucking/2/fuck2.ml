@@ -2,29 +2,37 @@ open Core.Std
 
 let println s = print_string (s ^ "\n")
 
-module Pizda = struct
-    module Fuck = struct
-        type t = {value : string}
-    end
+module rec String_literal : sig
+    type t = {value : string}
+end = String_literal
 
-    module Shit = struct
-        type t = {value : string(*; pizda: Pizda.t*)}
-    end
+and Number_literal : sig
+    type t = {value : float}
+end = Number_literal
 
+and New_expression : sig
+    type t = {ctor : Expression.t}
+end = New_expression
+
+and Expression : sig
     type t =
-    | Fuck of Fuck.t
-    | Shit of Shit.t
+        | String_literal of String_literal.t
+        | Number_literal of Number_literal.t
+end = Expression
 
-    let evaluate p =
-        match p with
-        | Fuck p -> "some fuck" ^ p.value
-        | Shit p -> "some shit " ^ p.value
-end
 
+let f x =
+    match x with
+        | Expression.String_literal x -> printf "string literal: %s\n" x.value
+        | Expression.Number_literal x -> printf "number literal: %f\n" x.value
+        | _ -> assert false
 
 let () =
     println "I am the fuck2";
-    Pizda.Shit {value = "big"} |> Pizda.evaluate |> println
+    f (Expression.String_literal {value = "scuko"});
+    f (Expression.Number_literal {value = 10.5});
+
+    (*Expression.Shit {value = "big"} |> Expression.evaluate |> println*)
 
 
 
