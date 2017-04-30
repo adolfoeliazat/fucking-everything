@@ -1,11 +1,13 @@
 buildscript {
     repositories {
         mavenCentral()
+        jcenter()
     }
 }
 
 repositories {
     mavenCentral()
+    jcenter()
 //    maven { url 'https://repo.spring.io/libs-snapshot' }
 //    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 //    maven { url "https://repo.gradle.org/gradle/libs-releases-local" }
@@ -33,6 +35,25 @@ dependencies {
     compile 'org.hibernate:hibernate-core:5.2.10.Final'
     compile 'org.hibernate:hibernate-core:5.2.10.Final:sources'
     compile 'com.zaxxer:HikariCP:2.6.1'
+    compile 'de.jensd:fontawesomefx-emojione:2.2.7-2'
+    compile 'de.jensd:fontawesomefx-emojione:2.2.7-2:sources'
+    compile 'de.jensd:fontawesomefx-fontawesome:4.7.0-5'
+    compile 'de.jensd:fontawesomefx-fontawesome:4.7.0-5:sources'
+
+    compile 'de.jensd:fontawesomefx-icons525:3.0.0-4'
+    compile 'de.jensd:fontawesomefx-icons525:3.0.0-4:sources'
+    compile 'de.jensd:fontawesomefx-materialdesignfont:1.7.22-4'
+    compile 'de.jensd:fontawesomefx-materialdesignfont:1.7.22-4:sources'
+    compile 'de.jensd:fontawesomefx-materialicons:2.2.0-5'
+    compile 'de.jensd:fontawesomefx-materialicons:2.2.0-5:sources'
+    compile 'de.jensd:fontawesomefx-octicons:4.3.0-5'
+    compile 'de.jensd:fontawesomefx-octicons:4.3.0-5:sources'
+    compile 'de.jensd:fontawesomefx-weathericons:2.0.10-5'
+    compile 'de.jensd:fontawesomefx-weathericons:2.0.10-5:sources'
+    compile 'de.jensd:fontawesomefx-commons:8.15'
+    compile 'de.jensd:fontawesomefx-commons:8.15:sources'
+    compile 'de.jensd:fontawesomefx-controls:8.15'
+    compile 'de.jensd:fontawesomefx-controls:8.15:sources'
 }
 
 task importDeps(type: Copy) {

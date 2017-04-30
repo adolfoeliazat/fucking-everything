@@ -1,8 +1,13 @@
 package vgrechka.botinok
 
+import de.jensd.fx.glyphs.emojione.EmojiOne
+import de.jensd.fx.glyphs.emojione.EmojiOneView
+import de.jensd.fx.glyphs.weathericons.WeatherIcon
 import javafx.application.Application
 import javafx.application.Platform
+import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
+import javafx.collections.ObservableList
 import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -21,11 +26,9 @@ import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.stage.WindowEvent
-import org.jnativehook.keyboard.NativeKeyEvent
+import javafx.util.Callback
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import vgrechka.*
-import vgrechka.globalmenu.*
-import java.awt.MouseInfo
 import java.awt.Rectangle
 import java.awt.Robot
 import java.awt.Toolkit.getDefaultToolkit
@@ -161,12 +164,73 @@ class StartBotinok : Application() {
         }
     }
 
+    class NavigationTreeNode(val title: String) {
+        override fun toString(): String {
+            return title
+        }
+    }
+
     class BotinokBrowserSceneController {
         @FXML lateinit var someTextField: TextField
         @FXML lateinit var fuckAroundButton1: Button
         @FXML lateinit var fuckAroundButton2: Button
+        @FXML lateinit var navigationTreeView: TreeView<NavigationTreeNode>
 
+        @Suppress("unused")
         fun initialize() {
+            navigationTreeView.setCellFactory {
+                object : TreeCell<NavigationTreeNode>() {
+                    override fun updateItem(item: NavigationTreeNode?, empty: Boolean) {
+                        super.updateItem(item, empty)
+                        if (item == null) {
+                            text = ""
+                            graphic = null
+                            return
+                        }
+
+                        // this.style = "-fx-text-fill: red; -fx-font-weight: bold;"
+                        text = item.title
+                        graphic = EmojiOneView(EmojiOne.AIRPLANE)
+                    }
+                }
+            }
+
+            navigationTreeView.root = object : TreeItem<NavigationTreeNode>(NavigationTreeNode("Freaking root")) {
+                private val children = FXCollections.observableArrayList<TreeItem<NavigationTreeNode>>()
+
+                init {
+                    fun addChild(title: String) {
+                        children += object : TreeItem<NavigationTreeNode>(NavigationTreeNode(title)) {
+                            override fun toString(): String {
+                                return title
+                            }
+
+                            override fun isLeaf(): Boolean {
+                                return true
+                            }
+
+                            override fun getChildren(): ObservableList<TreeItem<NavigationTreeNode>> {
+                                return FXCollections.emptyObservableList()
+                            }
+                        }
+                    }
+
+                    addChild("Fuck")
+                    addChild("Shit")
+                    addChild("Bitch")
+                }
+
+                override fun isLeaf(): Boolean {
+                    return false
+                }
+
+                override fun getChildren(): ObservableList<TreeItem<NavigationTreeNode>> {
+                    return children
+                }
+            }
+
+            navigationTreeView.root.isExpanded = true
+
             fuckAroundButton1.onAction = EventHandler {
                 JFXStuff.infoAlert("Fuck you, ${someTextField.text}")
             }
