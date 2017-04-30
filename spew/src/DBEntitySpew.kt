@@ -9,6 +9,9 @@ import java.io.File
 import java.util.*
 import kotlin.properties.Delegates.notNull
 
+@Target(AnnotationTarget.FILE)
+annotation class GDBEntitySpewOptions(val stuffObject: String = "")
+
 annotation class GEntity(val table: String)
 annotation class GOneToMany(val mappedBy: String)
 annotation class GManyToOne
@@ -78,6 +81,7 @@ class DBEntitySpew : Spew {
     private var end by notNull<String>()
     private var spewResults by notNullOnce<SpewResults>()
     private var entities by notNull<List<EntitySpec>>()
+    private var stuffObjectName: String? = null
 
     override fun ignite(ktFile: KtFile, outputFilePath: String, spewResults: SpewResults) {
         this.ktFile = ktFile
@@ -88,19 +92,19 @@ class DBEntitySpew : Spew {
         out = CodeShitter(code, indent = 0)
 
 //        val entities = fakeEntities()
-        entities = analyzeSources()
+        analyzeSources()
 
         val packageName = (ktFile.packageDirective
             ?: wtf("512f3d89-eb0d-4653-b04f-686c6100a900"))
             .qualifiedName
 
         shitHeader(out, packageName)
-        out.linen("// Fuck you    ${Date()}")
 
         for (_entity in entities) {
             entity = _entity
             spitShitForEntity()
         }
+        spitStuffClass()
         spitDDLComment()
 
         file.backUpAndWrite(code.toString())
@@ -326,6 +330,18 @@ class DBEntitySpew : Spew {
         out.append("}\n\n")
     }
 
+    fun spitStuffClass() {
+        if (stuffObjectName != null) {
+            out.append("object $stuffObjectName {\n")
+            out.append("    object ddl {\n")
+            out.append("        val dropCreateAllScript = \"\"\"\n")
+            out.append(spewResults.ddl.toString())
+            out.append("        \"\"\"\n")
+            out.append("    }\n")
+            out.append("}\n")
+        }
+    }
+
     fun spitDDLComment() {
         out.append("\n\n")
         out.append("/*\n")
@@ -390,12 +406,19 @@ class DBEntitySpew : Spew {
         if (false) clog(x)
     }
 
-    private fun analyzeSources(): List<EntitySpec> {
-        val entities = mutableListOf<EntitySpec>()
+    private fun analyzeSources() {
+        entities = mutableListOf<EntitySpec>()
         val nameToKlass = mutableMapOf<String, KtClass>()
 
         object {
             init {
+                for (ann in ktFile.freakingFindAnnotations(GDBEntitySpewOptions::class.simpleName!!)) {
+                    ann.freakingGetStringAttribute(GDBEntitySpewOptions::stuffObject.name)?.let {
+                        if (it.isNotBlank())
+                            stuffObjectName = it
+                    }
+                }
+
                 ktFile.freakingVisitClasses {
                     nameToKlass[it.name!!] = it
                 }
@@ -497,9 +520,6 @@ class DBEntitySpew : Spew {
             }
 
         }
-
-
-        return entities
     }
 
 
@@ -538,6 +558,11 @@ class DBEntitySpew : Spew {
     fun shitHeader(out: CodeShitter, packageName: String) {
         out.headerComment()
         out.line("""
+                //
+                // Generated on ${Date()}
+                // Model: ${ktFile.virtualFile.path}
+                //
+
                 package $packageName
 
                 import kotlin.reflect.KClass
