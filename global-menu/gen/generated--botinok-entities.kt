@@ -11,7 +11,7 @@ import vgrechka.*
 import vgrechka.spew.*
 import vgrechka.db.*
 
-// Fuck you    Sat Apr 29 23:59:40 EEST 2017
+// Fuck you    Sun Apr 30 08:05:39 EEST 2017
 
 // ------------------------------------------------------------------
 // BotinokBox

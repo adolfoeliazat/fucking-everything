@@ -44,7 +44,7 @@ object Spike_SQLite_DataSource {
 }
 
 private fun fuckAroundWithSQLiteConnection(con: Connection) {
-    val st = con.prepareStatement("select id, word, rank from nice_words")
+    val st = con.prepareStatement("select id, niceWord_word, niceWord_rank from nice_words")
     val rs = st.executeQuery()
     while (rs.next()) {
         clog("ID:", rs.getLong(1))

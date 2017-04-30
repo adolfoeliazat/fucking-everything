@@ -10,6 +10,8 @@ import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.annotation.EnableTransactionManagement
+import org.sqlite.SQLiteConfig
+import org.sqlite.javax.IntoSQLiteConnectionPoolDataSource
 import org.sqlite.javax.SQLiteConnectionPoolDataSource
 import vgrechka.*
 import vgrechka.db.*
@@ -23,7 +25,8 @@ import javax.sql.DataSource
 @EnableTransactionManagement
 @ComponentScan(basePackages = arrayOf("vgrechka.botinok"))
 open class BotinokAppConfig {
-    @Bean open fun entityManagerFactory(dataSource: DataSource) = LocalContainerEntityManagerFactoryBean() -{o->
+
+    @Bean open fun entityManagerFactory(dataSource: DataSource) = LocalContainerEntityManagerFactoryBean()-{o->
         o.jpaVendorAdapter = HibernateJpaVendorAdapter()-{o->
             o.setShowSql(true)
         }
@@ -35,8 +38,12 @@ open class BotinokAppConfig {
     }
 
     @Bean open fun dataSource(): DataSource {
-        return SQLiteConnectionPoolDataSource() -{o->
+//        return SQLiteConnectionPoolDataSource()-{o->
+        return IntoSQLiteConnectionPoolDataSource()-{o->
             o.url = BigPile.localSQLiteShebangDBURL
+            o.config = SQLiteConfig()-{o->
+                o.setDateClass(SQLiteConfig.DateClass.TEXT.value)
+            }
         }
     }
 
