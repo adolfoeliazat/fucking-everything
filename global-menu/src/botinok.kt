@@ -4,7 +4,10 @@ import javafx.application.Application
 import javafx.application.Platform
 import javafx.collections.ListChangeListener
 import javafx.event.EventHandler
+import javafx.fxml.FXML
+import javafx.fxml.FXMLLoader
 import javafx.geometry.Rectangle2D
+import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.*
@@ -39,6 +42,9 @@ object BotinokStuff {
     val obscureConst2 = boxEdgeSize + obscureConst1
 }
 
+private class NavigationTreeNode {
+
+}
 
 private class BoxPoints(var minX: Int, var minY: Int, var maxX: Int, var maxY: Int)
 
@@ -97,7 +103,7 @@ private enum class Handle {
 
 
 class StartBotinok : Application() {
-    private var scene by notNullOnce<Scene>()
+    private var primaryStage by notNullOnce<Stage>()
 
     override fun start(primaryStage: Stage) {
         run {
@@ -124,30 +130,58 @@ class StartBotinok : Application() {
             exitProcess(0)
         }
 
-        scene = Scene(Label(""))
+//        scene = Scene(Label(""))
 
         primaryStage.width = 1000.0
         primaryStage.height = 500.0
         primaryStage.title = "Botinok"
-        primaryStage.scene = scene
+//        primaryStage.scene = scene
         primaryStage.initStyle(StageStyle.DECORATED)
 
-        goBananas()
+        this.primaryStage = primaryStage
+        goBananas2()
 
         primaryStage.show()
     }
 
     private fun seed() {
         backPlatform.tx {
-            val playName = "Fucking Play"
-            if (botinokPlayRepo.findByName(playName) == null) {
-                botinokPlayRepo.save(newBotinokPlay(name = playName))
+            run {
+                val playName = "Fucking Play"
+                if (botinokPlayRepo.findByName(playName) == null) {
+                    botinokPlayRepo.save(newBotinokPlay(name = playName))
+                }
+            }
+            run {
+                val playName = "Shitty Play"
+                if (botinokPlayRepo.findByName(playName) == null) {
+                    botinokPlayRepo.save(newBotinokPlay(name = playName))
+                }
             }
         }
     }
 
+    class BotinokBrowserSceneController {
+        @FXML lateinit var someTextField: TextField
+        @FXML lateinit var fuckAroundButton1: Button
+        @FXML lateinit var fuckAroundButton2: Button
+
+        fun initialize() {
+            fuckAroundButton1.onAction = EventHandler {
+                JFXStuff.infoAlert("Fuck you, ${someTextField.text}")
+            }
+        }
+    }
+
+    inner class goBananas2 {
+        init {
+            val root = FXMLLoader.load<Parent>(this::class.java.getResource("BotinokBrowserScene.fxml"))
+            primaryStage.scene = Scene(root)
+        }
+    }
+
     inner class goBananas {
-        private val vbox = VBox(8.0)
+        private val vbox: VBox
         private val tmpImgPath = "$tmpDirPath/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
         private var stackPane: StackPane
         private var selectedHandles = setOf<Handle>()
@@ -166,7 +200,8 @@ class StartBotinok : Application() {
         private var arenaListView by notNull<ListView<Arena>>()
 
         init {
-            scene.root = vbox
+            vbox = VBox(8.0)
+            primaryStage.scene = Scene(vbox)
 
             // noise("tmpImgPath = $tmpImgPath")
             val buttonBox = HBox(8.0)
@@ -184,17 +219,27 @@ class StartBotinok : Application() {
             addButton("Fuck Around 1", this::action_fuckAround1)
             addButton("Fuck Around 2", this::action_fuckAround2)
 
+            val splitPane = SplitPane()
+            vbox.children += splitPane
+
+            val navigationTreeView = TreeView<NavigationTreeNode>()
+            splitPane.items += navigationTreeView
+            navigationTreeView.prefWidth = 50.0
+            splitPane.setDividerPosition(0, 0.1)
+
+            splitPane.items += ScrollPane()
+
             stackPane = StackPane()
+
+
+
 //            val scrollPane = ScrollPane()
 //            scrollPane.content = stackPane
-//            val splitPane = SplitPane()
 //
 //            initArenaListView()
 //
 //            splitPane.items += arenaListView
 //            splitPane.items += scrollPane
-//            splitPane.setDividerPosition(0, 0.2)
-//            vbox.children += splitPane
         }
 
         fun initArenaListView() {
