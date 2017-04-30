@@ -9,8 +9,7 @@ import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
-import org.junit.Assert.assertEquals
-import org.junit.Assert.fail
+import org.junit.Assert.*
 import org.junit.Test
 import org.springframework.context.ApplicationContext
 import java.io.*
@@ -280,16 +279,33 @@ operator fun StringBuilder.plusAssign(x: Any?) {
 val tmpDirPath get() = System.getProperty("java.io.tmpdir")
 
 fun assertThrown(check: (Throwable) -> Unit, block: () -> Unit) {
+    var thrown = false
     try {
         block()
-        fail("Expected something to be thrown")
     } catch (e: Throwable) {
+        thrown = true
         check(e)
     }
+    assertTrue("Expected something to be thrown", thrown)
 }
 
 fun <T : Throwable> assertThrown(clazz: KClass<T>, block: () -> Unit) {
     assertThrown({assertEquals(clazz, it::class)}, block)
+}
+
+fun assertThrownExceptionOrOneOfItsCausesMessageContains(needle: String, block: () -> Unit) {
+    assertThrown(check = {
+        val messages = mutableListOf<String?>()
+        var lookingAt: Throwable? = it
+        while (lookingAt != null) {
+            messages.add(lookingAt.message)
+            lookingAt = lookingAt.cause
+        }
+        if (!messages.any {it?.contains(needle) == true})
+            fail("Thrown exception (or one of its causes) message should contain `$needle`.\n"
+                     + "Instead got following messages:\n"
+                     + messages.map{"    $it"}.joinToString("\n"))
+    }, block = block)
 }
 
 class TestLogger {

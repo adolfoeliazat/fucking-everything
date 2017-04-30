@@ -5,7 +5,6 @@ import org.junit.runner.RunWith
 import org.junit.runners.Suite
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import vgrechka.*
-import vgrechka.spew.*
 
 @RunWith(Suite::class) @Suite.SuiteClasses(
     BotinokTest1::class
@@ -13,8 +12,6 @@ import vgrechka.spew.*
 class BotinokTests
 
 class BotinokTest1 {
-
-    // TODO:vgrechka Referential integrity in DDL
 
     // TODO:vgrechka 2) Drop/create schema here in addition to SpewSomeShit2
     // Is it necessary to keep drop/create also in SpewSomeShit2?
@@ -29,6 +26,12 @@ class BotinokTest1 {
         backPlatform.tx {
             botinokBoxRepo.findAll().forEach {
                 clog(it)
+            }
+        }
+        assertThrownExceptionOrOneOfItsCausesMessageContains("SQLITE_CONSTRAINT_FOREIGNKEY") {
+            backPlatform.tx {
+                val arena = botinokArenaRepo.findAll().first()
+                botinokArenaRepo.delete(arena)
             }
         }
     }

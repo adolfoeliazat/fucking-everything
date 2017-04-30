@@ -43,6 +43,7 @@ open class BotinokAppConfig {
             o.url = BigPile.localSQLiteShebangDBURL
             o.config = SQLiteConfig()-{o->
                 o.setDateClass(SQLiteConfig.DateClass.TEXT.value)
+                o.enforceForeignKeys(true)
             }
         }
     }

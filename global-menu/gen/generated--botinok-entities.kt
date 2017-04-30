@@ -11,7 +11,7 @@ import vgrechka.*
 import vgrechka.spew.*
 import vgrechka.db.*
 
-// Fuck you    Sun Apr 30 08:05:39 EEST 2017
+// Fuck you    Sun Apr 30 12:53:13 EEST 2017
 
 // ------------------------------------------------------------------
 // BotinokBox
@@ -38,15 +38,24 @@ val botinokBoxRepo: BotinokBoxRepository by lazy {
     val generatedRepo = backPlatform.springctx.getBean(Generated_BotinokBoxRepository::class.java)!!
 
     object:BotinokBoxRepository {
+        override fun findAll(): List<BotinokBox> {
+            val shit = generatedRepo.findAll()
+            return shit.map {it.toManuallyDefinedInterface()}
+        }
+
         override fun save(x: BotinokBox): BotinokBox {
             val shit = generatedRepo.save(x._backing)
             return shit.toManuallyDefinedInterface()
         }
 
-        override fun findAll(): List<BotinokBox> {
-            val shit = generatedRepo.findAll()
-            return shit.map {it.toManuallyDefinedInterface()}
+        override fun delete(id: Long) {
+            generatedRepo.delete(id)
         }
+
+        override fun delete(x : BotinokBox) {
+            generatedRepo.delete(x._backing)
+        }
+
     }
 }
 
@@ -130,26 +139,7 @@ class Generated_BotinokBoxFields(
     @XManyToOne(fetch = XFetchType.LAZY) var arena: Generated_BotinokArena
 )
 
-
-
-/*
-DDL
-===
-
-drop table if exists `botinok_boxes`;
-create table `botinok_boxes` (
-    `id` integer primary key autoincrement,
-    `botinokBox_common_createdAt` text not null,
-    `botinokBox_common_updatedAt` text not null,
-    `botinokBox_common_deleted` integer not null,
-    `botinokBox_x` integer not null,
-    `botinokBox_y` integer not null,
-    `botinokBox_w` integer not null,
-    `botinokBox_h` integer not null,
-    `botinokBox_arena__id` bigint not null,
-    foreign key (botinokBox_arena__id) references botinok_arenas(id)
-);
-*/// ------------------------------------------------------------------
+// ------------------------------------------------------------------
 // BotinokArena
 // ------------------------------------------------------------------
 
@@ -166,15 +156,24 @@ val botinokArenaRepo: BotinokArenaRepository by lazy {
     val generatedRepo = backPlatform.springctx.getBean(Generated_BotinokArenaRepository::class.java)!!
 
     object:BotinokArenaRepository {
+        override fun findAll(): List<BotinokArena> {
+            val shit = generatedRepo.findAll()
+            return shit.map {it.toManuallyDefinedInterface()}
+        }
+
         override fun save(x: BotinokArena): BotinokArena {
             val shit = generatedRepo.save(x._backing)
             return shit.toManuallyDefinedInterface()
         }
 
-        override fun findAll(): List<BotinokArena> {
-            val shit = generatedRepo.findAll()
-            return shit.map {it.toManuallyDefinedInterface()}
+        override fun delete(id: Long) {
+            generatedRepo.delete(id)
         }
+
+        override fun delete(x : BotinokArena) {
+            generatedRepo.delete(x._backing)
+        }
+
     }
 }
 
@@ -248,6 +247,20 @@ class Generated_BotinokArenaFields(
 DDL
 ===
 
+drop table if exists `botinok_boxes`;
+create table `botinok_boxes` (
+    `id` integer primary key autoincrement,
+    `botinokBox_common_createdAt` text not null,
+    `botinokBox_common_updatedAt` text not null,
+    `botinokBox_common_deleted` integer not null,
+    `botinokBox_x` integer not null,
+    `botinokBox_y` integer not null,
+    `botinokBox_w` integer not null,
+    `botinokBox_h` integer not null,
+    `botinokBox_arena__id` bigint not null,
+    foreign key (botinokBox_arena__id) references botinok_arenas(id)
+);
+
 drop table if exists `botinok_arenas`;
 create table `botinok_arenas` (
     `id` integer primary key autoincrement,
@@ -256,4 +269,5 @@ create table `botinok_arenas` (
     `botinokArena_common_deleted` integer not null,
     `botinokArena_name` text not null
 );
+
 */

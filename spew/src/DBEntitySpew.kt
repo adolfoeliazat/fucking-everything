@@ -20,6 +20,12 @@ interface GCommonEntityFields {
     var deleted: Boolean
 }
 
+interface GRepository<Entity : GCommonEntityFields> {
+    fun findAll(): List<Entity>
+    fun save(x: Entity): Entity
+    fun delete(id: Long)
+    fun delete(x: Entity)
+}
 
 private sealed class FieldKind {
     class Simple : FieldKind()
@@ -62,6 +68,8 @@ private data class EntitySpec(
 
 
 class DBEntitySpew : Spew {
+    // TODO:vgrechka Extract logic into one-off constructed in `ignite`
+
     private var ktFile by notNullOnce<KtFile>()
     private var outputFilePath by notNullOnce<String>()
     private var out by notNullOnce<CodeShitter>()
@@ -93,7 +101,7 @@ class DBEntitySpew : Spew {
             entity = _entity
             spitShitForEntity()
         }
-
+        spitDDLComment()
 
         file.backUpAndWrite(code.toString())
     }
@@ -129,46 +137,7 @@ class DBEntitySpew : Spew {
         out.append("val $en._backing\n")
         out.append("    get() = (this as Generated_${en}BackingProvider)._backing\n\n")
 
-        out.append("val ${end}Repo: ${en}Repository by lazy {\n")
-        out.append("    val generatedRepo = backPlatform.springctx.getBean(Generated_${en}Repository::class.java)!!\n")
-        out.append("\n")
-        out.append("    object:${en}Repository {\n")
-        out.append("        override fun save(x: $en): $en {\n")
-        out.append("            val shit = generatedRepo.save(x._backing)\n")
-        out.append("            return shit.toManuallyDefinedInterface()\n")
-        out.append("        }\n")
-        out.append("\n")
-
-        for ((finderIndex, finder) in entity.finders.withIndex()) {
-            val paramsCode = StringBuilder()
-            val generatedFinderArgsCode = StringBuilder()
-            for ((paramIndex, param) in finder.params.withIndex()) {
-                paramsCode += "${param.name}: ${param.type}"
-                generatedFinderArgsCode += param.name
-                if (paramIndex < finder.params.lastIndex) {
-                    paramsCode += ", "
-                    generatedFinderArgsCode += ", "
-                }
-            }
-            val returnTypeCode = when {
-                finder.returnsList -> "List<$en>"
-                else -> en
-            }
-
-            out.append("        override fun ${finder.definedFinderName}($paramsCode): $returnTypeCode {\n")
-            out.append("            val shit = generatedRepo.${finder.generatedFinderName}($generatedFinderArgsCode)\n")
-            if (finder.returnsList) {
-                out.append("            return shit.map {it.toManuallyDefinedInterface()}\n")
-            } else {
-                out.append("            return shit.toManuallyDefinedInterface()\n")
-            }
-            out.append("        }\n")
-            if (finderIndex < entity.finders.lastIndex)
-                out.append("\n")
-        }
-
-        out.append("    }\n")
-        out.append("}\n\n")
+        spitRepo()
 
         out.append("interface Generated_${en}Repository : XCrudRepository<Generated_$en, Long> {\n")
         for (finder in entity.finders) {
@@ -295,23 +264,81 @@ class DBEntitySpew : Spew {
         out.append(")\n")
         out.append("\n")
 
-        spitDDLComment()
+        generateDDLCommentForEntity()
 
         /*
          */
     }
 
-    fun spitDDLComment() {
-        fun append(x: String) {
-            out.append(x)
-            spewResults.ddl.append(x)
+    private fun spitRepo() {
+        out.append("val ${end}Repo: ${en}Repository by lazy {\n")
+        out.append("    val generatedRepo = backPlatform.springctx.getBean(Generated_${en}Repository::class.java)!!\n")
+        out.append("\n")
+        out.append("    object:${en}Repository {\n")
+        out.append("        override fun findAll(): List<$en> {\n")
+        out.append("            val shit = generatedRepo.findAll()\n")
+        out.append("            return shit.map {it.toManuallyDefinedInterface()}\n")
+        out.append("        }\n")
+        out.append("\n")
+        out.append("        override fun save(x: $en): $en {\n")
+        out.append("            val shit = generatedRepo.save(x._backing)\n")
+        out.append("            return shit.toManuallyDefinedInterface()\n")
+        out.append("        }\n")
+        out.append("\n")
+        out.append("        override fun delete(id: Long) {\n")
+        out.append("            generatedRepo.delete(id)\n")
+        out.append("        }\n")
+        out.append("\n")
+        out.append("        override fun delete(x : $en) {\n")
+        out.append("            generatedRepo.delete(x._backing)\n")
+        out.append("        }\n")
+        out.append("\n")
+
+        for ((finderIndex, finder) in entity.finders.withIndex()) {
+            val paramsCode = StringBuilder()
+            val generatedFinderArgsCode = StringBuilder()
+            for ((paramIndex, param) in finder.params.withIndex()) {
+                paramsCode += "${param.name}: ${param.type}"
+                generatedFinderArgsCode += param.name
+                if (paramIndex < finder.params.lastIndex) {
+                    paramsCode += ", "
+                    generatedFinderArgsCode += ", "
+                }
+            }
+            val returnTypeCode = when {
+                finder.returnsList -> "List<$en>"
+                else -> en
+            }
+
+            out.append("        override fun ${finder.definedFinderName}($paramsCode): $returnTypeCode {\n")
+            out.append("            val shit = generatedRepo.${finder.generatedFinderName}($generatedFinderArgsCode)\n")
+            if (finder.returnsList) {
+                out.append("            return shit.map {it.toManuallyDefinedInterface()}\n")
+            } else {
+                out.append("            return shit.toManuallyDefinedInterface()\n")
+            }
+            out.append("        }\n")
+            if (finderIndex < entity.finders.lastIndex)
+                out.append("\n")
         }
 
+        out.append("    }\n")
+        out.append("}\n\n")
+    }
+
+    fun spitDDLComment() {
         out.append("\n\n")
         out.append("/*\n")
         out.append("DDL\n")
         out.append("===\n")
         out.append("\n")
+        out.append(spewResults.ddl.toString())
+        out.append("*/")
+    }
+
+    fun generateDDLCommentForEntity() {
+        fun append(x: String) = spewResults.ddl.append(x)
+
         append("drop table if exists `${entity.tableName}`;\n")
         append("create table `${entity.tableName}` (\n")
         append("    `id` integer primary key autoincrement,\n")
@@ -353,8 +380,7 @@ class DBEntitySpew : Spew {
             append(",\n")
         append(foreignKeyLines.joinToString(",\n"))
 
-        append("\n);\n")
-        out.append("*/")
+        append("\n);\n\n")
 
         /*
          */
@@ -427,14 +453,14 @@ class DBEntitySpew : Spew {
                                         val func = decl
                                         val definedFinderName = func.name!!
 
-                                        if (definedFinderName == "save") continue
+                                        if (definedFinderName in setOf("save", "findAll", "delete")) continue
 
                                         var generatedFinderName by notNullOnce<String>()
 
-                                        if (definedFinderName == "findAll") {
+                                        /*if (definedFinderName == "findAll") {
                                             generatedFinderName = definedFinderName
                                         }
-                                        else if (definedFinderName.startsWith("findBy")) {
+                                        else*/ if (definedFinderName.startsWith("findBy")) {
                                             if (definedFinderName.contains("And")) imf("6653efd2-35ae-483a-b49d-0a6af6afac44")
                                             var shit = definedFinderName.substring("findBy".length)
                                             val operator = listOf(
