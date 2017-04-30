@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Sun Apr 30 14:04:54 EEST 2017
+// Generated on Sun Apr 30 16:00:36 EEST 2017
 // Model: e:/fegh/global-menu/src/botinok-entities.kt
 //
 
@@ -244,6 +244,109 @@ class Generated_BotinokArenaFields(
     @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokBox.arena") var boxes: MutableList<Generated_BotinokBox> = mutableListOf()
 )
 
+// ------------------------------------------------------------------
+// BotinokPlay
+// ------------------------------------------------------------------
+
+fun newBotinokPlay(name: String): BotinokPlay {
+    val backing = Generated_BotinokPlay(
+        Generated_BotinokPlayFields(name = name))
+    return backing.toManuallyDefinedInterface()
+}
+
+val BotinokPlay._backing
+    get() = (this as Generated_BotinokPlayBackingProvider)._backing
+
+val botinokPlayRepo: BotinokPlayRepository by lazy {
+    val generatedRepo = backPlatform.springctx.getBean(Generated_BotinokPlayRepository::class.java)!!
+
+    object:BotinokPlayRepository {
+        override fun findAll(): List<BotinokPlay> {
+            val shit = generatedRepo.findAll()
+            return shit.map {it.toManuallyDefinedInterface()}
+        }
+
+        override fun save(x: BotinokPlay): BotinokPlay {
+            val shit = generatedRepo.save(x._backing)
+            return shit.toManuallyDefinedInterface()
+        }
+
+        override fun delete(id: Long) {
+            generatedRepo.delete(id)
+        }
+
+        override fun delete(x : BotinokPlay) {
+            generatedRepo.delete(x._backing)
+        }
+
+        override fun findByName(x: String): BotinokPlay? {
+            val shit = generatedRepo.findByBotinokPlay_Name(x)
+            return shit?.toManuallyDefinedInterface()
+        }
+    }
+}
+
+interface Generated_BotinokPlayRepository : XCrudRepository<Generated_BotinokPlay, Long> {
+    fun findByBotinokPlay_Name(x: String): Generated_BotinokPlay?
+}
+
+interface Generated_BotinokPlayBackingProvider : DBCodeGenUtils.GeneratedBackingEntityProvider<Generated_BotinokPlay> {
+    override val _backing: Generated_BotinokPlay
+}
+
+@XEntity @XTable(name = "botinok_plays")
+class Generated_BotinokPlay(
+    @XEmbedded var botinokPlay: Generated_BotinokPlayFields
+)
+    : ClitoralEntity0(), DBCodeGenUtils.GeneratedEntity<BotinokPlay>
+{
+    override fun toManuallyDefinedInterface(): BotinokPlay {
+        return object : BotinokPlay, Generated_BotinokPlayBackingProvider {
+            override val _backing: Generated_BotinokPlay
+                get() = this@Generated_BotinokPlay
+
+            override var id: Long
+                get() = _backing.id!!
+                set(value) {_backing.id = value}
+
+            override var createdAt: XTimestamp
+                get() = _backing.botinokPlay.common.createdAt
+                set(value) {_backing.botinokPlay.common.createdAt = value}
+
+            override var updatedAt: XTimestamp
+                get() = _backing.botinokPlay.common.updatedAt
+                set(value) {_backing.botinokPlay.common.updatedAt = value}
+
+            override var deleted: Boolean
+                get() = _backing.botinokPlay.common.deleted
+                set(value) {_backing.botinokPlay.common.deleted = value}
+
+            override var name: String
+                get() = _backing.botinokPlay.name
+                set(value) {_backing.botinokPlay.name = value}
+
+            override fun toString() = _backing.toString()
+
+            override fun hashCode() = _backing.hashCode()
+
+            override fun equals(other: Any?): Boolean {
+                val otherShit = other as? Generated_BotinokPlayBackingProvider ?: return false
+                return _backing == otherShit._backing
+            }
+        }
+    }
+
+    override fun toString(): String {
+        return "BotinokPlay(name=${botinokPlay.name})"
+    }
+}
+
+@XEmbeddable
+class Generated_BotinokPlayFields(
+    @XEmbedded var common: CommonFields = CommonFields(),
+    @XColumn(columnDefinition = "text") var name: String
+)
+
 object BotinokGeneratedDBStuff {
     object ddl {
         val dropCreateAllScript = """
@@ -268,6 +371,15 @@ create table `botinok_arenas` (
     `botinokArena_common_updatedAt` text not null,
     `botinokArena_common_deleted` integer not null,
     `botinokArena_name` text not null
+);
+
+drop table if exists `botinok_plays`;
+create table `botinok_plays` (
+    `id` integer primary key autoincrement,
+    `botinokPlay_common_createdAt` text not null,
+    `botinokPlay_common_updatedAt` text not null,
+    `botinokPlay_common_deleted` integer not null,
+    `botinokPlay_name` text not null
 );
 
         """
@@ -300,6 +412,15 @@ create table `botinok_arenas` (
     `botinokArena_common_updatedAt` text not null,
     `botinokArena_common_deleted` integer not null,
     `botinokArena_name` text not null
+);
+
+drop table if exists `botinok_plays`;
+create table `botinok_plays` (
+    `id` integer primary key autoincrement,
+    `botinokPlay_common_createdAt` text not null,
+    `botinokPlay_common_updatedAt` text not null,
+    `botinokPlay_common_deleted` integer not null,
+    `botinokPlay_name` text not null
 );
 
 */

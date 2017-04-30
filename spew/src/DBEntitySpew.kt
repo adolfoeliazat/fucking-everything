@@ -60,7 +60,8 @@ private data class FinderSpec(
     val definedFinderName: String,
     val generatedFinderName: String,
     val params: List<FinderParamSpec>,
-    val returnsList: Boolean)
+    val returnsList: Boolean,
+    val returnsNullable: Boolean)
 
 private data class EntitySpec(
     val name: String,
@@ -142,25 +143,7 @@ class DBEntitySpew : Spew {
         out.append("    get() = (this as Generated_${en}BackingProvider)._backing\n\n")
 
         spitRepo()
-
-        out.append("interface Generated_${en}Repository : XCrudRepository<Generated_$en, Long> {\n")
-        for (finder in entity.finders) {
-            if (finder.definedFinderName in setOf("findAll")) continue
-
-            val paramsCode = StringBuilder()
-            for ((paramIndex, param) in finder.params.withIndex()) {
-                paramsCode += "${param.name}: ${param.type}"
-                if (paramIndex < finder.params.lastIndex) {
-                    paramsCode += ", "
-                }
-            }
-            val returnTypeCode = when {
-                finder.returnsList -> "List<Generated_$en>"
-                else -> "Generated_$en"
-            }
-            out.append("    fun ${finder.generatedFinderName}($paramsCode): $returnTypeCode\n")
-        }
-        out.append("}\n\n")
+        spitGeneratedRepo()
 
         out.append("interface Generated_${en}BackingProvider : DBCodeGenUtils.GeneratedBackingEntityProvider<Generated_$en> {\n")
         out.append("    override val _backing: Generated_$en\n")
@@ -274,6 +257,27 @@ class DBEntitySpew : Spew {
          */
     }
 
+    private fun spitGeneratedRepo() {
+        out.append("interface Generated_${en}Repository : XCrudRepository<Generated_$en, Long> {\n")
+        for (finder in entity.finders) {
+            if (finder.definedFinderName in setOf("findAll")) continue
+
+            val paramsCode = StringBuilder()
+            for ((paramIndex, param) in finder.params.withIndex()) {
+                paramsCode += "${param.name}: ${param.type}"
+                if (paramIndex < finder.params.lastIndex) {
+                    paramsCode += ", "
+                }
+            }
+            val returnTypeCode = when {
+                finder.returnsList -> "List<Generated_$en>"
+                else -> "Generated_$en${maybeQuestion(finder)}"
+            }
+            out.append("    fun ${finder.generatedFinderName}($paramsCode): $returnTypeCode\n")
+        }
+        out.append("}\n\n")
+    }
+
     private fun spitRepo() {
         out.append("val ${end}Repo: ${en}Repository by lazy {\n")
         out.append("    val generatedRepo = backPlatform.springctx.getBean(Generated_${en}Repository::class.java)!!\n")
@@ -314,12 +318,12 @@ class DBEntitySpew : Spew {
                 else -> en
             }
 
-            out.append("        override fun ${finder.definedFinderName}($paramsCode): $returnTypeCode {\n")
+            out.append("        override fun ${finder.definedFinderName}($paramsCode): $returnTypeCode${maybeQuestion(finder)} {\n")
             out.append("            val shit = generatedRepo.${finder.generatedFinderName}($generatedFinderArgsCode)\n")
             if (finder.returnsList) {
-                out.append("            return shit.map {it.toManuallyDefinedInterface()}\n")
+                out.append("            return shit${maybeQuestion(finder)}.map {it.toManuallyDefinedInterface()}\n")
             } else {
-                out.append("            return shit.toManuallyDefinedInterface()\n")
+                out.append("            return shit${maybeQuestion(finder)}.toManuallyDefinedInterface()\n")
             }
             out.append("        }\n")
             if (finderIndex < entity.finders.lastIndex)
@@ -329,6 +333,8 @@ class DBEntitySpew : Spew {
         out.append("    }\n")
         out.append("}\n\n")
     }
+
+    private fun maybeQuestion(finder: FinderSpec) = finder.returnsNullable.thenElseEmpty {"?"}
 
     fun spitStuffClass() {
         if (stuffObjectName != null) {
@@ -502,12 +508,15 @@ class DBEntitySpew : Spew {
                                                                       type = valueParameter.typeReference!!.text)
                                         }
 
-                                        val returnsList = func.typeReference!!.text.startsWith("List<")
+                                        val typeText = func.typeReference!!.text
+                                        val returnsList = typeText.startsWith("List<")
+                                        val returnsNullable = typeText.endsWith("?")
 
                                         finders += FinderSpec(definedFinderName = definedFinderName,
                                                               generatedFinderName = generatedFinderName,
                                                               params = params,
-                                                              returnsList = returnsList)
+                                                              returnsList = returnsList,
+                                                              returnsNullable = returnsNullable)
                                             .also {noise(it.toVerticalString())}
                                     }
                                 }
@@ -535,10 +544,12 @@ class DBEntitySpew : Spew {
                            FinderSpec(definedFinderName = "findAll",
                                       generatedFinderName = "findAll",
                                       returnsList = true,
+                                      returnsNullable = false,
                                       params = listOf()),
                            FinderSpec(definedFinderName = "findByWordLikeIgnoreCase",
                                       generatedFinderName = "findByAmazingWord_WordLikeIgnoreCase",
                                       returnsList = true,
+                                      returnsNullable = false,
                                       params = listOf(
                                           FinderParamSpec(name = "x", type = "String")
                                       )))),
@@ -552,6 +563,7 @@ class DBEntitySpew : Spew {
                            FinderSpec(definedFinderName = "findAll",
                                       generatedFinderName = "findAll",
                                       returnsList = true,
+                                      returnsNullable = false,
                                       params = listOf()))))
     }
 

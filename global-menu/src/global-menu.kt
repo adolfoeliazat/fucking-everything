@@ -179,7 +179,7 @@ internal object GlobalMenuPile {
 //}
 
 class StartGlobalMenu : Application() {
-    private val config: GlobalMenuConfig = BotinokGlobalMenuConfig()
+    private val config: GlobalMenuConfig = PhizdetsGlobalMenuConfig()
     private var vbox by notNullOnce<VBox>()
     private var listView by notNullOnce<ListView<GlobalMenuItem>>()
     private var scene by notNullOnce<Scene>()
