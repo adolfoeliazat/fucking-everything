@@ -5,6 +5,7 @@ import de.jensd.fx.glyphs.emojione.EmojiOneView
 import de.jensd.fx.glyphs.weathericons.WeatherIcon
 import javafx.application.Application
 import javafx.application.Platform
+import javafx.beans.value.ChangeListener
 import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
@@ -19,6 +20,7 @@ import javafx.scene.control.*
 import javafx.scene.image.Image
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
+import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
@@ -27,12 +29,18 @@ import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.stage.WindowEvent
 import javafx.util.Callback
+import org.jnativehook.GlobalScreen
+import org.jnativehook.keyboard.NativeKeyAdapter
+import org.jnativehook.keyboard.NativeKeyEvent
+import org.jnativehook.mouse.NativeMouseEvent
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import vgrechka.*
 import java.awt.Rectangle
 import java.awt.Robot
 import java.awt.Toolkit.getDefaultToolkit
 import java.io.File
+import java.util.logging.Level
+import java.util.logging.Logger
 import javax.imageio.ImageIO
 import kotlin.concurrent.thread
 import kotlin.properties.Delegates.notNull
@@ -43,6 +51,7 @@ object BotinokStuff {
     val handleSize = boxEdgeSize * 2
     val obscureConst1 = (handleSize - boxEdgeSize) / 2
     val obscureConst2 = boxEdgeSize + obscureConst1
+    var botinokBrowserSceneController by notNull<StartBotinok.BotinokBrowserSceneController>()
 }
 
 private class NavigationTreeNode {
@@ -114,9 +123,6 @@ class StartBotinok : Application() {
             seed()
         }
 
-
-
-
         Thread.setDefaultUncaughtExceptionHandler {thread, exception ->
             try {
                 Platform.runLater {
@@ -144,6 +150,9 @@ class StartBotinok : Application() {
         this.primaryStage = primaryStage
         goBananas2()
 
+        primaryStage.setOnShown {
+            handleKey2()
+        }
         primaryStage.show()
     }
 
@@ -175,9 +184,13 @@ class StartBotinok : Application() {
         @FXML lateinit var fuckAroundButton1: Button
         @FXML lateinit var fuckAroundButton2: Button
         @FXML lateinit var navigationTreeView: TreeView<NavigationTreeNode>
+        @FXML lateinit var splitPane: SplitPane
+        @FXML lateinit var detailsPane: AnchorPane
 
         @Suppress("unused")
         fun initialize() {
+            BotinokStuff.botinokBrowserSceneController = this
+            navigationTreeView.isShowRoot = false
             navigationTreeView.setCellFactory {
                 object : TreeCell<NavigationTreeNode>() {
                     override fun updateItem(item: NavigationTreeNode?, empty: Boolean) {
@@ -193,6 +206,10 @@ class StartBotinok : Application() {
                         graphic = EmojiOneView(EmojiOne.AIRPLANE)
                     }
                 }
+            }
+
+            class BotinokWorld {
+
             }
 
             navigationTreeView.root = object : TreeItem<NavigationTreeNode>(NavigationTreeNode("Freaking root")) {
@@ -423,12 +440,6 @@ class StartBotinok : Application() {
             }
         }
 
-        fun noise(s: String) {
-            if (false) {
-                clog(s)
-            }
-        }
-
         private fun action_save() {
             JFXStuff.infoAlert("Fuck you")
         }
@@ -605,25 +616,55 @@ class StartBotinok : Application() {
     }
 
     private fun installKeyboardHook() {
-//        val logger = Logger.getLogger(GlobalScreen::class.java.`package`.name)
-//        logger.level = Level.WARNING
-//        logger.useParentHandlers = false
-//
-//        GlobalScreen.registerNativeHook()
-//
-//        GlobalScreen.addNativeKeyListener(object : NativeKeyAdapter() {
-//            override fun nativeKeyPressed(e: NativeKeyEvent) {
-//                try {
-//                    if (e.modifiers.and(NativeMouseEvent.CTRL_L_MASK) == NativeMouseEvent.CTRL_L_MASK) {
-//                        if (e.keyCode == something) {
-//                            doSomething()
-//                        }
-//                    }
-//                } catch(e: Throwable) {
-//                    e.printStackTrace()
-//                }
-//            }
-//        })
+        val logger = Logger.getLogger(GlobalScreen::class.java.`package`.name)
+        logger.level = Level.WARNING
+        logger.useParentHandlers = false
+
+        GlobalScreen.registerNativeHook()
+
+        GlobalScreen.addNativeKeyListener(object : NativeKeyAdapter() {
+            override fun nativeKeyPressed(e: NativeKeyEvent) {
+                try {
+                    if (e.modifiers.and(NativeMouseEvent.CTRL_L_MASK) == NativeMouseEvent.CTRL_L_MASK) {
+                        if (e.keyCode == NativeKeyEvent.VC_2) {
+                            handleKey2()
+                        }
+                    }
+                } catch(e: Throwable) {
+                    e.printStackTrace()
+                }
+            }
+        })
+    }
+
+    private fun handleKey2() {
+        JFXStuff.later {
+            val tmpImgPath = "$tmpDirPath/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
+
+            run {
+                val image = Robot().createScreenCapture(Rectangle(getDefaultToolkit().screenSize))
+                ImageIO.write(image, "png", File(tmpImgPath))
+                noise("Saved screenshot")
+            }
+
+            primaryStage.isIconified = true
+            primaryStage.isIconified = false
+
+            val image = Image("file:///$tmpImgPath")
+            val detailsPane = BotinokStuff.botinokBrowserSceneController.detailsPane
+            val scrollPane = ScrollPane()
+            AnchorPane.setTopAnchor(scrollPane, 0.0)
+            AnchorPane.setRightAnchor(scrollPane, 0.0)
+            AnchorPane.setBottomAnchor(scrollPane, 0.0)
+            AnchorPane.setLeftAnchor(scrollPane, 0.0)
+            detailsPane.children.clear()
+            detailsPane.children += scrollPane
+
+            val canvas = Canvas(image.width, image.height)
+            scrollPane.content = canvas
+            val gc = canvas.graphicsContext2D
+            gc.drawImage(image, 0.0, 0.0)
+        }
     }
 
     companion object {
@@ -634,6 +675,12 @@ class StartBotinok : Application() {
     }
 }
 
+
+private fun noise(s: String) {
+    if (true) {
+        clog(s)
+    }
+}
 
 
 

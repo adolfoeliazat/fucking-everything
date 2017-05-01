@@ -1,6 +1,7 @@
 package vgrechka
 
 import com.google.common.collect.MapMaker
+import javafx.application.Platform
 import javafx.beans.Observable
 import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.control.Alert
@@ -20,6 +21,10 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.isAccessible
 
 object JFXStuff {
+    fun later(block: () -> Unit) {
+        Platform.runLater(block)
+    }
+
     fun infoAlert(headerText: String) {
         val alert = Alert(Alert.AlertType.INFORMATION)
         alert.title = "Fucking Information"
