@@ -146,8 +146,9 @@ enum class RegionHandle {
 sealed class FuckingNode {
     class Root : FuckingNode()
 
-    class Arena(val name: String, val image: Image) : FuckingNode() {
-        var treeItem by notNullOnce<TreeItem<FuckingNode>>()
+    class Arena(val treeItem: TreeItem<FuckingNode>,
+                val name: String,
+                val image: Image) : FuckingNode() {
 
         val regions: List<Region>
             get() {
@@ -159,13 +160,18 @@ sealed class FuckingNode {
 
 }
 
-class Region(val name: String,
+data class Region(val treeItem: TreeItem<FuckingNode>,
+             val name: String,
              val arena: Arena,
-             val x: Int,
-             val y: Int,
-             val w: Int,
-             val h: Int) : FuckingNode() {
+             var x: Int,
+             var y: Int,
+             var w: Int,
+             var h: Int) : FuckingNode() {
+
     override fun toString() = name
+
+    fun isHit(testX: Double, testY: Double) =
+        testX >= x && testX <= x + w - 1 && testY >= y && testY <= y + h - 1
 }
 
 class StartBotinok : Application() {
@@ -244,69 +250,125 @@ class StartBotinok : Application() {
         @FXML lateinit var detailsPane: AnchorPane
         var stuff by notNullOnce<goBananas2>()
         var currentContextMenu: ContextMenu? = null
-        var selectedArena: FuckingNode.Arena? = null
-        var selectedRegion: Region? = null
-        var canvas by notNull<Canvas>()
         var selectedRegionHandles = setOf<RegionHandle>()
         var nextInitialRegionLocationIndex = 0
+        var canvasContextMenu by notNull<ContextMenu>()
+        var boxContextMenu by notNull<ContextMenu>()
+        var operationStartRegionParams by notNull<Region>()
+        var operationStartMouseX = 0.0
+        var operationStartMouseY = 0.0
+
+        class RegionLocation(val x: Int, val y: Int, val w: Int, val h: Int)
 
         val initialRegionLocations = listOf(
             RegionLocation(x = 20, y = 20, w = 150, h = 50),
             RegionLocation(x = 100, y = 100, w = 50, h = 150)
         )
 
-        class RegionLocation(val x: Int, val y: Int, val w: Int, val h: Int)
+        val canvas by relazy {
+            detailsPane.children.clear()
+            val scrollPane = ScrollPane()
+            AnchorPane.setTopAnchor(scrollPane, 0.0)
+            AnchorPane.setRightAnchor(scrollPane, 0.0)
+            AnchorPane.setBottomAnchor(scrollPane, 0.0)
+            AnchorPane.setLeftAnchor(scrollPane, 0.0)
+            detailsPane.children += scrollPane
+            val canvas = Canvas(selectedArena().image.width, selectedArena().image.height)
+            scrollPane.content = canvas
 
-        fun onTreeSelectionChanged(item: TreeItem<FuckingNode>?) {
-            if (item == null) {
-                selectedArena = null
-                selectedRegion = null
+            canvas.addEventHandler(MouseEvent.MOUSE_PRESSED) {e->
+                if (e.button == MouseButton.PRIMARY) {
+                    // noise("MOUSE_PRESSED: e.x = ${e.x}; e.y = ${e.y}")
+                    hideContextMenus()
+                    val hitRegion: Region? = run {
+                        o@for (region in selectedArena().regions) {
+                            for (handle in RegionHandle.values()) {
+                                if (handle.rectForRegion(region).contains(e.x, e.y)) {
+                                    selectedRegionHandles = setOf(handle)
+                                    return@run region
+                                }
+                            }
+                            if (region.isHit(e.x, e.y)) {
+                                selectedRegionHandles = RegionHandle.values().toSet()
+                                return@run region
+                            }
+                        }
+                        null
+                    }
+                    if (hitRegion == null) {
+                        selectTreeItem(selectedArena().treeItem)
+                    } else {
+                        selectTreeItem(hitRegion.treeItem)
+                        operationStartRegionParams = hitRegion.copy()
+                        operationStartMouseX = e.x
+                        operationStartMouseY = e.y
+                        noise("operationStartMouseX = $operationStartMouseX; operationStartMouseY = $operationStartMouseY")
+                    }
+                }
+                drawArena()
+            }
+
+            canvas.addEventHandler(MouseEvent.MOUSE_RELEASED) {e->
+                drawArena()
+            }
+
+            canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED) {e->
+                if (e.button == MouseButton.PRIMARY) {
+                    // noise("MOUSE_DRAGGED: e.x = ${e.x}; e.y = ${e.y}")
+                    val selectedRegion = selectedRegion()
+                    if (selectedRegion != null) {
+                        val dx = Math.round(e.x - operationStartMouseX).toInt()
+                        val dy = Math.round(e.y - operationStartMouseY).toInt()
+                        noise("dx = $dx; dy = $dy")
+                        val dragMutators = selectedRegionHandles.flatMap{it.dragMutators}.toSet()
+                        val points = BoxPoints(operationStartRegionParams.x, operationStartRegionParams.y, operationStartRegionParams.x + operationStartRegionParams.w - 1, operationStartRegionParams.y + operationStartRegionParams.h - 1)
+                        dragMutators.forEach {it.mutate(points, dx, dy)}
+                        selectedRegion.x = points.minX
+                        selectedRegion.y = points.minY
+                        selectedRegion.w = points.maxX - points.minX + 1
+                        selectedRegion.h = points.maxY - points.minY + 1
+                        drawArena()
+                    }
+                }
+            }
+
+            canvas
+        }
+
+        private fun hideContextMenus() {
+            // TODO:vgrechka ...
+//            canvasContextMenu.hide()
+//            boxContextMenu.hide()
+        }
+
+        fun selectTreeItem(treeItem: TreeItem<FuckingNode>) {
+            navigationTreeView.selectionModel.select(treeItem)
+        }
+
+        fun onTreeSelectionChanged(oldItem: TreeItem<FuckingNode>?, newItem: TreeItem<FuckingNode>?) {
+            if (newItem == null) {
                 detailsPane.children.clear()
+                relazy.reset(this::canvas)
                 return
             }
 
-            val newSelectedArena = selectedArena()
-            // noise("newSelectedArena = $newSelectedArena")
-            val selectedArenaChanged = newSelectedArena != selectedArena
-            // noise("selectedArenaChanged = $selectedArenaChanged")
-            if (selectedArenaChanged) {
-                selectedArena = newSelectedArena
-                detailsPane.children.clear()
-                val scrollPane = ScrollPane()
-                AnchorPane.setTopAnchor(scrollPane, 0.0)
-                AnchorPane.setRightAnchor(scrollPane, 0.0)
-                AnchorPane.setBottomAnchor(scrollPane, 0.0)
-                AnchorPane.setLeftAnchor(scrollPane, 0.0)
-                detailsPane.children += scrollPane
-                canvas = Canvas(newSelectedArena.image.width, newSelectedArena.image.height)
-                scrollPane.content = canvas
-            }
-
-            val value = item.value
-            exhaustive=when {
-                value is Region -> {
-                    selectedRegion = value
-                    selectedRegionHandles = RegionHandle.values().toSet()
-                }
-                else -> {
-                    selectedRegion = null
-                }
+            if (oldItem?.region != selectedRegion()) {
+                selectedRegionHandles = RegionHandle.values().toSet()
             }
 
             drawArena()
         }
 
         fun drawArena() {
-            val arena = selectedArena!!
             val gc = canvas.graphicsContext2D
-            gc.drawImage(arena.image, 0.0, 0.0)
-            arena.regions.forEach {region->
+            gc.drawImage(selectedArena().image, 0.0, 0.0)
+            selectedArena().regions.forEach {region->
 //                run { // Area to be captured by the region
 //                    gc.fill = Color.BLUE
 //                    gc.fillRect(region.x.toDouble(), region.y.toDouble(), region.w.toDouble(), region.h.toDouble())
 //                }
 
-                val isFocused = selectedRegion === region
+                val isFocused = selectedRegion() === region
 
                 val darkPaint = Color(0.5, 0.0, 0.0, 1.0)
                 val brightPaint = Color(1.0, 0.0, 0.0, 1.0)
@@ -337,10 +399,11 @@ class StartBotinok : Application() {
                 val xywh = initialRegionLocations[nextInitialRegionLocationIndex]
                 if (++nextInitialRegionLocationIndex > initialRegionLocations.lastIndex)
                     nextInitialRegionLocationIndex = 0
-                val newRegion = Region("Region ${arena.regions.size + 1}", arena,
+                val regionTreeItem = TreeItem<FuckingNode>()
+                val newRegion = Region(regionTreeItem, "Region ${arena.regions.size + 1}", arena,
                                        x = xywh.x, y = xywh.y,
                                        w = xywh.w, h = xywh.h)
-                val regionTreeItem = TreeItem<FuckingNode>(newRegion)
+                regionTreeItem.value = newRegion
                 arena.treeItem.children += regionTreeItem
                 arena.treeItem.expandedProperty().set(true)
 
@@ -352,8 +415,22 @@ class StartBotinok : Application() {
         }
 
         private fun selectedArena(): FuckingNode.Arena {
-            val item = navigationTreeView.selectionModel.selectedItem
-            val value = item.value!!
+            return selectedTreeItem()!!.arena
+        }
+
+        private fun selectedRegion(): Region? {
+            return selectedTreeItem()?.region
+        }
+
+        private val TreeItem<FuckingNode>.region: Region? get() {
+            return value as? Region
+        }
+
+        private fun selectedTreeItem(): TreeItem<FuckingNode>? =
+            navigationTreeView.selectionModel.selectedItem
+
+        private val TreeItem<FuckingNode>.arena: FuckingNode.Arena get() {
+            val value = value!!
             val arena: FuckingNode.Arena = when (value) {
                 is FuckingNode.Root -> wtf("c420c2f1-7c89-45aa-89b6-0aee7faa4446")
                 is FuckingNode.Arena -> value
@@ -382,8 +459,8 @@ class StartBotinok : Application() {
                 }
             }
 
-            navigationTreeView.selectionModel.selectedItemProperty().addListener {_, _, newValue ->
-                onTreeSelectionChanged(newValue)
+            navigationTreeView.selectionModel.selectedItemProperty().addListener {_, oldValue, newValue ->
+                onTreeSelectionChanged(oldValue, newValue)
             }
 
             navigationTreeView.isShowRoot = false
@@ -432,349 +509,6 @@ class StartBotinok : Application() {
         }
     }
 
-    inner class goBananas {
-        private val vbox: VBox
-        private val tmpImgPath = "$tmpDirPath/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
-        private var stackPane: StackPane
-        private var selectedHandles = setOf<Handle>()
-        private var operationStartMouseX = 0.0
-        private var operationStartMouseY = 0.0
-        private var operationStartBoxParams by notNull<Box>()
-        private val darkPaint = Color(0.5, 0.0, 0.0, 1.0)
-        private val brightPaint = Color(1.0, 0.0, 0.0, 1.0)
-        private var image by notNull<Image>()
-        private var newBoxX by notNull<Int>()
-        private var newBoxY by notNull<Int>()
-        private var canvasContextMenu by notNull<ContextMenu>()
-        private var boxContextMenu by notNull<ContextMenu>()
-        private var play by notNull<Play>()
-        private var canvas by notNull<Canvas>()
-        private var arenaListView by notNull<ListView<Arena>>()
-
-        init {
-            vbox = VBox(8.0)
-            primaryStage.scene = Scene(vbox)
-
-            // noise("tmpImgPath = $tmpImgPath")
-            val buttonBox = HBox(8.0)
-            vbox.children += buttonBox
-
-            fun addButton(title: String, handler: () -> Unit) {
-                buttonBox.children += Button(title)-{o->
-                    o.onAction = EventHandler {
-                        handler()
-                    }
-                }
-            }
-
-            addButton("Save", this::action_save)
-            addButton("Fuck Around 1", this::action_fuckAround1)
-            addButton("Fuck Around 2", this::action_fuckAround2)
-
-            val splitPane = SplitPane()
-            vbox.children += splitPane
-
-            val navigationTreeView = TreeView<NavigationTreeNode>()
-            splitPane.items += navigationTreeView
-            navigationTreeView.prefWidth = 50.0
-            splitPane.setDividerPosition(0, 0.1)
-
-            splitPane.items += ScrollPane()
-
-            stackPane = StackPane()
-        }
-
-        fun initArenaListView() {
-            arenaListView = ListView<Arena>()
-            arenaListView.selectionModel.selectedItems.addListener(ListChangeListener {e->
-                if (e.list.size == 0) {
-                    play.editing.selectedArena = null
-                }
-                else if (e.list.size == 1) {
-                    val item = e.list.first()
-                    noise("arenaListView selection changed: $item")
-                    play.editing.selectedArena = item
-                }
-                else {
-                    wtf("19a359d5-77c2-4f2e-bb8f-2d36cc89d605")
-                }
-            })
-
-
-            fun addItem(menu: ContextMenu, title: String, handler: () -> Unit) {
-                menu.items += MenuItem(title)-{o->
-                    o.onAction = EventHandler {e->
-                        handler()
-                    }
-                }
-            }
-
-            arenaListView.setOnContextMenuRequested {e->
-                val menu = ContextMenu()
-                addItem(menu, "New", this::action_newArena)
-
-                if (arenaListView.selectionModel.selectedItems.isNotEmpty()) {
-                    addItem(menu, "Rename", this::action_renameArena)
-                    addItem(menu, "Delete", this::action_deleteArena)
-                }
-
-                menu.show(canvas, e.screenX, e.screenY)
-            }
-        }
-
-        private fun addNewArena() {
-            val arena = Arena()-{o->
-                o.title = "Unfuckingtitled arena ${play.arenas.size + 1}"
-            }
-            play.arenas += arena
-            play.editing.selectedArena = arena
-        }
-
-        private fun hideContextMenus() {
-            canvasContextMenu.hide()
-            boxContextMenu.hide()
-        }
-
-        private fun makeMenuItem(onAction: () -> Unit): MenuItem {
-            return MenuItem("Create Box")-{o->
-                o.onAction = EventHandler {e->
-                    onAction()
-                }
-            }
-        }
-
-        private fun drawShit_killme() {
-            val b = BotinokStuff
-
-            printState()
-            val gc = canvas.graphicsContext2D
-
-            val arena = play.editing.selectedArena
-            if (arena == null) {
-                gc.fill = Color.WHITE
-                gc.fillRect(0.0, 0.0, canvas.width, canvas.height)
-                return
-            }
-
-            gc.drawImage(image, 0.0, 0.0)
-            arena.boxes.forEach {box->
-//            run { // Area to be captured by the box
-//                gc.fill = Color.BLUE
-//                gc.fillRect(box.x.toDouble(), box.y.toDouble(), box.w.toDouble(), box.h.toDouble())
-//            }
-
-                gc.stroke = when {
-                    box === arena.editing.selectedBox -> darkPaint
-                    else -> brightPaint
-                }
-                gc.lineWidth = b.boxEdgeSize
-                gc.strokeRect(box.x.toDouble() - b.boxEdgeSize / 2, box.y.toDouble() - b.boxEdgeSize / 2, box.w.toDouble() + b.boxEdgeSize, box.h.toDouble() + b.boxEdgeSize)
-
-                if (box === arena.editing.selectedBox) {
-                    for (handle in Handle.values()) {
-                        gc.fill = when {
-                            handle in selectedHandles -> brightPaint
-                            else -> darkPaint
-                        }
-                        val rect = handle.rectForBox(box)
-                        gc.fillRect(rect.minX, rect.minY, rect.width, rect.height)
-                    }
-                }
-            }
-        }
-
-        private fun action_newArena() {
-            addNewArena()
-        }
-
-        private fun action_renameArena() {
-            val arena = selectedArenaBang()
-            JFXStuff.inputBox("So, how it should be named?", arena.title)?.let {
-                arena.title = it
-            }
-        }
-
-        private fun action_deleteArena() {
-            val arena = selectedArenaBang()
-            if (JFXStuff.confirm("Arena will be deleted: ${arena.title}")) {
-                play.arenas -= arena
-            }
-        }
-
-        private fun action_save() {
-            JFXStuff.infoAlert("Fuck you")
-        }
-
-        private fun action_fuckAround1() {
-            action_deleteArena()
-        }
-
-        private fun action_fuckAround2() {
-            thread {
-                var index = 0
-                while (true) {
-                    Thread.sleep(1000)
-                    Platform.runLater {
-                        play.editing.selectedArena = play.arenas[index]
-                        if (++index > play.arenas.lastIndex)
-                            index = 0
-                    }
-                }
-            }
-        }
-
-        fun takeScreenshot() {
-            val image = Robot().createScreenCapture(Rectangle(getDefaultToolkit().screenSize))
-            ImageIO.write(image, "png", File(tmpImgPath))
-        }
-
-        fun fuckingShit1() {
-            stackPane.children.clear()
-
-            initCanvas()
-
-            play = Play()
-            jfxProperty(play.editing::selectedArena).addListener {_, oldValue, newValue ->
-                // noise("selectedArena changed: $oldValue --> $newValue")
-                noise("selectedArena changed: $newValue")
-                arenaListView.selectionModel.select(newValue)
-                drawShit_killme()
-            }
-
-            arenaListView.items = play.arenas
-
-            run { // Test initial shit
-                addNewArena()
-                play.arenas.last()-{o->
-                    o.title = "Fucking arena"
-                    o.boxes-{a->
-                        a += Box()-{o->
-                            o.x = 25; o.y = 25
-                            o.w = 200; o.h = 100
-                        }
-                        a += Box()-{o->
-                            o.x = 400; o.y = 150
-                            o.w = 50; o.h = 150
-                        }
-                    }
-                }
-
-                addNewArena()
-                play.arenas.last()-{o->
-                    o.title = "Shitty arena"
-                    o.boxes-{a->
-                        a += Box()-{o->
-                            o.x = 200; o.y = 100
-                            o.w = 150; o.h = 250
-                        }
-                    }
-                }
-
-                drawShit_killme()
-            }
-
-        }
-
-        fun initCanvas() {
-            image = Image("file:///$tmpImgPath")
-            canvas = Canvas(image.width, image.height)
-            stackPane.children += canvas
-
-            canvasContextMenu = ContextMenu()
-            canvasContextMenu.items += makeMenuItem {
-                selectedArenaBang().boxes += Box()-{o->
-                    o.x = newBoxX; o.y = newBoxY
-                    o.w = 100; o.h = 100
-                }
-                drawShit_killme()
-            }
-
-            boxContextMenu = ContextMenu()
-            boxContextMenu.items += MenuItem("Delete")-{o->
-                o.onAction = EventHandler {e->
-                    selectedArenaBang().boxes -= selectedArenaBang().editing.selectedBox!!
-                    drawShit_killme()
-                }
-            }
-
-            canvas.setOnContextMenuRequested {e->
-                val p = canvas.screenToLocal(e.screenX, e.screenY)
-                val hitBox = selectedArenaBang().boxes.find {it.isHit(p.x, p.y)}
-                val menuToShow = when {
-                    hitBox != null -> {
-                        selectedArenaBang().editing.selectedBox = hitBox
-                        drawShit_killme()
-                        boxContextMenu
-                    }
-                    else -> {
-                        newBoxX = Math.round(p.x).toInt()
-                        newBoxY = Math.round(p.y).toInt()
-                        canvasContextMenu
-                    }
-                }
-
-                hideContextMenus()
-                menuToShow.show(canvas, e.screenX, e.screenY)
-            }
-
-            canvas.addEventHandler(MouseEvent.MOUSE_PRESSED) {e->
-                if (e.button == MouseButton.PRIMARY) {
-                    hideContextMenus()
-                    selectedArenaBang().editing.selectedBox = null
-                    o@for (box in selectedArenaBang().boxes) {
-                        for (handle in Handle.values()) {
-                            if (handle.rectForBox(box).contains(e.x, e.y)) {
-                                selectedArenaBang().editing.selectedBox = box
-                                selectedHandles = setOf(handle)
-                                break@o
-                            }
-                        }
-                        if (box.isHit(e.x, e.y)) {
-                            selectedArenaBang().editing.selectedBox = box
-                            selectedHandles = Handle.values().toSet()
-                            break@o
-                        }
-                    }
-                    selectedArenaBang().editing.selectedBox?.let {
-                        operationStartBoxParams = it.copy()
-                        operationStartMouseX = e.x
-                        operationStartMouseY = e.y
-                    }
-                }
-                drawShit_killme()
-            }
-
-            canvas.addEventHandler(MouseEvent.MOUSE_RELEASED) {e->
-                drawShit_killme()
-            }
-
-            canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED) {e->
-                if (e.button == MouseButton.PRIMARY) {
-                    val selectedBox = selectedArenaBang().editing.selectedBox
-                    if (selectedBox != null) {
-                        val dx = Math.round(e.x - operationStartMouseX).toInt()
-                        val dy = Math.round(e.y - operationStartMouseY).toInt()
-                        val dragMutators = selectedHandles.flatMap{it.dragMutators}.toSet()
-                        val points = BoxPoints(operationStartBoxParams.x, operationStartBoxParams.y, operationStartBoxParams.x + operationStartBoxParams.w - 1, operationStartBoxParams.y + operationStartBoxParams.h - 1)
-                        dragMutators.forEach {it.mutate(points, dx, dy)}
-                        selectedBox.x = points.minX
-                        selectedBox.y = points.minY
-                        selectedBox.w = points.maxX - points.minX + 1
-                        selectedBox.h = points.maxY - points.minY + 1
-                        drawShit_killme()
-                    }
-                }
-            }
-        }
-
-        private fun selectedArenaBang() = play.editing.selectedArena!!
-
-        fun printState() {
-//        noise("selectedBox = ${if (selectedBox != null) "<something>" else "null"}"
-//                 + "; selectedHandles = $selectedHandles"
-//                 + "; selectionMode = $selectionMode")
-        }
-    }
 
     private fun installKeyboardHook() {
         val logger = Logger.getLogger(GlobalScreen::class.java.`package`.name)
@@ -818,9 +552,9 @@ class StartBotinok : Application() {
                 noise("Saved screenshot")
             }
 
-            val arena = FuckingNode.Arena("Arena ${getArenaCount() + 1}", Image("file:///$tmpImgPath"))
-            val treeItem = TreeItem<FuckingNode>(arena)
-            arena.treeItem = treeItem
+            val treeItem = TreeItem<FuckingNode>()
+            val arena = FuckingNode.Arena(treeItem, "Arena ${getArenaCount() + 1}", Image("file:///$tmpImgPath"))
+            treeItem.value = arena
             bananas.rootNode.children.add(treeItem)
             co.navigationTreeView.scrollTo(bananas.rootNode.children.lastIndex)
             selectLastTreeItem()
@@ -867,7 +601,6 @@ private fun addMenuItem(menu: ContextMenu, title: String, handler: () -> Unit) {
         }
     }
 }
-
 
 
 
