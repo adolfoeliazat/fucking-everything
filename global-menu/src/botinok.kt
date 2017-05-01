@@ -48,9 +48,9 @@ object BotinokStuff {
     val obscureConst2 = boxEdgeSize + obscureConst1
 }
 
-private class BoxPoints(var minX: Int, var minY: Int, var maxX: Int, var maxY: Int)
+class BoxPoints(var minX: Int, var minY: Int, var maxX: Int, var maxY: Int)
 
-private enum class DragMutator {
+enum class DragMutator {
     TOP {override fun mutate(points: BoxPoints, dx: Int, dy: Int) {points.minY += dy}},
     RIGHT {override fun mutate(points: BoxPoints, dx: Int, dy: Int) {points.maxX += dx}},
     BOTTOM {override fun mutate(points: BoxPoints, dx: Int, dy: Int) {points.maxY += dy}},
@@ -59,7 +59,7 @@ private enum class DragMutator {
     abstract fun mutate(points: BoxPoints, dx: Int, dy: Int)
 }
 
-private enum class Handle {
+enum class Handle {
     TOP_LEFT {
         override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize, box.y.toDouble() - b.obscureConst2 - b.obscureConst1, b.handleSize, b.handleSize)
         override val dragMutators = setOf(DragMutator.TOP, DragMutator.LEFT)
@@ -101,12 +101,71 @@ private enum class Handle {
     abstract val dragMutators: Set<DragMutator>
 }
 
+enum class RegionHandle {
+    TOP_LEFT {
+        override fun rectForRegion(box: Region) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize, box.y.toDouble() - b.obscureConst2 - b.obscureConst1, b.handleSize, b.handleSize)
+        override val dragMutators = setOf(DragMutator.TOP, DragMutator.LEFT)
+    },
+    TOP {
+        override fun rectForRegion(box: Region) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.w / 2 - b.handleSize / 2, box.y.toDouble() - b.obscureConst2 - b.obscureConst1, b.handleSize, b.handleSize)
+        override val dragMutators = setOf(DragMutator.TOP)
+    },
+    TOP_RIGHT {
+        override fun rectForRegion(box: Region) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.w, box.y.toDouble() - b.obscureConst2 - b.obscureConst1, b.handleSize, b.handleSize)
+        override val dragMutators = setOf(DragMutator.TOP, DragMutator.RIGHT)
+    },
+    RIGHT {
+        override fun rectForRegion(box: Region) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.w, box.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.h / 2 + b.handleSize / 2, b.handleSize, b.handleSize)
+        override val dragMutators = setOf(DragMutator.RIGHT)
+    },
+    BOTTOM_RIGHT {
+        override fun rectForRegion(box: Region) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.w, box.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.h + b.handleSize, b.handleSize, b.handleSize)
+        override val dragMutators = setOf(DragMutator.BOTTOM, DragMutator.RIGHT)
+    },
+    BOTTOM {
+        override fun rectForRegion(box: Region) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.w / 2 - b.handleSize / 2, box.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.h + b.handleSize, b.handleSize, b.handleSize)
+        override val dragMutators = setOf(DragMutator.BOTTOM)
+    },
+    BOTTOM_LEFT {
+        override fun rectForRegion(box: Region) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize, box.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.h + b.handleSize, b.handleSize, b.handleSize)
+        override val dragMutators = setOf(DragMutator.BOTTOM, DragMutator.LEFT)
+    },
+    LEFT {
+        override fun rectForRegion(box: Region) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize, box.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.h / 2 + b.handleSize / 2, b.handleSize, b.handleSize)
+        override val dragMutators = setOf(DragMutator.LEFT)
+    };
+
+    companion object {
+        private val b = BotinokStuff
+    }
+
+    abstract fun rectForRegion(box: Region): Rectangle2D
+    abstract val dragMutators: Set<DragMutator>
+}
+
 sealed class FuckingNode {
     class Root : FuckingNode()
 
     class Arena(val name: String, val image: Image) : FuckingNode() {
+        var treeItem by notNullOnce<TreeItem<FuckingNode>>()
+
+        val regions: List<Region>
+            get() {
+                return treeItem.children.map {it.value as Region}
+            }
+
         override fun toString() = name
     }
+
+}
+
+class Region(val name: String,
+             val arena: Arena,
+             val x: Int,
+             val y: Int,
+             val w: Int,
+             val h: Int) : FuckingNode() {
+    override fun toString() = name
 }
 
 class StartBotinok : Application() {
@@ -148,7 +207,7 @@ class StartBotinok : Application() {
         bananas = goBananas2()
 
         primaryStage.setOnShown {
-            handleKey2()
+            simulateSomeUserActions()
         }
         primaryStage.show()
     }
@@ -177,40 +236,152 @@ class StartBotinok : Application() {
     }
 
     class BotinokBrowserSceneController {
-        var stuff by notNullOnce<goBananas2>()
         @FXML lateinit var someTextField: TextField
         @FXML lateinit var fuckAroundButton1: Button
         @FXML lateinit var fuckAroundButton2: Button
         @FXML lateinit var navigationTreeView: TreeView<FuckingNode>
         @FXML lateinit var splitPane: SplitPane
         @FXML lateinit var detailsPane: AnchorPane
+        var stuff by notNullOnce<goBananas2>()
+        var currentContextMenu: ContextMenu? = null
+        var selectedArena: FuckingNode.Arena? = null
+        var selectedRegion: Region? = null
+        var canvas by notNull<Canvas>()
+        var selectedRegionHandles = setOf<RegionHandle>()
+        var nextInitialRegionLocationIndex = 0
+
+        val initialRegionLocations = listOf(
+            RegionLocation(x = 20, y = 20, w = 150, h = 50),
+            RegionLocation(x = 100, y = 100, w = 50, h = 150)
+        )
+
+        class RegionLocation(val x: Int, val y: Int, val w: Int, val h: Int)
 
         fun onTreeSelectionChanged(item: TreeItem<FuckingNode>?) {
-            detailsPane.children.clear()
-            if (item == null) return
+            if (item == null) {
+                selectedArena = null
+                selectedRegion = null
+                detailsPane.children.clear()
+                return
+            }
+
+            val newSelectedArena = selectedArena()
+            // noise("newSelectedArena = $newSelectedArena")
+            val selectedArenaChanged = newSelectedArena != selectedArena
+            // noise("selectedArenaChanged = $selectedArenaChanged")
+            if (selectedArenaChanged) {
+                selectedArena = newSelectedArena
+                detailsPane.children.clear()
+                val scrollPane = ScrollPane()
+                AnchorPane.setTopAnchor(scrollPane, 0.0)
+                AnchorPane.setRightAnchor(scrollPane, 0.0)
+                AnchorPane.setBottomAnchor(scrollPane, 0.0)
+                AnchorPane.setLeftAnchor(scrollPane, 0.0)
+                detailsPane.children += scrollPane
+                canvas = Canvas(newSelectedArena.image.width, newSelectedArena.image.height)
+                scrollPane.content = canvas
+            }
 
             val value = item.value
-            exhaustive=when (value) {
-                is FuckingNode.Root -> {}
+            exhaustive=when {
+                value is Region -> {
+                    selectedRegion = value
+                    selectedRegionHandles = RegionHandle.values().toSet()
+                }
+                else -> {
+                    selectedRegion = null
+                }
+            }
 
-                is FuckingNode.Arena -> {
-                    val image = value.image
-                    val scrollPane = ScrollPane()
-                    AnchorPane.setTopAnchor(scrollPane, 0.0)
-                    AnchorPane.setRightAnchor(scrollPane, 0.0)
-                    AnchorPane.setBottomAnchor(scrollPane, 0.0)
-                    AnchorPane.setLeftAnchor(scrollPane, 0.0)
-                    detailsPane.children += scrollPane
+            drawArena()
+        }
 
-                    val canvas = Canvas(image.width, image.height)
-                    scrollPane.content = canvas
-                    val gc = canvas.graphicsContext2D
-                    gc.drawImage(image, 0.0, 0.0)
+        fun drawArena() {
+            val arena = selectedArena!!
+            val gc = canvas.graphicsContext2D
+            gc.drawImage(arena.image, 0.0, 0.0)
+            arena.regions.forEach {region->
+//                run { // Area to be captured by the region
+//                    gc.fill = Color.BLUE
+//                    gc.fillRect(region.x.toDouble(), region.y.toDouble(), region.w.toDouble(), region.h.toDouble())
+//                }
+
+                val isFocused = selectedRegion === region
+
+                val darkPaint = Color(0.5, 0.0, 0.0, 1.0)
+                val brightPaint = Color(1.0, 0.0, 0.0, 1.0)
+                gc.stroke = when {
+                    isFocused -> darkPaint
+                    else -> brightPaint
+                }
+                val b = BotinokStuff
+                gc.lineWidth = b.boxEdgeSize
+                gc.strokeRect(region.x.toDouble() - b.boxEdgeSize / 2, region.y.toDouble() - b.boxEdgeSize / 2, region.w.toDouble() + b.boxEdgeSize, region.h.toDouble() + b.boxEdgeSize)
+
+                if (isFocused) {
+                    for (handle in RegionHandle.values()) {
+                        gc.fill = when {
+                            handle in selectedRegionHandles -> brightPaint
+                            else -> darkPaint
+                        }
+                        val rect = handle.rectForRegion(region)
+                        gc.fillRect(rect.minX, rect.minY, rect.width, rect.height)
+                    }
                 }
             }
         }
 
-        fun init() {
+        fun action_newRegion() {
+            try {
+                val arena = selectedArena()
+                val xywh = initialRegionLocations[nextInitialRegionLocationIndex]
+                if (++nextInitialRegionLocationIndex > initialRegionLocations.lastIndex)
+                    nextInitialRegionLocationIndex = 0
+                val newRegion = Region("Region ${arena.regions.size + 1}", arena,
+                                       x = xywh.x, y = xywh.y,
+                                       w = xywh.w, h = xywh.h)
+                val regionTreeItem = TreeItem<FuckingNode>(newRegion)
+                arena.treeItem.children += regionTreeItem
+                arena.treeItem.expandedProperty().set(true)
+
+                navigationTreeView.selectionModel.clearSelection()
+                navigationTreeView.selectionModel.select(regionTreeItem)
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
+        }
+
+        private fun selectedArena(): FuckingNode.Arena {
+            val item = navigationTreeView.selectionModel.selectedItem
+            val value = item.value!!
+            val arena: FuckingNode.Arena = when (value) {
+                is FuckingNode.Root -> wtf("c420c2f1-7c89-45aa-89b6-0aee7faa4446")
+                is FuckingNode.Arena -> value
+                is Region -> value.arena
+            }
+            return arena
+        }
+
+        fun initController() {
+            navigationTreeView.setOnMouseClicked {
+                currentContextMenu?.hide()
+                currentContextMenu = null
+            }
+
+            navigationTreeView.setOnContextMenuRequested {e->
+                val item = navigationTreeView.selectionModel.selectedItem?.value
+
+                val menu = ContextMenu()
+                if (item is FuckingNode.Arena) {
+                    addMenuItem(menu, "New Region", this::action_newRegion)
+                }
+
+                if (menu.items.isNotEmpty()) {
+                    menu.show(navigationTreeView, e.screenX, e.screenY)
+                    currentContextMenu = menu
+                }
+            }
+
             navigationTreeView.selectionModel.selectedItemProperty().addListener {_, _, newValue ->
                 onTreeSelectionChanged(newValue)
             }
@@ -256,7 +427,7 @@ class StartBotinok : Application() {
             val root = loader.load<Parent>()
             co = loader.getController<BotinokBrowserSceneController>()
             co.stuff = this
-            co.init()
+            co.initController()
             primaryStage.scene = Scene(root)
         }
     }
@@ -372,7 +543,7 @@ class StartBotinok : Application() {
             }
         }
 
-        private fun drawShit() {
+        private fun drawShit_killme() {
             val b = BotinokStuff
 
             printState()
@@ -467,7 +638,7 @@ class StartBotinok : Application() {
                 // noise("selectedArena changed: $oldValue --> $newValue")
                 noise("selectedArena changed: $newValue")
                 arenaListView.selectionModel.select(newValue)
-                drawShit()
+                drawShit_killme()
             }
 
             arenaListView.items = play.arenas
@@ -499,7 +670,7 @@ class StartBotinok : Application() {
                     }
                 }
 
-                drawShit()
+                drawShit_killme()
             }
 
         }
@@ -515,14 +686,14 @@ class StartBotinok : Application() {
                     o.x = newBoxX; o.y = newBoxY
                     o.w = 100; o.h = 100
                 }
-                drawShit()
+                drawShit_killme()
             }
 
             boxContextMenu = ContextMenu()
             boxContextMenu.items += MenuItem("Delete")-{o->
                 o.onAction = EventHandler {e->
                     selectedArenaBang().boxes -= selectedArenaBang().editing.selectedBox!!
-                    drawShit()
+                    drawShit_killme()
                 }
             }
 
@@ -532,7 +703,7 @@ class StartBotinok : Application() {
                 val menuToShow = when {
                     hitBox != null -> {
                         selectedArenaBang().editing.selectedBox = hitBox
-                        drawShit()
+                        drawShit_killme()
                         boxContextMenu
                     }
                     else -> {
@@ -570,11 +741,11 @@ class StartBotinok : Application() {
                         operationStartMouseY = e.y
                     }
                 }
-                drawShit()
+                drawShit_killme()
             }
 
             canvas.addEventHandler(MouseEvent.MOUSE_RELEASED) {e->
-                drawShit()
+                drawShit_killme()
             }
 
             canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED) {e->
@@ -590,7 +761,7 @@ class StartBotinok : Application() {
                         selectedBox.y = points.minY
                         selectedBox.w = points.maxX - points.minX + 1
                         selectedBox.h = points.maxY - points.minY + 1
-                        drawShit()
+                        drawShit_killme()
                     }
                 }
             }
@@ -627,6 +798,16 @@ class StartBotinok : Application() {
         })
     }
 
+    private fun simulateSomeUserActions() {
+        handleKey2()
+        thread {
+            Thread.sleep(500)
+            JFXStuff.later {co.action_newRegion()}
+            Thread.sleep(500)
+            JFXStuff.later {co.action_newRegion()}
+        }
+    }
+
     private fun handleKey2() {
         JFXStuff.later {
             val tmpImgPath = "$tmpDirPath/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
@@ -637,11 +818,12 @@ class StartBotinok : Application() {
                 noise("Saved screenshot")
             }
 
-            val newTreeNode = TreeItem<FuckingNode>(FuckingNode.Arena("Arena ${getArenaCount() + 1}", Image("file:///$tmpImgPath")))
-            bananas.rootNode.children.add(newTreeNode)
+            val arena = FuckingNode.Arena("Arena ${getArenaCount() + 1}", Image("file:///$tmpImgPath"))
+            val treeItem = TreeItem<FuckingNode>(arena)
+            arena.treeItem = treeItem
+            bananas.rootNode.children.add(treeItem)
             co.navigationTreeView.scrollTo(bananas.rootNode.children.lastIndex)
-            co.navigationTreeView.selectionModel.clearSelection()
-            co.navigationTreeView.selectionModel.selectLast()
+            selectLastTreeItem()
 
 
             JFXStuff.later {
@@ -651,6 +833,11 @@ class StartBotinok : Application() {
                 }
             }
         }
+    }
+
+    private fun selectLastTreeItem() {
+        co.navigationTreeView.selectionModel.clearSelection()
+        co.navigationTreeView.selectionModel.selectLast()
     }
 
 
@@ -672,6 +859,15 @@ private fun noise(s: String) {
         clog(s)
     }
 }
+
+private fun addMenuItem(menu: ContextMenu, title: String, handler: () -> Unit) {
+    menu.items += MenuItem(title)-{o->
+        o.onAction = EventHandler {e->
+            handler()
+        }
+    }
+}
+
 
 
 
