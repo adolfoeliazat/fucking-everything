@@ -2,13 +2,9 @@ package vgrechka.botinok
 
 import de.jensd.fx.glyphs.emojione.EmojiOne
 import de.jensd.fx.glyphs.emojione.EmojiOneView
-import de.jensd.fx.glyphs.weathericons.WeatherIcon
 import javafx.application.Application
 import javafx.application.Platform
-import javafx.beans.value.ChangeListener
-import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
-import javafx.collections.ObservableList
 import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -28,7 +24,6 @@ import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.stage.WindowEvent
-import javafx.util.Callback
 import org.jnativehook.GlobalScreen
 import org.jnativehook.keyboard.NativeKeyAdapter
 import org.jnativehook.keyboard.NativeKeyEvent
@@ -51,11 +46,6 @@ object BotinokStuff {
     val handleSize = boxEdgeSize * 2
     val obscureConst1 = (handleSize - boxEdgeSize) / 2
     val obscureConst2 = boxEdgeSize + obscureConst1
-    var botinokBrowserSceneController by notNull<StartBotinok.BotinokBrowserSceneController>()
-}
-
-private class NavigationTreeNode {
-
 }
 
 private class BoxPoints(var minX: Int, var minY: Int, var maxX: Int, var maxY: Int)
@@ -111,11 +101,18 @@ private enum class Handle {
     abstract val dragMutators: Set<DragMutator>
 }
 
+sealed class FuckingNode {
+    class Root : FuckingNode()
 
-
+    class Arena(val name: String, val image: Image) : FuckingNode() {
+        override fun toString() = name
+    }
+}
 
 class StartBotinok : Application() {
     private var primaryStage by notNullOnce<Stage>()
+    private var bananas by notNullOnce<goBananas2>()
+    private var co by notNullOnce<BotinokBrowserSceneController>()
 
     override fun start(primaryStage: Stage) {
         run {
@@ -148,7 +145,7 @@ class StartBotinok : Application() {
         primaryStage.initStyle(StageStyle.DECORATED)
 
         this.primaryStage = primaryStage
-        goBananas2()
+        bananas = goBananas2()
 
         primaryStage.setOnShown {
             handleKey2()
@@ -180,20 +177,48 @@ class StartBotinok : Application() {
     }
 
     class BotinokBrowserSceneController {
+        var stuff by notNullOnce<goBananas2>()
         @FXML lateinit var someTextField: TextField
         @FXML lateinit var fuckAroundButton1: Button
         @FXML lateinit var fuckAroundButton2: Button
-        @FXML lateinit var navigationTreeView: TreeView<NavigationTreeNode>
+        @FXML lateinit var navigationTreeView: TreeView<FuckingNode>
         @FXML lateinit var splitPane: SplitPane
         @FXML lateinit var detailsPane: AnchorPane
 
-        @Suppress("unused")
-        fun initialize() {
-            BotinokStuff.botinokBrowserSceneController = this
+        fun onTreeSelectionChanged(item: TreeItem<FuckingNode>?) {
+            detailsPane.children.clear()
+            if (item == null) return
+
+            val value = item.value
+            exhaustive=when (value) {
+                is FuckingNode.Root -> {}
+
+                is FuckingNode.Arena -> {
+                    val image = value.image
+                    val scrollPane = ScrollPane()
+                    AnchorPane.setTopAnchor(scrollPane, 0.0)
+                    AnchorPane.setRightAnchor(scrollPane, 0.0)
+                    AnchorPane.setBottomAnchor(scrollPane, 0.0)
+                    AnchorPane.setLeftAnchor(scrollPane, 0.0)
+                    detailsPane.children += scrollPane
+
+                    val canvas = Canvas(image.width, image.height)
+                    scrollPane.content = canvas
+                    val gc = canvas.graphicsContext2D
+                    gc.drawImage(image, 0.0, 0.0)
+                }
+            }
+        }
+
+        fun init() {
+            navigationTreeView.selectionModel.selectedItemProperty().addListener {_, _, newValue ->
+                onTreeSelectionChanged(newValue)
+            }
+
             navigationTreeView.isShowRoot = false
             navigationTreeView.setCellFactory {
-                object : TreeCell<NavigationTreeNode>() {
-                    override fun updateItem(item: NavigationTreeNode?, empty: Boolean) {
+                object : TreeCell<FuckingNode>() {
+                    override fun updateItem(item: FuckingNode?, empty: Boolean) {
                         super.updateItem(item, empty)
                         if (item == null) {
                             text = ""
@@ -202,49 +227,13 @@ class StartBotinok : Application() {
                         }
 
                         // this.style = "-fx-text-fill: red; -fx-font-weight: bold;"
-                        text = item.title
+                        text = item.toString()
                         graphic = EmojiOneView(EmojiOne.AIRPLANE)
                     }
                 }
             }
 
-            class BotinokWorld {
-
-            }
-
-            navigationTreeView.root = object : TreeItem<NavigationTreeNode>(NavigationTreeNode("Freaking root")) {
-                private val children = FXCollections.observableArrayList<TreeItem<NavigationTreeNode>>()
-
-                init {
-                    fun addChild(title: String) {
-                        children += object : TreeItem<NavigationTreeNode>(NavigationTreeNode(title)) {
-                            override fun toString(): String {
-                                return title
-                            }
-
-                            override fun isLeaf(): Boolean {
-                                return true
-                            }
-
-                            override fun getChildren(): ObservableList<TreeItem<NavigationTreeNode>> {
-                                return FXCollections.emptyObservableList()
-                            }
-                        }
-                    }
-
-                    addChild("Fuck")
-                    addChild("Shit")
-                    addChild("Bitch")
-                }
-
-                override fun isLeaf(): Boolean {
-                    return false
-                }
-
-                override fun getChildren(): ObservableList<TreeItem<NavigationTreeNode>> {
-                    return children
-                }
-            }
+            navigationTreeView.root = stuff.rootNode
 
             navigationTreeView.root.isExpanded = true
 
@@ -252,11 +241,22 @@ class StartBotinok : Application() {
                 JFXStuff.infoAlert("Fuck you, ${someTextField.text}")
             }
         }
+
+        @Suppress("unused")
+        fun initialize() {
+
+        }
     }
 
     inner class goBananas2 {
+        val rootNode: TreeItem<FuckingNode> = TreeItem(FuckingNode.Root())
+
         init {
-            val root = FXMLLoader.load<Parent>(this::class.java.getResource("BotinokBrowserScene.fxml"))
+            val loader = FXMLLoader(this::class.java.getResource("BotinokBrowserScene.fxml"))
+            val root = loader.load<Parent>()
+            co = loader.getController<BotinokBrowserSceneController>()
+            co.stuff = this
+            co.init()
             primaryStage.scene = Scene(root)
         }
     }
@@ -311,16 +311,6 @@ class StartBotinok : Application() {
             splitPane.items += ScrollPane()
 
             stackPane = StackPane()
-
-
-
-//            val scrollPane = ScrollPane()
-//            scrollPane.content = stackPane
-//
-//            initArenaListView()
-//
-//            splitPane.items += arenaListView
-//            splitPane.items += scrollPane
         }
 
         fun initArenaListView() {
@@ -397,7 +387,7 @@ class StartBotinok : Application() {
 
             gc.drawImage(image, 0.0, 0.0)
             arena.boxes.forEach {box->
-                //            run { // Area to be captured by the box
+//            run { // Area to be captured by the box
 //                gc.fill = Color.BLUE
 //                gc.fillRect(box.x.toDouble(), box.y.toDouble(), box.w.toDouble(), box.h.toDouble())
 //            }
@@ -647,24 +637,25 @@ class StartBotinok : Application() {
                 noise("Saved screenshot")
             }
 
-            primaryStage.isIconified = true
-            primaryStage.isIconified = false
+            val newTreeNode = TreeItem<FuckingNode>(FuckingNode.Arena("Arena ${getArenaCount() + 1}", Image("file:///$tmpImgPath")))
+            bananas.rootNode.children.add(newTreeNode)
+            co.navigationTreeView.scrollTo(bananas.rootNode.children.lastIndex)
+            co.navigationTreeView.selectionModel.clearSelection()
+            co.navigationTreeView.selectionModel.selectLast()
 
-            val image = Image("file:///$tmpImgPath")
-            val detailsPane = BotinokStuff.botinokBrowserSceneController.detailsPane
-            val scrollPane = ScrollPane()
-            AnchorPane.setTopAnchor(scrollPane, 0.0)
-            AnchorPane.setRightAnchor(scrollPane, 0.0)
-            AnchorPane.setBottomAnchor(scrollPane, 0.0)
-            AnchorPane.setLeftAnchor(scrollPane, 0.0)
-            detailsPane.children.clear()
-            detailsPane.children += scrollPane
 
-            val canvas = Canvas(image.width, image.height)
-            scrollPane.content = canvas
-            val gc = canvas.graphicsContext2D
-            gc.drawImage(image, 0.0, 0.0)
+            JFXStuff.later {
+                primaryStage.isIconified = true
+                JFXStuff.later {
+                    primaryStage.isIconified = false
+                }
+            }
         }
+    }
+
+
+    fun getArenaCount(): Int {
+        return bananas.rootNode.children.size
     }
 
     companion object {
@@ -681,79 +672,6 @@ private fun noise(s: String) {
         clog(s)
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-//internal class BotinokGlobalMenuConfig : GlobalMenuConfig() {
-//    override val initialFaceIndex = 1
-//
-//    override val faces = listOf(
-//        makeListFace(
-//            keyCode = NativeKeyEvent.VC_1,
-//            items = listOf(
-//                object: GlobalMenuItem() {
-//                    private var textArea by notNull<TextArea>()
-//
-//                    override fun toString() = "Get mouse location"
-//
-//                    override fun run() {
-//                        showDamnLocation()
-//                    }
-//
-//                    override fun makeDetailsControl(): TextArea {
-//                        textArea = TextArea()
-//                        textArea.minHeight = 100.0
-//                        showDamnLocation()
-//                        return textArea
-//                    }
-//
-//                    private fun showDamnLocation() {
-//                        val location = MouseInfo.getPointerInfo().location
-//                        textArea.text = "${location.x}, ${location.y}"
-//                    }
-//                }
-//            )
-//        ),
-//
-//        BotinokScreenshotFace(NativeKeyEvent.VC_2)
-//
-////        makeFuckingFace(
-////            keyCode = NativeKeyEvent.VC_3,
-////            items = listOf(
-////                fuckingSimpleMenuItem(this::playScenario1)
-////            )
-////        )
-//    )
-//
-//    fun playScenario1() {
-//        JFXStuff.errorAlert("Not now, hoser")
-//    }
-//
-//
-//
-//}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
