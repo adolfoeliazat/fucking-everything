@@ -60,6 +60,20 @@ object JFXStuff {
         alert.contentText = prompt
         return alert.showAndWait().get() == ButtonType.OK
     }
+
+    enum class YesNoCancelResult {YES, NO, CANCEL}
+
+    fun yesNoCancel(prompt: String): YesNoCancelResult {
+        val alert = Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL)
+        alert.title = "Hey, Hoser"
+        alert.headerText = prompt
+        return when (alert.showAndWait().get()) {
+            ButtonType.YES -> YesNoCancelResult.YES
+            ButtonType.NO -> YesNoCancelResult.NO
+            ButtonType.CANCEL -> YesNoCancelResult.CANCEL
+            else -> wtf("b29d5532-14cd-4dfe-af1e-6b00aa225028")
+        }
+    }
 }
 
 private val Any.observables by AttachedComputedShit<Any, MutableList<Observable>>(weak = true) {

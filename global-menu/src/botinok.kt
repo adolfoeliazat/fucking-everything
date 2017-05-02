@@ -171,6 +171,7 @@ class StartBotinok : Application() {
     private var bananas by notNullOnce<goBananas2>()
     private var handleEnterKeyInPlaySelector by notNull<() -> Unit>()
     private var play by notNull<BotinokPlay>()
+    private var dirty = false
 
     override fun start(primaryStage: Stage) {
         run {
@@ -202,7 +203,36 @@ class StartBotinok : Application() {
         primaryStage.setOnShown {
             simulateSomeUserActions()
         }
+        primaryStage.setOnCloseRequest {
+            if (maybeAskAndSave().cancelled) {
+                it.consume()
+            }
+        }
         primaryStage.show()
+    }
+
+    class MaybeAskAndSaveResult(val cancelled: Boolean)
+    private fun maybeAskAndSave(): MaybeAskAndSaveResult {
+        if (dirty) {
+            exhaustive = when (JFXStuff.yesNoCancel("Should I save your shit?")) {
+                JFXStuff.YesNoCancelResult.YES -> {
+                    action_save()
+                }
+                JFXStuff.YesNoCancelResult.NO -> {
+                }
+                JFXStuff.YesNoCancelResult.CANCEL -> {
+                    return MaybeAskAndSaveResult(cancelled = true)
+                }
+            }
+        }
+        return MaybeAskAndSaveResult(cancelled = false)
+    }
+
+    fun setDirty(b: Boolean) {
+        if (dirty != b) {
+            dirty = b
+            updateStageTitle()
+        }
     }
 
     fun openPlaySelector() {
@@ -236,7 +266,7 @@ class StartBotinok : Application() {
 
     fun action_openPlayEditor(play: BotinokPlay) {
         this.play = play
-        primaryStage.title = "Botinok - ${play.name}"
+        updateStageTitle()
         bananas = goBananas2()
 
         for (arena in play.arenas) {
@@ -245,6 +275,10 @@ class StartBotinok : Application() {
                 addTreeItemForRegion(region, (arenaTreeItem.value as FuckingNode.Arena))
             }
         }
+    }
+
+    private fun updateStageTitle() {
+        primaryStage.title = "Botinok - ${play.name}${dirty.thenElseEmpty{" *"}}"
     }
 
     private fun seed() {
@@ -348,6 +382,7 @@ class StartBotinok : Application() {
                         selectedRegion.region.y = points.minY
                         selectedRegion.region.w = points.maxX - points.minX + 1
                         selectedRegion.region.h = points.maxY - points.minY + 1
+                        setDirty(true)
                         drawArena()
                     }
                 }
@@ -367,7 +402,7 @@ class StartBotinok : Application() {
 
                     o.items += MenuItem("_Quit")-{o->
                         o.setOnAction {
-                            exitProcess(0)
+                            action_quit()
                         }
                     }
                 }
@@ -500,6 +535,7 @@ class StartBotinok : Application() {
                                                  w = xywh.w, h = xywh.h,
                                                  arena = arena.arena)
                 arena.arena.regions.add(newRegion)
+                setDirty(true)
                 val regionTreeItem = addTreeItemForRegion(newRegion, arena)
                 arena.treeItem.expandedProperty().set(true)
 
@@ -539,6 +575,12 @@ class StartBotinok : Application() {
         @Suppress("unused")
         fun initialize() {
 
+        }
+    }
+
+    private fun action_quit() {
+        if (!maybeAskAndSave().cancelled) {
+            primaryStage.close()
         }
     }
 
@@ -606,6 +648,7 @@ class StartBotinok : Application() {
 
             val arena = newBotinokArena("Arena ${getArenaCount() + 1}", play)
             play.arenas.add(arena)
+            setDirty(true)
             addTreeItemForArena(arena)
             bananas.navigationTreeView.scrollTo(bananas.rootNode.children.lastIndex)
             selectLastTreeItem()
@@ -642,7 +685,7 @@ class StartBotinok : Application() {
             botinokPlayRepo.save(play)
         }
 
-        JFXStuff.infoAlert("Your shit is saved OK")
+        JFXStuff.infoAlert("Your shit was saved OK")
     }
 
     companion object {
