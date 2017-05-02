@@ -12,7 +12,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import org.sqlite.SQLiteConfig
 import org.sqlite.javax.IntoSQLiteConnectionPoolDataSource
-import org.sqlite.javax.SQLiteConnectionPoolDataSource
 import vgrechka.*
 import vgrechka.db.*
 import javax.persistence.EntityManagerFactory
@@ -24,7 +23,8 @@ import javax.sql.DataSource
 @EnableJpaRepositories
 @EnableTransactionManagement
 @ComponentScan(basePackages = arrayOf("vgrechka.botinok"))
-open class BotinokAppConfig {
+abstract class BotinokBaseAppConfig {
+    protected abstract val databaseURL: String
 
     @Bean open fun entityManagerFactory(dataSource: DataSource) = LocalContainerEntityManagerFactoryBean()-{o->
         o.jpaVendorAdapter = HibernateJpaVendorAdapter()-{o->
@@ -40,7 +40,7 @@ open class BotinokAppConfig {
     @Bean open fun dataSource(): DataSource {
 //        return SQLiteConnectionPoolDataSource()-{o->
         return IntoSQLiteConnectionPoolDataSource()-{o->
-            o.url = BigPile.localSQLiteShebangDBURL
+            o.url = databaseURL
             o.config = SQLiteConfig()-{o->
                 o.setDateClass(SQLiteConfig.DateClass.TEXT.value)
                 o.enforceForeignKeys(true)
@@ -52,5 +52,28 @@ open class BotinokAppConfig {
         o.entityManagerFactory = emf
     }
 }
+
+open class BotinokProdAppConfig : BotinokBaseAppConfig() {
+    override val databaseURL = BigPile.localSQLiteShebangDBURL
+}
+
+open class BotinokTestAppConfig : BotinokBaseAppConfig() {
+    override val databaseURL = BigPile.localSQLiteShebangTestDBURL
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

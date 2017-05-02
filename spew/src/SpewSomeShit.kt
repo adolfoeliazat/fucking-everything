@@ -4,7 +4,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import vgrechka.*
 import vgrechka.botinok.*
 import vgrechka.db.*
-import javax.sql.DataSource
 
 object SpewSomeShit1 {
     @JvmStatic
@@ -19,7 +18,7 @@ object SpewSomeShit2 {
     fun main(args: Array<String>) {
         val res = spewForInputFiles(listOf("%FE%/global-menu/src/botinok-entities.kt"))
         clog(res.ddl)
-        backPlatform.springctx = AnnotationConfigApplicationContext(BotinokAppConfig::class.java)
+        backPlatform.springctx = AnnotationConfigApplicationContext(BotinokTestAppConfig::class.java)
         DBStuff.executeBunchOfSQLStatementsAndCloseConnection(res.ddl.toString())
         clog("OK")
     }

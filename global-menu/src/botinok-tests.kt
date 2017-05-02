@@ -17,7 +17,7 @@ class BotinokTest1 {
     val log = TestLogger()
 
     @Test fun test1() {
-        backPlatform.springctx = AnnotationConfigApplicationContext(BotinokAppConfig::class.java)
+        backPlatform.springctx = AnnotationConfigApplicationContext(BotinokTestAppConfig::class.java)
 
         DBStuff.executeBunchOfSQLStatementsAndCloseConnection(BotinokGeneratedDBStuff.ddl.dropCreateAllScript)
 

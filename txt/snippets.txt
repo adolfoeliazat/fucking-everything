@@ -70,9 +70,13 @@
 ========== SQLite ==========
 
     sqlite3 -cmd "pragma foreign_keys = on;" e:\febig\db\shebang.db
+    .tables
+    .schema
     .quit
 
     sqlite3 e:\febig\db\shebang.db .dump
+
+    delete from botinok_regions; delete from botinok_arenas; delete from botinok_plays;
 
 
 

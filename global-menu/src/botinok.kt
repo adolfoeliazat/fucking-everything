@@ -4,7 +4,7 @@ import de.jensd.fx.glyphs.emojione.EmojiOne
 import de.jensd.fx.glyphs.emojione.EmojiOneView
 import javafx.application.Application
 import javafx.application.Platform
-import javafx.collections.ListChangeListener
+import javafx.collections.FXCollections
 import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -17,12 +17,8 @@ import javafx.scene.image.Image
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.AnchorPane
-import javafx.scene.layout.HBox
-import javafx.scene.layout.StackPane
-import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.stage.Stage
-import javafx.stage.StageStyle
 import javafx.stage.WindowEvent
 import org.jnativehook.GlobalScreen
 import org.jnativehook.keyboard.NativeKeyAdapter
@@ -181,7 +177,7 @@ class StartBotinok : Application() {
 
     override fun start(primaryStage: Stage) {
         run {
-            backPlatform.springctx = AnnotationConfigApplicationContext(BotinokAppConfig::class.java)
+            backPlatform.springctx = AnnotationConfigApplicationContext(BotinokProdAppConfig::class.java)
             seed()
         }
 
@@ -201,33 +197,42 @@ class StartBotinok : Application() {
             exitProcess(0)
         }
 
-//        scene = Scene(Label(""))
-
+        this.primaryStage = primaryStage
         primaryStage.width = 1000.0
         primaryStage.height = 500.0
-        primaryStage.title = "Botinok"
-//        primaryStage.scene = scene
-        primaryStage.initStyle(StageStyle.DECORATED)
-
-        this.primaryStage = primaryStage
-        bananas = goBananas2()
+        openPlaySelector()
 
         primaryStage.setOnShown {
-            simulateSomeUserActions()
+//            simulateSomeUserActions()
         }
         primaryStage.show()
+    }
+
+    fun openPlaySelector() {
+        primaryStage.title = "Botinok"
+        class Item(val play: BotinokPlay) {
+            override fun toString() = play.name
+        }
+        val listView = ListView<Item>()
+        listView.items = FXCollections.observableArrayList(botinokPlayRepo.findAll().map {Item(it)})
+        primaryStage.scene = Scene(listView)
+    }
+
+    fun openPlayEditor(play: BotinokPlay) {
+        primaryStage.title = "Botinok - ${play.name}"
+        bananas = goBananas2()
     }
 
     private fun seed() {
         backPlatform.tx {
             run {
-                val playName = "Fucking Play"
+                val playName = "Hamlet"
                 if (botinokPlayRepo.findByName(playName) == null) {
                     botinokPlayRepo.save(newBotinokPlay(name = playName))
                 }
             }
             run {
-                val playName = "Shitty Play"
+                val playName = "Macbeth"
                 if (botinokPlayRepo.findByName(playName) == null) {
                     botinokPlayRepo.save(newBotinokPlay(name = playName))
                 }
