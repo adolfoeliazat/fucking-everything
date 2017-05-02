@@ -176,6 +176,7 @@ data class Region(val treeItem: TreeItem<FuckingNode>,
 class StartBotinok : Application() {
     private var primaryStage by notNullOnce<Stage>()
     private var bananas by notNullOnce<goBananas2>()
+    private var handleEnterKeyInPlaySelector by notNull<() -> Unit>()
 
     override fun start(primaryStage: Stage) {
         run {
@@ -205,7 +206,7 @@ class StartBotinok : Application() {
         openPlaySelector()
 
         primaryStage.setOnShown {
-//            simulateSomeUserActions()
+            simulateSomeUserActions()
         }
         primaryStage.show()
     }
@@ -217,19 +218,19 @@ class StartBotinok : Application() {
         }
         val listView = ListView<Item>()
         listView.items = FXCollections.observableArrayList(botinokPlayRepo.findAll().map {Item(it)})
-        fun openShit() {
+        handleEnterKeyInPlaySelector = {
             listView.selectionModel.selectedItem?.play?.let {
                 openPlayEditor(it)
             }
         }
         listView.setOnKeyPressed {
             if (it.code == KeyCode.ENTER) {
-                openShit()
+                handleEnterKeyInPlaySelector()
             }
         }
         listView.setOnMouseClicked {
             if (it.button == MouseButton.PRIMARY && it.clickCount == 2) {
-                openShit()
+                handleEnterKeyInPlaySelector()
             }
         }
         JFXStuff.later {
@@ -554,9 +555,27 @@ class StartBotinok : Application() {
         })
     }
 
-    private fun simulateSomeUserActions() {
-        handleKey2()
-        thread {
+    private inner class simulateSomeUserActions {
+        init {thread {fuck2()}}
+
+        fun fuck1() {
+            Thread.sleep(500)
+            JFXStuff.later {handleEnterKeyInPlaySelector()}
+        }
+
+        fun fuck2() {
+            Thread.sleep(500)
+            JFXStuff.later {handleEnterKeyInPlaySelector()}
+            Thread.sleep(500)
+            handleKey2()
+            Thread.sleep(500)
+            JFXStuff.later {bananas.action_newRegion()}
+            Thread.sleep(500)
+            JFXStuff.later {bananas.action_newRegion()}
+        }
+
+        fun fuck3() {
+            handleKey2()
             Thread.sleep(500)
             JFXStuff.later {bananas.action_newRegion()}
             Thread.sleep(500)
