@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Sun Apr 30 16:00:36 EEST 2017
+// Generated on Tue May 02 08:30:48 EEST 2017
 // Model: e:/fegh/global-menu/src/botinok-entities.kt
 //
 
@@ -17,36 +17,38 @@ import vgrechka.spew.*
 import vgrechka.db.*
 
 // ------------------------------------------------------------------
-// BotinokBox
+// BotinokRegion
 // ------------------------------------------------------------------
 
-fun newBotinokBox(x: Int,
-                  y: Int,
-                  w: Int,
-                  h: Int,
-                  arena: BotinokArena): BotinokBox {
-    val backing = Generated_BotinokBox(
-        Generated_BotinokBoxFields(x = x,
-                                   y = y,
-                                   w = w,
-                                   h = h,
-                                   arena = arena._backing))
+fun newBotinokRegion(name: String,
+                     x: Int,
+                     y: Int,
+                     w: Int,
+                     h: Int,
+                     arena: BotinokArena): BotinokRegion {
+    val backing = Generated_BotinokRegion(
+        Generated_BotinokRegionFields(name = name,
+                                      x = x,
+                                      y = y,
+                                      w = w,
+                                      h = h,
+                                      arena = arena._backing))
     return backing.toManuallyDefinedInterface()
 }
 
-val BotinokBox._backing
-    get() = (this as Generated_BotinokBoxBackingProvider)._backing
+val BotinokRegion._backing
+    get() = (this as Generated_BotinokRegionBackingProvider)._backing
 
-val botinokBoxRepo: BotinokBoxRepository by lazy {
-    val generatedRepo = backPlatform.springctx.getBean(Generated_BotinokBoxRepository::class.java)!!
+val botinokRegionRepo: BotinokRegionRepository by lazy {
+    val generatedRepo = backPlatform.springctx.getBean(Generated_BotinokRegionRepository::class.java)!!
 
-    object:BotinokBoxRepository {
-        override fun findAll(): List<BotinokBox> {
+    object:BotinokRegionRepository {
+        override fun findAll(): List<BotinokRegion> {
             val shit = generatedRepo.findAll()
             return shit.map {it.toManuallyDefinedInterface()}
         }
 
-        override fun save(x: BotinokBox): BotinokBox {
+        override fun save(x: BotinokRegion): BotinokRegion {
             val shit = generatedRepo.save(x._backing)
             return shit.toManuallyDefinedInterface()
         }
@@ -55,86 +57,91 @@ val botinokBoxRepo: BotinokBoxRepository by lazy {
             generatedRepo.delete(id)
         }
 
-        override fun delete(x : BotinokBox) {
+        override fun delete(x : BotinokRegion) {
             generatedRepo.delete(x._backing)
         }
 
     }
 }
 
-interface Generated_BotinokBoxRepository : XCrudRepository<Generated_BotinokBox, Long> {
+interface Generated_BotinokRegionRepository : XCrudRepository<Generated_BotinokRegion, Long> {
 }
 
-interface Generated_BotinokBoxBackingProvider : DBCodeGenUtils.GeneratedBackingEntityProvider<Generated_BotinokBox> {
-    override val _backing: Generated_BotinokBox
+interface Generated_BotinokRegionBackingProvider : DBCodeGenUtils.GeneratedBackingEntityProvider<Generated_BotinokRegion> {
+    override val _backing: Generated_BotinokRegion
 }
 
-@XEntity @XTable(name = "botinok_boxes")
-class Generated_BotinokBox(
-    @XEmbedded var botinokBox: Generated_BotinokBoxFields
+@XEntity @XTable(name = "botinok_regions")
+class Generated_BotinokRegion(
+    @XEmbedded var botinokRegion: Generated_BotinokRegionFields
 )
-    : ClitoralEntity0(), DBCodeGenUtils.GeneratedEntity<BotinokBox>
+    : ClitoralEntity0(), DBCodeGenUtils.GeneratedEntity<BotinokRegion>
 {
-    override fun toManuallyDefinedInterface(): BotinokBox {
-        return object : BotinokBox, Generated_BotinokBoxBackingProvider {
-            override val _backing: Generated_BotinokBox
-                get() = this@Generated_BotinokBox
+    override fun toManuallyDefinedInterface(): BotinokRegion {
+        return object : BotinokRegion, Generated_BotinokRegionBackingProvider {
+            override val _backing: Generated_BotinokRegion
+                get() = this@Generated_BotinokRegion
 
             override var id: Long
                 get() = _backing.id!!
                 set(value) {_backing.id = value}
 
             override var createdAt: XTimestamp
-                get() = _backing.botinokBox.common.createdAt
-                set(value) {_backing.botinokBox.common.createdAt = value}
+                get() = _backing.botinokRegion.common.createdAt
+                set(value) {_backing.botinokRegion.common.createdAt = value}
 
             override var updatedAt: XTimestamp
-                get() = _backing.botinokBox.common.updatedAt
-                set(value) {_backing.botinokBox.common.updatedAt = value}
+                get() = _backing.botinokRegion.common.updatedAt
+                set(value) {_backing.botinokRegion.common.updatedAt = value}
 
             override var deleted: Boolean
-                get() = _backing.botinokBox.common.deleted
-                set(value) {_backing.botinokBox.common.deleted = value}
+                get() = _backing.botinokRegion.common.deleted
+                set(value) {_backing.botinokRegion.common.deleted = value}
+
+            override var name: String
+                get() = _backing.botinokRegion.name
+                set(value) {_backing.botinokRegion.name = value}
 
             override var x: Int
-                get() = _backing.botinokBox.x
-                set(value) {_backing.botinokBox.x = value}
+                get() = _backing.botinokRegion.x
+                set(value) {_backing.botinokRegion.x = value}
 
             override var y: Int
-                get() = _backing.botinokBox.y
-                set(value) {_backing.botinokBox.y = value}
+                get() = _backing.botinokRegion.y
+                set(value) {_backing.botinokRegion.y = value}
 
             override var w: Int
-                get() = _backing.botinokBox.w
-                set(value) {_backing.botinokBox.w = value}
+                get() = _backing.botinokRegion.w
+                set(value) {_backing.botinokRegion.w = value}
 
             override var h: Int
-                get() = _backing.botinokBox.h
-                set(value) {_backing.botinokBox.h = value}
+                get() = _backing.botinokRegion.h
+                set(value) {_backing.botinokRegion.h = value}
 
             override var arena: BotinokArena
-                get() = _backing.botinokBox.arena.toManuallyDefinedInterface()
-                set(value) {_backing.botinokBox.arena = value._backing}
+                get() = _backing.botinokRegion.arena.toManuallyDefinedInterface()
+                set(value) {_backing.botinokRegion.arena = value._backing}
 
             override fun toString() = _backing.toString()
 
             override fun hashCode() = _backing.hashCode()
 
             override fun equals(other: Any?): Boolean {
-                val otherShit = other as? Generated_BotinokBoxBackingProvider ?: return false
+                val otherShit = other as? Generated_BotinokRegionBackingProvider ?: return false
                 return _backing == otherShit._backing
             }
         }
     }
 
     override fun toString(): String {
-        return "BotinokBox(x=${botinokBox.x}, y=${botinokBox.y}, w=${botinokBox.w}, h=${botinokBox.h})"
+        return "BotinokRegion(name=${botinokRegion.name}, x=${botinokRegion.x}, y=${botinokRegion.y}, w=${botinokRegion.w}, h=${botinokRegion.h})"
     }
 }
 
 @XEmbeddable
-class Generated_BotinokBoxFields(
+class Generated_BotinokRegionFields(
     @XEmbedded var common: CommonFields = CommonFields(),
+    @XColumn(columnDefinition = "text") var name: String,
     @XColumn var x: Int,
     @XColumn var y: Int,
     @XColumn var w: Int,
@@ -146,9 +153,11 @@ class Generated_BotinokBoxFields(
 // BotinokArena
 // ------------------------------------------------------------------
 
-fun newBotinokArena(name: String): BotinokArena {
+fun newBotinokArena(name: String,
+                    play: BotinokPlay): BotinokArena {
     val backing = Generated_BotinokArena(
-        Generated_BotinokArenaFields(name = name))
+        Generated_BotinokArenaFields(name = name,
+                                     play = play._backing))
     return backing.toManuallyDefinedInterface()
 }
 
@@ -218,8 +227,12 @@ class Generated_BotinokArena(
                 get() = _backing.botinokArena.name
                 set(value) {_backing.botinokArena.name = value}
 
-            override var boxes: MutableList<BotinokBox>
-                by DBCodeGenUtils.FuckingList(getBackingList = {_backing.botinokArena.boxes})
+            override var play: BotinokPlay
+                get() = _backing.botinokArena.play.toManuallyDefinedInterface()
+                set(value) {_backing.botinokArena.play = value._backing}
+
+            override var regions: MutableList<BotinokRegion>
+                by DBCodeGenUtils.FuckingList(getBackingList = {_backing.botinokArena.regions})
 
             override fun toString() = _backing.toString()
 
@@ -241,7 +254,8 @@ class Generated_BotinokArena(
 class Generated_BotinokArenaFields(
     @XEmbedded var common: CommonFields = CommonFields(),
     @XColumn(columnDefinition = "text") var name: String,
-    @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokBox.arena") var boxes: MutableList<Generated_BotinokBox> = mutableListOf()
+    @XManyToOne(fetch = XFetchType.LAZY) var play: Generated_BotinokPlay,
+    @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokRegion.arena") var regions: MutableList<Generated_BotinokRegion> = mutableListOf()
 )
 
 // ------------------------------------------------------------------
@@ -325,6 +339,9 @@ class Generated_BotinokPlay(
                 get() = _backing.botinokPlay.name
                 set(value) {_backing.botinokPlay.name = value}
 
+            override var arenas: MutableList<BotinokArena>
+                by DBCodeGenUtils.FuckingList(getBackingList = {_backing.botinokPlay.arenas})
+
             override fun toString() = _backing.toString()
 
             override fun hashCode() = _backing.hashCode()
@@ -344,24 +361,26 @@ class Generated_BotinokPlay(
 @XEmbeddable
 class Generated_BotinokPlayFields(
     @XEmbedded var common: CommonFields = CommonFields(),
-    @XColumn(columnDefinition = "text") var name: String
+    @XColumn(columnDefinition = "text") var name: String,
+    @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokArena.play") var arenas: MutableList<Generated_BotinokArena> = mutableListOf()
 )
 
 object BotinokGeneratedDBStuff {
     object ddl {
         val dropCreateAllScript = """
-drop table if exists `botinok_boxes`;
-create table `botinok_boxes` (
+drop table if exists `botinok_regions`;
+create table `botinok_regions` (
     `id` integer primary key autoincrement,
-    `botinokBox_common_createdAt` text not null,
-    `botinokBox_common_updatedAt` text not null,
-    `botinokBox_common_deleted` integer not null,
-    `botinokBox_x` integer not null,
-    `botinokBox_y` integer not null,
-    `botinokBox_w` integer not null,
-    `botinokBox_h` integer not null,
-    `botinokBox_arena__id` bigint not null,
-    foreign key (botinokBox_arena__id) references botinok_arenas(id)
+    `botinokRegion_common_createdAt` text not null,
+    `botinokRegion_common_updatedAt` text not null,
+    `botinokRegion_common_deleted` integer not null,
+    `botinokRegion_name` text not null,
+    `botinokRegion_x` integer not null,
+    `botinokRegion_y` integer not null,
+    `botinokRegion_w` integer not null,
+    `botinokRegion_h` integer not null,
+    `botinokRegion_arena__id` bigint not null,
+    foreign key (botinokRegion_arena__id) references botinok_arenas(id)
 );
 
 drop table if exists `botinok_arenas`;
@@ -370,7 +389,9 @@ create table `botinok_arenas` (
     `botinokArena_common_createdAt` text not null,
     `botinokArena_common_updatedAt` text not null,
     `botinokArena_common_deleted` integer not null,
-    `botinokArena_name` text not null
+    `botinokArena_name` text not null,
+    `botinokArena_play__id` bigint not null,
+    foreign key (botinokArena_play__id) references botinok_plays(id)
 );
 
 drop table if exists `botinok_plays`;
@@ -391,18 +412,19 @@ create table `botinok_plays` (
 DDL
 ===
 
-drop table if exists `botinok_boxes`;
-create table `botinok_boxes` (
+drop table if exists `botinok_regions`;
+create table `botinok_regions` (
     `id` integer primary key autoincrement,
-    `botinokBox_common_createdAt` text not null,
-    `botinokBox_common_updatedAt` text not null,
-    `botinokBox_common_deleted` integer not null,
-    `botinokBox_x` integer not null,
-    `botinokBox_y` integer not null,
-    `botinokBox_w` integer not null,
-    `botinokBox_h` integer not null,
-    `botinokBox_arena__id` bigint not null,
-    foreign key (botinokBox_arena__id) references botinok_arenas(id)
+    `botinokRegion_common_createdAt` text not null,
+    `botinokRegion_common_updatedAt` text not null,
+    `botinokRegion_common_deleted` integer not null,
+    `botinokRegion_name` text not null,
+    `botinokRegion_x` integer not null,
+    `botinokRegion_y` integer not null,
+    `botinokRegion_w` integer not null,
+    `botinokRegion_h` integer not null,
+    `botinokRegion_arena__id` bigint not null,
+    foreign key (botinokRegion_arena__id) references botinok_arenas(id)
 );
 
 drop table if exists `botinok_arenas`;
@@ -411,7 +433,9 @@ create table `botinok_arenas` (
     `botinokArena_common_createdAt` text not null,
     `botinokArena_common_updatedAt` text not null,
     `botinokArena_common_deleted` integer not null,
-    `botinokArena_name` text not null
+    `botinokArena_name` text not null,
+    `botinokArena_play__id` bigint not null,
+    foreign key (botinokArena_play__id) references botinok_plays(id)
 );
 
 drop table if exists `botinok_plays`;

@@ -18,9 +18,9 @@ object SpewSomeShit2 {
     @JvmStatic
     fun main(args: Array<String>) {
         val res = spewForInputFiles(listOf("%FE%/global-menu/src/botinok-entities.kt"))
-//        clog(res.ddl)
-//        backPlatform.springctx = AnnotationConfigApplicationContext(BotinokAppConfig::class.java)
-//        DBStuff.executeBunchOfSQLStatementsAndCloseConnection(res.ddl.toString())
+        clog(res.ddl)
+        backPlatform.springctx = AnnotationConfigApplicationContext(BotinokAppConfig::class.java)
+        DBStuff.executeBunchOfSQLStatementsAndCloseConnection(res.ddl.toString())
         clog("OK")
     }
 }

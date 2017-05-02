@@ -8,8 +8,9 @@ import vgrechka.*
 import vgrechka.spew.*
 
 
-@GEntity(table = "botinok_boxes")
-interface BotinokBox : GCommonEntityFields {
+@GEntity(table = "botinok_regions")
+interface BotinokRegion : GCommonEntityFields {
+    var name: String
     var x: Int
     var y: Int
     var w: Int
@@ -17,13 +18,14 @@ interface BotinokBox : GCommonEntityFields {
     @GManyToOne var arena: BotinokArena
 }
 
-interface BotinokBoxRepository : GRepository<BotinokBox> {
+interface BotinokRegionRepository : GRepository<BotinokRegion> {
 }
 
 @GEntity(table = "botinok_arenas")
 interface BotinokArena : GCommonEntityFields {
     var name: String
-    @GOneToMany(mappedBy = "arena") var boxes: MutableList<BotinokBox>
+    @GManyToOne var play: BotinokPlay
+    @GOneToMany(mappedBy = "arena") var regions: MutableList<BotinokRegion>
 }
 
 interface BotinokArenaRepository : GRepository<BotinokArena> {
@@ -32,12 +34,15 @@ interface BotinokArenaRepository : GRepository<BotinokArena> {
 @GEntity(table = "botinok_plays")
 interface BotinokPlay : GCommonEntityFields {
     var name: String
+    @GOneToMany(mappedBy = "play") var arenas: MutableList<BotinokArena>
 }
 
 interface BotinokPlayRepository : GRepository<BotinokPlay> {
     fun findByName(x: String): BotinokPlay?
 }
 
+
+// ---------------------------------------------------------------------
 
 class Play {
     val arenas = FXCollections.observableArrayList<Arena>(JFXPropertyObservableExtractor())

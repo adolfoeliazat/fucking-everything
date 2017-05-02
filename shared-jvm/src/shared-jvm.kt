@@ -3,22 +3,17 @@ package vgrechka
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.common.base.Equivalence
-import com.google.common.cache.CacheBuilder
 import com.google.common.collect.MapMaker
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import org.junit.Assert.*
-import org.junit.Test
-import org.springframework.context.ApplicationContext
 import java.io.*
 import java.nio.charset.Charset
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
-import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
@@ -308,8 +303,15 @@ fun assertThrownExceptionOrOneOfItsCausesMessageContains(needle: String, block: 
     }, block = block)
 }
 
+interface TestLoggerPrintln {
+    fun println(value: Any?)
+}
+
 class TestLogger {
     val lines = mutableListOf<Line>()
+    val loopLoggingIndices = mutableListOf<LoopLoggingIndex>()
+
+    class LoopLoggingIndex(var index: Int)
 
     interface Line {
         fun usefulLength(): Int
@@ -354,6 +356,23 @@ class TestLogger {
                 line.renderTo(it, width)
             }
         }
+    }
+
+    fun <T> forEach(xs: Iterable<T>, uuid: String, block: (T, TestLoggerPrintln) -> Unit) {
+        val lli = LoopLoggingIndex(-100)
+        loopLoggingIndices += lli
+
+        for ((i, x) in xs.withIndex()) {
+            lli.index = i
+            block(x, object : TestLoggerPrintln {
+                override fun println(value: Any?) {
+                    val indexPrefix = loopLoggingIndices.map{it.index}.joinToString("-")
+                    this@TestLogger.println(value, "$indexPrefix--$uuid")
+                }
+            })
+        }
+
+        loopLoggingIndices.removeAt(loopLoggingIndices.lastIndex)
     }
 
     fun assertEquals(expected: String) {
