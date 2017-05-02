@@ -99,35 +99,35 @@ enum class Handle {
 
 enum class RegionHandle {
     TOP_LEFT {
-        override fun rectForRegion(box: Region) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize, box.y.toDouble() - b.obscureConst2 - b.obscureConst1, b.handleSize, b.handleSize)
+        override fun rectForRegion(box: Region) = Rectangle2D(box.region.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize, box.region.y.toDouble() - b.obscureConst2 - b.obscureConst1, b.handleSize, b.handleSize)
         override val dragMutators = setOf(DragMutator.TOP, DragMutator.LEFT)
     },
     TOP {
-        override fun rectForRegion(box: Region) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.w / 2 - b.handleSize / 2, box.y.toDouble() - b.obscureConst2 - b.obscureConst1, b.handleSize, b.handleSize)
+        override fun rectForRegion(box: Region) = Rectangle2D(box.region.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.region.w / 2 - b.handleSize / 2, box.region.y.toDouble() - b.obscureConst2 - b.obscureConst1, b.handleSize, b.handleSize)
         override val dragMutators = setOf(DragMutator.TOP)
     },
     TOP_RIGHT {
-        override fun rectForRegion(box: Region) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.w, box.y.toDouble() - b.obscureConst2 - b.obscureConst1, b.handleSize, b.handleSize)
+        override fun rectForRegion(box: Region) = Rectangle2D(box.region.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.region.w, box.region.y.toDouble() - b.obscureConst2 - b.obscureConst1, b.handleSize, b.handleSize)
         override val dragMutators = setOf(DragMutator.TOP, DragMutator.RIGHT)
     },
     RIGHT {
-        override fun rectForRegion(box: Region) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.w, box.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.h / 2 + b.handleSize / 2, b.handleSize, b.handleSize)
+        override fun rectForRegion(box: Region) = Rectangle2D(box.region.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.region.w, box.region.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.region.h / 2 + b.handleSize / 2, b.handleSize, b.handleSize)
         override val dragMutators = setOf(DragMutator.RIGHT)
     },
     BOTTOM_RIGHT {
-        override fun rectForRegion(box: Region) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.w, box.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.h + b.handleSize, b.handleSize, b.handleSize)
+        override fun rectForRegion(box: Region) = Rectangle2D(box.region.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.region.w, box.region.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.region.h + b.handleSize, b.handleSize, b.handleSize)
         override val dragMutators = setOf(DragMutator.BOTTOM, DragMutator.RIGHT)
     },
     BOTTOM {
-        override fun rectForRegion(box: Region) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.w / 2 - b.handleSize / 2, box.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.h + b.handleSize, b.handleSize, b.handleSize)
+        override fun rectForRegion(box: Region) = Rectangle2D(box.region.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.region.w / 2 - b.handleSize / 2, box.region.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.region.h + b.handleSize, b.handleSize, b.handleSize)
         override val dragMutators = setOf(DragMutator.BOTTOM)
     },
     BOTTOM_LEFT {
-        override fun rectForRegion(box: Region) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize, box.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.h + b.handleSize, b.handleSize, b.handleSize)
+        override fun rectForRegion(box: Region) = Rectangle2D(box.region.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize, box.region.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.region.h + b.handleSize, b.handleSize, b.handleSize)
         override val dragMutators = setOf(DragMutator.BOTTOM, DragMutator.LEFT)
     },
     LEFT {
-        override fun rectForRegion(box: Region) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize, box.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.h / 2 + b.handleSize / 2, b.handleSize, b.handleSize)
+        override fun rectForRegion(box: Region) = Rectangle2D(box.region.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize, box.region.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.region.h / 2 + b.handleSize / 2, b.handleSize, b.handleSize)
         override val dragMutators = setOf(DragMutator.LEFT)
     };
 
@@ -157,17 +157,13 @@ sealed class FuckingNode {
 }
 
 data class Region(val treeItem: TreeItem<FuckingNode>,
-             val name: String,
-             val arena: Arena,
-             var x: Int,
-             var y: Int,
-             var w: Int,
-             var h: Int) : FuckingNode() {
+                  val region: BotinokRegion,
+                  val arenaNode: Arena) : FuckingNode() {
 
-    override fun toString() = name
+    override fun toString() = region.name
 
     fun isHit(testX: Double, testY: Double) =
-        testX >= x && testX <= x + w - 1 && testY >= y && testY <= y + h - 1
+        testX >= region.x && testX <= region.x + region.w - 1 && testY >= region.y && testY <= region.y + region.h - 1
 }
 
 class StartBotinok : Application() {
@@ -218,7 +214,7 @@ class StartBotinok : Application() {
         listView.items = FXCollections.observableArrayList(botinokPlayRepo.findAll().map {Item(it)})
         handleEnterKeyInPlaySelector = {
             listView.selectionModel.selectedItem?.play?.let {
-                openPlayEditor(it)
+                action_openPlayEditor(it)
             }
         }
         listView.setOnKeyPressed {
@@ -238,10 +234,17 @@ class StartBotinok : Application() {
         primaryStage.scene = Scene(listView)
     }
 
-    fun openPlayEditor(play: BotinokPlay) {
+    fun action_openPlayEditor(play: BotinokPlay) {
         this.play = play
         primaryStage.title = "Botinok - ${play.name}"
         bananas = goBananas2()
+
+        for (arena in play.arenas) {
+            val arenaTreeItem = addTreeItemForArena(arena)
+            for (region in arena.regions) {
+                addTreeItemForRegion(region, (arenaTreeItem.value as FuckingNode.Arena))
+            }
+        }
     }
 
     private fun seed() {
@@ -271,7 +274,7 @@ class StartBotinok : Application() {
         var nextInitialRegionLocationIndex = 0
         var canvasContextMenu by notNull<ContextMenu>()
         var boxContextMenu by notNull<ContextMenu>()
-        var operationStartRegionParams by notNull<Region>()
+        var operationStartRegionParams by notNull<Box>()
         var operationStartMouseX = 0.0
         var operationStartMouseY = 0.0
         val rootNode: TreeItem<FuckingNode> = TreeItem(FuckingNode.Root())
@@ -317,7 +320,7 @@ class StartBotinok : Application() {
                         selectTreeItem(selectedArena().treeItem)
                     } else {
                         selectTreeItem(hitRegion.treeItem)
-                        operationStartRegionParams = hitRegion.copy()
+                        operationStartRegionParams = Box(hitRegion.region.x, hitRegion.region.y, hitRegion.region.w, hitRegion.region.h)
                         operationStartMouseX = e.x
                         operationStartMouseY = e.y
                         // noise("operationStartMouseX = $operationStartMouseX; operationStartMouseY = $operationStartMouseY")
@@ -341,10 +344,10 @@ class StartBotinok : Application() {
                         val dragMutators = selectedRegionHandles.flatMap{it.dragMutators}.toSet()
                         val points = BoxPoints(operationStartRegionParams.x, operationStartRegionParams.y, operationStartRegionParams.x + operationStartRegionParams.w - 1, operationStartRegionParams.y + operationStartRegionParams.h - 1)
                         dragMutators.forEach {it.mutate(points, dx, dy)}
-                        selectedRegion.x = points.minX
-                        selectedRegion.y = points.minY
-                        selectedRegion.w = points.maxX - points.minX + 1
-                        selectedRegion.h = points.maxY - points.minY + 1
+                        selectedRegion.region.x = points.minX
+                        selectedRegion.region.y = points.minY
+                        selectedRegion.region.w = points.maxX - points.minX + 1
+                        selectedRegion.region.h = points.maxY - points.minY + 1
                         drawArena()
                     }
                 }
@@ -471,7 +474,7 @@ class StartBotinok : Application() {
                 }
                 val b = BotinokStuff
                 gc.lineWidth = b.boxEdgeSize
-                gc.strokeRect(region.x.toDouble() - b.boxEdgeSize / 2, region.y.toDouble() - b.boxEdgeSize / 2, region.w.toDouble() + b.boxEdgeSize, region.h.toDouble() + b.boxEdgeSize)
+                gc.strokeRect(region.region.x.toDouble() - b.boxEdgeSize / 2, region.region.y.toDouble() - b.boxEdgeSize / 2, region.region.w.toDouble() + b.boxEdgeSize, region.region.h.toDouble() + b.boxEdgeSize)
 
                 if (isFocused) {
                     for (handle in RegionHandle.values()) {
@@ -492,12 +495,12 @@ class StartBotinok : Application() {
                 val xywh = initialRegionLocations[nextInitialRegionLocationIndex]
                 if (++nextInitialRegionLocationIndex > initialRegionLocations.lastIndex)
                     nextInitialRegionLocationIndex = 0
-                val regionTreeItem = TreeItem<FuckingNode>()
-                val newRegion = Region(regionTreeItem, "Region ${arena.regions.size + 1}", arena,
-                                       x = xywh.x, y = xywh.y,
-                                       w = xywh.w, h = xywh.h)
-                regionTreeItem.value = newRegion
-                arena.treeItem.children += regionTreeItem
+                val newRegion = newBotinokRegion(name = "Region ${arena.regions.size + 1}",
+                                                 x = xywh.x, y = xywh.y,
+                                                 w = xywh.w, h = xywh.h,
+                                                 arena = arena.arena)
+                arena.arena.regions.add(newRegion)
+                val regionTreeItem = addTreeItemForRegion(newRegion, arena)
                 arena.treeItem.expandedProperty().set(true)
 
                 navigationTreeView.selectionModel.clearSelection()
@@ -527,7 +530,7 @@ class StartBotinok : Application() {
             val arena: FuckingNode.Arena = when (value) {
                 is FuckingNode.Root -> wtf("c420c2f1-7c89-45aa-89b6-0aee7faa4446")
                 is FuckingNode.Arena -> value
-                is Region -> value.arena
+                is Region -> value.arenaNode
             }
             return arena
         }
@@ -537,6 +540,14 @@ class StartBotinok : Application() {
         fun initialize() {
 
         }
+    }
+
+    private fun addTreeItemForRegion(region: BotinokRegion, arenaNode: FuckingNode.Arena): TreeItem<FuckingNode> {
+        val regionTreeItem = TreeItem<FuckingNode>()
+        val newRegionNode = Region(regionTreeItem, region, arenaNode)
+        regionTreeItem.value = newRegionNode
+        arenaNode.treeItem.children += regionTreeItem
+        return regionTreeItem
     }
 
 
@@ -563,7 +574,7 @@ class StartBotinok : Application() {
     }
 
     private inner class simulateSomeUserActions {
-        init {thread {fuck2()}}
+        init {thread {fuck1()}}
 
         fun fuck1() {
             Thread.sleep(500)
@@ -580,19 +591,12 @@ class StartBotinok : Application() {
             Thread.sleep(500)
             JFXStuff.later {bananas.action_newRegion()}
         }
-
-        fun fuck3() {
-            action_takeScreenshot()
-            Thread.sleep(500)
-            JFXStuff.later {bananas.action_newRegion()}
-            Thread.sleep(500)
-            JFXStuff.later {bananas.action_newRegion()}
-        }
     }
+
+    val tmpImgPath = "$tmpDirPath/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
 
     private fun action_takeScreenshot() {
         JFXStuff.later {
-            val tmpImgPath = "$tmpDirPath/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
 
             run {
                 val image = Robot().createScreenCapture(Rectangle(getDefaultToolkit().screenSize))
@@ -600,15 +604,11 @@ class StartBotinok : Application() {
                 noise("Saved screenshot")
             }
 
-            val treeItem = TreeItem<FuckingNode>()
             val arena = newBotinokArena("Arena ${getArenaCount() + 1}", play)
             play.arenas.add(arena)
-            val arenaNode = FuckingNode.Arena(treeItem, arena, Image("file:///$tmpImgPath"))
-            treeItem.value = arenaNode
-            bananas.rootNode.children.add(treeItem)
+            addTreeItemForArena(arena)
             bananas.navigationTreeView.scrollTo(bananas.rootNode.children.lastIndex)
             selectLastTreeItem()
-
 
             JFXStuff.later {
                 primaryStage.isIconified = true
@@ -617,6 +617,14 @@ class StartBotinok : Application() {
                 }
             }
         }
+    }
+
+    private fun addTreeItemForArena(arena: BotinokArena): TreeItem<FuckingNode> {
+        val treeItem = TreeItem<FuckingNode>()
+        val arenaNode = FuckingNode.Arena(treeItem, arena, Image("file:///$tmpImgPath"))
+        treeItem.value = arenaNode
+        bananas.rootNode.children.add(treeItem)
+        return treeItem
     }
 
     private fun selectLastTreeItem() {

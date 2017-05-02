@@ -1,9 +1,6 @@
 package vgrechka.spew
 
-import org.jetbrains.kotlin.psi.KtClass
-import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.psi.KtFunction
-import org.jetbrains.kotlin.psi.KtProperty
+import org.jetbrains.kotlin.psi.*
 import vgrechka.*
 import java.io.File
 import java.util.*
@@ -13,8 +10,10 @@ import kotlin.properties.Delegates.notNull
 annotation class GDBEntitySpewOptions(val stuffObject: String = "")
 
 annotation class GEntity(val table: String)
-annotation class GOneToMany(val mappedBy: String)
-annotation class GManyToOne
+annotation class GOneToMany(val mappedBy: String, val fetch: GFetchType = GFetchType.LAZY)
+annotation class GManyToOne(val fetch: GFetchType = GFetchType.EAGER)
+
+enum class GFetchType {LAZY, EAGER}
 
 interface GCommonEntityFields {
     var id: Long
@@ -33,8 +32,8 @@ interface GRepository<Entity : GCommonEntityFields> {
 
 private sealed class FieldKind {
     class Simple : FieldKind()
-    class One : FieldKind()
-    data class Many(val mappedBy: String) : FieldKind()
+    class One(val fetchType: GFetchType) : FieldKind()
+    data class Many(val mappedBy: String, val fetchType: GFetchType) : FieldKind()
 }
 
 private data class FieldSpec(
@@ -239,10 +238,10 @@ class DBEntitySpew : Spew {
                     out.append(" var ${field.name}: ${field.type}")
                 }
                 is FieldKind.One -> {
-                    out.append("    @XManyToOne(fetch = XFetchType.LAZY) var ${field.name}: Generated_${field.type}")
+                    out.append("    @XManyToOne(fetch = XFetchType.${field.kind.fetchType.name}, cascade = arrayOf(XCascadeType.ALL)) var ${field.name}: Generated_${field.type}")
                 }
                 is FieldKind.Many -> {
-                    out.append("    @XOneToMany(fetch = XFetchType.LAZY, mappedBy = \"${field.kind.mappedBy}\") var ${field.name}: MutableList<Generated_${field.type}> = mutableListOf()")
+                    out.append("    @XOneToMany(fetch = XFetchType.${field.kind.fetchType.name}, mappedBy = \"${field.kind.mappedBy}\", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var ${field.name}: MutableList<Generated_${field.type}> = mutableListOf()")
                 }
             }
             if (index < entity.fields.lastIndex)
@@ -456,15 +455,26 @@ class DBEntitySpew : Spew {
                                         var kind: FieldKind = FieldKind.Simple()
                                         var type = prop.typeReference!!.text
 
+                                        fun findFetchType(ann: KtAnnotationEntry, default: GFetchType): GFetchType {
+                                            val prefix = GFetchType::class.simpleName + "."
+                                            val fetchTypeString = ann.freakingGetEnumAttributeText("fetch")
+                                                ?: "$prefix$default"
+                                            check(fetchTypeString.startsWith(prefix)) {"3e673b6f-939a-4a72-a4cf-a9fe20416ae5"}
+                                            return GFetchType.valueOf(fetchTypeString.substring(prefix.length))
+                                        }
+
                                         if (type.startsWith("MutableList<")) {
                                             type = type.substring("MutableList<".length, type.lastIndexOf(">"))
                                             val oneToManyAnnotationEntry = prop.freakingFindAnnotation("GOneToMany") ?: wtf("556650b2-91b5-45de-887f-81f87f701c49")
                                             val mappedBy = oneToManyAnnotationEntry.freakingGetStringAttribute("mappedBy") ?: wtf("9aafe9de-9a02-49c9-b4db-2300055b0026")
-                                            kind = FieldKind.Many(mappedBy = type.decapitalize() + "." + mappedBy)
+                                            val fetchType = findFetchType(oneToManyAnnotationEntry, default = GFetchType.LAZY)
+                                            kind = FieldKind.Many(mappedBy = type.decapitalize() + "." + mappedBy, fetchType = fetchType)
                                             isInCtorParams = false
                                         } else {
-                                            if (prop.freakingFindAnnotation("GManyToOne") != null) {
-                                                kind = FieldKind.One()
+                                            val manyToOneAnnotationEntry = prop.freakingFindAnnotation("GManyToOne")
+                                            if (manyToOneAnnotationEntry != null) {
+                                                val fetchType = findFetchType(manyToOneAnnotationEntry, default = GFetchType.EAGER)
+                                                kind = FieldKind.One(fetchType = fetchType)
                                             }
                                         }
 
@@ -545,7 +555,7 @@ class DBEntitySpew : Spew {
                        fields = listOf(
                            FieldSpec(name = "word", type = "String", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
                            FieldSpec(name = "rank", type = "Int", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
-                           FieldSpec(name = "comments", type = "AmazingComment", isEntity = true, isInCtorParams = false, isInToString = false, kind = FieldKind.Many(mappedBy = "amazingComment.word"))),
+                           FieldSpec(name = "comments", type = "AmazingComment", isEntity = true, isInCtorParams = false, isInToString = false, kind = FieldKind.Many(mappedBy = "amazingComment.word", fetchType = GFetchType.LAZY))),
                        finders = listOf(
                            FinderSpec(definedFinderName = "findAll",
                                       generatedFinderName = "findAll",
@@ -564,7 +574,7 @@ class DBEntitySpew : Spew {
                        fields = listOf(
                            FieldSpec(name = "author", type = "String", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
                            FieldSpec(name = "content", type = "String", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
-                           FieldSpec(name = "word", type = "AmazingWord", isEntity = true, isInCtorParams = true, isInToString = false, kind = FieldKind.One())),
+                           FieldSpec(name = "word", type = "AmazingWord", isEntity = true, isInCtorParams = true, isInToString = false, kind = FieldKind.One(fetchType = GFetchType.EAGER))),
                        finders = listOf(
                            FinderSpec(definedFinderName = "findAll",
                                       generatedFinderName = "findAll",

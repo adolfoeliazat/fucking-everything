@@ -25,7 +25,7 @@ interface BotinokRegionRepository : GRepository<BotinokRegion> {
 interface BotinokArena : GCommonEntityFields {
     var name: String
     @GManyToOne var play: BotinokPlay
-    @GOneToMany(mappedBy = "arena") var regions: MutableList<BotinokRegion>
+    @GOneToMany(mappedBy = "arena", fetch = GFetchType.EAGER) var regions: MutableList<BotinokRegion>
 }
 
 interface BotinokArenaRepository : GRepository<BotinokArena> {
@@ -34,7 +34,7 @@ interface BotinokArenaRepository : GRepository<BotinokArena> {
 @GEntity(table = "botinok_plays")
 interface BotinokPlay : GCommonEntityFields {
     var name: String
-    @GOneToMany(mappedBy = "play") var arenas: MutableList<BotinokArena>
+    @GOneToMany(mappedBy = "play", fetch = GFetchType.EAGER) var arenas: MutableList<BotinokArena>
 }
 
 interface BotinokPlayRepository : GRepository<BotinokPlay> {

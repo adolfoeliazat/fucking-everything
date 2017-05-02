@@ -5,7 +5,7 @@ import org.springframework.transaction.TransactionStatus
 
 interface XBackPlatform {
     var springctx: ApplicationContext
-    fun tx(block: (TransactionStatus) -> Unit)
+    fun <T> tx(block: (TransactionStatus) -> T): T
 }
 
 

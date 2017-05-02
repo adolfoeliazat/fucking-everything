@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Tue May 02 13:23:56 EEST 2017
+// Generated on Tue May 02 16:56:23 EEST 2017
 // Model: e:/fegh/global-menu/src/botinok-entities.kt
 //
 
@@ -151,7 +151,7 @@ class Generated_BotinokRegionFields(
     @XColumn var y: Int,
     @XColumn var w: Int,
     @XColumn var h: Int,
-    @XManyToOne(fetch = XFetchType.LAZY) var arena: Generated_BotinokArena
+    @XManyToOne(fetch = XFetchType.EAGER, cascade = arrayOf(XCascadeType.ALL)) var arena: Generated_BotinokArena
 )
 
 // ------------------------------------------------------------------
@@ -264,8 +264,8 @@ class Generated_BotinokArena(
 class Generated_BotinokArenaFields(
     @XEmbedded var common: CommonFields = CommonFields(),
     @XColumn(columnDefinition = "text") var name: String,
-    @XManyToOne(fetch = XFetchType.LAZY) var play: Generated_BotinokPlay,
-    @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokRegion.arena") var regions: MutableList<Generated_BotinokRegion> = mutableListOf()
+    @XManyToOne(fetch = XFetchType.EAGER, cascade = arrayOf(XCascadeType.ALL)) var play: Generated_BotinokPlay,
+    @XOneToMany(fetch = XFetchType.EAGER, mappedBy = "botinokRegion.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var regions: MutableList<Generated_BotinokRegion> = mutableListOf()
 )
 
 // ------------------------------------------------------------------
@@ -377,7 +377,7 @@ class Generated_BotinokPlay(
 class Generated_BotinokPlayFields(
     @XEmbedded var common: CommonFields = CommonFields(),
     @XColumn(columnDefinition = "text") var name: String,
-    @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokArena.play") var arenas: MutableList<Generated_BotinokArena> = mutableListOf()
+    @XOneToMany(fetch = XFetchType.EAGER, mappedBy = "botinokArena.play", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var arenas: MutableList<Generated_BotinokArena> = mutableListOf()
 )
 
 object BotinokGeneratedDBStuff {

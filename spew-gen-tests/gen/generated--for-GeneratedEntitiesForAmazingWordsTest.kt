@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Tue May 02 14:01:42 EEST 2017
+// Generated on Tue May 02 15:59:04 EEST 2017
 // Model: e:/fegh/spew-gen-tests/src/GeneratedEntitiesForAmazingWordsTest.kt
 //
 

@@ -40,15 +40,6 @@ object Spike_SQLite_DataSource {
     }
 }
 
-object Spike_SpringDataJPA {
-    @JvmStatic
-    fun main(args: Array<String>) {
-        backPlatform.springctx = AnnotationConfigApplicationContext(DBStuffTestsAppConfig::class.java)
-
-        clog("Fuck you")
-    }
-}
-
 private fun fuckAroundWithSQLiteConnection(con: Connection) {
     val st = con.prepareStatement("select id, niceWord_word, niceWord_rank from nice_words")
     val rs = st.executeQuery()

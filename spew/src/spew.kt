@@ -91,6 +91,12 @@ fun KtAnnotationEntry.freakingGetClassAttributeText(name: String): String? {
     }
 }
 
+fun KtAnnotationEntry.freakingGetEnumAttributeText(name: String): String? {
+    return this.freakingGetAttribute(name) {
+        (it.getArgumentExpression() as KtDotQualifiedExpression).text
+    }
+}
+
 fun <T> KtAnnotationEntry.freakingGetAttribute(name: String, convert: (KtValueArgument) -> T): T? {
     for (valueArgument in this.valueArguments) {
         val ktValueArgument = valueArgument as KtValueArgument

@@ -54,8 +54,8 @@ typealias XThreadLocal<T> = ThreadLocal<T>
 object JVMBackPlatform : XBackPlatform {
     override var springctx by notNullOnce<ApplicationContext>()
 
-    override fun tx(block: (TransactionStatus) -> Unit) {
-        TransactionTemplate(springctx.getBean(PlatformTransactionManager::class.java)).execute {
+    override fun <T> tx(block: (TransactionStatus) -> T): T {
+        return TransactionTemplate(springctx.getBean(PlatformTransactionManager::class.java)).execute {
             block(it)
         }
     }
