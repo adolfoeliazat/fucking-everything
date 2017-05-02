@@ -24,6 +24,7 @@ interface GCommonEntityFields {
 }
 
 interface GRepository<Entity : GCommonEntityFields> {
+    fun findOne(id: Long): Entity?
     fun findAll(): List<Entity>
     fun save(x: Entity): Entity
     fun delete(id: Long)
@@ -283,6 +284,11 @@ class DBEntitySpew : Spew {
         out.append("    val generatedRepo = backPlatform.springctx.getBean(Generated_${en}Repository::class.java)!!\n")
         out.append("\n")
         out.append("    object:${en}Repository {\n")
+        out.append("        override fun findOne(id: Long): $en? {\n")
+        out.append("            val shit = generatedRepo.findOne(id)\n")
+        out.append("            return shit?.toManuallyDefinedInterface()\n")
+        out.append("        }\n")
+        out.append("\n")
         out.append("        override fun findAll(): List<$en> {\n")
         out.append("            val shit = generatedRepo.findAll()\n")
         out.append("            return shit.map {it.toManuallyDefinedInterface()}\n")

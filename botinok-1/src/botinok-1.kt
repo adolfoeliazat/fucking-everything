@@ -19,38 +19,9 @@ import javax.sql.DataSource
 
 
 @Suppress("unused")
-@Configuration
 @EnableJpaRepositories
-@EnableTransactionManagement
 @ComponentScan(basePackages = arrayOf("vgrechka.botinok"))
-abstract class BotinokBaseAppConfig {
-    protected abstract val databaseURL: String
-
-    @Bean open fun entityManagerFactory(dataSource: DataSource) = LocalContainerEntityManagerFactoryBean()-{o->
-        o.jpaVendorAdapter = HibernateJpaVendorAdapter()-{o->
-            o.setShowSql(true)
-        }
-//        o.jpaPropertyMap.put(Environment.HBM2DDL_AUTO, "create-drop")
-        o.jpaPropertyMap.put(Environment.DIALECT, SQLiteDialect::class.qualifiedName)
-        o.jpaPropertyMap.put(Environment.IMPLICIT_NAMING_STRATEGY, NiceHibernateNamingStrategy::class.qualifiedName)
-        o.setPackagesToScan("vgrechka.botinok")
-        o.dataSource = dataSource
-    }
-
-    @Bean open fun dataSource(): DataSource {
-//        return SQLiteConnectionPoolDataSource()-{o->
-        return IntoSQLiteConnectionPoolDataSource()-{o->
-            o.url = databaseURL
-            o.config = SQLiteConfig()-{o->
-                o.setDateClass(SQLiteConfig.DateClass.TEXT.value)
-                o.enforceForeignKeys(true)
-            }
-        }
-    }
-
-    @Bean open fun transactionManager(emf: EntityManagerFactory) = JpaTransactionManager()-{o->
-        o.entityManagerFactory = emf
-    }
+abstract class BotinokBaseAppConfig : BaseSQLiteAppConfig(entityPackagesToScan = arrayOf("vgrechka.botinok")) {
 }
 
 open class BotinokProdAppConfig : BotinokBaseAppConfig() {

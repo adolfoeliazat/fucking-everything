@@ -32,6 +32,7 @@ dependencies {
     compile 'org.xerial:sqlite-jdbc:3.16.1'
     compile 'org.xerial:sqlite-jdbc:3.16.1:sources'
     compile 'org.springframework.data:spring-data-jpa:1.11.3.RELEASE'
+    compile 'org.springframework.data:spring-data-jpa:1.11.3.RELEASE:sources'
     compile 'org.hibernate:hibernate-core:5.2.10.Final'
     compile 'org.hibernate:hibernate-core:5.2.10.Final:sources'
     compile 'com.zaxxer:HikariCP:2.6.1'

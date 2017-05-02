@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Tue May 02 08:30:48 EEST 2017
+// Generated on Tue May 02 13:23:56 EEST 2017
 // Model: e:/fegh/global-menu/src/botinok-entities.kt
 //
 
@@ -43,6 +43,11 @@ val botinokRegionRepo: BotinokRegionRepository by lazy {
     val generatedRepo = backPlatform.springctx.getBean(Generated_BotinokRegionRepository::class.java)!!
 
     object:BotinokRegionRepository {
+        override fun findOne(id: Long): BotinokRegion? {
+            val shit = generatedRepo.findOne(id)
+            return shit?.toManuallyDefinedInterface()
+        }
+
         override fun findAll(): List<BotinokRegion> {
             val shit = generatedRepo.findAll()
             return shit.map {it.toManuallyDefinedInterface()}
@@ -168,6 +173,11 @@ val botinokArenaRepo: BotinokArenaRepository by lazy {
     val generatedRepo = backPlatform.springctx.getBean(Generated_BotinokArenaRepository::class.java)!!
 
     object:BotinokArenaRepository {
+        override fun findOne(id: Long): BotinokArena? {
+            val shit = generatedRepo.findOne(id)
+            return shit?.toManuallyDefinedInterface()
+        }
+
         override fun findAll(): List<BotinokArena> {
             val shit = generatedRepo.findAll()
             return shit.map {it.toManuallyDefinedInterface()}
@@ -275,6 +285,11 @@ val botinokPlayRepo: BotinokPlayRepository by lazy {
     val generatedRepo = backPlatform.springctx.getBean(Generated_BotinokPlayRepository::class.java)!!
 
     object:BotinokPlayRepository {
+        override fun findOne(id: Long): BotinokPlay? {
+            val shit = generatedRepo.findOne(id)
+            return shit?.toManuallyDefinedInterface()
+        }
+
         override fun findAll(): List<BotinokPlay> {
             val shit = generatedRepo.findAll()
             return shit.map {it.toManuallyDefinedInterface()}

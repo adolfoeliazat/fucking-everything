@@ -6,10 +6,7 @@ import javafx.application.Application
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.event.EventHandler
-import javafx.fxml.FXML
-import javafx.fxml.FXMLLoader
 import javafx.geometry.Rectangle2D
-import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.*
@@ -146,7 +143,7 @@ sealed class FuckingNode {
     class Root : FuckingNode()
 
     class Arena(val treeItem: TreeItem<FuckingNode>,
-                val name: String,
+                val arena: BotinokArena,
                 val image: Image) : FuckingNode() {
 
         val regions: List<Region>
@@ -154,7 +151,7 @@ sealed class FuckingNode {
                 return treeItem.children.map {it.value as Region}
             }
 
-        override fun toString() = name
+        override fun toString() = arena.name
     }
 
 }
@@ -177,6 +174,7 @@ class StartBotinok : Application() {
     private var primaryStage by notNullOnce<Stage>()
     private var bananas by notNullOnce<goBananas2>()
     private var handleEnterKeyInPlaySelector by notNull<() -> Unit>()
+    private var play by notNull<BotinokPlay>()
 
     override fun start(primaryStage: Stage) {
         run {
@@ -241,6 +239,7 @@ class StartBotinok : Application() {
     }
 
     fun openPlayEditor(play: BotinokPlay) {
+        this.play = play
         primaryStage.title = "Botinok - ${play.name}"
         bananas = goBananas2()
     }
@@ -259,12 +258,6 @@ class StartBotinok : Application() {
                     botinokPlayRepo.save(newBotinokPlay(name = playName))
                 }
             }
-        }
-    }
-
-    class NavigationTreeNode(val title: String) {
-        override fun toString(): String {
-            return title
         }
     }
 
@@ -362,6 +355,20 @@ class StartBotinok : Application() {
 
         init {
             val vbox = VBox()
+
+            vbox.children += MenuBar()-{o->
+                o.menus += Menu("_File")-{o->
+                    o.items += MenuItem("_Save")-{o->
+                        o.setOnAction {action_save()}
+                    }
+
+                    o.items += MenuItem("_Quit")-{o->
+                        o.setOnAction {
+                            exitProcess(0)
+                        }
+                    }
+                }
+            }
 
             splitPane = SplitPane()
             vbox.children += splitPane
@@ -545,7 +552,7 @@ class StartBotinok : Application() {
                 try {
                     if (e.modifiers.and(NativeMouseEvent.CTRL_L_MASK) == NativeMouseEvent.CTRL_L_MASK) {
                         if (e.keyCode == NativeKeyEvent.VC_2) {
-                            handleKey2()
+                            action_takeScreenshot()
                         }
                     }
                 } catch(e: Throwable) {
@@ -567,7 +574,7 @@ class StartBotinok : Application() {
             Thread.sleep(500)
             JFXStuff.later {handleEnterKeyInPlaySelector()}
             Thread.sleep(500)
-            handleKey2()
+            action_takeScreenshot()
             Thread.sleep(500)
             JFXStuff.later {bananas.action_newRegion()}
             Thread.sleep(500)
@@ -575,7 +582,7 @@ class StartBotinok : Application() {
         }
 
         fun fuck3() {
-            handleKey2()
+            action_takeScreenshot()
             Thread.sleep(500)
             JFXStuff.later {bananas.action_newRegion()}
             Thread.sleep(500)
@@ -583,7 +590,7 @@ class StartBotinok : Application() {
         }
     }
 
-    private fun handleKey2() {
+    private fun action_takeScreenshot() {
         JFXStuff.later {
             val tmpImgPath = "$tmpDirPath/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
 
@@ -594,8 +601,10 @@ class StartBotinok : Application() {
             }
 
             val treeItem = TreeItem<FuckingNode>()
-            val arena = FuckingNode.Arena(treeItem, "Arena ${getArenaCount() + 1}", Image("file:///$tmpImgPath"))
-            treeItem.value = arena
+            val arena = newBotinokArena("Arena ${getArenaCount() + 1}", play)
+            play.arenas.add(arena)
+            val arenaNode = FuckingNode.Arena(treeItem, arena, Image("file:///$tmpImgPath"))
+            treeItem.value = arenaNode
             bananas.rootNode.children.add(treeItem)
             bananas.navigationTreeView.scrollTo(bananas.rootNode.children.lastIndex)
             selectLastTreeItem()
@@ -618,6 +627,14 @@ class StartBotinok : Application() {
 
     fun getArenaCount(): Int {
         return bananas.rootNode.children.size
+    }
+
+    fun action_save() {
+        backPlatform.tx {
+            botinokPlayRepo.save(play)
+        }
+
+        JFXStuff.infoAlert("Your shit is saved OK")
     }
 
     companion object {

@@ -4,9 +4,21 @@ import org.hibernate.boot.model.naming.Identifier
 import org.hibernate.boot.model.naming.ImplicitJoinColumnNameSource
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
 import org.hibernate.boot.model.source.spi.AttributePath
+import org.hibernate.cfg.Environment
+import org.hibernate.dialect.SQLiteDialect
 import org.hibernate.engine.spi.SharedSessionContractImplementor
 import org.hibernate.id.IdentityGenerator
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import org.springframework.orm.jpa.JpaTransactionManager
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
+import org.springframework.transaction.annotation.EnableTransactionManagement
+import org.sqlite.SQLiteConfig
+import org.sqlite.javax.IntoSQLiteConnectionPoolDataSource
 import vgrechka.*
+import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
 object DBStuff {
@@ -112,6 +124,59 @@ data class CommonFields(
 //        updatedAt = backPlatform.requestGlobus.stamp
 //    }
 }
+
+
+@Configuration
+@EnableTransactionManagement
+abstract class BaseSQLiteAppConfig(val entityPackagesToScan: Array<String>) {
+    protected abstract val databaseURL: String
+
+    @Bean open fun entityManagerFactory(dataSource: DataSource) = LocalContainerEntityManagerFactoryBean()-{o->
+        o.jpaVendorAdapter = HibernateJpaVendorAdapter()-{o->
+            o.setShowSql(true)
+        }
+//        o.jpaPropertyMap.put(Environment.HBM2DDL_AUTO, "create-drop")
+        o.jpaPropertyMap.put(Environment.DIALECT, SQLiteDialect::class.qualifiedName)
+        o.jpaPropertyMap.put(Environment.IMPLICIT_NAMING_STRATEGY, NiceHibernateNamingStrategy::class.qualifiedName)
+        o.setPackagesToScan(*entityPackagesToScan)
+        o.dataSource = dataSource
+    }
+
+    @Bean open fun dataSource(): DataSource {
+//        return SQLiteConnectionPoolDataSource()-{o->
+        return IntoSQLiteConnectionPoolDataSource()-{o->
+            o.url = databaseURL
+            o.config = SQLiteConfig()-{o->
+                o.setDateClass(SQLiteConfig.DateClass.TEXT.value)
+                o.enforceForeignKeys(true)
+            }
+        }
+    }
+
+    @Bean open fun transactionManager(emf: EntityManagerFactory) = JpaTransactionManager()-{o->
+        o.entityManagerFactory = emf
+    }
+
+}
+
+abstract class BaseTestSQLiteAppConfig(entityPackagesToScan: Array<String>): BaseSQLiteAppConfig(entityPackagesToScan) {
+    override val databaseURL = BigPile.localSQLiteShebangTestDBURL
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

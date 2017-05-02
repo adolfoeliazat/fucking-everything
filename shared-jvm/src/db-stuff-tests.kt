@@ -2,8 +2,6 @@ package vgrechka.db.tests
 
 import org.hibernate.cfg.Environment
 import org.hibernate.dialect.SQLiteDialect
-import org.junit.runner.RunWith
-import org.junit.runners.Suite
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
@@ -13,7 +11,6 @@ import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.annotation.EnableTransactionManagement
-import org.sqlite.SQLiteDataSource
 import org.sqlite.javax.SQLiteConnectionPoolDataSource
 import vgrechka.*
 import vgrechka.db.*
@@ -25,7 +22,7 @@ import javax.sql.DataSource
 object Spike_SQLite_1 {
     @JvmStatic
     fun main(args: Array<String>) {
-        val con = DriverManager.getConnection(BigPile.localSQLiteShebangDBURL)
+        val con = DriverManager.getConnection(BigPile.localSQLiteShebangTestDBURL)
         fuckAroundWithSQLiteConnection(con)
         clog("OK")
     }
@@ -36,10 +33,19 @@ object Spike_SQLite_DataSource {
     fun main(args: Array<String>) {
         clog("How about DataSource?")
         val ds = SQLiteConnectionPoolDataSource()
-        ds.url = BigPile.localSQLiteShebangDBURL
+        ds.url = BigPile.localSQLiteShebangTestDBURL
         val con = ds.connection
         fuckAroundWithSQLiteConnection(con)
         clog("OK")
+    }
+}
+
+object Spike_SpringDataJPA {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        backPlatform.springctx = AnnotationConfigApplicationContext(DBStuffTestsAppConfig::class.java)
+
+        clog("Fuck you")
     }
 }
 
@@ -72,7 +78,7 @@ data class NiceWordFields(
 private object Spike_SaveShitToSQLiteAndLoadBackViaHibernate_1 {
     @JvmStatic
     fun main(args: Array<String>) {
-        backPlatform.springctx = AnnotationConfigApplicationContext(AppConfig::class.java)
+        backPlatform.springctx = AnnotationConfigApplicationContext(DBStuffTestsAppConfig::class.java)
 
         backPlatform.tx {
             clog("Fucking around?")
@@ -85,32 +91,33 @@ private object Spike_SaveShitToSQLiteAndLoadBackViaHibernate_1 {
         clog("OK")
     }
 
-    @Suppress("unused")
-    @Configuration
-    @EnableJpaRepositories
-    @EnableTransactionManagement
-    @ComponentScan(basePackages = arrayOf("vgrechka.db.tests"))
-    open class AppConfig {
-        @Bean open fun entityManagerFactory(dataSource: DataSource) = LocalContainerEntityManagerFactoryBean() -{o->
-            o.jpaVendorAdapter = HibernateJpaVendorAdapter()-{o->
-                o.setShowSql(true)
-            }
+}
+
+@Suppress("unused")
+@Configuration
+@EnableJpaRepositories
+@EnableTransactionManagement
+@ComponentScan(basePackages = arrayOf("vgrechka.db.tests"))
+private open class DBStuffTestsAppConfig {
+    @Bean open fun entityManagerFactory(dataSource: DataSource) = LocalContainerEntityManagerFactoryBean() -{o->
+        o.jpaVendorAdapter = HibernateJpaVendorAdapter()-{o->
+            o.setShowSql(true)
+        }
 //        o.jpaPropertyMap.put(Environment.HBM2DDL_AUTO, "create-drop")
-            o.jpaPropertyMap.put(Environment.DIALECT, SQLiteDialect::class.qualifiedName)
-            o.jpaPropertyMap.put(Environment.IMPLICIT_NAMING_STRATEGY, NiceHibernateNamingStrategy::class.qualifiedName)
-            o.setPackagesToScan("vgrechka.db.tests")
-            o.dataSource = dataSource
-        }
+        o.jpaPropertyMap.put(Environment.DIALECT, SQLiteDialect::class.qualifiedName)
+        o.jpaPropertyMap.put(Environment.IMPLICIT_NAMING_STRATEGY, NiceHibernateNamingStrategy::class.qualifiedName)
+        o.setPackagesToScan("vgrechka.db.tests")
+        o.dataSource = dataSource
+    }
 
-        @Bean open fun dataSource(): DataSource {
-            return SQLiteConnectionPoolDataSource()-{o->
-                o.url = "jdbc:sqlite:e:/febig/db/shebang.db"
-            }
+    @Bean open fun dataSource(): DataSource {
+        return SQLiteConnectionPoolDataSource()-{o->
+            o.url = "jdbc:sqlite:e:/febig/db/shebang.db"
         }
+    }
 
-        @Bean open fun transactionManager(emf: EntityManagerFactory) = JpaTransactionManager()-{o->
-            o.entityManagerFactory = emf
-        }
+    @Bean open fun transactionManager(emf: EntityManagerFactory) = JpaTransactionManager()-{o->
+        o.entityManagerFactory = emf
     }
 }
 

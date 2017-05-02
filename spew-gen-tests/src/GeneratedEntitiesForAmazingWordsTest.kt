@@ -243,33 +243,9 @@ ID of newly added word is 4                                3b11683c-7979-4e65-af
     }
 
     @Suppress("unused")
-    @Configuration
     @EnableJpaRepositories
-    @EnableTransactionManagement
     @ComponentScan(basePackages = arrayOf("vgrechka.spewgentests"))
-    open class AppConfig {
-        @Bean open fun entityManagerFactory(dataSource: DataSource) = LocalContainerEntityManagerFactoryBean()-{o->
-            o.jpaVendorAdapter = HibernateJpaVendorAdapter()-{o->
-                o.setShowSql(false)
-//                o.setShowSql(true)
-            }
-//        o.jpaPropertyMap.put(Environment.HBM2DDL_AUTO, "create-drop")
-            o.jpaPropertyMap.put(Environment.DIALECT, SQLiteDialect::class.qualifiedName)
-            o.jpaPropertyMap.put(Environment.IMPLICIT_NAMING_STRATEGY, NiceHibernateNamingStrategy::class.qualifiedName)
-            o.setPackagesToScan("vgrechka.spewgentests")
-            o.dataSource = dataSource
-        }
-
-        @Bean open fun dataSource(): DataSource {
-            return SQLiteConnectionPoolDataSource()-{o->
-                o.url = BigPile.localSQLiteShebangDBURL
-            }
-        }
-
-        @Bean open fun transactionManager(emf: EntityManagerFactory) = JpaTransactionManager()-{o->
-            o.entityManagerFactory = emf
-        }
-    }
+    open class AppConfig : BaseTestSQLiteAppConfig(entityPackagesToScan = arrayOf("vgrechka.spewgentests"))
 }
 
 
@@ -280,10 +256,8 @@ interface AmazingWord : GCommonEntityFields {
     @GOneToMany(mappedBy = "word") var comments: MutableList<AmazingComment>
 }
 
-interface AmazingWordRepository {
-    fun findAll(): List<AmazingWord>
+interface AmazingWordRepository : GRepository<AmazingWord> {
     fun findByWordLikeIgnoreCase(x: String): List<AmazingWord>
-    fun save(x: AmazingWord): AmazingWord
 }
 
 @GEntity(table = "amazing_comments")
@@ -293,9 +267,7 @@ interface AmazingComment : GCommonEntityFields {
     @GManyToOne var word: AmazingWord
 }
 
-interface AmazingCommentRepository {
-    fun findAll(): List<AmazingComment>
-    fun save(x: AmazingComment): AmazingComment
+interface AmazingCommentRepository : GRepository<AmazingComment> {
 }
 
 
