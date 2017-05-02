@@ -275,6 +275,15 @@ class StartBotinok : Application() {
                 addTreeItemForRegion(region, (arenaTreeItem.value as FuckingNode.Arena))
             }
         }
+
+        val rootItems = bananas.rootNode.children
+        if (rootItems.isNotEmpty()) {
+            val arenaItem = rootItems.first()
+            bananas.navigationTreeView.selectionModel.select(arenaItem)
+            if (arenaItem.children.isNotEmpty()) {
+                arenaItem.isExpanded = true
+            }
+        }
     }
 
     private fun updateStageTitle() {
