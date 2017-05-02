@@ -319,7 +319,7 @@ class StartBotinok : Application() {
                     if (selectedRegion != null) {
                         val dx = Math.round(e.x - operationStartMouseX).toInt()
                         val dy = Math.round(e.y - operationStartMouseY).toInt()
-                        noise("dx = $dx; dy = $dy")
+                        // noise("dx = $dx; dy = $dy")
                         val dragMutators = selectedRegionHandles.flatMap{it.dragMutators}.toSet()
                         val points = BoxPoints(operationStartRegionParams.x, operationStartRegionParams.y, operationStartRegionParams.x + operationStartRegionParams.w - 1, operationStartRegionParams.y + operationStartRegionParams.h - 1)
                         dragMutators.forEach {it.mutate(points, dx, dy)}
