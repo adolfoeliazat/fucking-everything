@@ -14,9 +14,12 @@ import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.*
 import javafx.scene.image.Image
+import javafx.scene.input.KeyCode
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.AnchorPane
+import javafx.scene.layout.Priority
+import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.WindowEvent
@@ -173,7 +176,6 @@ data class Region(val treeItem: TreeItem<FuckingNode>,
 class StartBotinok : Application() {
     private var primaryStage by notNullOnce<Stage>()
     private var bananas by notNullOnce<goBananas2>()
-    private var co by notNullOnce<BotinokBrowserSceneController>()
 
     override fun start(primaryStage: Stage) {
         run {
@@ -215,6 +217,25 @@ class StartBotinok : Application() {
         }
         val listView = ListView<Item>()
         listView.items = FXCollections.observableArrayList(botinokPlayRepo.findAll().map {Item(it)})
+        fun openShit() {
+            listView.selectionModel.selectedItem?.play?.let {
+                openPlayEditor(it)
+            }
+        }
+        listView.setOnKeyPressed {
+            if (it.code == KeyCode.ENTER) {
+                openShit()
+            }
+        }
+        listView.setOnMouseClicked {
+            if (it.button == MouseButton.PRIMARY && it.clickCount == 2) {
+                openShit()
+            }
+        }
+        JFXStuff.later {
+            listView.selectionModel.select(0)
+            listView.requestFocus()
+        }
         primaryStage.scene = Scene(listView)
     }
 
@@ -246,14 +267,11 @@ class StartBotinok : Application() {
         }
     }
 
-    class BotinokBrowserSceneController {
-        @FXML lateinit var someTextField: TextField
-        @FXML lateinit var fuckAroundButton1: Button
-        @FXML lateinit var fuckAroundButton2: Button
-        @FXML lateinit var navigationTreeView: TreeView<FuckingNode>
-        @FXML lateinit var splitPane: SplitPane
-        @FXML lateinit var detailsPane: AnchorPane
-        var stuff by notNullOnce<goBananas2>()
+    inner class goBananas2 {
+        var someTextField by notNull<TextField>()
+        var navigationTreeView by notNull<TreeView<FuckingNode>>()
+        var splitPane by notNull<SplitPane>()
+        var detailsPane by notNull<AnchorPane>()
         var currentContextMenu: ContextMenu? = null
         var selectedRegionHandles = setOf<RegionHandle>()
         var nextInitialRegionLocationIndex = 0
@@ -262,8 +280,9 @@ class StartBotinok : Application() {
         var operationStartRegionParams by notNull<Region>()
         var operationStartMouseX = 0.0
         var operationStartMouseY = 0.0
+        val rootNode: TreeItem<FuckingNode> = TreeItem(FuckingNode.Root())
 
-        class RegionLocation(val x: Int, val y: Int, val w: Int, val h: Int)
+        inner class RegionLocation(val x: Int, val y: Int, val w: Int, val h: Int)
 
         val initialRegionLocations = listOf(
             RegionLocation(x = 20, y = 20, w = 150, h = 50),
@@ -307,7 +326,7 @@ class StartBotinok : Application() {
                         operationStartRegionParams = hitRegion.copy()
                         operationStartMouseX = e.x
                         operationStartMouseY = e.y
-                        noise("operationStartMouseX = $operationStartMouseX; operationStartMouseY = $operationStartMouseY")
+                        // noise("operationStartMouseX = $operationStartMouseX; operationStartMouseY = $operationStartMouseY")
                     }
                 }
                 drawArena()
@@ -340,6 +359,67 @@ class StartBotinok : Application() {
             canvas
         }
 
+        init {
+            val vbox = VBox()
+
+            splitPane = SplitPane()
+            vbox.children += splitPane
+            VBox.setVgrow(splitPane, Priority.ALWAYS)
+            splitPane.setDividerPosition(0, 0.2)
+
+            navigationTreeView = TreeView()
+            splitPane.items += navigationTreeView
+
+            detailsPane = AnchorPane()
+            splitPane.items += detailsPane
+
+            navigationTreeView.setOnMouseClicked {
+                currentContextMenu?.hide()
+                currentContextMenu = null
+            }
+
+            navigationTreeView.setOnContextMenuRequested {e->
+                val item = navigationTreeView.selectionModel.selectedItem?.value
+
+                val menu = ContextMenu()
+                if (item is FuckingNode.Arena) {
+                    addMenuItem(menu, "New Region", this::action_newRegion)
+                }
+
+                if (menu.items.isNotEmpty()) {
+                    menu.show(navigationTreeView, e.screenX, e.screenY)
+                    currentContextMenu = menu
+                }
+            }
+
+            navigationTreeView.selectionModel.selectedItemProperty().addListener {_, oldValue, newValue ->
+                onTreeSelectionChanged(oldValue, newValue)
+            }
+
+            navigationTreeView.isShowRoot = false
+            navigationTreeView.setCellFactory {
+                object : TreeCell<FuckingNode>() {
+                    override fun updateItem(item: FuckingNode?, empty: Boolean) {
+                        super.updateItem(item, empty)
+                        if (item == null) {
+                            text = ""
+                            graphic = null
+                            return
+                        }
+
+                        // this.style = "-fx-text-fill: red; -fx-font-weight: bold;"
+                        text = item.toString()
+                        graphic = EmojiOneView(EmojiOne.AIRPLANE)
+                    }
+                }
+            }
+
+            navigationTreeView.root = rootNode
+            navigationTreeView.root.isExpanded = true
+
+            primaryStage.scene = Scene(vbox)
+        }
+
         private fun hideContextMenus() {
             // TODO:vgrechka ...
 //            canvasContextMenu.hide()
@@ -368,7 +448,7 @@ class StartBotinok : Application() {
             val gc = canvas.graphicsContext2D
             gc.drawImage(selectedArena().image, 0.0, 0.0)
             selectedArena().regions.forEach {region->
-//                run { // Area to be captured by the region
+                //                run { // Area to be captured by the region
 //                    gc.fill = Color.BLUE
 //                    gc.fillRect(region.x.toDouble(), region.y.toDouble(), region.w.toDouble(), region.h.toDouble())
 //                }
@@ -444,73 +524,10 @@ class StartBotinok : Application() {
             return arena
         }
 
-        fun initController() {
-            navigationTreeView.setOnMouseClicked {
-                currentContextMenu?.hide()
-                currentContextMenu = null
-            }
-
-            navigationTreeView.setOnContextMenuRequested {e->
-                val item = navigationTreeView.selectionModel.selectedItem?.value
-
-                val menu = ContextMenu()
-                if (item is FuckingNode.Arena) {
-                    addMenuItem(menu, "New Region", this::action_newRegion)
-                }
-
-                if (menu.items.isNotEmpty()) {
-                    menu.show(navigationTreeView, e.screenX, e.screenY)
-                    currentContextMenu = menu
-                }
-            }
-
-            navigationTreeView.selectionModel.selectedItemProperty().addListener {_, oldValue, newValue ->
-                onTreeSelectionChanged(oldValue, newValue)
-            }
-
-            navigationTreeView.isShowRoot = false
-            navigationTreeView.setCellFactory {
-                object : TreeCell<FuckingNode>() {
-                    override fun updateItem(item: FuckingNode?, empty: Boolean) {
-                        super.updateItem(item, empty)
-                        if (item == null) {
-                            text = ""
-                            graphic = null
-                            return
-                        }
-
-                        // this.style = "-fx-text-fill: red; -fx-font-weight: bold;"
-                        text = item.toString()
-                        graphic = EmojiOneView(EmojiOne.AIRPLANE)
-                    }
-                }
-            }
-
-            navigationTreeView.root = stuff.rootNode
-
-            navigationTreeView.root.isExpanded = true
-
-            fuckAroundButton1.onAction = EventHandler {
-                JFXStuff.infoAlert("Fuck you, ${someTextField.text}")
-            }
-        }
 
         @Suppress("unused")
         fun initialize() {
 
-        }
-    }
-
-    inner class goBananas2 {
-        val rootNode: TreeItem<FuckingNode> = TreeItem(FuckingNode.Root())
-
-        init {
-            val loader = FXMLLoader(this::class.java.getResource("BotinokBrowserScene.fxml"))
-            val root = loader.load<Parent>()
-            co = loader.getController<BotinokBrowserSceneController>()
-            co.stuff = this
-            co.initController()
-            primaryStage.scene = Scene(root)
         }
     }
 
@@ -541,9 +558,9 @@ class StartBotinok : Application() {
         handleKey2()
         thread {
             Thread.sleep(500)
-            JFXStuff.later {co.action_newRegion()}
+            JFXStuff.later {bananas.action_newRegion()}
             Thread.sleep(500)
-            JFXStuff.later {co.action_newRegion()}
+            JFXStuff.later {bananas.action_newRegion()}
         }
     }
 
@@ -561,7 +578,7 @@ class StartBotinok : Application() {
             val arena = FuckingNode.Arena(treeItem, "Arena ${getArenaCount() + 1}", Image("file:///$tmpImgPath"))
             treeItem.value = arena
             bananas.rootNode.children.add(treeItem)
-            co.navigationTreeView.scrollTo(bananas.rootNode.children.lastIndex)
+            bananas.navigationTreeView.scrollTo(bananas.rootNode.children.lastIndex)
             selectLastTreeItem()
 
 
@@ -575,8 +592,8 @@ class StartBotinok : Application() {
     }
 
     private fun selectLastTreeItem() {
-        co.navigationTreeView.selectionModel.clearSelection()
-        co.navigationTreeView.selectionModel.selectLast()
+        bananas.navigationTreeView.selectionModel.clearSelection()
+        bananas.navigationTreeView.selectionModel.selectLast()
     }
 
 
