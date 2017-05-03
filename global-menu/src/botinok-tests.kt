@@ -23,16 +23,16 @@ class BotinokTest1 {
 
         backPlatform.tx {
             botinokPlayRepo.save(newBotinokPlay("Pizdaplay")).also {play->
-                botinokArenaRepo.save(newBotinokArena(play = play, name = "Pizdarena")).also {arena->
+                botinokArenaRepo.save(newBotinokArena(play = play, name = "Pizdarena", screenshot = byteArrayOf())).also {arena->
                     botinokRegionRepo.save(newBotinokRegion(arena = arena, name = "Fucking region", x = 10, y = 20, w = 100, h = 200))
                     botinokRegionRepo.save(newBotinokRegion(arena = arena, name = "Shitty region", x = 15, y = 23, w = 350, h = 60))
                 }
-                botinokArenaRepo.save(newBotinokArena(play = play, name = "Mandarena")).also {arena->
+                botinokArenaRepo.save(newBotinokArena(play = play, name = "Mandarena", screenshot = byteArrayOf())).also {arena->
                     botinokRegionRepo.save(newBotinokRegion(arena = arena, name = "Bitchy region", x = 43, y = 32, w = 784, h = 46))
                 }
             }
             botinokPlayRepo.save(newBotinokPlay("Hamlet")).also {play->
-                botinokArenaRepo.save(newBotinokArena(play = play, name = "the fucking")).also {arena->
+                botinokArenaRepo.save(newBotinokArena(play = play, name = "the fucking", screenshot = byteArrayOf())).also {arena->
                     botinokRegionRepo.save(newBotinokRegion(arena = arena, name = "prince", x = 453, y = 858, w = 74, h = 500))
                     botinokRegionRepo.save(newBotinokRegion(arena = arena, name = "of Denmark", x = 424, y = 483, w = 22, h = 33))
                 }
@@ -52,7 +52,7 @@ class BotinokTest1 {
         }
 
         fun <T : GCommonEntityFields> checkForeignKeyPreventsDeletion(deleteFromRepo: GRepository<T>) {
-            assertThrownExceptionOrOneOfItsCausesMessageContains("SQLITE_CONSTRAINT_FOREIGNKEY") {
+            AssertPile.thrownExceptionOrOneOfItsCausesMessageContains("SQLITE_CONSTRAINT_FOREIGNKEY") {
                 backPlatform.tx {
                     val shit = deleteFromRepo.findAll().first()
                     deleteFromRepo.delete(shit)

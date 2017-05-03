@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Tue May 02 16:56:23 EEST 2017
+// Generated on Wed May 03 09:53:49 EEST 2017
 // Model: e:/fegh/global-menu/src/botinok-entities.kt
 //
 
@@ -159,9 +159,11 @@ class Generated_BotinokRegionFields(
 // ------------------------------------------------------------------
 
 fun newBotinokArena(name: String,
+                    screenshot: ByteArray,
                     play: BotinokPlay): BotinokArena {
     val backing = Generated_BotinokArena(
         Generated_BotinokArenaFields(name = name,
+                                     screenshot = screenshot,
                                      play = play._backing))
     return backing.toManuallyDefinedInterface()
 }
@@ -237,6 +239,10 @@ class Generated_BotinokArena(
                 get() = _backing.botinokArena.name
                 set(value) {_backing.botinokArena.name = value}
 
+            override var screenshot: ByteArray
+                get() = _backing.botinokArena.screenshot
+                set(value) {_backing.botinokArena.screenshot = value}
+
             override var play: BotinokPlay
                 get() = _backing.botinokArena.play.toManuallyDefinedInterface()
                 set(value) {_backing.botinokArena.play = value._backing}
@@ -256,7 +262,7 @@ class Generated_BotinokArena(
     }
 
     override fun toString(): String {
-        return "BotinokArena(name=${botinokArena.name})"
+        return "BotinokArena(name=${botinokArena.name}, screenshot=${botinokArena.screenshot})"
     }
 }
 
@@ -264,6 +270,7 @@ class Generated_BotinokArena(
 class Generated_BotinokArenaFields(
     @XEmbedded var common: CommonFields = CommonFields(),
     @XColumn(columnDefinition = "text") var name: String,
+    @XColumn var screenshot: ByteArray,
     @XManyToOne(fetch = XFetchType.EAGER, cascade = arrayOf(XCascadeType.ALL)) var play: Generated_BotinokPlay,
     @XOneToMany(fetch = XFetchType.EAGER, mappedBy = "botinokRegion.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var regions: MutableList<Generated_BotinokRegion> = mutableListOf()
 )
@@ -405,6 +412,7 @@ create table `botinok_arenas` (
     `botinokArena_common_updatedAt` text not null,
     `botinokArena_common_deleted` integer not null,
     `botinokArena_name` text not null,
+    `botinokArena_screenshot` blob not null,
     `botinokArena_play__id` bigint not null,
     foreign key (botinokArena_play__id) references botinok_plays(id)
 );
@@ -449,6 +457,7 @@ create table `botinok_arenas` (
     `botinokArena_common_updatedAt` text not null,
     `botinokArena_common_deleted` integer not null,
     `botinokArena_name` text not null,
+    `botinokArena_screenshot` blob not null,
     `botinokArena_play__id` bigint not null,
     foreign key (botinokArena_play__id) references botinok_plays(id)
 );

@@ -55,6 +55,8 @@ dependencies {
     compile 'de.jensd:fontawesomefx-commons:8.15:sources'
     compile 'de.jensd:fontawesomefx-controls:8.15'
     compile 'de.jensd:fontawesomefx-controls:8.15:sources'
+    compile 'net.bytebuddy:byte-buddy:1.6.9'
+    compile 'net.bytebuddy:byte-buddy:1.6.9:sources'
 }
 
 task importDeps(type: Copy) {

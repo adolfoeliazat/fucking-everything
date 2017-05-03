@@ -8,8 +8,8 @@ import org.junit.runners.Suite
 import java.util.concurrent.ConcurrentHashMap
 
 @RunWith(Suite::class) @Suite.SuiteClasses(
-    FileLineTests::class, AttachedComputedShitTests::class, JFXPropertyTests::class
-)
+    FileLineTests::class, AttachedComputedShitTests::class, JFXPropertyTests::class,
+    FilePile.Tests::class)
 class SharedJVMTestSuite
 
 class FileLineTests {
@@ -32,7 +32,7 @@ class MapBehaviorTests {
     }
 
     private fun testGivenMapDoesntAllowNullValues(map: MutableMap<Any?, Any?>) {
-        assertThrown(NullPointerException::class) {
+        AssertPile.thrown(NullPointerException::class) {
             map.put("shit", null)
         }
     }
@@ -78,6 +78,15 @@ class AttachedComputedShitTests {
         }
     }
 }
+
+
+
+
+
+
+
+
+
 
 
 

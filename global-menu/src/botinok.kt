@@ -37,6 +37,8 @@ import kotlin.concurrent.thread
 import kotlin.properties.Delegates.notNull
 import kotlin.system.exitProcess
 
+// delete from botinok_regions; delete from botinok_arenas; delete from botinok_plays;
+
 object BotinokStuff {
     val boxEdgeSize = 5.0
     val handleSize = boxEdgeSize * 2
@@ -655,7 +657,7 @@ class StartBotinok : Application() {
                 noise("Saved screenshot")
             }
 
-            val arena = newBotinokArena("Arena ${getArenaCount() + 1}", play)
+            val arena = newBotinokArena(name = "Arena ${getArenaCount() + 1}", screenshot = File(tmpImgPath).readBytes(), play = play)
             play.arenas.add(arena)
             setDirty(true)
             addTreeItemForArena(arena)

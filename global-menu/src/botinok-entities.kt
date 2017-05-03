@@ -24,6 +24,7 @@ interface BotinokRegionRepository : GRepository<BotinokRegion> {
 @GEntity(table = "botinok_arenas")
 interface BotinokArena : GCommonEntityFields {
     var name: String
+    var screenshot: ByteArray
     @GManyToOne var play: BotinokPlay
     @GOneToMany(mappedBy = "arena", fetch = GFetchType.EAGER) var regions: MutableList<BotinokRegion>
 }

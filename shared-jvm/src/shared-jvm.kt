@@ -9,6 +9,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import org.junit.Assert.*
+import org.junit.runner.RunWith
+import org.junit.runners.MySuite
 import java.io.*
 import java.nio.charset.Charset
 import java.time.LocalDateTime
@@ -19,10 +21,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KClass
-import kotlin.reflect.KMutableProperty0
-import kotlin.reflect.KProperty
-import kotlin.reflect.KProperty0
+import kotlin.reflect.*
 import kotlin.reflect.jvm.isAccessible
 
 
@@ -273,35 +272,66 @@ operator fun StringBuilder.plusAssign(x: Any?) {
 
 val tmpDirPath get() = System.getProperty("java.io.tmpdir")
 
-fun assertThrown(check: (Throwable) -> Unit, block: () -> Unit) {
-    var thrown = false
-    try {
-        block()
-    } catch (e: Throwable) {
-        thrown = true
-        check(e)
-    }
-    assertTrue("Expected something to be thrown", thrown)
-}
-
-fun <T : Throwable> assertThrown(clazz: KClass<T>, block: () -> Unit) {
-    assertThrown({assertEquals(clazz, it::class)}, block)
-}
-
-fun assertThrownExceptionOrOneOfItsCausesMessageContains(needle: String, block: () -> Unit) {
-    assertThrown(check = {
-        val messages = mutableListOf<String?>()
-        var lookingAt: Throwable? = it
-        while (lookingAt != null) {
-            messages.add(lookingAt.message)
-            lookingAt = lookingAt.cause
+object TestPile {
+    object existingPizdaFile {
+        fun big(): File {
+            val file = File(BigPile.shitForTestsBigRoot + "/existing-pizda.txt")
+            check(file.readText() == "I exist in big-file repository for the sake of tests, don't touch me") {"00a5878c-b6b9-410d-8300-4eda095ce8c3"}
+            return file
         }
-        if (!messages.any {it?.contains(needle) == true})
-            fail("Thrown exception (or one of its causes) message should contain `$needle`.\n"
-                     + "Instead got following messages:\n"
-                     + messages.map{"    $it"}.joinToString("\n"))
-    }, block = block)
+
+        fun small(): File {
+            val file = File(BigPile.shitForTestsSmallRoot + "/existing-pizda.txt")
+            check(file.readText() == "I exist in small-file repository for the sake of tests, don't touch me") {"0bcaf93a-b1e2-457e-ba09-f5c881c8e11d"}
+            return file
+        }
+    }
 }
+
+object AssertPile {
+    fun thrown(assert: (Throwable) -> Unit, block: () -> Unit) {
+        var thrown = false
+        try {
+            block()
+        } catch (e: Throwable) {
+            thrown = true
+            assert(e)
+        }
+        assertTrue("Expected something to be thrown", thrown)
+    }
+
+    fun <T : Throwable> thrown(clazz: KClass<T>, block: () -> Unit) {
+        thrown({assertEquals(clazz, it::class)}, block)
+    }
+
+    fun thrownExceptionOrOneOfItsCausesMessageContains(needle: String, block: () -> Unit) {
+        thrown(assert = {
+            val messages = mutableListOf<String?>()
+            var lookingAt: Throwable? = it
+            while (lookingAt != null) {
+                messages.add(lookingAt.message)
+                lookingAt = lookingAt.cause
+            }
+            if (!messages.any {it?.contains(needle) == true})
+                fail("Thrown exception (or one of its causes) message should contain `$needle`.\n"
+                         + "Instead got following messages:\n"
+                         + messages.map{"    $it"}.joinToString("\n"))
+        }, block = block)
+    }
+
+    fun thrownContainsUUID(uuidMangledForTests: String, block: () -> Unit) {
+        val mangler = "--testref--"
+        val manglerIndex = uuidMangledForTests.indexOf(mangler)
+        check(manglerIndex == 1) {"ff82815b-c0c4-486c-9a36-d97723406715"}
+
+        val uuid = uuidMangledForTests[0] + uuidMangledForTests.substring(manglerIndex + mangler.length)
+        thrown(block = block, assert = {
+            assertTrue("Expecting exception message\nto contain `$uuid`,\nbut got `${it.message}`",
+                       it.message?.contains(uuid) == true)
+        })
+    }
+}
+
 
 interface TestLoggerPrintln {
     fun println(value: Any?)
@@ -459,34 +489,176 @@ val PG_LOCAL_DATE_TIME = DateTimeFormatterBuilder()
     .toFormatter()!!
 
 
-fun File.backUpAndWrite(newCode: String) {
-    this.backUpIfExists()
-    writeText(newCode)
-    clog("Written $path")
+object TimePile {
+    private var testLdtnow: LocalDateTime? = null
+
+    fun ldtnow(): LocalDateTime {
+        return testLdtnow ?: LocalDateTime.now()!!
+    }
+
+    fun withTestLdtnow(ldt: LocalDateTime, block: () -> Unit) {
+        val old_testLdtnow = testLdtnow
+        testLdtnow = ldt
+        try {
+            block()
+        } finally {
+            testLdtnow = old_testLdtnow
+        }
+    }
 }
 
-fun File.backUpIfExists() {
-    if (!exists()) return
+object FilePile {
+    class backUp {
+        interface Ignite {
+            fun ignite(file: File): String?
+        }
 
-    check(path.replace("\\", "/").startsWith(BigPile.fuckingEverythingRoot + "/")) {"9911cfc6-6435-4a54-aa74-ad492162181a"}
+        inner class fromFuckingEverythingSmallRoot {
+            inner class ifExists : Ignite {
+                override fun ignite(file: File): String? {
+                    if (!file.exists()) return null
 
-    val stamp = LocalDateTime.now().format(PG_LOCAL_DATE_TIME).replace(Regex("[ :\\.]"), "-")
-    val outPath = (
-        BigPile.spewBak + "/" +
-            path
-                .substring(BigPile.fuckingEverythingRoot.length)
-                .replace("\\", "/")
-                .replace(Regex("^/"), "")
-                .replace("/", "--")
-            + "----$stamp"
-        )
+                    check(file.path.replace("\\", "/").startsWith(BigPile.fuckingEverythingSmallRoot + "/")) {"9911cfc6-6435-4a54-aa74-ad492162181a"}
 
-    // clog("Backing up: $outPath")
-    File(outPath).writeText(readText())
+                    val stamp = TimePile.ldtnow().format(PG_LOCAL_DATE_TIME).replace(Regex("[ :\\.]"), "-")
+                    val prefixForGeneratedFileName = "fesmall----"
+                    val outPath = (
+                        BigPile.fuckingBackupsRoot + "/" +
+                            prefixForGeneratedFileName +
+                            file.path
+                                .substring(BigPile.fuckingEverythingSmallRoot.length)
+                                .replace("\\", "/")
+                                .replace(Regex("^/"), "")
+                                .replace("/", "--") +
+                            "----$stamp"
+                        )
+
+                    // clog("Backing up: $outPath")
+                    File(outPath).writeBytes(file.readBytes())
+                    return outPath
+                }
+
+//                inner class tests {
+//                    @Test fun doesntExist() {
+//                        val res = ignite(File(BigPile.fuckingEverythingSmallRoot + "/non-existent-pizda.txt"))
+//                        assertNull(res)
+//                    }
+//
+//                    @Test fun existsButNotInFuckingEverything() {
+//                        AssertPile.thrownContainsUUID("9--testref--911cfc6-6435-4a54-aa74-ad492162181a") {
+//                            ignite(TestPile.existingPizdaFile.big())
+//                        }
+//                    }
+//
+//                    @Test fun cool() {
+//                        TimePile.withTestLdtnow(LocalDateTime.of(2015, 5, 25, 10, 11, 12, 345000000)) {
+//                            val res = ignite(TestPile.existingPizdaFile.small())
+//                            assertEquals(BigPile.fuckingBackupsRoot + "/fesmall----shit-for-tests--existing-pizda.txt----2015-05-25-10-11-12-345", res)
+//                        }
+//                    }
+//                }
+            }
+
+            inner class orBitchIfDoesntExist : Ignite {
+                override fun ignite(file: File): String {
+                    val backupPath = ifExists().ignite(file)
+                        ?: bitch("Cannot find file for backing it up: ${file.path}    c5a4b69c-e2d5-4833-b9c0-4eb5b0b06c25")
+                    return backupPath
+                }
+
+//                inner class tests {
+//                    @Test fun cool() {
+//                        TimePile.withTestLdtnow(LocalDateTime.of(2015, 5, 25, 10, 11, 12, 345000000)) {
+//                            val res = ignite(TestPile.existingPizdaFile.small())
+//                            assertEquals(BigPile.fuckingBackupsRoot + "/fesmall----shit-for-tests--existing-pizda.txt----2015-05-25-10-11-12-345", res)
+//                        }
+//                    }
+//                }
+            }
+        }
+
+        inner class fromFuckingEverythingBigRoot {
+            inner class ifExists {
+                fun ignite(file: File): String? {
+                    imf("15186bbb-1f56-4a4c-b1a1-1dbc66d0bb2a")
+                }
+            }
+        }
+    }
+
+    fun <SUT> suiteFor(makeSUT: () -> SUT, build: (SuiteBuilder<SUT>) -> Unit) {
+        imf("73680252-55ac-47ba-b300-f621d4e31412")
+    }
+
+    class SuiteBuilder<SUT> {
+        fun case(name: String, exercise: (SUT) -> Unit) {
+            imf("311c4357-a8c7-4a5a-9cb3-cdb82807ca7d")
+        }
+    }
+
+    @RunWith(MySuite::class)
+    class Tests : MyFuckingTestSpec() {
+        init {
+            suiteFor({backUp().fromFuckingEverythingSmallRoot().ifExists()}) {
+                buildCommonCases(it)
+                buildDoesntExistCase(it) {exercise->
+                    assertNull(exercise())
+                }
+            }
+
+            suiteFor({backUp().fromFuckingEverythingSmallRoot().orBitchIfDoesntExist()}) {
+                buildCommonCases(it)
+                buildDoesntExistCase(it) {exercise->
+                    AssertPile.thrownContainsUUID("c--testref--5a4b69c-e2d5-4833-b9c0-4eb5b0b06c25") {
+                        exercise()
+                    }
+                }
+            }
+        }
+
+        private fun buildDoesntExistCase(it: SuiteBuilder<out backUp.Ignite>, block: (() -> String?) -> Unit) {
+            it.case("doesntExist") {sut ->
+                block {sut.ignite(File(BigPile.fuckingEverythingSmallRoot + "/non-existent-pizda.txt"))}
+            }
+        }
+
+        private fun buildCommonCases(it: SuiteBuilder<out backUp.Ignite>) {
+            it.case("existsButNotUnderGivenRoot") {sut ->
+                AssertPile.thrownContainsUUID("9--testref--911cfc6-6435-4a54-aa74-ad492162181a") {
+                    sut.ignite(TestPile.existingPizdaFile.big())
+                }
+            }
+            it.case("cool") {sut ->
+                TimePile.withTestLdtnow(LocalDateTime.of(2015, 5, 25, 10, 11, 12, 345000000)) {
+                    fail("// TODO:vgrechka Delete backup file first")
+                    val res = sut.ignite(TestPile.existingPizdaFile.small())
+                    assertEquals(BigPile.fuckingBackupsRoot + "/fesmall----shit-for-tests--existing-pizda.txt----2015-05-25-10-11-12-345", res)
+                    fail("// TODO:vgrechka Check file content")
+                }
+            }
+        }
+    }
 }
+
+abstract class MyFuckingTestSpec {
+    protected class StepBuilder<PrevStep> {
+        fun <Step> step(makeStep: (PrevStep) -> Step, buildFurther: (StepBuilder<Step>) -> Unit) {
+            imf("6d0e172d-6801-403d-bcc9-db6d2a7b94c2")
+        }
+
+        fun case(name: String, exercise: (PrevStep) -> Unit) {
+            imf("5dd331fd-3add-4a66-81ff-a06ba2a39ce7")
+        }
+    }
+
+    protected fun <Step> startSteps(makeFirstStep: () -> Step, buildFurtherSteps: (StepBuilder<Step>) -> Unit) {
+        imf("09e64f48-228d-475b-ae0b-418463f2dac6")
+    }
+}
+
 
 fun String.substituteMyVars(): String {
-    return this.replace("%FE%", BigPile.fuckingEverythingRoot)
+    return this.replace("%FE%", BigPile.fuckingEverythingSmallRoot)
 }
 
 fun String.indexOfOrNull(needle: String, startIndex: Int = 0, ignoreCase: Boolean = false): Int? {
@@ -500,6 +672,50 @@ val Throwable.stackTraceStr: String
         PrintWriter(sw).use { printStackTrace(it) }
         return sw.toString()
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+//startSteps({backUp()}) {
+//    it.step({it.fromFuckingEverythingSmallRoot()}) {
+//        it.step({it.ifExists()}) {
+//            it.case("doesntExist") {sut->
+//                val res = sut.ignite(File(BigPile.fuckingEverythingSmallRoot + "/non-existent-pizda.txt"))
+//                assertNull(res)
+//            }
+//            it.case("existsButNotInFuckingEverything") {sut->
+//                AssertPile.thrownContainsUUID("9--testref--911cfc6-6435-4a54-aa74-ad492162181a") {
+//                    sut.ignite(TestPile.existingPizdaFile.big())
+//                }
+//            }
+//            it.case("cool") {sut->
+//                TimePile.withTestLdtnow(LocalDateTime.of(2015, 5, 25, 10, 11, 12, 345000000)) {
+//                    val res = sut.ignite(TestPile.existingPizdaFile.small())
+//                    assertEquals(BigPile.fuckingBackupsRoot + "/fesmall----shit-for-tests--existing-pizda.txt----2015-05-25-10-11-12-345", res)
+//                }
+//            }
+//        }
+//    }
+//}
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -4,6 +4,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import vgrechka.*
 import vgrechka.botinok.*
 import vgrechka.db.*
+import java.io.File
 
 object SpewSomeShit1 {
     @JvmStatic
@@ -13,7 +14,7 @@ object SpewSomeShit1 {
     }
 }
 
-object SpewSomeShit2 {
+object SpewBotinokEntitiesAndRecreateTestDatabaseSchema {
     @JvmStatic
     fun main(args: Array<String>) {
         val res = spewForInputFiles(listOf("%FE%/global-menu/src/botinok-entities.kt"))
@@ -23,6 +24,31 @@ object SpewSomeShit2 {
         clog("OK")
     }
 }
+
+object SpewBotinokEntitiesAndRecreateProdDatabaseSchema {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val res = spewForInputFiles(listOf("%FE%/global-menu/src/botinok-entities.kt"))
+        clog(res.ddl)
+        val backupPath = FilePile.backUp().fromFuckingEverythingSmallRoot().orBitchIfDoesntExist()
+            .ignite(File(BigPile.localSQLiteShebangDBFilePath))
+        clog("Backed shit up to $backupPath")
+        backPlatform.springctx = AnnotationConfigApplicationContext(BotinokProdAppConfig::class.java)
+        DBStuff.executeBunchOfSQLStatementsAndCloseConnection(res.ddl.toString())
+        clog("OK")
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

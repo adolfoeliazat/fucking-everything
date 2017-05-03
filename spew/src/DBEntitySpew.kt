@@ -108,7 +108,9 @@ class DBEntitySpew : Spew {
         spitStuffClass()
         spitDDLComment()
 
-        file.backUpAndWrite(code.toString())
+        FilePile.backUp().fromFuckingEverythingSmallRoot().ifExists().ignite(file)
+        file.writeText(code.toString())
+        clog("Written ${file.path}")
     }
 
     fun spitShitForEntity() {
@@ -384,6 +386,8 @@ class DBEntitySpew : Spew {
                         "Long?" -> "bigint"
                         "String" -> "text not null"
                         "String?" -> "text"
+                        "ByteArray" -> "blob not null"
+                        "ByteArray?" -> "blob"
                         else -> wtf("field.type = ${field.type}    5e84c6fb-b523-43cc-aa45-bdef1dca7ff2")
                     }
                 }
@@ -478,7 +482,7 @@ class DBEntitySpew : Spew {
                                             }
                                         }
 
-                                        val isEntity = type !in setOf("Int", "Long", "Boolean", "String", "XTimestamp")
+                                        val isEntity = type !in setOf("Int", "Long", "Boolean", "String", "XTimestamp", "ByteArray")
                                         val isInToString = !isEntity
 
                                         fields += FieldSpec(name = name,
@@ -548,40 +552,40 @@ class DBEntitySpew : Spew {
     }
 
 
-    private fun fakeEntities(): List<EntitySpec> {
-        return listOf(
-            EntitySpec(name = "AmazingWord",
-                       tableName = "amazing_words",
-                       fields = listOf(
-                           FieldSpec(name = "word", type = "String", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
-                           FieldSpec(name = "rank", type = "Int", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
-                           FieldSpec(name = "comments", type = "AmazingComment", isEntity = true, isInCtorParams = false, isInToString = false, kind = FieldKind.Many(mappedBy = "amazingComment.word", fetchType = GFetchType.LAZY))),
-                       finders = listOf(
-                           FinderSpec(definedFinderName = "findAll",
-                                      generatedFinderName = "findAll",
-                                      returnsList = true,
-                                      returnsNullable = false,
-                                      params = listOf()),
-                           FinderSpec(definedFinderName = "findByWordLikeIgnoreCase",
-                                      generatedFinderName = "findByAmazingWord_WordLikeIgnoreCase",
-                                      returnsList = true,
-                                      returnsNullable = false,
-                                      params = listOf(
-                                          FinderParamSpec(name = "x", type = "String")
-                                      )))),
-            EntitySpec(name = "AmazingComment",
-                       tableName = "amazing_comments",
-                       fields = listOf(
-                           FieldSpec(name = "author", type = "String", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
-                           FieldSpec(name = "content", type = "String", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
-                           FieldSpec(name = "word", type = "AmazingWord", isEntity = true, isInCtorParams = true, isInToString = false, kind = FieldKind.One(fetchType = GFetchType.EAGER))),
-                       finders = listOf(
-                           FinderSpec(definedFinderName = "findAll",
-                                      generatedFinderName = "findAll",
-                                      returnsList = true,
-                                      returnsNullable = false,
-                                      params = listOf()))))
-    }
+//    private fun fakeEntities(): List<EntitySpec> {
+//        return listOf(
+//            EntitySpec(name = "AmazingWord",
+//                       tableName = "amazing_words",
+//                       fields = listOf(
+//                           FieldSpec(name = "word", type = "String", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
+//                           FieldSpec(name = "rank", type = "Int", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
+//                           FieldSpec(name = "comments", type = "AmazingComment", isEntity = true, isInCtorParams = false, isInToString = false, kind = FieldKind.Many(mappedBy = "amazingComment.word", fetchType = GFetchType.LAZY))),
+//                       finders = listOf(
+//                           FinderSpec(definedFinderName = "findAll",
+//                                      generatedFinderName = "findAll",
+//                                      returnsList = true,
+//                                      returnsNullable = false,
+//                                      params = listOf()),
+//                           FinderSpec(definedFinderName = "findByWordLikeIgnoreCase",
+//                                      generatedFinderName = "findByAmazingWord_WordLikeIgnoreCase",
+//                                      returnsList = true,
+//                                      returnsNullable = false,
+//                                      params = listOf(
+//                                          FinderParamSpec(name = "x", type = "String")
+//                                      )))),
+//            EntitySpec(name = "AmazingComment",
+//                       tableName = "amazing_comments",
+//                       fields = listOf(
+//                           FieldSpec(name = "author", type = "String", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
+//                           FieldSpec(name = "content", type = "String", isEntity = false, isInCtorParams = true, isInToString = true, kind = FieldKind.Simple()),
+//                           FieldSpec(name = "word", type = "AmazingWord", isEntity = true, isInCtorParams = true, isInToString = false, kind = FieldKind.One(fetchType = GFetchType.EAGER))),
+//                       finders = listOf(
+//                           FinderSpec(definedFinderName = "findAll",
+//                                      generatedFinderName = "findAll",
+//                                      returnsList = true,
+//                                      returnsNullable = false,
+//                                      params = listOf()))))
+//    }
 
     fun shitHeader(out: CodeShitter, packageName: String) {
         out.headerComment()
