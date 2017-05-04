@@ -646,7 +646,7 @@ class StartBotinok : Application() {
         }
     }
 
-    val tmpImgPath = "$tmpDirPath/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
+    val tmpImgPath = "${FilePile.tmpDirPath}/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
 
     private fun action_takeScreenshot() {
         JFXStuff.later {

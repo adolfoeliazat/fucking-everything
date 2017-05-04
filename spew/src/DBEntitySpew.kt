@@ -108,7 +108,7 @@ class DBEntitySpew : Spew {
         spitStuffClass()
         spitDDLComment()
 
-        FilePile.backUp().fromFuckingEverythingSmallRoot().ifExists().ignite(file)
+        FilePile.backUp().ifExists().ignite(file)
         file.writeText(code.toString())
         clog("Written ${file.path}")
     }

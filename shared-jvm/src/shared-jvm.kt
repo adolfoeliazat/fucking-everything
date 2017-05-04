@@ -18,7 +18,6 @@ import org.junit.Assert.*
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.FreakingSuite
 import org.junit.runners.Suite
 import java.io.*
 import java.nio.charset.Charset
@@ -284,8 +283,6 @@ operator fun StringBuilder.plusAssign(x: Any?) {
     this.append(x)
 }
 
-val tmpDirPath get() = System.getProperty("java.io.tmpdir")
-
 object TestPile {
     object existingPizdaFile {
         fun big(): File {
@@ -394,9 +391,9 @@ object TestPile {
             casesWereDefined = true
         }
 
-        override fun <SUT : Any> suiteFor(makeSUT: (BaseSUT) -> SUT, build: (SuiteMaker<SUT>) -> Unit) {
+        override fun <SUT : Any> suiteFor(makeSUT: (BaseSUT) -> SUT, prefix: String, build: (SuiteMaker<SUT>) -> Unit) {
             val newSUTMaker = {makeSUT(makeBaseSUT())}
-            val childSuiteMaker = SuiteMakerImpl(objectNameFromMaker(newSUTMaker), newSUTMaker)
+            val childSuiteMaker = SuiteMakerImpl(prefix + objectNameFromMaker(newSUTMaker), newSUTMaker)
             build(childSuiteMaker)
             childGeneratedClasses += childSuiteMaker.generateClass()
         }
@@ -655,113 +652,60 @@ object TimePile {
 }
 
 interface SuiteMakerClient {
-    fun build(it: SuiteMaker<Unit>)
+    fun build(make: SuiteMaker<Unit>)
 }
 
 object FilePile {
+    val tmpDirPath get() = System.getProperty("java.io.tmpdir")
+
     class backUp {
         interface Ignite {
             fun ignite(file: File): String?
         }
 
-        inner class fromFuckingEverythingSmallRoot {
-            inner class ifExists : Ignite {
-                override fun ignite(file: File): String? {
-                    if (!file.exists()) return null
+        inner class ifExists : Ignite {
+            override fun ignite(file: File): String? {
+                if (!file.exists()) return null
 
-                    check(file.path.replace("\\", "/").startsWith(BigPile.fuckingEverythingSmallRoot + "/")) {"9911cfc6-6435-4a54-aa74-ad492162181a"}
+                class R2P(val root: String, val generatedPrefix: String)
+                val r2p = listOf(R2P(BigPile.fuckingEverythingSmallRoot, "fesmall----"),
+                                 R2P(BigPile.fuckingEverythingBigRoot, "febig----"))
+                    .find {file.path.replace("\\", "/").startsWith(it.root + "/")}
+                    ?: bitch("9911cfc6-6435-4a54-aa74-ad492162181a")
 
-                    val stamp = TimePile.ldtnow().format(PG_LOCAL_DATE_TIME).replace(Regex("[ :\\.]"), "-")
-                    val prefixForGeneratedFileName = "fesmall----"
-                    val outPath = (
-                        BigPile.fuckingBackupsRoot + "/" +
-                            prefixForGeneratedFileName +
-                            file.path
-                                .substring(BigPile.fuckingEverythingSmallRoot.length)
-                                .replace("\\", "/")
-                                .replace(Regex("^/"), "")
-                                .replace("/", "--") +
-                            "----$stamp"
-                        )
+                val stamp = TimePile.ldtnow().format(PG_LOCAL_DATE_TIME).replace(Regex("[ :.]"), "-")
+                val prefixForGeneratedFileName = r2p.generatedPrefix
+                val outPath = (
+                    BigPile.fuckingBackupsRoot + "/" +
+                        prefixForGeneratedFileName +
+                        file.path
+                            .substring(r2p.root.length)
+                            .replace("\\", "/")
+                            .replace(Regex("^/"), "")
+                            .replace("/", "--") +
+                        "----$stamp"
+                    )
 
-                    // clog("Backing up: $outPath")
-                    File(outPath).writeBytes(file.readBytes())
-                    return outPath
-                }
-            }
-
-            inner class orBitchIfDoesntExist : Ignite {
-                override fun ignite(file: File): String {
-                    val backupPath = ifExists().ignite(file)
-                        ?: bitch("Cannot find file for backing it up: ${file.path}    c5a4b69c-e2d5-4833-b9c0-4eb5b0b06c25")
-                    return backupPath
-                }
+                // clog("Backing up: $outPath")
+                File(outPath).writeBytes(file.readBytes())
+                return outPath
             }
         }
 
-        inner class fromFuckingEverythingBigRoot {
-            inner class ifExists {
-                fun ignite(file: File): String? {
-                    imf("15186bbb-1f56-4a4c-b1a1-1dbc66d0bb2a")
-                }
+        inner class orBitchIfDoesntExist : Ignite {
+            override fun ignite(file: File): String {
+                val backupPath = ifExists().ignite(file)
+                    ?: bitch("Cannot find file for backing it up: ${file.path}    c5a4b69c-e2d5-4833-b9c0-4eb5b0b06c25")
+                return backupPath
             }
         }
     }
 
-    @RunWith(FreakingSuite::class)
-    class Tests : SuiteMakerClient {
-        override fun build(it: SuiteMaker<Unit>) {
-            it.suiteFor({backUp().fromFuckingEverythingSmallRoot().ifExists()}) {
-                buildCommonCases(it)
-                buildDoesntExistCase(it) {exercise->
-                    assertNull(exercise())
-                }
-            }
-
-            it.suiteFor({backUp().fromFuckingEverythingSmallRoot().orBitchIfDoesntExist()}) {
-                buildCommonCases(it)
-                buildDoesntExistCase(it) {exercise->
-                    AssertPile.thrownContainsUUID("c--testref--5a4b69c-e2d5-4833-b9c0-4eb5b0b06c25") {
-                        exercise()
-                    }
-                }
-            }
-        }
-
-        private fun buildDoesntExistCase(it: SuiteMaker<out backUp.Ignite>, block: (() -> String?) -> Unit) {
-            it.case("doesntExist") {sut ->
-                block {sut.ignite(File(BigPile.fuckingEverythingSmallRoot + "/non-existent-pizda.txt"))}
-            }
-        }
-
-        private fun buildCommonCases(it: SuiteMaker<out backUp.Ignite>) {
-            it.case("existsButNotUnderGivenRoot") {sut ->
-                AssertPile.thrownContainsUUID("9--testref--911cfc6-6435-4a54-aa74-ad492162181a") {
-                    sut.ignite(TestPile.existingPizdaFile.big())
-                }
-            }
-            it.case("cool") {sut ->
-                TimePile.withTestLdtnow(LocalDateTime.of(2015, 5, 25, 10, 11, 12, 345000000)) {
-                    val expectedBakFilePath = BigPile.fuckingBackupsRoot + "/fesmall----shit-for-tests--existing-pizda.txt----2015-05-25-10-11-12-345"
-                    run {
-                        val f = File(expectedBakFilePath)
-                        if (f.exists()) {
-                            check(f.delete()) {"3c959326-52f7-441b-881a-596e2fb730b1"}
-                        }
-                    }
-                    val fileToBackUp = TestPile.existingPizdaFile.small()
-                    val actualBakFilePath = sut.ignite(fileToBackUp)
-                    assertEquals(expectedBakFilePath, actualBakFilePath)
-                    assertEquals(fileToBackUp.readText(), File(actualBakFilePath).readText())
-                }
-            }
-        }
-    }
 }
 
 interface SuiteMaker<BaseSUT : Any> {
     fun case(name: String, exercise: (BaseSUT) -> Unit)
-    fun <SubSUT : Any> suiteFor(makeSUT: (BaseSUT) -> SubSUT, build: (SuiteMaker<SubSUT>) -> Unit)
+    fun <SubSUT : Any> suiteFor(makeSUT: (BaseSUT) -> SubSUT, prefix: String = "", build: (SuiteMaker<SubSUT>) -> Unit)
     fun suite(suiteName: String, build: (SuiteMaker<BaseSUT>) -> Unit)
 }
 
