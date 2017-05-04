@@ -6,6 +6,7 @@ import com.google.common.base.Equivalence
 import com.google.common.collect.MapMaker
 import net.bytebuddy.ByteBuddy
 import net.bytebuddy.description.annotation.AnnotationDescription
+import net.bytebuddy.description.modifier.Ownership
 import net.bytebuddy.description.modifier.Visibility
 import net.bytebuddy.dynamic.DynamicType
 import net.bytebuddy.implementation.MethodDelegation
@@ -14,6 +15,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import org.junit.Assert.*
+import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.FreakingSuite
@@ -301,6 +303,9 @@ object TestPile {
 
 
     class SuiteMakerImpl<BaseSUT : Any>(val suiteName: String, val makeBaseSUT: () -> BaseSUT) : SuiteMaker<BaseSUT> {
+        // This is for jumping to source using IDE
+        val pieceOfStack = "Suite at " + Exception().stackTrace[2]
+
         var testClassBuilder: DynamicType.Builder<Any> = ByteBuddy().subclass(Any::class.java)!!
         var casesWereDefined = false
         val childGeneratedClasses = mutableListOf<Class<*>>()
@@ -318,20 +323,28 @@ object TestPile {
         }
 
         fun generateClasses(): Array<Class<*>> {
-            val makeTestClass = casesWereDefined.thenElseNull {
-                fun (className: String) = testClassBuilder
-                    .name(className)
+            val testClass = casesWereDefined.thenElseNull {
+                testClassBuilder
+                    .name(generateName(suiteName))
+                    .defineMethod("beforeClass", Void.TYPE, Visibility.PUBLIC, Ownership.STATIC)
+                    .intercept(MethodDelegation.to(object {
+                        @Suppress("unused")
+                        fun invokeBeforeClass() {
+//                            System.err.println(pieceOfStack)
+                        }
+                    }))
+                    .annotateMethod(AnnotationDescription.Builder.ofType(BeforeClass::class.java).build())
                     .make()
                     .load(this::class.java.classLoader)
                     .loaded
             }
 
-            if (makeTestClass != null && childGeneratedClasses.isEmpty()) {
-                return arrayOf(makeTestClass(generateName(suiteName)))
+            if (testClass != null && childGeneratedClasses.isEmpty()) {
+                return arrayOf(testClass)
             } else {
                 val allChildClasses = mutableListOf<Class<*>>()
-                if (makeTestClass != null)
-                    allChildClasses += makeTestClass(generateName(suiteName))
+                if (testClass != null)
+                    allChildClasses += testClass
                 allChildClasses += childGeneratedClasses
                 return allChildClasses.toTypedArray()
             }
@@ -358,14 +371,22 @@ object TestPile {
 
         override fun case(name: String, exercise: (BaseSUT) -> Unit) {
             // This is for jumping to source using IDE
-            val stackTraceElement = "Case at " + Exception().stackTrace[1]
+            val pieceOfStack = StringBuilder()
+            val trace = Exception().stackTrace
+            pieceOfStack += "Case at " + trace[1] + "\n"
+            for (item in trace.drop(2)) {
+                if (item.toString().contains(TestPile::generateJUnitSuiteClassesFromBuilder.name))
+                    break
+                else
+                    pieceOfStack += "        $item\n"
+            }
 
             testClassBuilder = testClassBuilder
                 .defineMethod(toMachineName(name), Void.TYPE, Visibility.PUBLIC)
                 .intercept(MethodDelegation.to(object {
                     @Suppress("unused")
                     fun invokeTestMethod() {
-                        clog(stackTraceElement)
+                        clog(pieceOfStack)
                         exercise(makeBaseSUT())
                     }
                 }))
