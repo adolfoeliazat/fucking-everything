@@ -300,7 +300,7 @@ object TestPile {
     }
 
 
-    class SuiteMakerImpl<BaseSUT>(val makeBaseSUT: () -> BaseSUT) : SuiteMaker<BaseSUT> {
+    class SuiteMakerImpl<BaseSUT : Any>(val suiteName: String, val makeBaseSUT: () -> BaseSUT) : SuiteMaker<BaseSUT> {
         var testClassBuilder: DynamicType.Builder<Any> = ByteBuddy().subclass(Any::class.java)!!
         var casesWereDefined = false
         val childGeneratedClasses = mutableListOf<Class<*>>()
@@ -317,7 +317,7 @@ object TestPile {
             }
         }
 
-        fun generateClasses(name: String): Array<Class<*>> {
+        fun generateClasses(): Array<Class<*>> {
             val makeTestClass = casesWereDefined.thenElseNull {
                 fun (className: String) = testClassBuilder
                     .name(className)
@@ -327,18 +327,18 @@ object TestPile {
             }
 
             if (makeTestClass != null && childGeneratedClasses.isEmpty()) {
-                return arrayOf(makeTestClass(generateName(name)))
+                return arrayOf(makeTestClass(generateName(suiteName)))
             } else {
                 val allChildClasses = mutableListOf<Class<*>>()
                 if (makeTestClass != null)
-                    allChildClasses += makeTestClass(generateName(name))
+                    allChildClasses += makeTestClass(generateName(suiteName))
                 allChildClasses += childGeneratedClasses
                 return allChildClasses.toTypedArray()
             }
         }
 
-        fun generateClass(name: String): Class<*> {
-            val classes = generateClasses(name)
+        fun generateClass(): Class<*> {
+            val classes = generateClasses()
             if (classes.size == 1)
                 return classes.first()
             else
@@ -350,18 +350,22 @@ object TestPile {
                     .annotateType(AnnotationDescription.Builder
                                       .ofType(Suite.SuiteClasses::class.java)
                                       .defineTypeArray("value", *classes).build())
-                    .name(generateName(name))
+                    .name(generateName(suiteName))
                     .make()
                     .load(this::class.java.classLoader)
                     .loaded
         }
 
         override fun case(name: String, exercise: (BaseSUT) -> Unit) {
+            // This is for jumping to source using IDE
+            val stackTraceElement = "Case at " + Exception().stackTrace[1]
+
             testClassBuilder = testClassBuilder
-                .defineMethod(name, Void.TYPE, Visibility.PUBLIC)
+                .defineMethod(toMachineName(name), Void.TYPE, Visibility.PUBLIC)
                 .intercept(MethodDelegation.to(object {
                     @Suppress("unused")
-                    fun invokeMotherfucker() {
+                    fun invokeTestMethod() {
+                        clog(stackTraceElement)
                         exercise(makeBaseSUT())
                     }
                 }))
@@ -369,27 +373,44 @@ object TestPile {
             casesWereDefined = true
         }
 
-        override fun <SUT> suiteFor(makeSUT: (BaseSUT) -> SUT, build: (SuiteMaker<SUT>) -> Unit) {
-            val sampleSUT = makeSUT(makeBaseSUT()) as Any
+        override fun <SUT : Any> suiteFor(makeSUT: (BaseSUT) -> SUT, build: (SuiteMaker<SUT>) -> Unit) {
+            val newSUTMaker = {makeSUT(makeBaseSUT())}
+            val childSuiteMaker = SuiteMakerImpl(objectNameFromMaker(newSUTMaker), newSUTMaker)
+            build(childSuiteMaker)
+            childGeneratedClasses += childSuiteMaker.generateClass()
+        }
+
+        override fun suite(suiteName: String, build: (SuiteMaker<BaseSUT>) -> Unit) {
+            val childSuiteMaker = SuiteMakerImpl(toMachineName(suiteName), makeBaseSUT)
+            build(childSuiteMaker)
+            childGeneratedClasses += childSuiteMaker.generateClass()
+        }
+
+        private fun toMachineName(suiteName: String): String {
+            val machineSuiteName = suiteName
+                .replace(Regex("\\s+"), "_")
+                .replace(Regex("[.,-:!;']"), "")
+            return machineSuiteName
+        }
+
+        private fun objectNameFromMaker(make: () -> Any): String {
+            val sampleSUT = make()
             var name = sampleSUT.javaClass.name
             val lastDot = name.lastIndexOf(".")
             if (lastDot != -1) {
                 name = name.substring(lastDot + 1)
             }
             name = name.replace("$", "_")
-
-            val childSuiteMaker = SuiteMakerImpl<SUT> {makeSUT(makeBaseSUT())}
-            build(childSuiteMaker)
-
-            childGeneratedClasses += childSuiteMaker.generateClass(name)
+            return name
         }
     }
 
     fun generateJUnitSuiteClassesFromBuilder(clazz: Class<*>): Array<Class<*>> {
         val clientSideBuilder = clazz.newInstance() as SuiteMakerClient
-        val ourSideBuilder = SuiteMakerImpl {Unit}
+        val suiteName = clazz.name.replace("$", "_")
+        val ourSideBuilder = SuiteMakerImpl(suiteName) {Unit}
         clientSideBuilder.build(ourSideBuilder)
-        return ourSideBuilder.generateClasses(clazz.name.replace("$", "_"))
+        return ourSideBuilder.generateClasses()
     }
 }
 
@@ -710,9 +731,10 @@ object FilePile {
     }
 }
 
-interface SuiteMaker<BaseSUT> {
+interface SuiteMaker<BaseSUT : Any> {
     fun case(name: String, exercise: (BaseSUT) -> Unit)
-    fun <SubSUT> suiteFor(makeSUT: (BaseSUT) -> SubSUT, build: (SuiteMaker<SubSUT>) -> Unit)
+    fun <SubSUT : Any> suiteFor(makeSUT: (BaseSUT) -> SubSUT, build: (SuiteMaker<SubSUT>) -> Unit)
+    fun suite(suiteName: String, build: (SuiteMaker<BaseSUT>) -> Unit)
 }
 
 fun String.substituteMyVars(): String {
@@ -724,12 +746,6 @@ fun String.indexOfOrNull(needle: String, startIndex: Int = 0, ignoreCase: Boolea
     return if (index >= 0) index else null
 }
 
-val Throwable.stackTraceStr: String
-    get() {
-        val sw = StringWriter()
-        PrintWriter(sw).use { printStackTrace(it) }
-        return sw.toString()
-    }
 
 
 

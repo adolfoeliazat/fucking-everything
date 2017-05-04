@@ -220,7 +220,7 @@ object IDEAStuff {
     }
 
     fun errorDialog(e: Throwable) {
-        later {Messages.showErrorDialog(e.stackTraceStr, "Shit Didn't Work")}
+        later {Messages.showErrorDialog(e.stackTraceString, "Shit Didn't Work")}
     }
 
     fun infoDialog(message: String) {
