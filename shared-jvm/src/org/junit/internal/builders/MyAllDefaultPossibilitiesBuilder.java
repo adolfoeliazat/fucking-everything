@@ -2,9 +2,8 @@ package org.junit.internal.builders;
 
 import org.junit.runner.Runner;
 import org.junit.runners.MySuite;
+import org.junit.runners.MySuite2;
 import org.junit.runners.model.RunnerBuilder;
-import vgrechka.Crazy;
-import vgrechka.MyFuckingRunner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +18,7 @@ public class MyAllDefaultPossibilitiesBuilder extends RunnerBuilder {
     @Override
     public Runner runnerForClass(Class<?> testClass) throws Throwable {
         if (MySuite.GeneratedSuite.class.isAssignableFrom(testClass)) {
-            return new MySuite(testClass, this);
+            return new MySuite2(testClass, this);
         }
 
 

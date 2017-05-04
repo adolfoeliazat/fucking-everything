@@ -1,6 +1,6 @@
 package vgrechka
 
-object DebugGlobal {
+object DebugPile {
     private var nextPUID = 1L
     val shitToDebugTag = mutableMapOf<Any, String>()
     val shitToAttachedShit = mutableMapOf<Any, MutableMap<String, Any?>>()
@@ -9,28 +9,28 @@ object DebugGlobal {
 }
 
 fun Any.debug_attachAllShitFrom(src: Any) {
-    val shitAttachedToSource = DebugGlobal.shitToAttachedShit[src] ?: return
-    val shitAttachedToMe = DebugGlobal.shitToAttachedShit.getOrPut(this) {mutableMapOf()}
+    val shitAttachedToSource = DebugPile.shitToAttachedShit[src] ?: return
+    val shitAttachedToMe = DebugPile.shitToAttachedShit.getOrPut(this) {mutableMapOf()}
     for ((k, v) in shitAttachedToSource) {
         shitAttachedToMe[k] = v
     }
 }
 
 fun Any.debug_attachShit(label: String, shit: Any?) {
-    val attachedShit = DebugGlobal.shitToAttachedShit.getOrPut(this) {mutableMapOf()}
+    val attachedShit = DebugPile.shitToAttachedShit.getOrPut(this) {mutableMapOf()}
     attachedShit[label] = shit
 }
 
 fun Any.debug_attachedShit(label: String): Any? {
-    val attachedShit = DebugGlobal.shitToAttachedShit[this] ?: return null
+    val attachedShit = DebugPile.shitToAttachedShit[this] ?: return null
     return attachedShit[label]
 }
 
 fun Any.debug_attachTag(tag: String? = null): String {
-    val theTag = tag ?: ("dt" + DebugGlobal.nextPUID())
-    DebugGlobal.shitToDebugTag[this] = theTag
+    val theTag = tag ?: ("dt" + DebugPile.nextPUID())
+    DebugPile.shitToDebugTag[this] = theTag
     return theTag
 }
 
-val Any?.debug_tag: String? get() = DebugGlobal.shitToDebugTag[this]
+val Any?.debug_tag: String? get() = DebugPile.shitToDebugTag[this]
 
