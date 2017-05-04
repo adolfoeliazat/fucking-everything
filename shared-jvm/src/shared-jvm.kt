@@ -721,10 +721,17 @@ object FilePile {
             }
             it.case("cool") {sut ->
                 TimePile.withTestLdtnow(LocalDateTime.of(2015, 5, 25, 10, 11, 12, 345000000)) {
-                    fail("// TODO:vgrechka Delete backup file first")
-                    val res = sut.ignite(TestPile.existingPizdaFile.small())
-                    assertEquals(BigPile.fuckingBackupsRoot + "/fesmall----shit-for-tests--existing-pizda.txt----2015-05-25-10-11-12-345", res)
-                    fail("// TODO:vgrechka Check file content")
+                    val expectedBakFilePath = BigPile.fuckingBackupsRoot + "/fesmall----shit-for-tests--existing-pizda.txt----2015-05-25-10-11-12-345"
+                    run {
+                        val f = File(expectedBakFilePath)
+                        if (f.exists()) {
+                            check(f.delete()) {"3c959326-52f7-441b-881a-596e2fb730b1"}
+                        }
+                    }
+                    val fileToBackUp = TestPile.existingPizdaFile.small()
+                    val actualBakFilePath = sut.ignite(fileToBackUp)
+                    assertEquals(expectedBakFilePath, actualBakFilePath)
+                    assertEquals(fileToBackUp.readText(), File(actualBakFilePath).readText())
                 }
             }
         }
