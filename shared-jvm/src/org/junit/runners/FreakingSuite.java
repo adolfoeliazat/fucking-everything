@@ -1,17 +1,23 @@
+//
+// A little bit hacked org.junit.runners.Suite to support following usage:
+//
+//     @RunWith(FreakingSuite::class)
+//     class Tests : SuiteMakerClient {
+//        .....
+//     }
+//
+// Search for @hack
+//
+
 package org.junit.runners;
 
-import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.description.annotation.AnnotationDescription;
-import net.bytebuddy.description.modifier.Visibility;
-import net.bytebuddy.implementation.MethodDelegation;
-import org.junit.Test;
 import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
-import org.junit.internal.builders.MyAllDefaultPossibilitiesBuilder;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
+import vgrechka.*;
 
 import java.lang.annotation.*;
 import java.util.Collections;
@@ -26,54 +32,21 @@ import java.util.List;
  *
  * @since 4.0
  */
-public class MySuite2 extends ParentRunner<Runner> {
+public class FreakingSuite extends ParentRunner<Runner> {
     /**
      * Returns an empty suite.
      */
     public static Runner emptySuite() {
         try {
-            return new MySuite2((Class<?>) null, new Class<?>[0]);
+            return new FreakingSuite((Class<?>) null, new Class<?>[0]);
         } catch (InitializationError e) {
             throw new RuntimeException("This shouldn't be possible");
         }
     }
 
-    /**
-     * The <code>SuiteClasses</code> annotation specifies the classes to be run when a class
-     * annotated with <code>@RunWith(Suite.class)</code> is run.
-     */
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.TYPE)
-    @Inherited
-    public @interface SuiteClasses {
-        /**
-         * @return the classes to be run
-         */
-        public Class<?>[] value();
-    }
-
-    public static class Motherfucker {
-        public void goBananas() {
-            System.out.println("Hooooooolyyyyyyyyy fuuuuuuuuuck");
-        }
-    }
-
     private static Class<?>[] getAnnotatedClasses(Class<?> klass) throws Exception {
-        if (MySuite.GeneratedSuite.class.isAssignableFrom(klass)) {
-            Class<?> generatedClass = new ByteBuddy()
-                    .subclass(Object.class)
-                    .name("GeneratedShit_" + System.currentTimeMillis())
-                    .defineMethod("pizda", void.class, Visibility.PUBLIC)
-                    .intercept(MethodDelegation.to(new Motherfucker()))
-                    .annotateMethod(AnnotationDescription.Builder.ofType(Test.class).build())
-                    .make()
-                    .load(MySuite2.class.getClassLoader())
-                    .getLoaded();
-
-            return new Class<?>[] {generatedClass};
-        } else {
-            throw new IllegalStateException("99d6a855-50f5-437a-ac2c-47feb4460b7d");
-        }
+        // @hack
+        return TestPile.INSTANCE.generateJUnitSuiteClassesFromBuilder(klass);
     }
 
     private final List<Runner> runners;
@@ -84,8 +57,8 @@ public class MySuite2 extends ParentRunner<Runner> {
      * @param klass the root class
      * @param builder builds runners for classes in the suite
      */
-    public MySuite2(Class<?> klass, RunnerBuilder builder) throws Exception {
-        this(new MyAllDefaultPossibilitiesBuilder(false), klass, getAnnotatedClasses(klass));
+    public FreakingSuite(Class<?> klass, RunnerBuilder builder) throws Exception {
+        this(new AllDefaultPossibilitiesBuilder(false), klass, getAnnotatedClasses(klass));
     }
 
     /**
@@ -95,7 +68,7 @@ public class MySuite2 extends ParentRunner<Runner> {
      * @param builder builds runners for classes in the suite
      * @param classes the classes in the suite
      */
-    public MySuite2(RunnerBuilder builder, Class<?>[] classes) throws InitializationError {
+    public FreakingSuite(RunnerBuilder builder, Class<?>[] classes) throws InitializationError {
         this(null, builder.runners(null, classes));
     }
 
@@ -105,7 +78,7 @@ public class MySuite2 extends ParentRunner<Runner> {
      * @param klass the root of the suite
      * @param suiteClasses the classes in the suite
      */
-    protected MySuite2(Class<?> klass, Class<?>[] suiteClasses) throws InitializationError {
+    protected FreakingSuite(Class<?> klass, Class<?>[] suiteClasses) throws InitializationError {
         this(new AllDefaultPossibilitiesBuilder(true), klass, suiteClasses);
     }
 
@@ -116,7 +89,7 @@ public class MySuite2 extends ParentRunner<Runner> {
      * @param klass the root of the suite
      * @param suiteClasses the classes in the suite
      */
-    protected MySuite2(RunnerBuilder builder, Class<?> klass, Class<?>[] suiteClasses) throws InitializationError {
+    protected FreakingSuite(RunnerBuilder builder, Class<?> klass, Class<?>[] suiteClasses) throws InitializationError {
         this(klass, builder.runners(klass, suiteClasses));
     }
 
@@ -126,7 +99,7 @@ public class MySuite2 extends ParentRunner<Runner> {
      * @param klass root of the suite
      * @param runners for each class in the suite, a {@link Runner}
      */
-    protected MySuite2(Class<?> klass, List<Runner> runners) throws InitializationError {
+    protected FreakingSuite(Class<?> klass, List<Runner> runners) throws InitializationError {
         super(klass);
         this.runners = Collections.unmodifiableList(runners);
     }

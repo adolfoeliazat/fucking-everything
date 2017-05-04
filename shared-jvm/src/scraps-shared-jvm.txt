@@ -1,0 +1,134 @@
+class Foo {
+    inner class Bar {
+        fun shitFromBar1() = "shit from bar 1"
+        fun shitFromBar2() = "shit from bar 2"
+        inner class Baz {
+            fun shitFromBaz() = "shit from baz"
+        }
+    }
+}
+
+
+@RunWith(MySuite::class)
+class Tests : SuiteMakerClient {
+    override fun build(it: SuiteMaker<Unit>) {
+        it.suiteFor({Foo().Bar()}) {
+            it.case("first") {sut->
+                clog("Case: first")
+                assertEquals("shit from bar 1", sut.shitFromBar1())
+            }
+            it.case("second") {sut->
+                clog("Case: second")
+                assertEquals("shit from bar 2", sut.shitFromBar2())
+            }
+            it.suiteFor({it.Baz()}) {
+                it.case("third") {sut->
+                    clog("Case: third")
+                    assertEquals("shit from baz", sut.shitFromBaz())
+                }
+            }
+        }
+
+        it.case("weirdCase") {sut->
+            clog("Well, I'm weird...")
+        }
+
+        it.suiteFor({backUp().fromFuckingEverythingSmallRoot().ifExists()}) {
+            buildCommonCases(it)
+            buildDoesntExistCase(it) {exercise->
+                assertNull(exercise())
+            }
+        }
+
+        it.suiteFor({backUp().fromFuckingEverythingSmallRoot().orBitchIfDoesntExist()}) {
+            buildCommonCases(it)
+            buildDoesntExistCase(it) {exercise->
+                AssertPile.thrownContainsUUID("c--testref--5a4b69c-e2d5-4833-b9c0-4eb5b0b06c25") {
+                    exercise()
+                }
+            }
+        }
+    }
+
+    private fun buildDoesntExistCase(it: SuiteMaker<out backUp.Ignite>, block: (() -> String?) -> Unit) {
+        it.case("doesntExist") {sut ->
+            block {sut.ignite(File(BigPile.fuckingEverythingSmallRoot + "/non-existent-pizda.txt"))}
+        }
+    }
+
+    private fun buildCommonCases(it: SuiteMaker<out backUp.Ignite>) {
+        it.case("existsButNotUnderGivenRoot") {sut ->
+            AssertPile.thrownContainsUUID("9--testref--911cfc6-6435-4a54-aa74-ad492162181a") {
+                sut.ignite(TestPile.existingPizdaFile.big())
+            }
+        }
+        it.case("cool") {sut ->
+            TimePile.withTestLdtnow(LocalDateTime.of(2015, 5, 25, 10, 11, 12, 345000000)) {
+                fail("// TODO:vgrechka Delete backup file first")
+                val res = sut.ignite(TestPile.existingPizdaFile.small())
+                assertEquals(BigPile.fuckingBackupsRoot + "/fesmall----shit-for-tests--existing-pizda.txt----2015-05-25-10-11-12-345", res)
+                fail("// TODO:vgrechka Check file content")
+            }
+        }
+    }
+}
+
+
+startSteps({backUp()}) {
+    it.step({it.fromFuckingEverythingSmallRoot()}) {
+        it.step({it.ifExists()}) {
+            it.case("doesntExist") {sut->
+                val res = sut.ignite(File(BigPile.fuckingEverythingSmallRoot + "/non-existent-pizda.txt"))
+                assertNull(res)
+            }
+            it.case("existsButNotInFuckingEverything") {sut->
+                AssertPile.thrownContainsUUID("9--testref--911cfc6-6435-4a54-aa74-ad492162181a") {
+                    sut.ignite(TestPile.existingPizdaFile.big())
+                }
+            }
+            it.case("cool") {sut->
+                TimePile.withTestLdtnow(LocalDateTime.of(2015, 5, 25, 10, 11, 12, 345000000)) {
+                    val res = sut.ignite(TestPile.existingPizdaFile.small())
+                    assertEquals(BigPile.fuckingBackupsRoot + "/fesmall----shit-for-tests--existing-pizda.txt----2015-05-25-10-11-12-345", res)
+                }
+            }
+        }
+    }
+}
+
+
+class StepShit {
+    class StepBuilder<PrevStep> {
+        fun <Step> step(makeStep: (PrevStep) -> Step, buildFurther: (StepBuilder<Step>) -> Unit) {
+            imf("6d0e172d-6801-403d-bcc9-db6d2a7b94c2")
+        }
+
+        fun case(name: String, exercise: (PrevStep) -> Unit) {
+            imf("5dd331fd-3add-4a66-81ff-a06ba2a39ce7")
+        }
+    }
+
+    fun <Step> startSteps(makeFirstStep: () -> Step, buildFurtherSteps: (StepBuilder<Step>) -> Unit) {
+        imf("09e64f48-228d-475b-ae0b-418463f2dac6")
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

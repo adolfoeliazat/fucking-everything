@@ -16,7 +16,7 @@ import okhttp3.RequestBody
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.MySuite
+import org.junit.runners.FreakingSuite
 import org.junit.runners.Suite
 import java.io.*
 import java.nio.charset.Charset
@@ -305,42 +305,62 @@ object TestPile {
         var casesWereDefined = false
         val childGeneratedClasses = mutableListOf<Class<*>>()
 
-        fun generateClass(): Class<*> {
-            val testClass = casesWereDefined.thenElseNull {
-                testClassBuilder
-                    .name("Tests_" + DebugPile.nextPUID())
+        companion object {
+            private var counter = 0
+            fun generateName(suggested: String): String {
+                val res = suggested + "_" + (++counter) + "__"
+//                run {
+//                    if (res.contains("7"))
+//                        "break on me"
+//                }
+                return res
+            }
+        }
+
+        fun generateClasses(name: String): Array<Class<*>> {
+            val makeTestClass = casesWereDefined.thenElseNull {
+                fun (className: String) = testClassBuilder
+                    .name(className)
                     .make()
                     .load(this::class.java.classLoader)
-                    .loaded}
+                    .loaded
+            }
 
-            if (testClass != null && childGeneratedClasses.isEmpty()) {
-                return testClass
+            if (makeTestClass != null && childGeneratedClasses.isEmpty()) {
+                return arrayOf(makeTestClass(generateName(name)))
             } else {
                 val allChildClasses = mutableListOf<Class<*>>()
-                if (testClass != null)
-                    allChildClasses += testClass
+                if (makeTestClass != null)
+                    allChildClasses += makeTestClass(generateName(name))
                 allChildClasses += childGeneratedClasses
+                return allChildClasses.toTypedArray()
+            }
+        }
 
-                val suiteClass = ByteBuddy()
+        fun generateClass(name: String): Class<*> {
+            val classes = generateClasses(name)
+            if (classes.size == 1)
+                return classes.first()
+            else
+                return ByteBuddy()
                     .subclass(Any::class.java)
                     .annotateType(AnnotationDescription.Builder
                                       .ofType(RunWith::class.java)
                                       .define("value", Suite::class.java).build())
                     .annotateType(AnnotationDescription.Builder
                                       .ofType(Suite.SuiteClasses::class.java)
-                                      .defineTypeArray("value", *allChildClasses.toTypedArray()).build())
-                    .name("Suite_" + DebugPile.nextPUID())
+                                      .defineTypeArray("value", *classes).build())
+                    .name(generateName(name))
                     .make()
                     .load(this::class.java.classLoader)
                     .loaded
-                return suiteClass
-            }
         }
 
         override fun case(name: String, exercise: (BaseSUT) -> Unit) {
             testClassBuilder = testClassBuilder
                 .defineMethod(name, Void.TYPE, Visibility.PUBLIC)
                 .intercept(MethodDelegation.to(object {
+                    @Suppress("unused")
                     fun invokeMotherfucker() {
                         exercise(makeBaseSUT())
                     }
@@ -361,15 +381,15 @@ object TestPile {
             val childSuiteMaker = SuiteMakerImpl<SUT> {makeSUT(makeBaseSUT())}
             build(childSuiteMaker)
 
-            childGeneratedClasses += childSuiteMaker.generateClass()
+            childGeneratedClasses += childSuiteMaker.generateClass(name)
         }
     }
 
-    fun generateJUnitSuiteClassesFromBuilder(klass: Class<*>): Array<Class<*>> {
-        val clientSideBuilder = klass.newInstance() as SuiteMakerClient
+    fun generateJUnitSuiteClassesFromBuilder(clazz: Class<*>): Array<Class<*>> {
+        val clientSideBuilder = clazz.newInstance() as SuiteMakerClient
         val ourSideBuilder = SuiteMakerImpl {Unit}
         clientSideBuilder.build(ourSideBuilder)
-        return arrayOf(ourSideBuilder.generateClass())
+        return ourSideBuilder.generateClasses(clazz.name.replace("$", "_"))
     }
 }
 
@@ -646,40 +666,9 @@ object FilePile {
         }
     }
 
-    class Foo {
-        inner class Bar {
-            fun shitFromBar1() = "shit from bar 1"
-            fun shitFromBar2() = "shit from bar 2"
-            inner class Baz {
-                fun shitFromBaz() = "shit from baz"
-            }
-        }
-    }
-
-    @RunWith(MySuite::class)
+    @RunWith(FreakingSuite::class)
     class Tests : SuiteMakerClient {
         override fun build(it: SuiteMaker<Unit>) {
-            it.suiteFor({Foo().Bar()}) {
-                it.case("first") {sut->
-                    clog("Case: first")
-                    assertEquals("shit from bar 1", sut.shitFromBar1())
-                }
-                it.case("second") {sut->
-                    clog("Case: second")
-                    assertEquals("shit from bar 2", sut.shitFromBar2())
-                }
-                it.suiteFor({it.Baz()}) {
-                    it.case("third") {sut->
-                        clog("Case: third")
-                        assertEquals("shit from baz", sut.shitFromBaz())
-                    }
-                }
-            }
-
-            it.case("weirdCase") {sut->
-                clog("Well, I'm weird...")
-            }
-
             it.suiteFor({backUp().fromFuckingEverythingSmallRoot().ifExists()}) {
                 buildCommonCases(it)
                 buildDoesntExistCase(it) {exercise->
@@ -726,11 +715,6 @@ interface SuiteMaker<BaseSUT> {
     fun <SubSUT> suiteFor(makeSUT: (BaseSUT) -> SubSUT, build: (SuiteMaker<SubSUT>) -> Unit)
 }
 
-//interface CaseMaker<SUT> {
-//    fun case(name: String, exercise: (SUT) -> Unit)
-//    fun <SUT2> suiteFor(makeSUT: (SUT) -> SUT2, build: (CaseMaker<SUT2>) -> Unit)
-//}
-
 fun String.substituteMyVars(): String {
     return this.replace("%FE%", BigPile.fuckingEverythingSmallRoot)
 }
@@ -746,57 +730,6 @@ val Throwable.stackTraceStr: String
         PrintWriter(sw).use { printStackTrace(it) }
         return sw.toString()
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-//startSteps({backUp()}) {
-//    it.step({it.fromFuckingEverythingSmallRoot()}) {
-//        it.step({it.ifExists()}) {
-//            it.case("doesntExist") {sut->
-//                val res = sut.ignite(File(BigPile.fuckingEverythingSmallRoot + "/non-existent-pizda.txt"))
-//                assertNull(res)
-//            }
-//            it.case("existsButNotInFuckingEverything") {sut->
-//                AssertPile.thrownContainsUUID("9--testref--911cfc6-6435-4a54-aa74-ad492162181a") {
-//                    sut.ignite(TestPile.existingPizdaFile.big())
-//                }
-//            }
-//            it.case("cool") {sut->
-//                TimePile.withTestLdtnow(LocalDateTime.of(2015, 5, 25, 10, 11, 12, 345000000)) {
-//                    val res = sut.ignite(TestPile.existingPizdaFile.small())
-//                    assertEquals(BigPile.fuckingBackupsRoot + "/fesmall----shit-for-tests--existing-pizda.txt----2015-05-25-10-11-12-345", res)
-//                }
-//            }
-//        }
-//    }
-//}
-
-//class StepShit {
-//    class StepBuilder<PrevStep> {
-//        fun <Step> step(makeStep: (PrevStep) -> Step, buildFurther: (StepBuilder<Step>) -> Unit) {
-//            imf("6d0e172d-6801-403d-bcc9-db6d2a7b94c2")
-//        }
-//
-//        fun case(name: String, exercise: (PrevStep) -> Unit) {
-//            imf("5dd331fd-3add-4a66-81ff-a06ba2a39ce7")
-//        }
-//    }
-//
-//    fun <Step> startSteps(makeFirstStep: () -> Step, buildFurtherSteps: (StepBuilder<Step>) -> Unit) {
-//        imf("09e64f48-228d-475b-ae0b-418463f2dac6")
-//    }
-//}
-
 
 
 
