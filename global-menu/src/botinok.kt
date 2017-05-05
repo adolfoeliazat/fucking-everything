@@ -438,9 +438,10 @@ class StartBotinok : Application() {
             when (value) {
                 is FuckingNode.Arena -> {
                     addMenuItem(menu, "Rename", {action_renameArena(item, value)})
-                    if (item !== rootNode.children.first()) {
-                        addMenuItem(menu, "Move Up", {action_moveArenaUp(item, value)})
-                    }
+                    if (item !== rootNode.children.first())
+                        addMenuItem(menu, "Move Up", {moveArenaIndexDelta(item, value, -1)})
+                    if (item !== rootNode.children.last())
+                        addMenuItem(menu, "Move Down", {moveArenaIndexDelta(item, value, +1)})
                     addMenuItem(menu, "New Region", this::action_newRegion)
                 }
                 is Region -> {
@@ -454,18 +455,18 @@ class StartBotinok : Application() {
             }
         }
 
-        private fun action_moveArenaUp(item: TreeItem<FuckingNode>, arenaNode: FuckingNode.Arena) {
+        private fun moveArenaIndexDelta(item: TreeItem<FuckingNode>, arenaNode: FuckingNode.Arena, i: Int) {
             run {
                 val arena = arenaNode.arena
                 val index = play.arenas.indexOfOrNull(arena) ?: wtf("db8f6365-cf88-494f-8f6a-7a07b11c01f5")
-                val tmp = play.arenas[index - 1]
-                play.arenas[index - 1] = arena
+                val tmp = play.arenas[index + i]
+                play.arenas[index + i] = arena
                 play.arenas[index] = tmp
             }
             run {
                 val index = rootNode.children.indexOfOrNull(item) ?: wtf("5df53fb4-534a-49df-832d-ee31043c7f19")
                 rootNode.children.removeAt(index)
-                rootNode.children.add(index - 1, item)
+                rootNode.children.add(index + i, item)
             }
             setDirty(true)
         }
