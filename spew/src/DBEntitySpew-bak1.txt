@@ -2,7 +2,6 @@ package vgrechka.spew
 
 import org.jetbrains.kotlin.psi.*
 import vgrechka.*
-import vgrechka.BigPile.mangleUUID
 import java.io.File
 import java.util.*
 import kotlin.properties.Delegates.notNull
@@ -118,7 +117,6 @@ class DBEntitySpew : Spew {
         en = entity.name
         end = en.decapitalize()
         out.smallSection(en)
-        out.append("// Generated at ${mangleUUID("7470173f-49ef-43cb-adf7-1c395f07518c")}\n")
         val fuck10 = "fun new$en("
         out.append(fuck10)
         val ctorParams = entity.fields.filter {it.isInCtorParams}
@@ -130,16 +128,16 @@ class DBEntitySpew : Spew {
         out.append("): $en {\n")
 
         out.append(  "    val backing = Generated_$en(\n")
-        val fuck20 = "        Generated_${en}Fields().also {"
+        val fuck20 = "        Generated_${en}Fields("
         out.append(fuck20)
         for ((ctorParamIndex, ctorParam) in ctorParams.withIndex()) {
-            out.append("it.${ctorParam.name} = ${maybeWrapShitIntoPlatformType(ctorParam, ctorParam.name)}")
+            out.append("${ctorParam.name} = ${ctorParam.name}")
             if (ctorParam.isEntity)
                 out.append("._backing")
             if (ctorParamIndex < ctorParams.lastIndex)
-                out.append("\n" + " ".repeat(fuck20.length))
+                out.append(",\n" + " ".repeat(fuck20.length))
         }
-        out.append("})\n")
+        out.append("))\n")
         out.append("    return backing.toManuallyDefinedInterface()\n")
         out.append("}\n\n")
 
@@ -154,7 +152,7 @@ class DBEntitySpew : Spew {
         out.append("}\n\n")
 
         out.append("@XEntity @XTable(name = \"${entity.tableName}\")\n")
-        out.append("class Generated_$en( // Generated at ${mangleUUID("f21265f2-3d69-4ab8-a07c-5595106a9e6b")}\n")
+        out.append("class Generated_$en(\n")
         out.append("    @XEmbedded var $end: Generated_${en}Fields\n")
         out.append(")\n")
         out.append("    : ClitoralEntity0(), DBCodeGenUtils.GeneratedEntity<$en>\n")
@@ -185,8 +183,8 @@ class DBEntitySpew : Spew {
             exhaustive=when (field.kind) {
                 is FieldKind.Simple -> {
                     out.append("            override var ${field.name}: ${field.type}\n")
-                    out.append("                get() = ${maybeUnwrapShitFromPlatformType(field, "_backing.$end.${field.name}")}\n")
-                    out.append("                set(value) {_backing.$end.${field.name} = ${maybeWrapShitIntoPlatformType(field, "value")}}\n")
+                    out.append("                get() = _backing.$end.${field.name}\n")
+                    out.append("                set(value) {_backing.$end.${field.name} = value}\n")
                     out.append("\n")
                 }
                 is FieldKind.One -> {
@@ -231,65 +229,34 @@ class DBEntitySpew : Spew {
         out.append("\n")
 
         out.append("@XEmbeddable\n")
-        out.append("class Generated_${en}Fields { // Generated at ${mangleUUID("2e91acff-5613-4b14-b71e-5edee254d029")}\n")
-        out.append("    @XEmbedded var common: CommonFields = CommonFields()\n")
+        out.append("class Generated_${en}Fields(\n")
+        out.append("    @XEmbedded var common: CommonFields = CommonFields(),\n")
         for ((index, field) in entity.fields.withIndex()) {
             exhaustive=when (field.kind) {
                 is FieldKind.Simple -> {
                     out.append("    @XColumn")
                     if (field.type == "String")
                         out.append("(columnDefinition = \"text\")")
-                    out.append(" lateinit var ${field.name}: ${field.platformType()}")
+                    out.append(" var ${field.name}: ${field.type}")
                 }
                 is FieldKind.One -> {
-                    out.append("    @XManyToOne(fetch = XFetchType.${field.kind.fetchType.name}, cascade = arrayOf(XCascadeType.ALL)) lateinit var ${field.name}: Generated_${field.type}")
+                    out.append("    @XManyToOne(fetch = XFetchType.${field.kind.fetchType.name}, cascade = arrayOf(XCascadeType.ALL)) var ${field.name}: Generated_${field.type}")
                 }
                 is FieldKind.Many -> {
                     out.append("    @XOneToMany(fetch = XFetchType.${field.kind.fetchType.name}, mappedBy = \"${field.kind.mappedBy}\", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var ${field.name}: MutableList<Generated_${field.type}> = mutableListOf()")
                 }
             }
-//            if (index < entity.fields.lastIndex)
-//                out.append(",")
+            if (index < entity.fields.lastIndex)
+                out.append(",")
             out.append("\n")
         }
-        out.append("}\n")
+        out.append(")\n")
         out.append("\n")
 
         generateDDLCommentForEntity()
 
         /*
          */
-    }
-
-    private fun maybeUnwrapShitFromPlatformType(typed: FieldSpec, shit: String): String {
-        val platformType = typed.platformType()
-        return when {
-            platformType != typed.type -> when (typed.type) {
-                "Int" -> "$shit.toInt()"
-                "Long" -> "$shit.toLong()"
-                "Boolean" -> "$shit.booleanValue()"
-                else -> wtf("f8ef6767-4bfd-4bad-8ee3-9b5fbd768990")
-            }
-            else -> shit
-        }
-    }
-
-    private fun maybeWrapShitIntoPlatformType(typed: FieldSpec, shit: String): String {
-        val platformType = typed.platformType()
-        return when {
-            platformType != typed.type -> "$platformType($shit)"
-            else -> shit
-        }
-    }
-
-    private fun FieldSpec.platformType(): String {
-        val platformFieldType = when (type) {
-            "Int" -> "java.lang.Integer"
-            "Long" -> "java.lang.Long"
-            "Boolean" -> "java.lang.Boolean"
-            else -> type
-        }
-        return platformFieldType
     }
 
     private fun spitGeneratedRepo() {
@@ -516,7 +483,7 @@ class DBEntitySpew : Spew {
                                         }
 
                                         val isEntity = type !in setOf("Int", "Long", "Boolean", "String", "XTimestamp", "ByteArray")
-                                        val isInToString = !isEntity && type !in setOf("ByteArray")
+                                        val isInToString = !isEntity
 
                                         fields += FieldSpec(name = name,
                                                             type = type,
@@ -638,7 +605,6 @@ class DBEntitySpew : Spew {
         out.line("")
     }
 }
-
 
 
 

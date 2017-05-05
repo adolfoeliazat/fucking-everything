@@ -51,17 +51,20 @@ class BotinokTest1 {
             }
         }
 
-        fun <T : GCommonEntityFields> checkForeignKeyPreventsDeletion(deleteFromRepo: GRepository<T>) {
-            AssertPile.thrownExceptionOrOneOfItsCausesMessageContains("SQLITE_CONSTRAINT_FOREIGNKEY") {
-                backPlatform.tx {
-                    val shit = deleteFromRepo.findAll().first()
-                    deleteFromRepo.delete(shit)
-                }
-            }
-        }
-
-        checkForeignKeyPreventsDeletion(deleteFromRepo = botinokPlayRepo)
-        checkForeignKeyPreventsDeletion(deleteFromRepo = botinokArenaRepo)
+// Now that cascade and orphanRemoval are used, below is not relevant.
+// TODO:vgrechka Provide an option to generate code without cascading delete -- for the sake of safety
+//
+//        fun <T : GCommonEntityFields> checkForeignKeyPreventsDeletion(deleteFromRepo: GRepository<T>) {
+//            AssertPile.thrownExceptionOrOneOfItsCausesMessageContains("SQLITE_CONSTRAINT_FOREIGNKEY") {
+//                backPlatform.tx {
+//                    val shit = deleteFromRepo.findAll().first()
+//                    deleteFromRepo.delete(shit)
+//                }
+//            }
+//        }
+//
+//        checkForeignKeyPreventsDeletion(deleteFromRepo = botinokPlayRepo)
+//        checkForeignKeyPreventsDeletion(deleteFromRepo = botinokArenaRepo)
 
         log.assertEquals("""
 BotinokPlay(name=Pizdaplay)                                             0--5ac827cf-d160-439e-8bce-ef41e51ec69a

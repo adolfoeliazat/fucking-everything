@@ -50,7 +50,7 @@ object BotinokFuckingAround {
 //            this::fuck_shitIsNotSavedAutomatically_2
 //            this::fuck_explicitSave
 //            this::fuck_bug_arenaSavedTwice
-            this::fuck_bug_arenaSavedTwice_2
+            this::fuck_bug_arenaSavedTwice
 
         clog("====================================================")
         clog(f.name)
@@ -123,35 +123,13 @@ object BotinokFuckingAround {
             botinokPlayRepo.save(play)
         }
         run {
-            val play = botinokPlayRepo.findByName("The Fucking Play")!!
-            val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play)
-            play.arenas.add(arena)
-            botinokPlayRepo.save(play)
-
-            play.name = "The Fucking Play (Amended)"
-            botinokPlayRepo.save(play)
-        }
-        dumpShit()
-    }
-
-    fun fuck_bug_arenaSavedTwice_2() {
-        run {
-            val play = newBotinokPlay("The Fucking Play")
-            botinokPlayRepo.save(play)
-        }
-        run {
             var play = botinokPlayRepo.findByName("The Fucking Play")!!
             val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play)
             play.arenas.add(arena)
-            clog("aaaaaa " + play.arenas.first()._backing.botinokArena.regions)
-
             play = botinokPlayRepo.save(play)
-            clog("ID assigned to arena: " + play.arenas.first().id)
-            clog("rrrrrr " + play.arenas.first()._backing.botinokArena.regions)
-//            play.arenas.first().regions.size
 
-//            play.name = "The Fucking Play (Amended)"
-//            botinokPlayRepo.save(play)
+            play.name = "The Fucking Play (Amended)"
+            botinokPlayRepo.save(play)
         }
         dumpShit()
     }

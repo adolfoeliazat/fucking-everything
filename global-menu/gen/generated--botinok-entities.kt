@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Fri May 05 11:14:31 EEST 2017
+// Generated on Fri May 05 16:48:45 EEST 2017
 // Model: e:/fegh/global-menu/src/botinok-entities.kt
 //
 
@@ -20,6 +20,7 @@ import vgrechka.db.*
 // BotinokRegion
 // ------------------------------------------------------------------
 
+// Generated at 7-470173f-49ef-43cb-adf7-1c395f07518c
 fun newBotinokRegion(name: String,
                      x: Int,
                      y: Int,
@@ -27,12 +28,12 @@ fun newBotinokRegion(name: String,
                      h: Int,
                      arena: BotinokArena): BotinokRegion {
     val backing = Generated_BotinokRegion(
-        Generated_BotinokRegionFields(name = name,
-                                      x = x,
-                                      y = y,
-                                      w = w,
-                                      h = h,
-                                      arena = arena._backing))
+        Generated_BotinokRegionFields().also {it.name = name
+                                              it.x = java.lang.Integer(x)
+                                              it.y = java.lang.Integer(y)
+                                              it.w = java.lang.Integer(w)
+                                              it.h = java.lang.Integer(h)
+                                              it.arena = arena._backing})
     return backing.toManuallyDefinedInterface()
 }
 
@@ -77,7 +78,7 @@ interface Generated_BotinokRegionBackingProvider : DBCodeGenUtils.GeneratedBacki
 }
 
 @XEntity @XTable(name = "botinok_regions")
-class Generated_BotinokRegion(
+class Generated_BotinokRegion( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9e6b
     @XEmbedded var botinokRegion: Generated_BotinokRegionFields
 )
     : ClitoralEntity0(), DBCodeGenUtils.GeneratedEntity<BotinokRegion>
@@ -108,20 +109,20 @@ class Generated_BotinokRegion(
                 set(value) {_backing.botinokRegion.name = value}
 
             override var x: Int
-                get() = _backing.botinokRegion.x
-                set(value) {_backing.botinokRegion.x = value}
+                get() = _backing.botinokRegion.x.toInt()
+                set(value) {_backing.botinokRegion.x = java.lang.Integer(value)}
 
             override var y: Int
-                get() = _backing.botinokRegion.y
-                set(value) {_backing.botinokRegion.y = value}
+                get() = _backing.botinokRegion.y.toInt()
+                set(value) {_backing.botinokRegion.y = java.lang.Integer(value)}
 
             override var w: Int
-                get() = _backing.botinokRegion.w
-                set(value) {_backing.botinokRegion.w = value}
+                get() = _backing.botinokRegion.w.toInt()
+                set(value) {_backing.botinokRegion.w = java.lang.Integer(value)}
 
             override var h: Int
-                get() = _backing.botinokRegion.h
-                set(value) {_backing.botinokRegion.h = value}
+                get() = _backing.botinokRegion.h.toInt()
+                set(value) {_backing.botinokRegion.h = java.lang.Integer(value)}
 
             override var arena: BotinokArena
                 get() = _backing.botinokRegion.arena.toManuallyDefinedInterface()
@@ -144,27 +145,28 @@ class Generated_BotinokRegion(
 }
 
 @XEmbeddable
-class Generated_BotinokRegionFields(
-    @XEmbedded var common: CommonFields = CommonFields(),
-    @XColumn(columnDefinition = "text") var name: String,
-    @XColumn var x: Int,
-    @XColumn var y: Int,
-    @XColumn var w: Int,
-    @XColumn var h: Int,
-    @XManyToOne(fetch = XFetchType.EAGER, cascade = arrayOf(XCascadeType.ALL)) var arena: Generated_BotinokArena
-)
+class Generated_BotinokRegionFields { // Generated at 2-e91acff-5613-4b14-b71e-5edee254d029
+    @XEmbedded var common: CommonFields = CommonFields()
+    @XColumn(columnDefinition = "text") lateinit var name: String
+    @XColumn lateinit var x: java.lang.Integer
+    @XColumn lateinit var y: java.lang.Integer
+    @XColumn lateinit var w: java.lang.Integer
+    @XColumn lateinit var h: java.lang.Integer
+    @XManyToOne(fetch = XFetchType.EAGER, cascade = arrayOf(XCascadeType.ALL)) lateinit var arena: Generated_BotinokArena
+}
 
 // ------------------------------------------------------------------
 // BotinokArena
 // ------------------------------------------------------------------
 
+// Generated at 7-470173f-49ef-43cb-adf7-1c395f07518c
 fun newBotinokArena(name: String,
                     screenshot: ByteArray,
                     play: BotinokPlay): BotinokArena {
     val backing = Generated_BotinokArena(
-        Generated_BotinokArenaFields(name = name,
-                                     screenshot = screenshot,
-                                     play = play._backing))
+        Generated_BotinokArenaFields().also {it.name = name
+                                             it.screenshot = screenshot
+                                             it.play = play._backing})
     return backing.toManuallyDefinedInterface()
 }
 
@@ -209,7 +211,7 @@ interface Generated_BotinokArenaBackingProvider : DBCodeGenUtils.GeneratedBackin
 }
 
 @XEntity @XTable(name = "botinok_arenas")
-class Generated_BotinokArena(
+class Generated_BotinokArena( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9e6b
     @XEmbedded var botinokArena: Generated_BotinokArenaFields
 )
     : ClitoralEntity0(), DBCodeGenUtils.GeneratedEntity<BotinokArena>
@@ -262,26 +264,27 @@ class Generated_BotinokArena(
     }
 
     override fun toString(): String {
-        return "BotinokArena(name=${botinokArena.name}, screenshot=${botinokArena.screenshot})"
+        return "BotinokArena(name=${botinokArena.name})"
     }
 }
 
 @XEmbeddable
-class Generated_BotinokArenaFields(
-    @XEmbedded var common: CommonFields = CommonFields(),
-    @XColumn(columnDefinition = "text") var name: String,
-    @XColumn var screenshot: ByteArray,
-    @XManyToOne(fetch = XFetchType.EAGER, cascade = arrayOf(XCascadeType.ALL)) var play: Generated_BotinokPlay,
+class Generated_BotinokArenaFields { // Generated at 2-e91acff-5613-4b14-b71e-5edee254d029
+    @XEmbedded var common: CommonFields = CommonFields()
+    @XColumn(columnDefinition = "text") lateinit var name: String
+    @XColumn lateinit var screenshot: ByteArray
+    @XManyToOne(fetch = XFetchType.EAGER, cascade = arrayOf(XCascadeType.ALL)) lateinit var play: Generated_BotinokPlay
     @XOneToMany(fetch = XFetchType.EAGER, mappedBy = "botinokRegion.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var regions: MutableList<Generated_BotinokRegion> = mutableListOf()
-)
+}
 
 // ------------------------------------------------------------------
 // BotinokPlay
 // ------------------------------------------------------------------
 
+// Generated at 7-470173f-49ef-43cb-adf7-1c395f07518c
 fun newBotinokPlay(name: String): BotinokPlay {
     val backing = Generated_BotinokPlay(
-        Generated_BotinokPlayFields(name = name))
+        Generated_BotinokPlayFields().also {it.name = name})
     return backing.toManuallyDefinedInterface()
 }
 
@@ -331,7 +334,7 @@ interface Generated_BotinokPlayBackingProvider : DBCodeGenUtils.GeneratedBacking
 }
 
 @XEntity @XTable(name = "botinok_plays")
-class Generated_BotinokPlay(
+class Generated_BotinokPlay( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9e6b
     @XEmbedded var botinokPlay: Generated_BotinokPlayFields
 )
     : ClitoralEntity0(), DBCodeGenUtils.GeneratedEntity<BotinokPlay>
@@ -381,11 +384,11 @@ class Generated_BotinokPlay(
 }
 
 @XEmbeddable
-class Generated_BotinokPlayFields(
-    @XEmbedded var common: CommonFields = CommonFields(),
-    @XColumn(columnDefinition = "text") var name: String,
+class Generated_BotinokPlayFields { // Generated at 2-e91acff-5613-4b14-b71e-5edee254d029
+    @XEmbedded var common: CommonFields = CommonFields()
+    @XColumn(columnDefinition = "text") lateinit var name: String
     @XOneToMany(fetch = XFetchType.EAGER, mappedBy = "botinokArena.play", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var arenas: MutableList<Generated_BotinokArena> = mutableListOf()
-)
+}
 
 object BotinokGeneratedDBPile {
     object ddl {

@@ -13,5 +13,10 @@ object BigPile {
 
     val localSQLiteShebangTestDBFilePath = fuckingEverythingBigRoot + "/db/shebang-test.db"
     val localSQLiteShebangTestDBURL = "jdbc:intosqlite:$localSQLiteShebangTestDBFilePath"
+
+
+    fun mangleUUID(uuid: String): String {
+        return uuid[0] + "-" + uuid.drop(1)
+    }
 }
 
