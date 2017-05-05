@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Wed May 03 09:53:49 EEST 2017
+// Generated on Fri May 05 11:14:31 EEST 2017
 // Model: e:/fegh/global-menu/src/botinok-entities.kt
 //
 
@@ -387,7 +387,7 @@ class Generated_BotinokPlayFields(
     @XOneToMany(fetch = XFetchType.EAGER, mappedBy = "botinokArena.play", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var arenas: MutableList<Generated_BotinokArena> = mutableListOf()
 )
 
-object BotinokGeneratedDBStuff {
+object BotinokGeneratedDBPile {
     object ddl {
         val dropCreateAllScript = """
 drop table if exists `botinok_regions`;

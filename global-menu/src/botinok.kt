@@ -26,6 +26,7 @@ import org.jnativehook.keyboard.NativeKeyEvent
 import org.jnativehook.mouse.NativeMouseEvent
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import vgrechka.*
+import vgrechka.db.*
 import java.awt.Rectangle
 import java.awt.Robot
 import java.awt.Toolkit.getDefaultToolkit
@@ -46,6 +47,8 @@ object BotinokStuff {
     val obscureConst2 = boxEdgeSize + obscureConst1
 }
 
+data class Box(var x: Int = 0, var y: Int = 0, var w: Int = 0, var h: Int = 0)
+
 class BoxPoints(var minX: Int, var minY: Int, var maxX: Int, var maxY: Int)
 
 enum class DragMutator {
@@ -55,48 +58,6 @@ enum class DragMutator {
     LEFT {override fun mutate(points: BoxPoints, dx: Int, dy: Int) {points.minX += dx}};
 
     abstract fun mutate(points: BoxPoints, dx: Int, dy: Int)
-}
-
-enum class Handle {
-    TOP_LEFT {
-        override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize, box.y.toDouble() - b.obscureConst2 - b.obscureConst1, b.handleSize, b.handleSize)
-        override val dragMutators = setOf(DragMutator.TOP, DragMutator.LEFT)
-    },
-    TOP {
-        override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.w / 2 - b.handleSize / 2, box.y.toDouble() - b.obscureConst2 - b.obscureConst1, b.handleSize, b.handleSize)
-        override val dragMutators = setOf(DragMutator.TOP)
-    },
-    TOP_RIGHT {
-        override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.w, box.y.toDouble() - b.obscureConst2 - b.obscureConst1, b.handleSize, b.handleSize)
-        override val dragMutators = setOf(DragMutator.TOP, DragMutator.RIGHT)
-    },
-    RIGHT {
-        override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.w, box.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.h / 2 + b.handleSize / 2, b.handleSize, b.handleSize)
-        override val dragMutators = setOf(DragMutator.RIGHT)
-    },
-    BOTTOM_RIGHT {
-        override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.w, box.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.h + b.handleSize, b.handleSize, b.handleSize)
-        override val dragMutators = setOf(DragMutator.BOTTOM, DragMutator.RIGHT)
-    },
-    BOTTOM {
-        override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.w / 2 - b.handleSize / 2, box.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.h + b.handleSize, b.handleSize, b.handleSize)
-        override val dragMutators = setOf(DragMutator.BOTTOM)
-    },
-    BOTTOM_LEFT {
-        override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize, box.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.h + b.handleSize, b.handleSize, b.handleSize)
-        override val dragMutators = setOf(DragMutator.BOTTOM, DragMutator.LEFT)
-    },
-    LEFT {
-        override fun rectForBox(box: Box) = Rectangle2D(box.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize, box.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.h / 2 + b.handleSize / 2, b.handleSize, b.handleSize)
-        override val dragMutators = setOf(DragMutator.LEFT)
-    };
-
-    companion object {
-        private val b = BotinokStuff
-    }
-
-    abstract fun rectForBox(box: Box): Rectangle2D
-    abstract val dragMutators: Set<DragMutator>
 }
 
 enum class RegionHandle {
@@ -693,7 +654,7 @@ class StartBotinok : Application() {
 
     fun action_save() {
         backPlatform.tx {
-            botinokPlayRepo.save(play)
+            play = botinokPlayRepo.save(play)
         }
 
         JFXStuff.infoAlert("Your shit was saved OK")
@@ -721,7 +682,6 @@ private fun addMenuItem(menu: ContextMenu, title: String, handler: () -> Unit) {
         }
     }
 }
-
 
 
 

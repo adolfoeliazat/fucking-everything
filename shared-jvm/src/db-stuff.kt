@@ -10,7 +10,6 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor
 import org.hibernate.id.IdentityGenerator
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
@@ -18,25 +17,50 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 import org.sqlite.SQLiteConfig
 import org.sqlite.javax.IntoSQLiteConnectionPoolDataSource
 import vgrechka.*
+import java.sql.Connection
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
-object DBStuff {
+object DBPile {
     fun executeBunchOfSQLStatementsAndCloseConnection(sql: String) {
         val sqls = sql.split(";").filter {it.isNotBlank()}
         executeBunchOfSQLStatementsAndCloseConnection(sqls)
     }
 
     fun executeBunchOfSQLStatementsAndCloseConnection(sqls: List<String>) {
-        val ds = backPlatform.springctx.getBean(DataSource::class.java)
-        val con = ds.connection
-        try {
+        withConnection {con->
             val st = con.createStatement()
             for (sql in sqls) {
                 st.execute(sql)
             }
+        }
+    }
+
+    private fun <T> withConnection(block: (Connection) -> T): T {
+        val ds = backPlatform.springctx.getBean(DataSource::class.java)
+        val con = ds.connection
+        try {
+            return block(con)
         } finally {
             con.close()
+        }
+    }
+
+    fun executeAndFormatResultForPrinting(sql: String): String {
+        return withConnection {con->
+            val buf = StringBuilder()
+            val st = con.prepareStatement(sql)
+            val rs = st.executeQuery()
+            while (rs.next()) {
+                for (columnIndex in 1..rs.metaData.columnCount) {
+                    val value: Any? = rs.getObject(columnIndex)
+                    if (columnIndex > 1)
+                        buf.append("|")
+                    buf.append(value.toString())
+                }
+                buf.appendln()
+            }
+            buf.toString()
         }
     }
 }

@@ -69,10 +69,12 @@
 
 ========== SQLite ==========
 
-    sqlite3 -cmd "pragma foreign_keys = on;" e:\febig\db\shebang.db
+    title shebang.db & sqlite3 -cmd "pragma foreign_keys = on;" e:\febig\db\shebang.db
     .tables
     .schema
     .quit
+
+    title shebang-test.db & sqlite3 -cmd "pragma foreign_keys = on;" e:\febig\db\shebang-test.db
 
     sqlite3 e:\febig\db\shebang.db .dump
 

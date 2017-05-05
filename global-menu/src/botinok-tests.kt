@@ -19,7 +19,7 @@ class BotinokTest1 {
     @Test fun test1() {
         backPlatform.springctx = AnnotationConfigApplicationContext(BotinokTestAppConfig::class.java)
 
-        DBStuff.executeBunchOfSQLStatementsAndCloseConnection(BotinokGeneratedDBStuff.ddl.dropCreateAllScript)
+        DBPile.executeBunchOfSQLStatementsAndCloseConnection(BotinokGeneratedDBPile.ddl.dropCreateAllScript)
 
         backPlatform.tx {
             botinokPlayRepo.save(newBotinokPlay("Pizdaplay")).also {play->

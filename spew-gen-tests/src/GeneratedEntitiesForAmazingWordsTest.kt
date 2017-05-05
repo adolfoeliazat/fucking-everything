@@ -2,26 +2,15 @@
 
 package vgrechka.spewgentests
 
-import org.hibernate.cfg.Environment
-import org.hibernate.dialect.SQLiteDialect
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
-import org.springframework.orm.jpa.JpaTransactionManager
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
-import org.springframework.transaction.annotation.EnableTransactionManagement
-import org.sqlite.javax.SQLiteConnectionPoolDataSource
 import vgrechka.*
 import vgrechka.db.*
 import vgrechka.spew.*
-import javax.persistence.EntityManagerFactory
-import javax.sql.DataSource
 
 class GeneratedEntitiesForAmazingWordsTest {
     val log = TestLogger()
@@ -201,7 +190,7 @@ ID of newly added word is 4                                3b11683c-7979-4e65-af
 
         private fun recreateSchema() {
             log.println("Recreating schema", "11e89c05-3db6-4b67-a111-2509625d7028")
-            DBStuff.executeBunchOfSQLStatementsAndCloseConnection(listOf(
+            DBPile.executeBunchOfSQLStatementsAndCloseConnection(listOf(
                 "drop table if exists amazing_comments;",
                 "drop table if exists amazing_words;",
 

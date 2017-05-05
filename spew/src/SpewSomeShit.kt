@@ -20,7 +20,7 @@ object SpewBotinokEntitiesAndRecreateTestDatabaseSchema {
         val res = spewForInputFiles(listOf("%FE%/global-menu/src/botinok-entities.kt"))
         clog(res.ddl)
         backPlatform.springctx = AnnotationConfigApplicationContext(BotinokTestAppConfig::class.java)
-        DBStuff.executeBunchOfSQLStatementsAndCloseConnection(res.ddl.toString())
+        DBPile.executeBunchOfSQLStatementsAndCloseConnection(res.ddl.toString())
         clog("OK")
     }
 }
@@ -34,7 +34,7 @@ object SpewBotinokEntitiesAndRecreateProdDatabaseSchema {
             .ignite(File(BigPile.localSQLiteShebangDBFilePath))
         clog("Backed shit up to $backupPath")
         backPlatform.springctx = AnnotationConfigApplicationContext(BotinokProdAppConfig::class.java)
-        DBStuff.executeBunchOfSQLStatementsAndCloseConnection(res.ddl.toString())
+        DBPile.executeBunchOfSQLStatementsAndCloseConnection(res.ddl.toString())
         clog("OK")
     }
 }

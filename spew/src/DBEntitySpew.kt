@@ -7,7 +7,7 @@ import java.util.*
 import kotlin.properties.Delegates.notNull
 
 @Target(AnnotationTarget.FILE)
-annotation class GDBEntitySpewOptions(val stuffObject: String = "")
+annotation class GDBEntitySpewOptions(val pileObject: String = "")
 
 annotation class GEntity(val table: String)
 annotation class GOneToMany(val mappedBy: String, val fetch: GFetchType = GFetchType.LAZY)
@@ -82,7 +82,7 @@ class DBEntitySpew : Spew {
     private var end by notNull<String>()
     private var spewResults by notNullOnce<SpewResults>()
     private var entities by notNull<List<EntitySpec>>()
-    private var stuffObjectName: String? = null
+    private var pileObjectName: String? = null
 
     override fun ignite(ktFile: KtFile, outputFilePath: String, spewResults: SpewResults) {
         this.ktFile = ktFile
@@ -344,8 +344,8 @@ class DBEntitySpew : Spew {
     private fun maybeQuestion(finder: FinderSpec) = finder.returnsNullable.thenElseEmpty {"?"}
 
     fun spitStuffClass() {
-        if (stuffObjectName != null) {
-            out.append("object $stuffObjectName {\n")
+        if (pileObjectName != null) {
+            out.append("object $pileObjectName {\n")
             out.append("    object ddl {\n")
             out.append("        val dropCreateAllScript = \"\"\"\n")
             out.append(spewResults.ddl.toString())
@@ -428,9 +428,9 @@ class DBEntitySpew : Spew {
         object {
             init {
                 for (ann in ktFile.freakingFindAnnotations(GDBEntitySpewOptions::class.simpleName!!)) {
-                    ann.freakingGetStringAttribute(GDBEntitySpewOptions::stuffObject.name)?.let {
+                    ann.freakingGetStringAttribute(GDBEntitySpewOptions::pileObject.name)?.let {
                         if (it.isNotBlank())
-                            stuffObjectName = it
+                            pileObjectName = it
                     }
                 }
 
