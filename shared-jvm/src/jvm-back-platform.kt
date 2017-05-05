@@ -31,6 +31,7 @@ typealias XTable = Table
 typealias XEmbedded = Embedded
 typealias XOneToMany = OneToMany
 typealias XColumn = Column
+typealias XOrderColumn = OrderColumn
 typealias XEnumerated = Enumerated
 typealias XEnumType = EnumType
 typealias XManyToOne = ManyToOne

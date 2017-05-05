@@ -13,6 +13,7 @@ annotation class GDBEntitySpewOptions(val pileObject: String = "")
 annotation class GEntity(val table: String)
 annotation class GOneToMany(val mappedBy: String, val fetch: GFetchType = GFetchType.LAZY)
 annotation class GManyToOne(val fetch: GFetchType = GFetchType.EAGER)
+annotation class GIsOrderColumn
 
 enum class GFetchType {LAZY, EAGER}
 
@@ -41,8 +42,8 @@ private data class FieldSpec(
     val name: String,
     val type: String,
     val isEntity: Boolean,
-    val isInCtorParams: Boolean,
     val isInToString: Boolean,
+    val isOrderColumn: Boolean,
     val kind: FieldKind)
 {
     fun typeWithoutQuestion() = when {
@@ -73,7 +74,7 @@ private data class EntitySpec(
 
 
 class DBEntitySpew : Spew {
-    // TODO:vgrechka Extract logic into one-off constructed in `ignite`
+    // TODO:vgrechka Extract logic into one-off class constructed in `ignite` (to avoid all these `notNull`s)
 
     private var ktFile by notNullOnce<KtFile>()
     private var outputFilePath by notNullOnce<String>()
@@ -121,7 +122,7 @@ class DBEntitySpew : Spew {
         out.append("// Generated at ${mangleUUID("7470173f-49ef-43cb-adf7-1c395f07518c")}\n")
         val fuck10 = "fun new$en("
         out.append(fuck10)
-        val ctorParams = entity.fields.filter {it.isInCtorParams}
+        val ctorParams = entity.fields.filter {it.kind !is FieldKind.Many && !it.isOrderColumn}
         for ((ctorParamIndex, ctorParam) in ctorParams.withIndex()) {
             out.append("${ctorParam.name}: ${ctorParam.type}")
             if (ctorParamIndex < ctorParams.lastIndex)
@@ -239,13 +240,23 @@ class DBEntitySpew : Spew {
                     out.append("    @XColumn")
                     if (field.type == "String")
                         out.append("(columnDefinition = \"text\")")
-                    out.append(" lateinit var ${field.name}: ${field.platformType()}")
+                    if (field.type.endsWith("?"))
+                        out.append(" var ${field.name}: ${field.type} = null")
+                    else
+                        out.append(" lateinit var ${field.name}: ${field.platformType()}")
                 }
                 is FieldKind.One -> {
-                    out.append("    @XManyToOne(fetch = XFetchType.${field.kind.fetchType.name}, cascade = arrayOf(XCascadeType.ALL)) lateinit var ${field.name}: Generated_${field.type}")
+                    out.append("    @XManyToOne(fetch = XFetchType.${field.kind.fetchType.name}, cascade = arrayOf(XCascadeType.ALL))")
+                    out.append(" lateinit var ${field.name}: Generated_${field.type}")
                 }
                 is FieldKind.Many -> {
-                    out.append("    @XOneToMany(fetch = XFetchType.${field.kind.fetchType.name}, mappedBy = \"${field.kind.mappedBy}\", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var ${field.name}: MutableList<Generated_${field.type}> = mutableListOf()")
+                    out.append("    @XOneToMany(fetch = XFetchType.${field.kind.fetchType.name}, mappedBy = \"${field.kind.mappedBy}\", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true)")
+                    val entity = entities.find {it.name == field.type} ?: wtf("68c50078-c088-476b-9a52-7c1657412fc3")
+                    val orderColumnField = entity.fields.find {it.isOrderColumn}
+                    if (orderColumnField != null) {
+                        out.append(" @XOrderColumn(name = \"${field.type.decapitalize()}_${orderColumnField.name}\")")
+                    }
+                    out.append(" var ${field.name}: MutableList<Generated_${field.type}> = mutableListOf()")
                 }
             }
 //            if (index < entity.fields.lastIndex)
@@ -488,7 +499,6 @@ class DBEntitySpew : Spew {
                                     if (decl is KtProperty) {
                                         val prop = decl
                                         val name = prop.name!!
-                                        var isInCtorParams = true
                                         var kind: FieldKind = FieldKind.Simple()
                                         var type = prop.typeReference!!.text
 
@@ -505,8 +515,8 @@ class DBEntitySpew : Spew {
                                             val oneToManyAnnotationEntry = prop.freakingFindAnnotation("GOneToMany") ?: wtf("556650b2-91b5-45de-887f-81f87f701c49")
                                             val mappedBy = oneToManyAnnotationEntry.freakingGetStringAttribute("mappedBy") ?: wtf("9aafe9de-9a02-49c9-b4db-2300055b0026")
                                             val fetchType = findFetchType(oneToManyAnnotationEntry, default = GFetchType.LAZY)
-                                            kind = FieldKind.Many(mappedBy = type.decapitalize() + "." + mappedBy, fetchType = fetchType)
-                                            isInCtorParams = false
+                                            kind = FieldKind.Many(mappedBy = type.decapitalize() + "." + mappedBy,
+                                                                  fetchType = fetchType)
                                         } else {
                                             val manyToOneAnnotationEntry = prop.freakingFindAnnotation("GManyToOne")
                                             if (manyToOneAnnotationEntry != null) {
@@ -521,8 +531,8 @@ class DBEntitySpew : Spew {
                                         fields += FieldSpec(name = name,
                                                             type = type,
                                                             isEntity = isEntity,
-                                                            isInCtorParams = isInCtorParams,
                                                             isInToString = isInToString,
+                                                            isOrderColumn = prop.freakingFindAnnotation("GIsOrderColumn") != null,
                                                             kind = kind)
                                             .also {noise(it.toVerticalString())}
                                     }

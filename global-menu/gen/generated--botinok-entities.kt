@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Fri May 05 18:14:02 EEST 2017
+// Generated on Fri May 05 20:58:44 EEST 2017
 // Model: e:/fegh/global-menu/src/botinok-entities.kt
 //
 
@@ -104,6 +104,10 @@ class Generated_BotinokRegion( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a
                 get() = _backing.botinokRegion.common.deleted
                 set(value) {_backing.botinokRegion.common.deleted = value}
 
+            override var position: Int?
+                get() = _backing.botinokRegion.position
+                set(value) {_backing.botinokRegion.position = value}
+
             override var name: String
                 get() = _backing.botinokRegion.name
                 set(value) {_backing.botinokRegion.name = value}
@@ -147,6 +151,7 @@ class Generated_BotinokRegion( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a
 @XEmbeddable
 class Generated_BotinokRegionFields { // Generated at 2-e91acff-5613-4b14-b71e-5edee254d029
     @XEmbedded var common: CommonFields = CommonFields()
+    @XColumn var position: Int? = null
     @XColumn(columnDefinition = "text") lateinit var name: String
     @XColumn lateinit var x: java.lang.Integer
     @XColumn lateinit var y: java.lang.Integer
@@ -237,6 +242,10 @@ class Generated_BotinokArena( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9
                 get() = _backing.botinokArena.common.deleted
                 set(value) {_backing.botinokArena.common.deleted = value}
 
+            override var position: Int?
+                get() = _backing.botinokArena.position
+                set(value) {_backing.botinokArena.position = value}
+
             override var name: String
                 get() = _backing.botinokArena.name
                 set(value) {_backing.botinokArena.name = value}
@@ -271,10 +280,11 @@ class Generated_BotinokArena( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9
 @XEmbeddable
 class Generated_BotinokArenaFields { // Generated at 2-e91acff-5613-4b14-b71e-5edee254d029
     @XEmbedded var common: CommonFields = CommonFields()
+    @XColumn var position: Int? = null
     @XColumn(columnDefinition = "text") lateinit var name: String
     @XColumn lateinit var screenshot: ByteArray
     @XManyToOne(fetch = XFetchType.EAGER, cascade = arrayOf(XCascadeType.ALL)) lateinit var play: Generated_BotinokPlay
-    @XOneToMany(fetch = XFetchType.EAGER, mappedBy = "botinokRegion.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var regions: MutableList<Generated_BotinokRegion> = mutableListOf()
+    @XOneToMany(fetch = XFetchType.EAGER, mappedBy = "botinokRegion.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) @XOrderColumn(name = "botinokRegion_position") var regions: MutableList<Generated_BotinokRegion> = mutableListOf()
 }
 
 // ------------------------------------------------------------------
@@ -387,7 +397,7 @@ class Generated_BotinokPlay( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9e
 class Generated_BotinokPlayFields { // Generated at 2-e91acff-5613-4b14-b71e-5edee254d029
     @XEmbedded var common: CommonFields = CommonFields()
     @XColumn(columnDefinition = "text") lateinit var name: String
-    @XOneToMany(fetch = XFetchType.EAGER, mappedBy = "botinokArena.play", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var arenas: MutableList<Generated_BotinokArena> = mutableListOf()
+    @XOneToMany(fetch = XFetchType.EAGER, mappedBy = "botinokArena.play", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) @XOrderColumn(name = "botinokArena_position") var arenas: MutableList<Generated_BotinokArena> = mutableListOf()
 }
 
 object BotinokGeneratedDBPile {
@@ -399,6 +409,7 @@ create table `botinok_regions` (
     `botinokRegion_common_createdAt` text not null,
     `botinokRegion_common_updatedAt` text not null,
     `botinokRegion_common_deleted` integer not null,
+    `botinokRegion_position` integer,
     `botinokRegion_name` text not null,
     `botinokRegion_x` integer not null,
     `botinokRegion_y` integer not null,
@@ -414,6 +425,7 @@ create table `botinok_arenas` (
     `botinokArena_common_createdAt` text not null,
     `botinokArena_common_updatedAt` text not null,
     `botinokArena_common_deleted` integer not null,
+    `botinokArena_position` integer,
     `botinokArena_name` text not null,
     `botinokArena_screenshot` blob not null,
     `botinokArena_play__id` bigint not null,
@@ -444,6 +456,7 @@ create table `botinok_regions` (
     `botinokRegion_common_createdAt` text not null,
     `botinokRegion_common_updatedAt` text not null,
     `botinokRegion_common_deleted` integer not null,
+    `botinokRegion_position` integer,
     `botinokRegion_name` text not null,
     `botinokRegion_x` integer not null,
     `botinokRegion_y` integer not null,
@@ -459,6 +472,7 @@ create table `botinok_arenas` (
     `botinokArena_common_createdAt` text not null,
     `botinokArena_common_updatedAt` text not null,
     `botinokArena_common_deleted` integer not null,
+    `botinokArena_position` integer,
     `botinokArena_name` text not null,
     `botinokArena_screenshot` blob not null,
     `botinokArena_play__id` bigint not null,

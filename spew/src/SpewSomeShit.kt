@@ -14,6 +14,15 @@ object SpewSomeShit1 {
     }
 }
 
+object SpewBotinokEntities {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val res = spewForInputFiles(listOf("%FE%/global-menu/src/botinok-entities.kt"))
+        clog(res.ddl)
+        clog("OK")
+    }
+}
+
 object SpewBotinokEntitiesAndRecreateTestDatabaseSchema {
     @JvmStatic
     fun main(args: Array<String>) {

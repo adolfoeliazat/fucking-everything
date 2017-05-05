@@ -11,6 +11,7 @@ import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.*
 import javafx.scene.image.Image
+import javafx.scene.input.ContextMenuEvent
 import javafx.scene.input.KeyCode
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
@@ -26,7 +27,6 @@ import org.jnativehook.keyboard.NativeKeyEvent
 import org.jnativehook.mouse.NativeMouseEvent
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import vgrechka.*
-import vgrechka.db.*
 import java.awt.Rectangle
 import java.awt.Robot
 import java.awt.Toolkit.getDefaultToolkit
@@ -106,8 +106,9 @@ sealed class FuckingNode {
     class Root : FuckingNode()
 
     class Arena(val treeItem: TreeItem<FuckingNode>,
-                val arena: BotinokArena,
-                val image: Image) : FuckingNode() {
+                val arena: BotinokArena) : FuckingNode() {
+
+        val image by lazy {Image(arena.screenshot.inputStream())}
 
         val regions: List<Region>
             get() {
@@ -145,6 +146,7 @@ class StartBotinok : Application() {
         Thread.setDefaultUncaughtExceptionHandler {thread, exception ->
             try {
                 Platform.runLater {
+                    exception.printStackTrace()
                     JFXStuff.errorAlert(exception)
                 }
             } catch (e: Throwable) {
@@ -397,17 +399,7 @@ class StartBotinok : Application() {
             }
 
             navigationTreeView.setOnContextMenuRequested {e->
-                val item = navigationTreeView.selectionModel.selectedItem?.value
-
-                val menu = ContextMenu()
-                if (item is FuckingNode.Arena) {
-                    addMenuItem(menu, "New Region", this::action_newRegion)
-                }
-
-                if (menu.items.isNotEmpty()) {
-                    menu.show(navigationTreeView, e.screenX, e.screenY)
-                    currentContextMenu = menu
-                }
+                makeTreeContextMenu(e)
             }
 
             navigationTreeView.selectionModel.selectedItemProperty().addListener {_, oldValue, newValue ->
@@ -436,6 +428,55 @@ class StartBotinok : Application() {
             navigationTreeView.root.isExpanded = true
 
             primaryStage.scene = Scene(vbox)
+        }
+
+        private fun makeTreeContextMenu(e: ContextMenuEvent) {
+            val item = navigationTreeView.selectionModel.selectedItem
+            val value = item?.value
+
+            val menu = ContextMenu()
+            when (value) {
+                is FuckingNode.Arena -> {
+                    addMenuItem(menu, "Rename", {action_renameArena(item, value)})
+                    if (item !== rootNode.children.first()) {
+                        addMenuItem(menu, "Move Up", {action_moveArenaUp(item, value)})
+                    }
+                    addMenuItem(menu, "New Region", this::action_newRegion)
+                }
+                is Region -> {
+
+                }
+            }
+
+            if (menu.items.isNotEmpty()) {
+                menu.show(navigationTreeView, e.screenX, e.screenY)
+                currentContextMenu = menu
+            }
+        }
+
+        private fun action_moveArenaUp(item: TreeItem<FuckingNode>, arenaNode: FuckingNode.Arena) {
+            run {
+                val arena = arenaNode.arena
+                val index = play.arenas.indexOfOrNull(arena) ?: wtf("db8f6365-cf88-494f-8f6a-7a07b11c01f5")
+                val tmp = play.arenas[index - 1]
+                play.arenas[index - 1] = arena
+                play.arenas[index] = tmp
+            }
+            run {
+                val index = rootNode.children.indexOfOrNull(item) ?: wtf("5df53fb4-534a-49df-832d-ee31043c7f19")
+                rootNode.children.removeAt(index)
+                rootNode.children.add(index - 1, item)
+            }
+            setDirty(true)
+        }
+
+        private fun action_renameArena(treeItem: TreeItem<FuckingNode>, arenaNode: FuckingNode.Arena) {
+            val arena = arenaNode.arena
+            JFXStuff.inputBox("So, name?", arena.name)?.let {
+                arena.name = it
+                treeItem.value = FuckingNode.Arena(treeItem, arena)
+                setDirty(true)
+            }
         }
 
         private fun hideContextMenus() {
@@ -636,7 +677,7 @@ class StartBotinok : Application() {
 
     private fun addTreeItemForArena(arena: BotinokArena): TreeItem<FuckingNode> {
         val treeItem = TreeItem<FuckingNode>()
-        val arenaNode = FuckingNode.Arena(treeItem, arena, Image(arena.screenshot.inputStream()))
+        val arenaNode = FuckingNode.Arena(treeItem, arena)
 //        val arenaNode = FuckingNode.Arena(treeItem, arena, Image("file:///$tmpImgPath"))
         treeItem.value = arenaNode
         bananas.rootNode.children.add(treeItem)
