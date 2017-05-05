@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Fri May 05 16:48:45 EEST 2017
+// Generated on Fri May 05 18:14:02 EEST 2017
 // Model: e:/fegh/global-menu/src/botinok-entities.kt
 //
 

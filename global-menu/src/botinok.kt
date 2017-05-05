@@ -159,8 +159,8 @@ class StartBotinok : Application() {
         }
 
         this.primaryStage = primaryStage
-        primaryStage.width = 1000.0
-        primaryStage.height = 500.0
+        primaryStage.width = 1500.0
+        primaryStage.height = 750.0
         openPlaySelector()
 
         primaryStage.setOnShown {
@@ -636,7 +636,8 @@ class StartBotinok : Application() {
 
     private fun addTreeItemForArena(arena: BotinokArena): TreeItem<FuckingNode> {
         val treeItem = TreeItem<FuckingNode>()
-        val arenaNode = FuckingNode.Arena(treeItem, arena, Image("file:///$tmpImgPath"))
+        val arenaNode = FuckingNode.Arena(treeItem, arena, Image(arena.screenshot.inputStream()))
+//        val arenaNode = FuckingNode.Arena(treeItem, arena, Image("file:///$tmpImgPath"))
         treeItem.value = arenaNode
         bananas.rootNode.children.add(treeItem)
         return treeItem
@@ -653,10 +654,8 @@ class StartBotinok : Application() {
     }
 
     fun action_save() {
-        backPlatform.tx {
-            play = botinokPlayRepo.save(play)
-        }
-
+        play = botinokPlayRepo.save(play)
+        setDirty(false)
         JFXStuff.infoAlert("Your shit was saved OK")
     }
 
