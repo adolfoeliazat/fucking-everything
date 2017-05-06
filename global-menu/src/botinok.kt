@@ -34,7 +34,9 @@ import vgrechka.*
 import java.awt.Rectangle
 import java.awt.Robot
 import java.awt.Toolkit.getDefaultToolkit
+import java.awt.event.InputEvent
 import java.io.File
+import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
 import javax.imageio.ImageIO
@@ -146,6 +148,8 @@ class StartBotinok : Application() {
     var play by notNull<BotinokPlay>()
     @Volatile var running = false
     @Volatile var stopRequested = false
+    val robot = Robot()
+    val tmpImgPath = "${FilePile.tmpDirPath}/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
 
     override fun start(primaryStage: Stage) {
         run {
@@ -447,6 +451,12 @@ class StartBotinok : Application() {
                         o.isDisable = true
                     }
                     o.items += stopMenuItem
+                }
+
+                o.menus += Menu("_Tools")-{o->
+                    o.items += MenuItem("_Mess Around")-{o->
+                        o.setOnAction {action_messAround()}
+                    }
                 }
             }
 
@@ -826,13 +836,11 @@ class StartBotinok : Application() {
         }
     }
 
-    val tmpImgPath = "${FilePile.tmpDirPath}/d2185122-750e-432d-8d88-fad71b5021b5.png".replace("\\", "/")
-
     private fun action_takeScreenshot() {
         JFXStuff.later {
 
             run {
-                val image = Robot().createScreenCapture(Rectangle(getDefaultToolkit().screenSize))
+                val image = robot.createScreenCapture(Rectangle(getDefaultToolkit().screenSize))
                 ImageIO.write(image, "png", File(tmpImgPath))
                 noise("Saved screenshot")
             }
@@ -886,15 +894,72 @@ class StartBotinok : Application() {
         bananas.statusLabel.text = "Running..."
         stopRequested = false
         thread {
-            while (!stopRequested) {
-                Thread.sleep(2000)
-                clog("Tick")
+            arenas@for (arena in play.arenas) {
+                if (arena.regions.isEmpty()) {
+                    noise("Arena ${arena.name}: no regions -- skipping")
+                    continue@arenas
+                }
+                if (arena.pointers.isEmpty()) {
+                    noise("Arena ${arena.name}: no pointers -- skipping")
+                    continue@arenas
+                }
+                if (arena.pointers.size > 1) {
+                    noise("Arena ${arena.name}: multiple pointers are not yet supported -- skipping")
+                    continue@arenas
+                }
+
+                noise("Arena ${arena.name}: waiting for match")
+                val arenaImage = ImageIO.read(arena.screenshot.inputStream())
+                check(arenaImage.raster.numBands == 3) {"9332a09a-417e-4c3b-8867-9bf76af6b47f"}
+                while (true) {
+                    val time0 = System.currentTimeMillis()
+                    val screenImage = robot.createScreenCapture(Rectangle(getDefaultToolkit().screenSize))
+                    check(screenImage.raster.numBands == 3) {"99e06055-4be8-4c29-8ac9-6437663e5d8e"}
+                    var allRegionsMatched = true
+                    regions@for (region in arena.regions) {
+                        if (stopRequested) break@arenas
+
+                        for (x in region.x until region.x + region.w) {
+                            for (y in region.y until region.y + region.h) {
+                                val screenPixel = intArrayOf(-1, -1, -1)
+                                screenImage.raster.getPixel(x, y, screenPixel)
+                                // noise("Screen pixel: ${screenPixel[0]}, ${screenPixel[1]}, ${screenPixel[2]}")
+
+                                val arenaPixel = intArrayOf(-1, -1, -1)
+                                arenaImage.raster.getPixel(x, y, arenaPixel)
+                                // noise("Arena pixel: ${arenaPixel[0]}, ${arenaPixel[1]}, ${arenaPixel[2]}")
+
+                                if (!Arrays.equals(screenPixel, arenaPixel)) {
+                                    allRegionsMatched = false
+                                    break@regions
+                                }
+                            }
+                        }
+                    }
+
+                    if (allRegionsMatched) {
+                        noise("Arena ${arena.name}: matched")
+                        thread {
+                            val pointer = arena.pointers.first()
+                            robot.mouseMove(pointer.x, pointer.y)
+                            Thread.sleep(250)
+                            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+                            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+                        }
+                        continue@arenas
+                    }
+
+                    noise("Tick: ${System.currentTimeMillis() - time0}ms")
+                    Thread.sleep(2000)
+                }
             }
+
             running = false
             JFXStuff.later {
                 bananas.runMenuItem.isDisable = false
                 bananas.stopMenuItem.isDisable = true
                 bananas.resetStatusLabel()
+                noise("Stopped")
             }
         }
     }
@@ -903,6 +968,20 @@ class StartBotinok : Application() {
         if (!running) return
         stopRequested = true
         bananas.statusLabel.text = "Stopping..."
+    }
+
+    fun action_messAround() {
+        val pointer = findPointer(arenaIndex = 0)
+        thread {
+            robot.mouseMove(pointer.x, pointer.y)
+            Thread.sleep(250)
+            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+        }
+    }
+
+    fun findPointer(arenaIndex: Int, pointerIndex: Int = 0): BotinokPointer {
+        return play.arenas[arenaIndex].pointers[pointerIndex]
     }
 
     companion object {
