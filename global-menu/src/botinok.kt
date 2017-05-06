@@ -6,6 +6,7 @@ import javafx.application.Application
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.event.EventHandler
+import javafx.geometry.Insets
 import javafx.geometry.Orientation
 import javafx.geometry.Rectangle2D
 import javafx.scene.Node
@@ -138,12 +139,13 @@ data class PointerNode(val treeItem: TreeItem<FuckingNode>,
 }
 
 class StartBotinok : Application() {
-    private var primaryStage by notNullOnce<Stage>()
-    private var bananas by notNullOnce<goBananas2>()
-    private var handleEnterKeyInPlaySelector by notNull<() -> Unit>()
-    private var afterPlayEditorOpened = {}
-    private var play by notNull<BotinokPlay>()
-    private var dirty = false
+    var primaryStage by notNullOnce<Stage>()
+    var bananas by notNullOnce<goBananas2>()
+    var handleEnterKeyInPlaySelector by notNull<() -> Unit>()
+    var afterPlayEditorOpened = {}
+    var play by notNull<BotinokPlay>()
+    @Volatile var running = false
+    @Volatile var stopRequested = false
 
     override fun start(primaryStage: Stage) {
         run {
@@ -184,6 +186,14 @@ class StartBotinok : Application() {
         primaryStage.show()
     }
 
+    var dirty = false
+        set(value) {
+            if (field != value) {
+                field = value
+                updateStageTitle()
+            }
+        }
+
     class MaybeAskAndSaveResult(val cancelled: Boolean)
     private fun maybeAskAndSave(): MaybeAskAndSaveResult {
         if (dirty) {
@@ -199,13 +209,6 @@ class StartBotinok : Application() {
             }
         }
         return MaybeAskAndSaveResult(cancelled = false)
-    }
-
-    fun setDirty(b: Boolean) {
-        if (dirty != b) {
-            dirty = b
-            updateStageTitle()
-        }
     }
 
     fun openPlaySelector() {
@@ -303,6 +306,9 @@ class StartBotinok : Application() {
         val pointerWidth = 17
         val pointerHeight = 25
         var leftSplitPane: SplitPane
+        val statusLabel: Label
+        var runMenuItem by notNullOnce<MenuItem>()
+        var stopMenuItem by notNullOnce<MenuItem>()
 
         inner class RegionLocation(val x: Int, val y: Int, val w: Int, val h: Int)
 
@@ -385,7 +391,7 @@ class StartBotinok : Application() {
                     // noise("MOUSE_DRAGGED: e.x = ${e.x}; e.y = ${e.y}")
 
                     fun updateShit() {
-                        setDirty(true)
+                        dirty = true
                         drawArena()
                     }
 
@@ -425,17 +431,31 @@ class StartBotinok : Application() {
                     o.items += MenuItem("_Save")-{o->
                         o.setOnAction {action_save()}
                     }
-
                     o.items += MenuItem("_Quit")-{o->
-                        o.setOnAction {
-                            action_quit()
-                        }
+                        o.setOnAction {action_quit()}
                     }
+                }
+
+                o.menus += Menu("_Play")-{o->
+                    runMenuItem = MenuItem("_Run")-{o->
+                        o.setOnAction {action_run()}
+                    }
+                    o.items += runMenuItem
+
+                    stopMenuItem = MenuItem("_Stop")-{o->
+                        o.setOnAction {action_stop()}
+                        o.isDisable = true
+                    }
+                    o.items += stopMenuItem
                 }
             }
 
             mainSplitPane = SplitPane()
             vbox.children += mainSplitPane
+            statusLabel = Label()
+            statusLabel.padding = Insets(5.0)
+            resetStatusLabel()
+            vbox.children += statusLabel
             VBox.setVgrow(mainSplitPane, Priority.ALWAYS)
             mainSplitPane.setDividerPosition(0, 0.2)
 
@@ -486,6 +506,10 @@ class StartBotinok : Application() {
             primaryStage.scene = Scene(vbox)
         }
 
+        fun resetStatusLabel() {
+            statusLabel.text = "Fucking around? :)"
+        }
+
         private fun makeTreeContextMenu(e: ContextMenuEvent) {
             val item = navigationTreeView.selectionModel.selectedItem
             val value = item?.value
@@ -525,7 +549,7 @@ class StartBotinok : Application() {
                 rootNode.children.removeAt(index)
                 rootNode.children.add(index + i, item)
             }
-            setDirty(true)
+            dirty = true
         }
 
         private fun action_renameArena(treeItem: TreeItem<FuckingNode>, arenaNode: ArenaNode) {
@@ -533,7 +557,7 @@ class StartBotinok : Application() {
             JFXStuff.inputBox("So, name?", arena.name)?.let {
                 arena.name = it
                 treeItem.value = ArenaNode(treeItem, arena)
-                setDirty(true)
+                dirty = true
             }
         }
 
@@ -568,7 +592,7 @@ class StartBotinok : Application() {
                 pileTextArea.text = pointerNode.pointer.pile
                 pileTextArea.textProperty().addListener {_, _, newValue->
                     pointerNode.pointer.pile = newValue
-                    setDirty(true)
+                    dirty = true
                 }
             }
 
@@ -654,7 +678,7 @@ class StartBotinok : Application() {
                                                  w = xywh.w, h = xywh.h,
                                                  arena = arena.arena)
                 arena.arena.regions.add(newRegion)
-                setDirty(true)
+                dirty = true
                 val regionTreeItem = addTreeItemForRegion(newRegion, arena)
                 arena.treeItem.expandedProperty().set(true)
 
@@ -675,7 +699,7 @@ class StartBotinok : Application() {
                                                   script = "// Fuck you",
                                                   arena = arenaNode.arena)
                 arenaNode.arena.pointers.add(newPointer)
-                setDirty(true)
+                dirty = true
                 val pointerTreeItem = addTreeItemForPointer(newPointer, arenaNode)
                 arenaNode.treeItem.expandedProperty().set(true)
 
@@ -815,7 +839,7 @@ class StartBotinok : Application() {
 
             val arena = newBotinokArena(name = "Arena ${getArenaCount() + 1}", screenshot = File(tmpImgPath).readBytes(), play = play)
             play.arenas.add(arena)
-            setDirty(true)
+            dirty = true
             addTreeItemForArena(arena)
             bananas.navigationTreeView.scrollTo(bananas.rootNode.children.lastIndex)
             selectLastTreeItem()
@@ -850,8 +874,35 @@ class StartBotinok : Application() {
 
     fun action_save() {
         play = botinokPlayRepo.save(play)
-        setDirty(false)
+        dirty = false
         JFXStuff.infoAlert("Your shit was saved OK")
+    }
+
+    fun action_run() {
+        if (running) return
+        bananas.runMenuItem.isDisable = true
+        bananas.stopMenuItem.isDisable = false
+        running = true
+        bananas.statusLabel.text = "Running..."
+        stopRequested = false
+        thread {
+            while (!stopRequested) {
+                Thread.sleep(2000)
+                clog("Tick")
+            }
+            running = false
+            JFXStuff.later {
+                bananas.runMenuItem.isDisable = false
+                bananas.stopMenuItem.isDisable = true
+                bananas.resetStatusLabel()
+            }
+        }
+    }
+
+    fun action_stop() {
+        if (!running) return
+        stopRequested = true
+        bananas.statusLabel.text = "Stopping..."
     }
 
     companion object {
