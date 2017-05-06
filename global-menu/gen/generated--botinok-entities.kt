@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Fri May 05 20:58:44 EEST 2017
+// Generated on Fri May 05 22:36:36 EEST 2017
 // Model: e:/fegh/global-menu/src/botinok-entities.kt
 //
 
@@ -161,6 +161,157 @@ class Generated_BotinokRegionFields { // Generated at 2-e91acff-5613-4b14-b71e-5
 }
 
 // ------------------------------------------------------------------
+// BotinokPointer
+// ------------------------------------------------------------------
+
+// Generated at 7-470173f-49ef-43cb-adf7-1c395f07518c
+fun newBotinokPointer(name: String,
+                      x: Int,
+                      y: Int,
+                      pile: String,
+                      language: String,
+                      script: String,
+                      arena: BotinokArena): BotinokPointer {
+    val backing = Generated_BotinokPointer(
+        Generated_BotinokPointerFields().also {it.name = name
+                                               it.x = java.lang.Integer(x)
+                                               it.y = java.lang.Integer(y)
+                                               it.pile = pile
+                                               it.language = language
+                                               it.script = script
+                                               it.arena = arena._backing})
+    return backing.toManuallyDefinedInterface()
+}
+
+val BotinokPointer._backing
+    get() = (this as Generated_BotinokPointerBackingProvider)._backing
+
+val botinokPointerRepo: BotinokPointerRepository by lazy {
+    val generatedRepo = backPlatform.springctx.getBean(Generated_BotinokPointerRepository::class.java)!!
+
+    object:BotinokPointerRepository {
+        override fun findOne(id: Long): BotinokPointer? {
+            val shit = generatedRepo.findOne(id)
+            return shit?.toManuallyDefinedInterface()
+        }
+
+        override fun findAll(): List<BotinokPointer> {
+            val shit = generatedRepo.findAll()
+            return shit.map {it.toManuallyDefinedInterface()}
+        }
+
+        override fun save(x: BotinokPointer): BotinokPointer {
+            val shit = generatedRepo.save(x._backing)
+            return shit.toManuallyDefinedInterface()
+        }
+
+        override fun delete(id: Long) {
+            generatedRepo.delete(id)
+        }
+
+        override fun delete(x : BotinokPointer) {
+            generatedRepo.delete(x._backing)
+        }
+
+    }
+}
+
+interface Generated_BotinokPointerRepository : XCrudRepository<Generated_BotinokPointer, Long> {
+}
+
+interface Generated_BotinokPointerBackingProvider : DBCodeGenUtils.GeneratedBackingEntityProvider<Generated_BotinokPointer> {
+    override val _backing: Generated_BotinokPointer
+}
+
+@XEntity @XTable(name = "botinok_pointers")
+class Generated_BotinokPointer( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9e6b
+    @XEmbedded var botinokPointer: Generated_BotinokPointerFields
+)
+    : ClitoralEntity0(), DBCodeGenUtils.GeneratedEntity<BotinokPointer>
+{
+    override fun toManuallyDefinedInterface(): BotinokPointer {
+        return object : BotinokPointer, Generated_BotinokPointerBackingProvider {
+            override val _backing: Generated_BotinokPointer
+                get() = this@Generated_BotinokPointer
+
+            override var id: Long
+                get() = _backing.id!!
+                set(value) {_backing.id = value}
+
+            override var createdAt: XTimestamp
+                get() = _backing.botinokPointer.common.createdAt
+                set(value) {_backing.botinokPointer.common.createdAt = value}
+
+            override var updatedAt: XTimestamp
+                get() = _backing.botinokPointer.common.updatedAt
+                set(value) {_backing.botinokPointer.common.updatedAt = value}
+
+            override var deleted: Boolean
+                get() = _backing.botinokPointer.common.deleted
+                set(value) {_backing.botinokPointer.common.deleted = value}
+
+            override var position: Int?
+                get() = _backing.botinokPointer.position
+                set(value) {_backing.botinokPointer.position = value}
+
+            override var name: String
+                get() = _backing.botinokPointer.name
+                set(value) {_backing.botinokPointer.name = value}
+
+            override var x: Int
+                get() = _backing.botinokPointer.x.toInt()
+                set(value) {_backing.botinokPointer.x = java.lang.Integer(value)}
+
+            override var y: Int
+                get() = _backing.botinokPointer.y.toInt()
+                set(value) {_backing.botinokPointer.y = java.lang.Integer(value)}
+
+            override var pile: String
+                get() = _backing.botinokPointer.pile
+                set(value) {_backing.botinokPointer.pile = value}
+
+            override var language: String
+                get() = _backing.botinokPointer.language
+                set(value) {_backing.botinokPointer.language = value}
+
+            override var script: String
+                get() = _backing.botinokPointer.script
+                set(value) {_backing.botinokPointer.script = value}
+
+            override var arena: BotinokArena
+                get() = _backing.botinokPointer.arena.toManuallyDefinedInterface()
+                set(value) {_backing.botinokPointer.arena = value._backing}
+
+            override fun toString() = _backing.toString()
+
+            override fun hashCode() = _backing.hashCode()
+
+            override fun equals(other: Any?): Boolean {
+                val otherShit = other as? Generated_BotinokPointerBackingProvider ?: return false
+                return _backing == otherShit._backing
+            }
+        }
+    }
+
+    override fun toString(): String {
+        return "BotinokPointer(name=${botinokPointer.name}, x=${botinokPointer.x}, y=${botinokPointer.y}, pile=${botinokPointer.pile}, language=${botinokPointer.language}, script=${botinokPointer.script})"
+    }
+}
+
+@XEmbeddable
+class Generated_BotinokPointerFields { // Generated at 2-e91acff-5613-4b14-b71e-5edee254d029
+    @XEmbedded var common: CommonFields = CommonFields()
+    @XColumn var position: Int? = null
+    @XColumn(columnDefinition = "text") lateinit var name: String
+    @XColumn lateinit var x: java.lang.Integer
+    @XColumn lateinit var y: java.lang.Integer
+    @XColumn(columnDefinition = "text") lateinit var pile: String
+    @XColumn(columnDefinition = "text") lateinit var language: String
+    @XColumn(columnDefinition = "text") lateinit var script: String
+    @XManyToOne(fetch = XFetchType.EAGER, cascade = arrayOf(XCascadeType.ALL)) lateinit var arena: Generated_BotinokArena
+}
+
+// ------------------------------------------------------------------
 // BotinokArena
 // ------------------------------------------------------------------
 
@@ -261,6 +412,9 @@ class Generated_BotinokArena( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9
             override var regions: MutableList<BotinokRegion>
                 by DBCodeGenUtils.FuckingList(getBackingList = {_backing.botinokArena.regions})
 
+            override var pointers: MutableList<BotinokPointer>
+                by DBCodeGenUtils.FuckingList(getBackingList = {_backing.botinokArena.pointers})
+
             override fun toString() = _backing.toString()
 
             override fun hashCode() = _backing.hashCode()
@@ -285,6 +439,7 @@ class Generated_BotinokArenaFields { // Generated at 2-e91acff-5613-4b14-b71e-5e
     @XColumn lateinit var screenshot: ByteArray
     @XManyToOne(fetch = XFetchType.EAGER, cascade = arrayOf(XCascadeType.ALL)) lateinit var play: Generated_BotinokPlay
     @XOneToMany(fetch = XFetchType.EAGER, mappedBy = "botinokRegion.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) @XOrderColumn(name = "botinokRegion_position") var regions: MutableList<Generated_BotinokRegion> = mutableListOf()
+    @XOneToMany(fetch = XFetchType.EAGER, mappedBy = "botinokPointer.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) @XOrderColumn(name = "botinokPointer_position") var pointers: MutableList<Generated_BotinokPointer> = mutableListOf()
 }
 
 // ------------------------------------------------------------------
@@ -419,6 +574,23 @@ create table `botinok_regions` (
     foreign key (botinokRegion_arena__id) references botinok_arenas(id)
 );
 
+drop table if exists `botinok_pointers`;
+create table `botinok_pointers` (
+    `id` integer primary key autoincrement,
+    `botinokPointer_common_createdAt` text not null,
+    `botinokPointer_common_updatedAt` text not null,
+    `botinokPointer_common_deleted` integer not null,
+    `botinokPointer_position` integer,
+    `botinokPointer_name` text not null,
+    `botinokPointer_x` integer not null,
+    `botinokPointer_y` integer not null,
+    `botinokPointer_pile` text not null,
+    `botinokPointer_language` text not null,
+    `botinokPointer_script` text not null,
+    `botinokPointer_arena__id` bigint not null,
+    foreign key (botinokPointer_arena__id) references botinok_arenas(id)
+);
+
 drop table if exists `botinok_arenas`;
 create table `botinok_arenas` (
     `id` integer primary key autoincrement,
@@ -464,6 +636,23 @@ create table `botinok_regions` (
     `botinokRegion_h` integer not null,
     `botinokRegion_arena__id` bigint not null,
     foreign key (botinokRegion_arena__id) references botinok_arenas(id)
+);
+
+drop table if exists `botinok_pointers`;
+create table `botinok_pointers` (
+    `id` integer primary key autoincrement,
+    `botinokPointer_common_createdAt` text not null,
+    `botinokPointer_common_updatedAt` text not null,
+    `botinokPointer_common_deleted` integer not null,
+    `botinokPointer_position` integer,
+    `botinokPointer_name` text not null,
+    `botinokPointer_x` integer not null,
+    `botinokPointer_y` integer not null,
+    `botinokPointer_pile` text not null,
+    `botinokPointer_language` text not null,
+    `botinokPointer_script` text not null,
+    `botinokPointer_arena__id` bigint not null,
+    foreign key (botinokPointer_arena__id) references botinok_arenas(id)
 );
 
 drop table if exists `botinok_arenas`;

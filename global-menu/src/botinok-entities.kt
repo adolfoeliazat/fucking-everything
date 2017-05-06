@@ -5,7 +5,6 @@ package vgrechka.botinok
 
 import vgrechka.spew.*
 
-
 @GEntity(table = "botinok_regions")
 interface BotinokRegion : GCommonEntityFields {
     @GIsOrderColumn var position: Int?
@@ -20,6 +19,21 @@ interface BotinokRegion : GCommonEntityFields {
 interface BotinokRegionRepository : GRepository<BotinokRegion> {
 }
 
+@GEntity(table = "botinok_pointers")
+interface BotinokPointer : GCommonEntityFields {
+    @GIsOrderColumn var position: Int?
+    var name: String
+    var x: Int
+    var y: Int
+    var pile: String
+    var language: String
+    var script: String
+    @GManyToOne var arena: BotinokArena
+}
+
+interface BotinokPointerRepository : GRepository<BotinokPointer> {
+}
+
 @GEntity(table = "botinok_arenas")
 interface BotinokArena : GCommonEntityFields {
     @GIsOrderColumn var position: Int?
@@ -29,6 +43,9 @@ interface BotinokArena : GCommonEntityFields {
 
     @GOneToMany(mappedBy = "arena", fetch = GFetchType.EAGER)
     var regions: MutableList<BotinokRegion>
+
+    @GOneToMany(mappedBy = "arena", fetch = GFetchType.EAGER)
+    var pointers: MutableList<BotinokPointer>
 }
 
 interface BotinokArenaRepository : GRepository<BotinokArena> {
