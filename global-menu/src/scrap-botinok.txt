@@ -1,0 +1,20 @@
+val stackedShit = drawingAreaStackPane.children.subList(1, drawingAreaStackPane.children.size)
+stackedShit.clear()
+
+val icon = FontAwesomeIconView(FontAwesomeIcon.MOUSE_POINTER)
+val scale = 1.0
+icon.translateX = pointerNode.pointer.x.toDouble() + (icon.glyphSize.toDouble() * scale - icon.glyphSize.toDouble()) / 2
+icon.translateY = pointerNode.pointer.y.toDouble() + (icon.glyphSize.toDouble() * scale - icon.glyphSize.toDouble()) / 2
+icon.scaleX = scale
+icon.scaleY = scale
+icon.opacity = 0.5
+icon.glyphSize = pointerWidth
+icon.fill = when {
+    isFocused -> brightRedPaint
+    else -> blackPaint
+}
+StackPane.setAlignment(icon, Pos.TOP_LEFT)
+
+
+
+

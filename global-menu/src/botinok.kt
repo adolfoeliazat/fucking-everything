@@ -23,6 +23,7 @@ import javafx.scene.layout.Priority
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
+import javafx.scene.paint.Paint
 import javafx.stage.Stage
 import javafx.stage.WindowEvent
 import org.jnativehook.GlobalScreen
@@ -126,8 +127,6 @@ data class RegionNode(val treeItem: TreeItem<FuckingNode>,
 
     override fun toString() = region.name
 
-    fun isHit(testX: Double, testY: Double) =
-        testX >= region.x && testX <= region.x + region.w - 1 && testY >= region.y && testY <= region.y + region.h - 1
 }
 
 data class PointerNode(val treeItem: TreeItem<FuckingNode>,
@@ -300,6 +299,8 @@ class StartBotinok : Application() {
         var operationStartMouseY = 0.0
         val rootNode: TreeItem<FuckingNode> = TreeItem(FuckingNode.Root())
         var drawingAreaStackPane by notNull<StackPane>()
+        val pointerWidth = 17
+        val pointerHeight = 25
 
         inner class RegionLocation(val x: Int, val y: Int, val w: Int, val h: Int)
 
@@ -307,6 +308,16 @@ class StartBotinok : Application() {
             RegionLocation(x = 20, y = 20, w = 150, h = 50),
             RegionLocation(x = 100, y = 100, w = 50, h = 150)
         )
+
+        fun isHit(regionNode: RegionNode, testX: Double, testY: Double): Boolean {
+            val r = regionNode.region
+            return testX >= r.x && testX <= r.x + r.w - 1 && testY >= r.y && testY <= r.y + r.h - 1
+        }
+
+        fun isHit(pointerNode: PointerNode, testX: Double, testY: Double): Boolean {
+            val p = pointerNode.pointer
+            return testX >= p.x && testX <= p.x + pointerWidth - 1 && testY >= p.y && testY <= p.y + pointerWidth - 1
+        }
 
         val canvas by relazy {
             detailsPane.children.clear()
@@ -326,7 +337,7 @@ class StartBotinok : Application() {
                 if (e.button == MouseButton.PRIMARY) {
                     // noise("MOUSE_PRESSED: e.x = ${e.x}; e.y = ${e.y}")
                     hideContextMenus()
-                    val hitRegion: RegionNode? = run {
+                    val hitRegionNode: RegionNode? = run {
                         o@for (region in selectedArena().regions) {
                             for (handle in RegionHandle.values()) {
                                 if (handle.rectForRegion(region).contains(e.x, e.y)) {
@@ -334,21 +345,33 @@ class StartBotinok : Application() {
                                     return@run region
                                 }
                             }
-                            if (region.isHit(e.x, e.y)) {
+                            if (isHit(region, e.x, e.y)) {
                                 selectedRegionHandles = RegionHandle.values().toSet()
                                 return@run region
                             }
                         }
                         null
                     }
-                    if (hitRegion == null) {
-                        selectTreeItem(selectedArena().treeItem)
-                    } else {
-                        selectTreeItem(hitRegion.treeItem)
-                        operationStartRegionParams = Box(hitRegion.region.x, hitRegion.region.y, hitRegion.region.w, hitRegion.region.h)
+                    if (hitRegionNode != null) {
+                        selectTreeItem(hitRegionNode.treeItem)
+                        operationStartRegionParams = Box(hitRegionNode.region.x, hitRegionNode.region.y, hitRegionNode.region.w, hitRegionNode.region.h)
                         operationStartMouseX = e.x
                         operationStartMouseY = e.y
                         // noise("operationStartMouseX = $operationStartMouseX; operationStartMouseY = $operationStartMouseY")
+                    } else {
+                        val hitPointerNode: PointerNode? = selectedArena().pointers.find {
+                            val p = it.pointer
+                            val pointerRect = Rectangle2D(p.x.toDouble(), p.y.toDouble(), pointerWidth.toDouble(), pointerHeight.toDouble())
+                            pointerRect.contains(e.x, e.y)
+                        }
+                        if (hitPointerNode != null) {
+                            selectTreeItem(hitPointerNode.treeItem)
+                            operationStartRegionParams = Box(hitPointerNode.pointer.x, hitPointerNode.pointer.y, -123, -123)
+                            operationStartMouseX = e.x
+                            operationStartMouseY = e.y
+                        } else {
+                            selectTreeItem(selectedArena().treeItem)
+                        }
                     }
                 }
                 drawArena()
@@ -361,10 +384,17 @@ class StartBotinok : Application() {
             canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED) {e->
                 if (e.button == MouseButton.PRIMARY) {
                     // noise("MOUSE_DRAGGED: e.x = ${e.x}; e.y = ${e.y}")
+
+                    fun updateShit() {
+                        setDirty(true)
+                        drawArena()
+                    }
+
+                    val dx = Math.round(e.x - operationStartMouseX).toInt()
+                    val dy = Math.round(e.y - operationStartMouseY).toInt()
+
                     val selectedRegion = selectedRegion()
                     if (selectedRegion != null) {
-                        val dx = Math.round(e.x - operationStartMouseX).toInt()
-                        val dy = Math.round(e.y - operationStartMouseY).toInt()
                         // noise("dx = $dx; dy = $dy")
                         val dragMutators = selectedRegionHandles.flatMap{it.dragMutators}.toSet()
                         val points = BoxPoints(operationStartRegionParams.x, operationStartRegionParams.y, operationStartRegionParams.x + operationStartRegionParams.w - 1, operationStartRegionParams.y + operationStartRegionParams.h - 1)
@@ -373,8 +403,14 @@ class StartBotinok : Application() {
                         selectedRegion.region.y = points.minY
                         selectedRegion.region.w = points.maxX - points.minX + 1
                         selectedRegion.region.h = points.maxY - points.minY + 1
-                        setDirty(true)
-                        drawArena()
+                        updateShit()
+                    } else {
+                        val selectedPointer = selectedPointer()
+                        if (selectedPointer != null) {
+                            selectedPointer.pointer.x = operationStartRegionParams.x + dx
+                            selectedPointer.pointer.y = operationStartRegionParams.y + dy
+                            updateShit()
+                        }
                     }
                 }
             }
@@ -526,16 +562,15 @@ class StartBotinok : Application() {
             val gc = canvas.graphicsContext2D
             gc.drawImage(selectedArena().image, 0.0, 0.0)
 
-            val blackPaint = Color(0.0, 0.0, 0.0, 1.0)
-            val darkRedPaint = Color(0.5, 0.0, 0.0, 1.0)
-            val brightRedPaint = Color(1.0, 0.0, 0.0, 1.0)
-
             for (regionNode in selectedArena().regions) {
+                val darkPaint = Color(0.5, 0.0, 0.0, 1.0)
+                val brightPaint = Color(1.0, 0.0, 0.0, 1.0)
+
                 val isFocused = selectedRegion() === regionNode
 
                 gc.stroke = when {
-                    isFocused -> darkRedPaint
-                    else -> brightRedPaint
+                    isFocused -> darkPaint
+                    else -> brightPaint
                 }
                 val b = BotinokStuff
                 gc.lineWidth = b.boxEdgeSize
@@ -544,8 +579,8 @@ class StartBotinok : Application() {
                 if (isFocused) {
                     for (handle in RegionHandle.values()) {
                         gc.fill = when {
-                            handle in selectedRegionHandles -> brightRedPaint
-                            else -> darkRedPaint
+                            handle in selectedRegionHandles -> brightPaint
+                            else -> darkPaint
                         }
                         val rect = handle.rectForRegion(regionNode)
                         gc.fillRect(rect.minX, rect.minY, rect.width, rect.height)
@@ -553,37 +588,41 @@ class StartBotinok : Application() {
                 }
             }
 
-            val stackedShit = drawingAreaStackPane.children.subList(1, drawingAreaStackPane.children.size)
-            stackedShit.clear()
-
             for (pointerNode in selectedArena().pointers) {
                 val isFocused = selectedPointer() === pointerNode
 
-//                run { // Draw exact point
-//                    val darkPaint = Color(0.5, 0.0, 0.0, 1.0)
-//                    val brightPaint = Color(1.0, 0.0, 0.0, 1.0)
-//                    gc.fill = when {
-//                        isFocused -> darkPaint
-//                        else -> brightPaint
-//                    }
-//                    gc.fillRect(pointerNode.pointer.x.toDouble(), pointerNode.pointer.y.toDouble(),
-//                                1.0, 1.0)
-//                }
+                val w = pointerWidth.toDouble()
+                val h = pointerHeight.toDouble()
+                val x0 = pointerNode.pointer.x.toDouble()
+                val y0 = pointerNode.pointer.y.toDouble()
+                val x1 = x0 + w - 1
+                val y1 = y0 + h - 1
 
-                val icon = FontAwesomeIconView(FontAwesomeIcon.MOUSE_POINTER)
-                val scale = 1.0
-                icon.translateX = pointerNode.pointer.x.toDouble() + (icon.glyphSize.toDouble() * scale - icon.glyphSize.toDouble()) / 2
-                icon.translateY = pointerNode.pointer.y.toDouble() + (icon.glyphSize.toDouble() * scale - icon.glyphSize.toDouble()) / 2
-                icon.scaleX = scale
-                icon.scaleY = scale
-                icon.opacity = 0.5
-                icon.glyphSize = 32
-                icon.fill = when {
-                    isFocused -> brightRedPaint
-                    else -> blackPaint
+//                gc.fill = Color(0.0, 0.0, 1.0, 0.2)
+//                gc.fillRect(x0, y0, w, h)
+
+                val paint = when {
+                    isFocused -> Color(1.0, 0.0, 0.0, 1.0)
+                    else -> Color(0.0, 0.0, 0.0, 1.0)
                 }
-                StackPane.setAlignment(icon, Pos.TOP_LEFT)
-                stackedShit.add(icon)
+                gc.fill = paint
+
+                gc.beginPath()
+                gc.moveTo(x0, y0)
+                gc.lineTo(x1, y0 + (y1 - y0) * 0.70)
+                gc.lineTo(x0 + (x1 - x0) * 0.35, y0 + (y1 - y0) * 0.7)
+                gc.lineTo(x0, y1)
+                gc.closePath()
+                gc.fill()
+
+                gc.lineWidth = 4.0
+                gc.stroke = paint
+                gc.beginPath()
+                gc.lineTo(x0 + (x1 - x0) * 0.40, y0 + (y1 - y0) * 0.7)
+                gc.lineTo(x0 + (x1 - x0) * 0.60, y1)
+                gc.closePath()
+                gc.fill()
+                gc.stroke()
             }
         }
 
