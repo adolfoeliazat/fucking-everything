@@ -2,14 +2,13 @@ package vgrechka.botinok
 
 import de.jensd.fx.glyphs.emojione.EmojiOne
 import de.jensd.fx.glyphs.emojione.EmojiOneView
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView
 import javafx.application.Application
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.event.EventHandler
-import javafx.geometry.Pos
+import javafx.geometry.Orientation
 import javafx.geometry.Rectangle2D
+import javafx.scene.Node
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.*
@@ -23,7 +22,6 @@ import javafx.scene.layout.Priority
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
-import javafx.scene.paint.Paint
 import javafx.stage.Stage
 import javafx.stage.WindowEvent
 import org.jnativehook.GlobalScreen
@@ -143,6 +141,7 @@ class StartBotinok : Application() {
     private var primaryStage by notNullOnce<Stage>()
     private var bananas by notNullOnce<goBananas2>()
     private var handleEnterKeyInPlaySelector by notNull<() -> Unit>()
+    private var afterPlayEditorOpened = {}
     private var play by notNull<BotinokPlay>()
     private var dirty = false
 
@@ -261,6 +260,8 @@ class StartBotinok : Application() {
                 arenaItem.isExpanded = true
             }
         }
+
+        afterPlayEditorOpened()
     }
 
     private fun updateStageTitle() {
@@ -287,7 +288,7 @@ class StartBotinok : Application() {
     inner class goBananas2 {
         var someTextField by notNull<TextField>()
         var navigationTreeView by notNull<TreeView<FuckingNode>>()
-        var splitPane by notNull<SplitPane>()
+        var mainSplitPane by notNull<SplitPane>()
         var detailsPane by notNull<AnchorPane>()
         var currentContextMenu: ContextMenu? = null
         var selectedRegionHandles = setOf<RegionHandle>()
@@ -301,6 +302,7 @@ class StartBotinok : Application() {
         var drawingAreaStackPane by notNull<StackPane>()
         val pointerWidth = 17
         val pointerHeight = 25
+        var leftSplitPane: SplitPane
 
         inner class RegionLocation(val x: Int, val y: Int, val w: Int, val h: Int)
 
@@ -322,12 +324,9 @@ class StartBotinok : Application() {
         val canvas by relazy {
             detailsPane.children.clear()
             val scrollPane = ScrollPane()
-            AnchorPane.setTopAnchor(scrollPane, 0.0)
-            AnchorPane.setRightAnchor(scrollPane, 0.0)
-            AnchorPane.setBottomAnchor(scrollPane, 0.0)
-            AnchorPane.setLeftAnchor(scrollPane, 0.0)
+            stretch(scrollPane)
             detailsPane.children += scrollPane
-            val canvas = Canvas(selectedArena().image.width, selectedArena().image.height)
+            val canvas = Canvas(selectedArenaNode().image.width, selectedArenaNode().image.height)
 
             drawingAreaStackPane = StackPane()
             drawingAreaStackPane.children += canvas
@@ -338,7 +337,7 @@ class StartBotinok : Application() {
                     // noise("MOUSE_PRESSED: e.x = ${e.x}; e.y = ${e.y}")
                     hideContextMenus()
                     val hitRegionNode: RegionNode? = run {
-                        o@for (region in selectedArena().regions) {
+                        o@for (region in selectedArenaNode().regions) {
                             for (handle in RegionHandle.values()) {
                                 if (handle.rectForRegion(region).contains(e.x, e.y)) {
                                     selectedRegionHandles = setOf(handle)
@@ -359,7 +358,7 @@ class StartBotinok : Application() {
                         operationStartMouseY = e.y
                         // noise("operationStartMouseX = $operationStartMouseX; operationStartMouseY = $operationStartMouseY")
                     } else {
-                        val hitPointerNode: PointerNode? = selectedArena().pointers.find {
+                        val hitPointerNode: PointerNode? = selectedArenaNode().pointers.find {
                             val p = it.pointer
                             val pointerRect = Rectangle2D(p.x.toDouble(), p.y.toDouble(), pointerWidth.toDouble(), pointerHeight.toDouble())
                             pointerRect.contains(e.x, e.y)
@@ -370,7 +369,7 @@ class StartBotinok : Application() {
                             operationStartMouseX = e.x
                             operationStartMouseY = e.y
                         } else {
-                            selectTreeItem(selectedArena().treeItem)
+                            selectTreeItem(selectedArenaNode().treeItem)
                         }
                     }
                 }
@@ -393,7 +392,7 @@ class StartBotinok : Application() {
                     val dx = Math.round(e.x - operationStartMouseX).toInt()
                     val dy = Math.round(e.y - operationStartMouseY).toInt()
 
-                    val selectedRegion = selectedRegion()
+                    val selectedRegion = selectedRegionNode()
                     if (selectedRegion != null) {
                         // noise("dx = $dx; dy = $dy")
                         val dragMutators = selectedRegionHandles.flatMap{it.dragMutators}.toSet()
@@ -405,7 +404,7 @@ class StartBotinok : Application() {
                         selectedRegion.region.h = points.maxY - points.minY + 1
                         updateShit()
                     } else {
-                        val selectedPointer = selectedPointer()
+                        val selectedPointer = selectedPointerNode()
                         if (selectedPointer != null) {
                             selectedPointer.pointer.x = operationStartRegionParams.x + dx
                             selectedPointer.pointer.y = operationStartRegionParams.y + dy
@@ -435,16 +434,20 @@ class StartBotinok : Application() {
                 }
             }
 
-            splitPane = SplitPane()
-            vbox.children += splitPane
-            VBox.setVgrow(splitPane, Priority.ALWAYS)
-            splitPane.setDividerPosition(0, 0.2)
+            mainSplitPane = SplitPane()
+            vbox.children += mainSplitPane
+            VBox.setVgrow(mainSplitPane, Priority.ALWAYS)
+            mainSplitPane.setDividerPosition(0, 0.2)
 
+            leftSplitPane = SplitPane()
+            leftSplitPane.orientation = Orientation.VERTICAL
             navigationTreeView = TreeView()
-            splitPane.items += navigationTreeView
+            leftSplitPane.items += navigationTreeView
+
+            mainSplitPane.items += leftSplitPane
 
             detailsPane = AnchorPane()
-            splitPane.items += detailsPane
+            mainSplitPane.items += detailsPane
 
             navigationTreeView.setOnMouseClicked {
                 currentContextMenu?.hide()
@@ -456,7 +459,7 @@ class StartBotinok : Application() {
             }
 
             navigationTreeView.selectionModel.selectedItemProperty().addListener {_, oldValue, newValue ->
-                onTreeSelectionChanged(oldValue, newValue)
+                handleTreeSelectionChanged(oldValue, newValue)
             }
 
             navigationTreeView.isShowRoot = false
@@ -544,15 +547,29 @@ class StartBotinok : Application() {
             navigationTreeView.selectionModel.select(treeItem)
         }
 
-        fun onTreeSelectionChanged(oldItem: TreeItem<FuckingNode>?, newItem: TreeItem<FuckingNode>?) {
+        fun handleTreeSelectionChanged(oldItem: TreeItem<FuckingNode>?, newItem: TreeItem<FuckingNode>?) {
+            if (leftSplitPane.items.size > 1)
+                leftSplitPane.items.subList(1, leftSplitPane.items.size).clear()
+
             if (newItem == null) {
                 detailsPane.children.clear()
                 relazy.reset(this::canvas)
                 return
             }
 
-            if (oldItem?.region != selectedRegion()) {
+            if (oldItem?.regionNode != selectedRegionNode()) {
                 selectedRegionHandles = RegionHandle.values().toSet()
+            }
+
+            newItem.pointerNode?.let {pointerNode ->
+                val pileTextArea = TextArea()
+                leftSplitPane.items += pileTextArea
+                leftSplitPane.setDividerPosition(0, 0.8)
+                pileTextArea.text = pointerNode.pointer.pile
+                pileTextArea.textProperty().addListener {_, _, newValue->
+                    pointerNode.pointer.pile = newValue
+                    setDirty(true)
+                }
             }
 
             drawArena()
@@ -560,13 +577,13 @@ class StartBotinok : Application() {
 
         fun drawArena() {
             val gc = canvas.graphicsContext2D
-            gc.drawImage(selectedArena().image, 0.0, 0.0)
+            gc.drawImage(selectedArenaNode().image, 0.0, 0.0)
 
-            for (regionNode in selectedArena().regions) {
+            for (regionNode in selectedArenaNode().regions) {
                 val darkPaint = Color(0.5, 0.0, 0.0, 1.0)
                 val brightPaint = Color(1.0, 0.0, 0.0, 1.0)
 
-                val isFocused = selectedRegion() === regionNode
+                val isFocused = selectedRegionNode() === regionNode
 
                 gc.stroke = when {
                     isFocused -> darkPaint
@@ -588,8 +605,8 @@ class StartBotinok : Application() {
                 }
             }
 
-            for (pointerNode in selectedArena().pointers) {
-                val isFocused = selectedPointer() === pointerNode
+            for (pointerNode in selectedArenaNode().pointers) {
+                val isFocused = selectedPointerNode() === pointerNode
 
                 val w = pointerWidth.toDouble()
                 val h = pointerHeight.toDouble()
@@ -628,7 +645,7 @@ class StartBotinok : Application() {
 
         fun action_newRegion() {
             try {
-                val arena = selectedArena()
+                val arena = selectedArenaNode()
                 val xywh = initialRegionLocations[nextInitialRegionLocationIndex]
                 if (++nextInitialRegionLocationIndex > initialRegionLocations.lastIndex)
                     nextInitialRegionLocationIndex = 0
@@ -650,7 +667,7 @@ class StartBotinok : Application() {
 
         fun action_newPointer() {
             try {
-                val arenaNode = selectedArena()
+                val arenaNode = selectedArenaNode()
                 val newPointer = newBotinokPointer(name = "Pointer ${arenaNode.pointers.size + 1}",
                                                   x = 50, y = 50,
                                                   pile = "{}",
@@ -669,30 +686,30 @@ class StartBotinok : Application() {
             }
         }
 
-        private fun selectedArena(): ArenaNode {
+        fun selectedArenaNode(): ArenaNode {
             return selectedTreeItem()!!.arena
         }
 
-        private fun selectedRegion(): RegionNode? {
-            return selectedTreeItem()?.region
+        fun selectedRegionNode(): RegionNode? {
+            return selectedTreeItem()?.regionNode
         }
 
-        private fun selectedPointer(): PointerNode? {
-            return selectedTreeItem()?.pointer
+        fun selectedPointerNode(): PointerNode? {
+            return selectedTreeItem()?.pointerNode
         }
 
-        private val TreeItem<FuckingNode>.region: RegionNode? get() {
+        val TreeItem<FuckingNode>.regionNode: RegionNode? get() {
             return value as? RegionNode
         }
 
-        private val TreeItem<FuckingNode>.pointer: PointerNode? get() {
+        val TreeItem<FuckingNode>.pointerNode: PointerNode? get() {
             return value as? PointerNode
         }
 
-        private fun selectedTreeItem(): TreeItem<FuckingNode>? =
+        fun selectedTreeItem(): TreeItem<FuckingNode>? =
             navigationTreeView.selectionModel.selectedItem
 
-        private val TreeItem<FuckingNode>.arena: ArenaNode get() {
+        val TreeItem<FuckingNode>.arena: ArenaNode get() {
             val value = value!!
             val arena: ArenaNode = when (value) {
                 is FuckingNode.Root -> wtf("c420c2f1-7c89-45aa-89b6-0aee7faa4446")
@@ -702,11 +719,13 @@ class StartBotinok : Application() {
             }
             return arena
         }
+    }
 
-        @Suppress("unused")
-        fun initialize() {
-
-        }
+    private fun stretch(node: Node) {
+        AnchorPane.setTopAnchor(node, 0.0)
+        AnchorPane.setRightAnchor(node, 0.0)
+        AnchorPane.setBottomAnchor(node, 0.0)
+        AnchorPane.setLeftAnchor(node, 0.0)
     }
 
     private fun action_quit() {
@@ -754,9 +773,19 @@ class StartBotinok : Application() {
     }
 
     private inner class simulateSomeUserActions {
-        init {thread {fuck1()}}
+        init {thread {fuck3()}}
 
         fun fuck1() {
+            Thread.sleep(500)
+            JFXStuff.later {handleEnterKeyInPlaySelector()}
+        }
+
+        fun fuck3() {
+            afterPlayEditorOpened = {
+                val pointerTreeItem = bananas.selectedArenaNode().treeItem.children.find {it.value is PointerNode}
+                    ?: wtf("228ade45-63d1-4aab-966d-2a8ddc0fedec")
+                bananas.navigationTreeView.selectionModel.select(pointerTreeItem)
+            }
             Thread.sleep(500)
             JFXStuff.later {handleEnterKeyInPlaySelector()}
         }
