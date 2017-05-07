@@ -72,8 +72,8 @@ class OptsBuilderSpew : Spew {
 
             val optsKlass = klass.declarations.find {it is KtClass && it.name == "Opts"} as KtClass
             for (param in optsKlass.primaryConstructor!!.valueParameters) {
-                if (param.name == "title")
-                    "break on me"
+//                if (param.name == "title")
+//                    "break on me"
 
                 var type = param.typeReference!!.text
                 if (hasInnerClass(type))
@@ -103,13 +103,13 @@ class OptsBuilderSpew : Spew {
             }
 
             out.appendln("    }")
-            out.appendln()
 
+            out.appendln()
             for (fuck in fucks) {
                 out.appendln("    fun ${fuck.name}(x: ${fuck.type}): ${klass.name} {optsMaking.${fuck.name} = x; return this as ${klass.name}}")
             }
-            out.appendln()
 
+            out.appendln()
             out.appendln("    fun hardenOpts(): ${klass.name}.Opts {")
             out.appendln("        return ${klass.name}.Opts(")
             for ((i, fuck) in fucks.withIndex()) {
@@ -123,11 +123,25 @@ class OptsBuilderSpew : Spew {
             out.appendln("        )")
             out.appendln("    }")
 
+            out.appendln()
+            out.appendln("    fun ignite() = ${klass.name}.Ignition(hardenOpts()).ignite()")
+
             out.appendln("}")
         }
+
         out.appendln()
     }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

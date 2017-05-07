@@ -180,8 +180,12 @@ abstract class BaseTestSQLiteAppConfig(entityPackagesToScan: Array<String>): Bas
 
 @GOptsBuilder
 class ExecuteAndFormatResultForPrinting : Generated_BaseFor_ExecuteAndFormatResultForPrinting() {
-    val buf = StringBuilder()
-    var metaData by notNullOnce<ResultSetMetaData>()
+    class Opts(
+        val sql: String,
+        val title: Title = Title.None(),
+        val skipColumn: (ResultSetColumnMeta) -> Boolean = {false},
+        val appender: Appender
+    )
 
     sealed class Title {
         class None : Title()
@@ -190,60 +194,59 @@ class ExecuteAndFormatResultForPrinting : Generated_BaseFor_ExecuteAndFormatResu
         class SQL: Title()
     }
 
-    class Opts(
-        val sql: String,
-        val title: Title = Title.None(),
-        val skipColumn: (ResultSetColumnMeta) -> Boolean = {false},
-        val appender: Appender
-    )
-
     interface Appender {
-        fun appendColumn(columnIndex: Int, value: Any?)
+        fun appendColumn(g: Ignition, columnIndex: Int, value: Any?)
     }
 
     fun linePerColumn() = appender(object : Appender {
-        override fun appendColumn(columnIndex: Int, value: Any?) {
-            buf.appendln(metaData.getColumnName(columnIndex) + ": " + value.toString())
+        override fun appendColumn(g: Ignition, columnIndex: Int, value: Any?) {
+            clog("pizda " + g.opts.sql)
+            g.buf.appendln(g.metaData.getColumnName(columnIndex) + ": " + value.toString())
         }
     })
 
     fun linePerRow() = appender(object : Appender {
-        override fun appendColumn(columnIndex: Int, value: Any?) {
+        override fun appendColumn(g: Ignition, columnIndex: Int, value: Any?) {
             if (columnIndex > 1)
-                buf.append("|")
-            buf.append(value.toString())
+                g.buf.append("|")
+            g.buf.append(value.toString())
         }
     })
 
-    fun ignite(): String {
-        val opts = hardenOpts()
-        DBPile.withConnection {con ->
-            val st = con.prepareStatement(opts.sql)
-            val rs = st.executeQuery()
-            metaData = rs.metaData
-            val titleValue = when (opts.title) {
-                is Title.None -> null
-                is Title.Explicit -> opts.title.value
-                is Title.AutoDetect -> imf("c5e8ecf9-cda0-43d4-aa7e-67d86e455978")
-                is Title.SQL -> opts.sql
-            }
-            if (titleValue != null) {
-                buf.appendln(titleValue)
-                buf.appendln("=".repeat(titleValue.length))
-                buf.appendln()
-            }
-            while (rs.next()) {
-                for (columnIndex in 1..metaData.columnCount) {
-                    if (!opts.skipColumn(ResultSetColumnMeta(metaData, columnIndex))) {
-                        val value: Any? = rs.getObject(columnIndex)
-                        opts.appender.appendColumn(columnIndex, value)
-                    }
+    class Ignition(val opts: Opts) {
+        val buf = StringBuilder()
+        var metaData by notNullOnce<ResultSetMetaData>()
+
+        fun ignite(): String {
+            DBPile.withConnection {con ->
+                val st = con.prepareStatement(opts.sql)
+                val rs = st.executeQuery()
+                metaData = rs.metaData
+                val titleValue = when (opts.title) {
+                    is Title.None -> null
+                    is Title.Explicit -> opts.title.value
+                    is Title.AutoDetect -> imf("c5e8ecf9-cda0-43d4-aa7e-67d86e455978")
+                    is Title.SQL -> opts.sql
                 }
-                buf.appendln()
+                if (titleValue != null) {
+                    buf.appendln(titleValue)
+                    buf.appendln("=".repeat(titleValue.length))
+                    buf.appendln()
+                }
+                while (rs.next()) {
+                    for (columnIndex in 1..metaData.columnCount) {
+                        if (!opts.skipColumn(ResultSetColumnMeta(metaData, columnIndex))) {
+                            val value: Any? = rs.getObject(columnIndex)
+                            opts.appender.appendColumn(this, columnIndex, value)
+                        }
+                    }
+                    buf.appendln()
+                }
             }
+            return buf.toString()
         }
-        return buf.toString()
     }
+
 }
 
 

@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Sun May 07 19:00:00 EEST 2017
+// Generated on Sun May 07 20:14:39 EEST 2017
 // Model: e:/fegh/db-stuff/src/db-stuff.kt
 //
 
@@ -36,5 +36,7 @@ abstract class Generated_BaseFor_ExecuteAndFormatResultForPrinting {
             appender = optsMaking.appender!!
         )
     }
+
+    fun ignite() = ExecuteAndFormatResultForPrinting.Ignition(hardenOpts()).ignite()
 }
 
