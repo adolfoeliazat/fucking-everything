@@ -75,9 +75,35 @@ class OptsBuilderSpew : Spew {
 //                if (param.name == "title")
 //                    "break on me"
 
-                var type = param.typeReference!!.text
-                if (hasInnerClass(type))
-                    type = "${klass.name}.$type"
+                val type = run {
+                    val typeInSource = param.typeReference!!.text
+                    val qualifiedType = StringBuilder()
+                    var identBuf = StringBuilder()
+                    fun identFinished() {
+                        val ident = identBuf.toString()
+                        qualifiedType.append(
+                            if (hasInnerClass(ident))
+                                "${klass.name}.$ident"
+                            else
+                                ident)
+                        identBuf = StringBuilder()
+                    }
+                    for (c in typeInSource) {
+                        if (c in 'a'..'z' || c in 'A'..'Z' || c in '0'..'9' || c == '_' || c == '$') {
+                            identBuf.append(c)
+                        } else {
+                            identFinished()
+                            qualifiedType.append(c)
+                        }
+                    }
+                    identFinished()
+                    var res = qualifiedType.toString()
+
+                    if (res.contains("->"))
+                        res = "($res)"
+
+                    res
+                }
 
                 fucks += Fuck(name = param.name!!,
                               type = type,

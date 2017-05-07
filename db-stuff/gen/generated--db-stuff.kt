@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Sun May 07 20:14:39 EEST 2017
+// Generated on Sun May 07 20:54:49 EEST 2017
 // Model: e:/fegh/db-stuff/src/db-stuff.kt
 //
 
@@ -19,14 +19,14 @@ abstract class Generated_BaseFor_ExecuteAndFormatResultForPrinting {
     class Generated_OptsMaking {
         var sql: String? = null
         var title: ExecuteAndFormatResultForPrinting.Title = ExecuteAndFormatResultForPrinting.Title.None()
-        var skipColumn: (ResultSetColumnMeta) -> Boolean = {false}
-        var appender: ExecuteAndFormatResultForPrinting.Appender? = null
+        var skipColumn: ((ResultSetColumnMeta) -> Boolean) = {false}
+        var appender: ((ExecuteAndFormatResultForPrinting.Ignition) -> ExecuteAndFormatResultForPrinting.Appender)? = null
     }
 
     fun sql(x: String): ExecuteAndFormatResultForPrinting {optsMaking.sql = x; return this as ExecuteAndFormatResultForPrinting}
     fun title(x: ExecuteAndFormatResultForPrinting.Title): ExecuteAndFormatResultForPrinting {optsMaking.title = x; return this as ExecuteAndFormatResultForPrinting}
-    fun skipColumn(x: (ResultSetColumnMeta) -> Boolean): ExecuteAndFormatResultForPrinting {optsMaking.skipColumn = x; return this as ExecuteAndFormatResultForPrinting}
-    fun appender(x: ExecuteAndFormatResultForPrinting.Appender): ExecuteAndFormatResultForPrinting {optsMaking.appender = x; return this as ExecuteAndFormatResultForPrinting}
+    fun skipColumn(x: ((ResultSetColumnMeta) -> Boolean)): ExecuteAndFormatResultForPrinting {optsMaking.skipColumn = x; return this as ExecuteAndFormatResultForPrinting}
+    fun appender(x: ((ExecuteAndFormatResultForPrinting.Ignition) -> ExecuteAndFormatResultForPrinting.Appender)): ExecuteAndFormatResultForPrinting {optsMaking.appender = x; return this as ExecuteAndFormatResultForPrinting}
 
     fun hardenOpts(): ExecuteAndFormatResultForPrinting.Opts {
         return ExecuteAndFormatResultForPrinting.Opts(

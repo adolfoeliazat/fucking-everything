@@ -184,7 +184,7 @@ class ExecuteAndFormatResultForPrinting : Generated_BaseFor_ExecuteAndFormatResu
         val sql: String,
         val title: Title = Title.None(),
         val skipColumn: (ResultSetColumnMeta) -> Boolean = {false},
-        val appender: Appender
+        val appender: (Ignition) -> Appender
     )
 
     sealed class Title {
@@ -195,23 +195,22 @@ class ExecuteAndFormatResultForPrinting : Generated_BaseFor_ExecuteAndFormatResu
     }
 
     interface Appender {
-        fun appendColumn(g: Ignition, columnIndex: Int, value: Any?)
+        fun appendColumn(columnIndex: Int, value: Any?)
     }
 
-    fun linePerColumn() = appender(object : Appender {
-        override fun appendColumn(g: Ignition, columnIndex: Int, value: Any?) {
-            clog("pizda " + g.opts.sql)
+    fun linePerColumn() = appender({g-> object : Appender {
+        override fun appendColumn(columnIndex: Int, value: Any?) {
             g.buf.appendln(g.metaData.getColumnName(columnIndex) + ": " + value.toString())
         }
-    })
+    }})
 
-    fun linePerRow() = appender(object : Appender {
-        override fun appendColumn(g: Ignition, columnIndex: Int, value: Any?) {
+    fun linePerRow() = appender({g-> object : Appender {
+        override fun appendColumn(columnIndex: Int, value: Any?) {
             if (columnIndex > 1)
                 g.buf.append("|")
             g.buf.append(value.toString())
         }
-    })
+    }})
 
     class Ignition(val opts: Opts) {
         val buf = StringBuilder()
@@ -233,11 +232,12 @@ class ExecuteAndFormatResultForPrinting : Generated_BaseFor_ExecuteAndFormatResu
                     buf.appendln("=".repeat(titleValue.length))
                     buf.appendln()
                 }
+                val appender = opts.appender(this)
                 while (rs.next()) {
                     for (columnIndex in 1..metaData.columnCount) {
                         if (!opts.skipColumn(ResultSetColumnMeta(metaData, columnIndex))) {
                             val value: Any? = rs.getObject(columnIndex)
-                            opts.appender.appendColumn(this, columnIndex, value)
+                            appender.appendColumn(columnIndex, value)
                         }
                     }
                     buf.appendln()
