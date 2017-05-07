@@ -1,42 +1,8 @@
 package vgrechka.botinok
 
-import de.jensd.fx.glyphs.emojione.EmojiOne
-import de.jensd.fx.glyphs.emojione.EmojiOneView
-import javafx.application.Application
-import javafx.application.Platform
-import javafx.collections.FXCollections
-import javafx.event.EventHandler
-import javafx.geometry.Rectangle2D
-import javafx.scene.Scene
-import javafx.scene.canvas.Canvas
-import javafx.scene.control.*
-import javafx.scene.image.Image
-import javafx.scene.input.KeyCode
-import javafx.scene.input.MouseButton
-import javafx.scene.input.MouseEvent
-import javafx.scene.layout.AnchorPane
-import javafx.scene.layout.Priority
-import javafx.scene.layout.VBox
-import javafx.scene.paint.Color
-import javafx.stage.Stage
-import javafx.stage.WindowEvent
-import org.jnativehook.GlobalScreen
-import org.jnativehook.keyboard.NativeKeyAdapter
-import org.jnativehook.keyboard.NativeKeyEvent
-import org.jnativehook.mouse.NativeMouseEvent
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import vgrechka.*
 import vgrechka.db.*
-import java.awt.Rectangle
-import java.awt.Robot
-import java.awt.Toolkit.getDefaultToolkit
-import java.io.File
-import java.util.logging.Level
-import java.util.logging.Logger
-import javax.imageio.ImageIO
-import kotlin.concurrent.thread
-import kotlin.properties.Delegates.notNull
-import kotlin.system.exitProcess
 
 object BotinokFuckingAround {
     @JvmStatic
@@ -137,10 +103,10 @@ object BotinokFuckingAround {
     fun dumpShit() {
         clog("Plays")
         clog("-----")
-        clog(DBPile.executeAndFormatResultForPrinting("select * from botinok_plays"))
+        clog(ExecuteAndFormatResultForPrinting().sql("select * from botinok_plays").linePerRow().ignite())
         clog("Arenas")
         clog("------")
-        clog(DBPile.executeAndFormatResultForPrinting("select * from botinok_arenas"))
+        clog(ExecuteAndFormatResultForPrinting().sql("select * from botinok_arenas").linePerRow().ignite())
     }
 }
 

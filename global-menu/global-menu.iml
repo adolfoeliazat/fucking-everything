@@ -312,5 +312,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="db-stuff" />
   </component>
 </module>

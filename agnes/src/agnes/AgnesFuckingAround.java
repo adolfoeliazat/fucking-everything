@@ -2,6 +2,8 @@ package agnes;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import vgrechka.db.DBPile;
+import vgrechka.db.Db_stuffKt;
+import vgrechka.db.ExecuteAndFormatResultForPrinting;
 
 import java.lang.reflect.Method;
 
@@ -107,13 +109,16 @@ public class AgnesFuckingAround {
     private void dumpShit() {
         clog("Girls");
         clog("-----");
-        clog(DBPile.INSTANCE.executeAndFormatResultForPrinting("select * from agnes_girls"));
+        clog(new ExecuteAndFormatResultForPrinting()
+                .sql("select * from agnes_girls").linePerRow().ignite());
         clog("Boobs");
         clog("-----");
-        clog(DBPile.INSTANCE.executeAndFormatResultForPrinting("select * from agnes_boobs"));
+        clog(new ExecuteAndFormatResultForPrinting()
+                .sql("select * from agnes_boobs").linePerRow().ignite());
         clog("Tits");
         clog("----");
-        clog(DBPile.INSTANCE.executeAndFormatResultForPrinting("select * from agnes_tits"));
+        clog(new ExecuteAndFormatResultForPrinting()
+                .sql("select * from agnes_tits").linePerRow().ignite());
     }
 }
 

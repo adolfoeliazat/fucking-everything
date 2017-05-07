@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/attic/attic.iml" filepath="$PROJECT_DIR$/attic/attic.iml" />
       <module fileurl="file://$PROJECT_DIR$/botinok-1/botinok-1.iml" filepath="$PROJECT_DIR$/botinok-1/botinok-1.iml" />
       <module fileurl="file://$PROJECT_DIR$/copyright/copyright.iml" filepath="$PROJECT_DIR$/copyright/copyright.iml" />
+      <module fileurl="file://$PROJECT_DIR$/db-stuff/db-stuff.iml" filepath="$PROJECT_DIR$/db-stuff/db-stuff.iml" />
       <module fileurl="file://$PROJECT_DIR$/etc/etc.iml" filepath="$PROJECT_DIR$/etc/etc.iml" />
       <module fileurl="file://$PROJECT_DIR$/global-menu/global-menu.iml" filepath="$PROJECT_DIR$/global-menu/global-menu.iml" />
       <module fileurl="file://$PROJECT_DIR$/hot-reloadable-idea-piece-of-shit/hot-reloadable-idea-piece-of-shit.iml" filepath="$PROJECT_DIR$/hot-reloadable-idea-piece-of-shit/hot-reloadable-idea-piece-of-shit.iml" />
@@ -23,6 +24,7 @@
       <module fileurl="file://$PROJECT_DIR$/shit-for-tests/shit-for-tests.iml" filepath="$PROJECT_DIR$/shit-for-tests/shit-for-tests.iml" />
       <module fileurl="file://$PROJECT_DIR$/spew/spew.iml" filepath="$PROJECT_DIR$/spew/spew.iml" />
       <module fileurl="file://$PROJECT_DIR$/spew-gen-tests/spew-gen-tests.iml" filepath="$PROJECT_DIR$/spew-gen-tests/spew-gen-tests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spew-run-configs/spew-run-configs.iml" filepath="$PROJECT_DIR$/spew-run-configs/spew-run-configs.iml" />
       <module fileurl="file://$PROJECT_DIR$/test-index/test-index.iml" filepath="$PROJECT_DIR$/test-index/test-index.iml" />
       <module fileurl="file://$PROJECT_DIR$/txt/txt.iml" filepath="$PROJECT_DIR$/txt/txt.iml" />
     </modules>

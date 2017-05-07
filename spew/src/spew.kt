@@ -45,6 +45,10 @@ class CodeShitter(val output: StringBuilder, val indent: Int) {
         output += text
     }
 
+    fun appendln(text: String = "") {
+        append(text + "\n")
+    }
+
     fun line(text: String, numNewlines: Int = 1) {
         var s = dedent(text)
         s = reindent(indent, s)

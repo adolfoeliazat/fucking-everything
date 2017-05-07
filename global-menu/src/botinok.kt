@@ -31,6 +31,7 @@ import org.jnativehook.keyboard.NativeKeyEvent
 import org.jnativehook.mouse.NativeMouseEvent
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import vgrechka.*
+import vgrechka.db.*
 import java.awt.Rectangle
 import java.awt.Robot
 import java.awt.Toolkit.getDefaultToolkit
@@ -837,8 +838,8 @@ class StartBotinok : Application() {
     }
 
     private fun action_takeScreenshot() {
+        stopRequested = true
         JFXStuff.later {
-
             run {
                 val image = robot.createScreenCapture(Rectangle(getDefaultToolkit().screenSize))
                 ImageIO.write(image, "png", File(tmpImgPath))
@@ -939,18 +940,22 @@ class StartBotinok : Application() {
 
                     if (allRegionsMatched) {
                         noise("Arena ${arena.name}: matched")
-                        thread {
-                            val pointer = arena.pointers.first()
-                            robot.mouseMove(pointer.x, pointer.y)
-                            Thread.sleep(250)
-                            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
-                            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
-                        }
+                        val pointer = arena.pointers.first()
+                        robot.mouseMove(pointer.x, pointer.y)
+                        Thread.sleep(250)
+                        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+                        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+
+                        // TODO:vgrechka Think about...
+                        // In many cases this time will be enough for UI to respond,
+                        // so next iteration will match right away, and we avoid longer waiting. Or not?
+                        Thread.sleep(250)
+
                         continue@arenas
                     }
 
                     noise("Tick: ${System.currentTimeMillis() - time0}ms")
-                    Thread.sleep(2000)
+                    Thread.sleep(1000)
                 }
             }
 
@@ -1006,8 +1011,6 @@ private fun addMenuItem(menu: ContextMenu, title: String, handler: () -> Unit) {
         }
     }
 }
-
-
 
 
 

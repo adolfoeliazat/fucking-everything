@@ -23,7 +23,9 @@
           <root url="jar://$MODULE_DIR$/../lib-gradle/hibernate-core-5.2.10.Final.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../lib-gradle/hibernate-core-5.2.10.Final-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
@@ -77,7 +79,9 @@
           <root url="jar://$MODULE_DIR$/../lib-gradle/spring-data-jpa-1.11.3.RELEASE.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../lib-gradle/spring-data-jpa-1.11.3.RELEASE-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
@@ -122,9 +126,12 @@
           <root url="jar://$MODULE_DIR$/../lib-gradle/spring-orm-4.3.8.RELEASE.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../lib-gradle/spring-orm-4.3.8.RELEASE-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="shared-jvm" />
+    <orderEntry type="module" module-name="db-stuff" />
   </component>
 </module>
