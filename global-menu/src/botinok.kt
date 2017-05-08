@@ -45,8 +45,6 @@ import kotlin.concurrent.thread
 import kotlin.properties.Delegates.notNull
 import kotlin.system.exitProcess
 
-// TODO:vgrechka Shift positions after deleting shit
-
 // delete from botinok_regions; delete from botinok_pointers; delete from botinok_arenas; delete from botinok_plays;
 
 object BotinokStuff {
@@ -258,16 +256,16 @@ class StartBotinok : Application() {
             updateStageTitle()
             bananas = goBananas2()
 
-            val arenas = play.arenas.toMutableList()
+            val arenas = play.arenas //.toMutableList()
             arenas.sortBy {it.position}
             for (arena in arenas) {
                 val arenaTreeItem = addTreeItemForArena(arena)
-                val regions = arena.regions.toMutableList()
+                val regions = arena.regions //.toMutableList()
                 regions.sortBy {it.position}
                 for (region in regions) {
                     addTreeItemForRegion(region, (arenaTreeItem.value as ArenaNode))
                 }
-                val pointers = arena.pointers.toMutableList()
+                val pointers = arena.pointers //.toMutableList()
                 pointers.sortBy {it.position}
                 for (pointer in pointers) {
                     addTreeItemForPointer(pointer, (arenaTreeItem.value as ArenaNode))
@@ -566,7 +564,11 @@ class StartBotinok : Application() {
 
         private fun action_deleteArena(item: TreeItem<FuckingNode>, arenaNode: ArenaNode) {
             check(item.parent.value is RootNode) {"6c32dc0c-3ffa-4f4e-875f-d63d587f6132"}
-            play.arenas.remove(arenaNode.arena)
+            val indexToDelete = play.arenas.indexOf(arenaNode.arena)
+            play.arenas.removeAt(indexToDelete)
+            for (index in indexToDelete..play.arenas.lastIndex) {
+                --play.arenas[index].position
+            }
             item.parent.children -= item
         }
 
@@ -575,20 +577,24 @@ class StartBotinok : Application() {
                 val arena = arenaNode.arena
                 val index = play.arenas.indexOfOrNull(arena) ?: wtf("db8f6365-cf88-494f-8f6a-7a07b11c01f5")
 
-                val a = play.arenas[index + i]
-                play.arenas[index + i] = play.arenas[index]
-                play.arenas[index] = a
+                val a = play.arenas[index]
+                play.arenas[index] = play.arenas[index + i]
+                play.arenas[index + i] = a
 
-                val p = play.arenas[index + i].position
-                play.arenas[index + i].position = play.arenas[index].position
-                play.arenas[index].position = p
+                val p = play.arenas[index].position
+                play.arenas[index].position = play.arenas[index + i].position
+                play.arenas[index + i].position = p
             }
 
             run { // Tree
                 val index = rootNode.children.indexOfOrNull(item) ?: wtf("5df53fb4-534a-49df-832d-ee31043c7f19")
-                rootNode.children.removeAt(index)
-                rootNode.children.add(index + i, item)
+                val tmp = rootNode.children[index]
+                rootNode.children[index] = rootNode.children[index + i]
+                rootNode.children[index + i] = tmp
+                navigationTreeView.selectionModel.clearSelection()
+                selectTreeItem(item)
             }
+
             dirty = true
         }
 
