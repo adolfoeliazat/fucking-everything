@@ -34,7 +34,7 @@ object BotinokFuckingAround {
         run {
             backPlatform.tx {
                 val play = botinokPlayRepo.findByName("The Fucking Play")!!
-                val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play)
+                val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play, position = 0)
                 play.arenas.add(arena)
             }
         }
@@ -49,7 +49,7 @@ object BotinokFuckingAround {
         run {
             val play = botinokPlayRepo.findByName("The Fucking Play")!!
             backPlatform.tx {
-                val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play)
+                val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play, position = 0)
                 play.arenas.add(arena)
             }
         }
@@ -63,7 +63,7 @@ object BotinokFuckingAround {
         }
         run {
             val play = botinokPlayRepo.findByName("The Fucking Play")!!
-            val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play)
+            val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play, position = 0)
             play.arenas.add(arena)
         }
         dumpShit()
@@ -76,7 +76,7 @@ object BotinokFuckingAround {
         }
         run {
             val play = botinokPlayRepo.findByName("The Fucking Play")!!
-            val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play)
+            val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play, position = 0)
             play.arenas.add(arena)
             botinokPlayRepo.save(play)
         }
@@ -90,7 +90,7 @@ object BotinokFuckingAround {
         }
         run {
             var play = botinokPlayRepo.findByName("The Fucking Play")!!
-            val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play)
+            val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play, position = 0)
             play.arenas.add(arena)
             play = botinokPlayRepo.save(play)
 

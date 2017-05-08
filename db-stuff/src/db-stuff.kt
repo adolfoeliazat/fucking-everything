@@ -25,8 +25,8 @@ import java.sql.ResultSetMetaData
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
-class ResultSetColumnMeta(val meta: ResultSetMetaData, val index: Int) {
-    val name get() = meta.getColumnName(index)!!
+class ResultSetColumnMeta(val meta: ResultSetMetaData, val index1: Int) {
+    val name get() = meta.getColumnName(index1)!!
 }
 
 object DBPile {
@@ -195,20 +195,41 @@ class ExecuteAndFormatResultForPrinting : Generated_BaseFor_ExecuteAndFormatResu
     }
 
     interface Appender {
-        fun appendColumn(columnIndex: Int, value: Any?)
+        fun appendColumn(renderedColumnIndex0: Int, tableColumnIndex1: Int, value: Any?)
+        fun afterAllColumnsInRow()
     }
 
     fun linePerColumn() = appender({g-> object : Appender {
-        override fun appendColumn(columnIndex: Int, value: Any?) {
-            g.buf.appendln(g.metaData.getColumnName(columnIndex) + ": " + value.toString())
+        override fun appendColumn(renderedColumnIndex0: Int, tableColumnIndex1: Int, value: Any?) {
+            g.buf.appendln(g.metaData.getColumnName(renderedColumnIndex0) + ": " + value.toString())
+        }
+
+        override fun afterAllColumnsInRow() {
+            g.buf.appendln()
+        }
+    }})
+
+    fun linePerSeveralColumns(numColumns: Int) = appender({g-> object : Appender {
+        override fun appendColumn(renderedColumnIndex0: Int, tableColumnIndex1: Int, value: Any?) {
+            if (renderedColumnIndex0 % numColumns == 0 && renderedColumnIndex0 > 0)
+                g.buf.appendln()
+            g.buf.append(g.metaData.getColumnName(tableColumnIndex1) + ": " + value.toString() + " | ")
+        }
+
+        override fun afterAllColumnsInRow() {
+            g.buf.append("\n\n")
         }
     }})
 
     fun linePerRow() = appender({g-> object : Appender {
-        override fun appendColumn(columnIndex: Int, value: Any?) {
-            if (columnIndex > 1)
+        override fun appendColumn(renderedColumnIndex0: Int, tableColumnIndex1: Int, value: Any?) {
+            if (renderedColumnIndex0 > 1)
                 g.buf.append("|")
             g.buf.append(value.toString())
+        }
+
+        override fun afterAllColumnsInRow() {
+            g.buf.appendln()
         }
     }})
 
@@ -234,13 +255,14 @@ class ExecuteAndFormatResultForPrinting : Generated_BaseFor_ExecuteAndFormatResu
                 }
                 val appender = opts.appender(this)
                 while (rs.next()) {
+                    var renderedColumnIndex0 = 0
                     for (columnIndex in 1..metaData.columnCount) {
                         if (!opts.skipColumn(ResultSetColumnMeta(metaData, columnIndex))) {
                             val value: Any? = rs.getObject(columnIndex)
-                            appender.appendColumn(columnIndex, value)
+                            appender.appendColumn(renderedColumnIndex0++, columnIndex, value)
                         }
                     }
-                    buf.appendln()
+                    appender.afterAllColumnsInRow()
                 }
             }
             return buf.toString()

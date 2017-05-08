@@ -57,6 +57,7 @@ dependencies {
     compile 'de.jensd:fontawesomefx-controls:8.15:sources'
     compile 'net.bytebuddy:byte-buddy:1.6.9'
     compile 'net.bytebuddy:byte-buddy:1.6.9:sources'
+    compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final:sources'
 }
 
 task importDeps(type: Copy) {

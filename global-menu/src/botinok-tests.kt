@@ -23,18 +23,18 @@ class BotinokTest1 {
 
         backPlatform.tx {
             botinokPlayRepo.save(newBotinokPlay("Pizdaplay")).also {play->
-                botinokArenaRepo.save(newBotinokArena(play = play, name = "Pizdarena", screenshot = byteArrayOf())).also {arena->
-                    botinokRegionRepo.save(newBotinokRegion(arena = arena, name = "Fucking region", x = 10, y = 20, w = 100, h = 200))
-                    botinokRegionRepo.save(newBotinokRegion(arena = arena, name = "Shitty region", x = 15, y = 23, w = 350, h = 60))
+                botinokArenaRepo.save(newBotinokArena(play = play, name = "Pizdarena", screenshot = byteArrayOf(), position = 0)).also {arena->
+                    botinokRegionRepo.save(newBotinokRegion(arena = arena, name = "Fucking region", x = 10, y = 20, w = 100, h = 200, position = 0))
+                    botinokRegionRepo.save(newBotinokRegion(arena = arena, name = "Shitty region", x = 15, y = 23, w = 350, h = 60, position = 1))
                 }
-                botinokArenaRepo.save(newBotinokArena(play = play, name = "Mandarena", screenshot = byteArrayOf())).also {arena->
-                    botinokRegionRepo.save(newBotinokRegion(arena = arena, name = "Bitchy region", x = 43, y = 32, w = 784, h = 46))
+                botinokArenaRepo.save(newBotinokArena(play = play, name = "Mandarena", screenshot = byteArrayOf(), position = 1)).also {arena->
+                    botinokRegionRepo.save(newBotinokRegion(arena = arena, name = "Bitchy region", x = 43, y = 32, w = 784, h = 46, position = 0))
                 }
             }
             botinokPlayRepo.save(newBotinokPlay("Hamlet")).also {play->
-                botinokArenaRepo.save(newBotinokArena(play = play, name = "the fucking", screenshot = byteArrayOf())).also {arena->
-                    botinokRegionRepo.save(newBotinokRegion(arena = arena, name = "prince", x = 453, y = 858, w = 74, h = 500))
-                    botinokRegionRepo.save(newBotinokRegion(arena = arena, name = "of Denmark", x = 424, y = 483, w = 22, h = 33))
+                botinokArenaRepo.save(newBotinokArena(play = play, name = "the fucking", screenshot = byteArrayOf(), position = 0)).also {arena->
+                    botinokRegionRepo.save(newBotinokRegion(arena = arena, name = "prince", x = 453, y = 858, w = 74, h = 500, position = 0))
+                    botinokRegionRepo.save(newBotinokRegion(arena = arena, name = "of Denmark", x = 424, y = 483, w = 22, h = 33, position = 1))
                 }
             }
         }

@@ -7,7 +7,7 @@ import vgrechka.spew.*
 
 @GEntity(table = "botinok_regions")
 interface BotinokRegion : GCommonEntityFields {
-    @GIsOrderColumn var position: Int?
+    /*@GIsOrderColumn*/ var position: Int
     var name: String
     var x: Int
     var y: Int
@@ -21,7 +21,7 @@ interface BotinokRegionRepository : GRepository<BotinokRegion> {
 
 @GEntity(table = "botinok_pointers")
 interface BotinokPointer : GCommonEntityFields {
-    @GIsOrderColumn var position: Int?
+    /*@GIsOrderColumn*/ var position: Int
     var name: String
     var x: Int
     var y: Int
@@ -36,15 +36,15 @@ interface BotinokPointerRepository : GRepository<BotinokPointer> {
 
 @GEntity(table = "botinok_arenas")
 interface BotinokArena : GCommonEntityFields {
-    @GIsOrderColumn var position: Int?
+    /*@GIsOrderColumn*/ var position: Int
     var name: String
     var screenshot: ByteArray
     @GManyToOne var play: BotinokPlay
 
-    @GOneToMany(mappedBy = "arena", fetch = GFetchType.EAGER)
+    @GOneToMany(mappedBy = "arena"/*, fetch = GFetchType.EAGER*/)
     var regions: MutableList<BotinokRegion>
 
-    @GOneToMany(mappedBy = "arena", fetch = GFetchType.EAGER)
+    @GOneToMany(mappedBy = "arena"/*, fetch = GFetchType.EAGER*/)
     var pointers: MutableList<BotinokPointer>
 }
 
@@ -55,7 +55,7 @@ interface BotinokArenaRepository : GRepository<BotinokArena> {
 interface BotinokPlay : GCommonEntityFields {
     var name: String
 
-    @GOneToMany(mappedBy = "play", fetch = GFetchType.EAGER)
+    @GOneToMany(mappedBy = "play"/*, fetch = GFetchType.EAGER*/)
     var arenas: MutableList<BotinokArena>
 }
 

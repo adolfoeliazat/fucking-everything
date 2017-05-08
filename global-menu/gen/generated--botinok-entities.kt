@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Fri May 05 22:36:36 EEST 2017
+// Generated on Mon May 08 12:23:52 EEST 2017
 // Model: e:/fegh/global-menu/src/botinok-entities.kt
 //
 
@@ -21,14 +21,16 @@ import vgrechka.db.*
 // ------------------------------------------------------------------
 
 // Generated at 7-470173f-49ef-43cb-adf7-1c395f07518c
-fun newBotinokRegion(name: String,
+fun newBotinokRegion(position: Int,
+                     name: String,
                      x: Int,
                      y: Int,
                      w: Int,
                      h: Int,
                      arena: BotinokArena): BotinokRegion {
     val backing = Generated_BotinokRegion(
-        Generated_BotinokRegionFields().also {it.name = name
+        Generated_BotinokRegionFields().also {it.position = java.lang.Integer(position)
+                                              it.name = name
                                               it.x = java.lang.Integer(x)
                                               it.y = java.lang.Integer(y)
                                               it.w = java.lang.Integer(w)
@@ -104,9 +106,9 @@ class Generated_BotinokRegion( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a
                 get() = _backing.botinokRegion.common.deleted
                 set(value) {_backing.botinokRegion.common.deleted = value}
 
-            override var position: Int?
-                get() = _backing.botinokRegion.position
-                set(value) {_backing.botinokRegion.position = value}
+            override var position: Int
+                get() = _backing.botinokRegion.position.toInt()
+                set(value) {_backing.botinokRegion.position = java.lang.Integer(value)}
 
             override var name: String
                 get() = _backing.botinokRegion.name
@@ -144,14 +146,14 @@ class Generated_BotinokRegion( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a
     }
 
     override fun toString(): String {
-        return "BotinokRegion(name=${botinokRegion.name}, x=${botinokRegion.x}, y=${botinokRegion.y}, w=${botinokRegion.w}, h=${botinokRegion.h})"
+        return "BotinokRegion(position=${botinokRegion.position}, name=${botinokRegion.name}, x=${botinokRegion.x}, y=${botinokRegion.y}, w=${botinokRegion.w}, h=${botinokRegion.h})"
     }
 }
 
 @XEmbeddable
 class Generated_BotinokRegionFields { // Generated at 2-e91acff-5613-4b14-b71e-5edee254d029
     @XEmbedded var common: CommonFields = CommonFields()
-    @XColumn var position: Int? = null
+    @XColumn lateinit var position: java.lang.Integer
     @XColumn(columnDefinition = "text") lateinit var name: String
     @XColumn lateinit var x: java.lang.Integer
     @XColumn lateinit var y: java.lang.Integer
@@ -165,7 +167,8 @@ class Generated_BotinokRegionFields { // Generated at 2-e91acff-5613-4b14-b71e-5
 // ------------------------------------------------------------------
 
 // Generated at 7-470173f-49ef-43cb-adf7-1c395f07518c
-fun newBotinokPointer(name: String,
+fun newBotinokPointer(position: Int,
+                      name: String,
                       x: Int,
                       y: Int,
                       pile: String,
@@ -173,7 +176,8 @@ fun newBotinokPointer(name: String,
                       script: String,
                       arena: BotinokArena): BotinokPointer {
     val backing = Generated_BotinokPointer(
-        Generated_BotinokPointerFields().also {it.name = name
+        Generated_BotinokPointerFields().also {it.position = java.lang.Integer(position)
+                                               it.name = name
                                                it.x = java.lang.Integer(x)
                                                it.y = java.lang.Integer(y)
                                                it.pile = pile
@@ -250,9 +254,9 @@ class Generated_BotinokPointer( // Generated at f-21265f2-3d69-4ab8-a07c-5595106
                 get() = _backing.botinokPointer.common.deleted
                 set(value) {_backing.botinokPointer.common.deleted = value}
 
-            override var position: Int?
-                get() = _backing.botinokPointer.position
-                set(value) {_backing.botinokPointer.position = value}
+            override var position: Int
+                get() = _backing.botinokPointer.position.toInt()
+                set(value) {_backing.botinokPointer.position = java.lang.Integer(value)}
 
             override var name: String
                 get() = _backing.botinokPointer.name
@@ -294,14 +298,14 @@ class Generated_BotinokPointer( // Generated at f-21265f2-3d69-4ab8-a07c-5595106
     }
 
     override fun toString(): String {
-        return "BotinokPointer(name=${botinokPointer.name}, x=${botinokPointer.x}, y=${botinokPointer.y}, pile=${botinokPointer.pile}, language=${botinokPointer.language}, script=${botinokPointer.script})"
+        return "BotinokPointer(position=${botinokPointer.position}, name=${botinokPointer.name}, x=${botinokPointer.x}, y=${botinokPointer.y}, pile=${botinokPointer.pile}, language=${botinokPointer.language}, script=${botinokPointer.script})"
     }
 }
 
 @XEmbeddable
 class Generated_BotinokPointerFields { // Generated at 2-e91acff-5613-4b14-b71e-5edee254d029
     @XEmbedded var common: CommonFields = CommonFields()
-    @XColumn var position: Int? = null
+    @XColumn lateinit var position: java.lang.Integer
     @XColumn(columnDefinition = "text") lateinit var name: String
     @XColumn lateinit var x: java.lang.Integer
     @XColumn lateinit var y: java.lang.Integer
@@ -316,11 +320,13 @@ class Generated_BotinokPointerFields { // Generated at 2-e91acff-5613-4b14-b71e-
 // ------------------------------------------------------------------
 
 // Generated at 7-470173f-49ef-43cb-adf7-1c395f07518c
-fun newBotinokArena(name: String,
+fun newBotinokArena(position: Int,
+                    name: String,
                     screenshot: ByteArray,
                     play: BotinokPlay): BotinokArena {
     val backing = Generated_BotinokArena(
-        Generated_BotinokArenaFields().also {it.name = name
+        Generated_BotinokArenaFields().also {it.position = java.lang.Integer(position)
+                                             it.name = name
                                              it.screenshot = screenshot
                                              it.play = play._backing})
     return backing.toManuallyDefinedInterface()
@@ -393,9 +399,9 @@ class Generated_BotinokArena( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9
                 get() = _backing.botinokArena.common.deleted
                 set(value) {_backing.botinokArena.common.deleted = value}
 
-            override var position: Int?
-                get() = _backing.botinokArena.position
-                set(value) {_backing.botinokArena.position = value}
+            override var position: Int
+                get() = _backing.botinokArena.position.toInt()
+                set(value) {_backing.botinokArena.position = java.lang.Integer(value)}
 
             override var name: String
                 get() = _backing.botinokArena.name
@@ -427,19 +433,19 @@ class Generated_BotinokArena( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9
     }
 
     override fun toString(): String {
-        return "BotinokArena(name=${botinokArena.name})"
+        return "BotinokArena(position=${botinokArena.position}, name=${botinokArena.name})"
     }
 }
 
 @XEmbeddable
 class Generated_BotinokArenaFields { // Generated at 2-e91acff-5613-4b14-b71e-5edee254d029
     @XEmbedded var common: CommonFields = CommonFields()
-    @XColumn var position: Int? = null
+    @XColumn lateinit var position: java.lang.Integer
     @XColumn(columnDefinition = "text") lateinit var name: String
     @XColumn lateinit var screenshot: ByteArray
     @XManyToOne(fetch = XFetchType.EAGER, cascade = arrayOf(XCascadeType.ALL)) lateinit var play: Generated_BotinokPlay
-    @XOneToMany(fetch = XFetchType.EAGER, mappedBy = "botinokRegion.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) @XOrderColumn(name = "botinokRegion_position") var regions: MutableList<Generated_BotinokRegion> = mutableListOf()
-    @XOneToMany(fetch = XFetchType.EAGER, mappedBy = "botinokPointer.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) @XOrderColumn(name = "botinokPointer_position") var pointers: MutableList<Generated_BotinokPointer> = mutableListOf()
+    @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokRegion.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var regions: MutableList<Generated_BotinokRegion> = mutableListOf()
+    @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokPointer.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var pointers: MutableList<Generated_BotinokPointer> = mutableListOf()
 }
 
 // ------------------------------------------------------------------
@@ -552,7 +558,7 @@ class Generated_BotinokPlay( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9e
 class Generated_BotinokPlayFields { // Generated at 2-e91acff-5613-4b14-b71e-5edee254d029
     @XEmbedded var common: CommonFields = CommonFields()
     @XColumn(columnDefinition = "text") lateinit var name: String
-    @XOneToMany(fetch = XFetchType.EAGER, mappedBy = "botinokArena.play", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) @XOrderColumn(name = "botinokArena_position") var arenas: MutableList<Generated_BotinokArena> = mutableListOf()
+    @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokArena.play", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var arenas: MutableList<Generated_BotinokArena> = mutableListOf()
 }
 
 object BotinokGeneratedDBPile {
@@ -564,7 +570,7 @@ create table `botinok_regions` (
     `botinokRegion_common_createdAt` text not null,
     `botinokRegion_common_updatedAt` text not null,
     `botinokRegion_common_deleted` integer not null,
-    `botinokRegion_position` integer,
+    `botinokRegion_position` integer not null,
     `botinokRegion_name` text not null,
     `botinokRegion_x` integer not null,
     `botinokRegion_y` integer not null,
@@ -580,7 +586,7 @@ create table `botinok_pointers` (
     `botinokPointer_common_createdAt` text not null,
     `botinokPointer_common_updatedAt` text not null,
     `botinokPointer_common_deleted` integer not null,
-    `botinokPointer_position` integer,
+    `botinokPointer_position` integer not null,
     `botinokPointer_name` text not null,
     `botinokPointer_x` integer not null,
     `botinokPointer_y` integer not null,
@@ -597,7 +603,7 @@ create table `botinok_arenas` (
     `botinokArena_common_createdAt` text not null,
     `botinokArena_common_updatedAt` text not null,
     `botinokArena_common_deleted` integer not null,
-    `botinokArena_position` integer,
+    `botinokArena_position` integer not null,
     `botinokArena_name` text not null,
     `botinokArena_screenshot` blob not null,
     `botinokArena_play__id` bigint not null,
@@ -628,7 +634,7 @@ create table `botinok_regions` (
     `botinokRegion_common_createdAt` text not null,
     `botinokRegion_common_updatedAt` text not null,
     `botinokRegion_common_deleted` integer not null,
-    `botinokRegion_position` integer,
+    `botinokRegion_position` integer not null,
     `botinokRegion_name` text not null,
     `botinokRegion_x` integer not null,
     `botinokRegion_y` integer not null,
@@ -644,7 +650,7 @@ create table `botinok_pointers` (
     `botinokPointer_common_createdAt` text not null,
     `botinokPointer_common_updatedAt` text not null,
     `botinokPointer_common_deleted` integer not null,
-    `botinokPointer_position` integer,
+    `botinokPointer_position` integer not null,
     `botinokPointer_name` text not null,
     `botinokPointer_x` integer not null,
     `botinokPointer_y` integer not null,
@@ -661,7 +667,7 @@ create table `botinok_arenas` (
     `botinokArena_common_createdAt` text not null,
     `botinokArena_common_updatedAt` text not null,
     `botinokArena_common_deleted` integer not null,
-    `botinokArena_position` integer,
+    `botinokArena_position` integer not null,
     `botinokArena_name` text not null,
     `botinokArena_screenshot` blob not null,
     `botinokArena_play__id` bigint not null,
