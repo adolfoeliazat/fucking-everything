@@ -141,7 +141,7 @@ class OptsBuilderSpew : Spew {
             for ((i, fuck) in fucks.withIndex()) {
                 out.append("            ${fuck.name} = optsMaking.${fuck.name}")
                 if (fuck.defaultValue == null)
-                    out.append("!!")
+                    out.append(" ?: wtf(\"I want `${fuck.name}`    ${UUID.randomUUID()}\")")
                 if (i < fucks.lastIndex)
                     out.append(",")
                 out.appendln()

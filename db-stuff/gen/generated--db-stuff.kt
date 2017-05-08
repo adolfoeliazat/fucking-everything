@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Sun May 07 20:54:49 EEST 2017
+// Generated on Mon May 08 06:11:58 EEST 2017
 // Model: e:/fegh/db-stuff/src/db-stuff.kt
 //
 
@@ -30,10 +30,10 @@ abstract class Generated_BaseFor_ExecuteAndFormatResultForPrinting {
 
     fun hardenOpts(): ExecuteAndFormatResultForPrinting.Opts {
         return ExecuteAndFormatResultForPrinting.Opts(
-            sql = optsMaking.sql!!,
+            sql = optsMaking.sql ?: wtf("I want `sql`    248c06ee-33c4-408b-aff8-3ce15ff3e82d"),
             title = optsMaking.title,
             skipColumn = optsMaking.skipColumn,
-            appender = optsMaking.appender!!
+            appender = optsMaking.appender ?: wtf("I want `appender`    9c644e20-f9ce-455e-9e29-1598a2fc69e0")
         )
     }
 
