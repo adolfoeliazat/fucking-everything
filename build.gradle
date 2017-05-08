@@ -58,6 +58,10 @@ dependencies {
     compile 'net.bytebuddy:byte-buddy:1.6.9'
     compile 'net.bytebuddy:byte-buddy:1.6.9:sources'
     compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final:sources'
+    compile 'net.ttddyy:datasource-proxy:1.4.1'
+    compile 'net.ttddyy:datasource-proxy:1.4.1:sources'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+    compile 'ch.qos.logback:logback-classic:1.2.3:sources'
 }
 
 task importDeps(type: Copy) {

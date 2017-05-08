@@ -45,7 +45,9 @@ import kotlin.concurrent.thread
 import kotlin.properties.Delegates.notNull
 import kotlin.system.exitProcess
 
-// delete from botinok_regions; delete from botinok_arenas; delete from botinok_plays;
+// TODO:vgrechka Shift positions after deleting shit
+
+// delete from botinok_regions; delete from botinok_pointers; delete from botinok_arenas; delete from botinok_plays;
 
 object BotinokStuff {
     val boxEdgeSize = 5.0
@@ -114,7 +116,7 @@ sealed class FuckingNode
 class RootNode : FuckingNode()
 
 class ArenaNode(val treeItem: TreeItem<FuckingNode>,
-                val arena: BotinokArena) : FuckingNode() {
+                var arena: BotinokArena) : FuckingNode() {
 
     val image by lazy {Image(arena.screenshot.inputStream())}
     val regions: List<RegionNode> get() = treeItem.children.map {it.value as? RegionNode}.filterNotNull()
@@ -124,7 +126,7 @@ class ArenaNode(val treeItem: TreeItem<FuckingNode>,
 }
 
 data class RegionNode(val treeItem: TreeItem<FuckingNode>,
-                      val region: BotinokRegion,
+                      var region: BotinokRegion,
                       val arenaNode: ArenaNode) : FuckingNode() {
 
     override fun toString() = region.name
@@ -132,7 +134,7 @@ data class RegionNode(val treeItem: TreeItem<FuckingNode>,
 }
 
 data class PointerNode(val treeItem: TreeItem<FuckingNode>,
-                       val pointer: BotinokPointer,
+                       var pointer: BotinokPointer,
                        val arenaNode: ArenaNode) : FuckingNode() {
 
     override fun toString() = pointer.name
@@ -682,7 +684,7 @@ class StartBotinok : Application() {
 
                 val paint = when {
                     isFocused -> Color(1.0, 0.0, 0.0, 1.0)
-                    else -> Color(0.0, 0.0, 0.0, 1.0)
+                    else -> Color(1.0, 0.0, 0.0, 1.0)
                 }
                 gc.fill = paint
 
@@ -915,9 +917,23 @@ class StartBotinok : Application() {
 
     fun action_save() {
         backPlatform.tx {
-            val jpaContext = backPlatform.springctx.getBean(JpaContext::class.java)
-            val em = jpaContext.getEntityManagerByManagedType(Generated_BotinokPlay::class.java)
-            em.merge(play._backing)
+            play = botinokPlayRepo.save(play)
+
+            var arenaIndex = 0
+            for (arenaTreeItem in bananas.rootNode.children) {
+                val arenaNode = arenaTreeItem.value as ArenaNode
+                arenaNode.arena = play.arenas[arenaIndex++]
+                var regionIndex = 0
+                var pointerIndex = 0
+                for (child in arenaTreeItem.children) {
+                    val value = child.value
+                    exhaustive=when (value) {
+                        is RegionNode -> value.region = arenaNode.arena.regions[regionIndex++]
+                        is PointerNode -> value.pointer = arenaNode.arena.pointers[pointerIndex++]
+                        else -> wtf("9774d118-0b21-4ff3-953d-a371fcd6ce64")
+                    }
+                }
+            }
         }
 
         dirty = false

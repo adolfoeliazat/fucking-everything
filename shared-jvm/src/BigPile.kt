@@ -18,5 +18,10 @@ object BigPile {
     fun mangleUUID(uuid: String): String {
         return uuid[0] + "-" + uuid.drop(1)
     }
+
+    fun isRunningFromIntelliJ(): Boolean {
+        val classPath = System.getProperty("java.class.path")
+        return classPath.contains("idea_rt.jar")
+    }
 }
 

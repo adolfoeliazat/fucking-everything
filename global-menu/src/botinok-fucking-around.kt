@@ -3,6 +3,7 @@ package vgrechka.botinok
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import vgrechka.*
 import vgrechka.db.*
+import kotlin.properties.Delegates.notNull
 
 object BotinokFuckingAround {
     @JvmStatic
@@ -16,7 +17,8 @@ object BotinokFuckingAround {
 //            this::fuck_shitIsNotSavedAutomatically_2
 //            this::fuck_explicitSave
 //            this::fuck_bug_arenaSavedTwice
-            this::fuck_bug_arenaSavedTwice
+//            this::fuck_bug_arenaSavedTwice
+            this::fuck_1
 
         clog("====================================================")
         clog(f.name)
@@ -24,6 +26,57 @@ object BotinokFuckingAround {
         clog()
         f()
         clog("OK")
+    }
+
+    fun fuck_1() {
+        fun printArenas() {
+            clog(ExecuteAndFormatResultForPrinting()
+                     .linePerRow()
+                     .sql("select * from botinok_arenas")
+                     .skipColumn {col->
+                         listOf("createdAt", "updatedAt", "deleted", "screenshot")
+                             .any {col.name.contains(it)}}
+                     .ignite())
+        }
+
+        run {
+            val play = newBotinokPlay("The Fucking Play")
+            botinokPlayRepo.save(play)
+        }
+        clog("---------- 1 -----------")
+        printArenas()
+
+        run {
+            var play by notNull<BotinokPlay>()
+            backPlatform.tx {
+                play = botinokPlayRepo.findOne(1)!!
+                play.arenas.size
+            }
+
+            var firstArena by notNull<BotinokArena>()
+            backPlatform.tx {
+                firstArena = newBotinokArena(play = play,
+                                             position = 0,
+                                             name = "Arena 1",
+                                             screenshot = byteArrayOf())
+                play.arenas.add(firstArena)
+                play.arenas.add(newBotinokArena(play = play,
+                                                position = 1,
+                                                name = "Arena 2",
+                                                screenshot = byteArrayOf()))
+                play = botinokPlayRepo.save(play)
+            }
+            clog("---------- 2 -----------")
+            printArenas()
+
+            backPlatform.tx {
+                play.arenas.remove(firstArena) // Doesn't work
+                // play.arenas.removeAt(firstArena) // Works
+                play = botinokPlayRepo.save(play)
+            }
+            clog("---------- 3 -----------")
+            printArenas()
+        }
     }
 
     fun fuck_txSavesShitAutomatically() {

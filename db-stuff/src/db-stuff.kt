@@ -2,6 +2,10 @@
 
 package vgrechka.db
 
+import net.ttddyy.dsproxy.listener.logging.SLF4JLogLevel
+import net.ttddyy.dsproxy.listener.logging.SLF4JQueryLoggingListener
+import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder
+import org.fusesource.jansi.AnsiConsole
 import org.hibernate.boot.model.naming.Identifier
 import org.hibernate.boot.model.naming.ImplicitJoinColumnNameSource
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
@@ -12,6 +16,7 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor
 import org.hibernate.id.IdentityGenerator
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.jpa.repository.JpaContext
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
@@ -53,6 +58,8 @@ object DBPile {
             con.close()
         }
     }
+
+    val jpaContext get() = backPlatform.springctx.getBean(JpaContext::class.java)!!
 
 }
 
@@ -146,9 +153,35 @@ data class CommonFields(
 abstract class BaseSQLiteAppConfig(val entityPackagesToScan: Array<String>) {
     protected abstract val databaseURL: String
 
+    data class Settings(
+        val colorfulConsole: Boolean
+    )
+
+    data class DataProxySourceSettings(
+        val colorful: Boolean
+    )
+
+    @Bean open fun initShit(settings: Settings): Any {
+        if (settings.colorfulConsole) {
+            if (!BigPile.isRunningFromIntelliJ()) {
+                AnsiConsole.systemInstall()
+            }
+        }
+
+        return Any()
+    }
+
+    @Bean open fun settings() = Settings(
+        colorfulConsole = true
+    )
+
+    @Bean open fun dataSourceProxySettings() = DataProxySourceSettings(
+        colorful = true
+    )
+
     @Bean open fun entityManagerFactory(dataSource: DataSource) = LocalContainerEntityManagerFactoryBean()-{o->
         o.jpaVendorAdapter = HibernateJpaVendorAdapter()-{o->
-            o.setShowSql(true)
+//            o.setShowSql(true)
         }
 //        o.jpaPropertyMap.put(Environment.HBM2DDL_AUTO, "create-drop")
         o.jpaPropertyMap.put(Environment.DIALECT, SQLiteDialect::class.qualifiedName)
@@ -158,14 +191,22 @@ abstract class BaseSQLiteAppConfig(val entityPackagesToScan: Array<String>) {
     }
 
     @Bean open fun dataSource(): DataSource {
-//        return SQLiteConnectionPoolDataSource()-{o->
-        return IntoSQLiteConnectionPoolDataSource()-{o->
+        val ds = IntoSQLiteConnectionPoolDataSource()-{o->
             o.url = databaseURL
             o.config = SQLiteConfig()-{o->
                 o.setDateClass(SQLiteConfig.DateClass.TEXT.value)
                 o.enforceForeignKeys(true)
             }
         }
+        return ProxyDataSourceBuilder()
+            .dataSource(ds)
+            .listener(SLF4JQueryLoggingListener()-{o->
+                o.logLevel = SLF4JLogLevel.INFO
+                o.queryLogEntryCreator = FreakingQueryLogEntryCreator()-{o->
+                    o.isMultiline = true
+                }
+            })
+            .build()
     }
 
     @Bean open fun transactionManager(emf: EntityManagerFactory) = JpaTransactionManager()-{o->
@@ -223,7 +264,7 @@ class ExecuteAndFormatResultForPrinting : Generated_BaseFor_ExecuteAndFormatResu
 
     fun linePerRow() = appender({g-> object : Appender {
         override fun appendColumn(renderedColumnIndex0: Int, tableColumnIndex1: Int, value: Any?) {
-            if (renderedColumnIndex0 > 1)
+            if (renderedColumnIndex0 > 0)
                 g.buf.append("|")
             g.buf.append(value.toString())
         }

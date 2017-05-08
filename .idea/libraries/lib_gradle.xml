@@ -40,7 +40,6 @@
       <root url="jar://$PROJECT_DIR$/lib-gradle/jetty-xml-9.4.3.v20170317.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib-gradle/okhttp-3.6.0.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib-gradle/okio-1.11.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib-gradle/slf4j-api-1.6.6.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib-gradle/websocket-api-9.4.3.v20170317.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib-gradle/websocket-client-9.4.3.v20170317.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib-gradle/websocket-common-9.4.3.v20170317.jar!/" />
@@ -48,6 +47,7 @@
       <root url="jar://$PROJECT_DIR$/lib-gradle/websocket-servlet-9.4.3.v20170317.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib-gradle/asm-5.2.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib-gradle/asm-tree-5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-gradle/slf4j-api-1.7.25.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

@@ -246,7 +246,7 @@ class DBEntitySpew : Spew {
                         out.append(" lateinit var ${field.name}: ${field.platformType()}")
                 }
                 is FieldKind.One -> {
-                    out.append("    @XManyToOne(fetch = XFetchType.${field.kind.fetchType.name}, cascade = arrayOf(XCascadeType.ALL))")
+                    out.append("    @XManyToOne(fetch = XFetchType.${field.kind.fetchType.name}/*, cascade = arrayOf(XCascadeType.ALL)*/)")
                     out.append(" lateinit var ${field.name}: Generated_${field.type}")
                 }
                 is FieldKind.Many -> {

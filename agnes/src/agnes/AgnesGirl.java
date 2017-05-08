@@ -12,7 +12,7 @@ public class AgnesGirl {
     @Column(columnDefinition = "text")
     public String name;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "girl", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(/*fetch = FetchType.LAZY,*/ mappedBy = "girl", cascade = {CascadeType.ALL}, orphanRemoval = true)
     public List<AgnesBoob> boobs = new ArrayList<>();
 }
 

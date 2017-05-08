@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Mon May 08 12:23:52 EEST 2017
+// Generated on Mon May 08 17:22:35 EEST 2017
 // Model: e:/fegh/global-menu/src/botinok-entities.kt
 //
 
@@ -159,7 +159,7 @@ class Generated_BotinokRegionFields { // Generated at 2-e91acff-5613-4b14-b71e-5
     @XColumn lateinit var y: java.lang.Integer
     @XColumn lateinit var w: java.lang.Integer
     @XColumn lateinit var h: java.lang.Integer
-    @XManyToOne(fetch = XFetchType.EAGER, cascade = arrayOf(XCascadeType.ALL)) lateinit var arena: Generated_BotinokArena
+    @XManyToOne(fetch = XFetchType.EAGER/*, cascade = arrayOf(XCascadeType.ALL)*/) lateinit var arena: Generated_BotinokArena
 }
 
 // ------------------------------------------------------------------
@@ -312,7 +312,7 @@ class Generated_BotinokPointerFields { // Generated at 2-e91acff-5613-4b14-b71e-
     @XColumn(columnDefinition = "text") lateinit var pile: String
     @XColumn(columnDefinition = "text") lateinit var language: String
     @XColumn(columnDefinition = "text") lateinit var script: String
-    @XManyToOne(fetch = XFetchType.EAGER, cascade = arrayOf(XCascadeType.ALL)) lateinit var arena: Generated_BotinokArena
+    @XManyToOne(fetch = XFetchType.EAGER/*, cascade = arrayOf(XCascadeType.ALL)*/) lateinit var arena: Generated_BotinokArena
 }
 
 // ------------------------------------------------------------------
@@ -443,7 +443,7 @@ class Generated_BotinokArenaFields { // Generated at 2-e91acff-5613-4b14-b71e-5e
     @XColumn lateinit var position: java.lang.Integer
     @XColumn(columnDefinition = "text") lateinit var name: String
     @XColumn lateinit var screenshot: ByteArray
-    @XManyToOne(fetch = XFetchType.EAGER, cascade = arrayOf(XCascadeType.ALL)) lateinit var play: Generated_BotinokPlay
+    @XManyToOne(fetch = XFetchType.EAGER/*, cascade = arrayOf(XCascadeType.ALL)*/) lateinit var play: Generated_BotinokPlay
     @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokRegion.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var regions: MutableList<Generated_BotinokRegion> = mutableListOf()
     @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokPointer.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var pointers: MutableList<Generated_BotinokPointer> = mutableListOf()
 }

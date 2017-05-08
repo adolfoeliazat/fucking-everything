@@ -1,18 +1,26 @@
 package agnes;
 
+import kotlin.jvm.functions.Function1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.transaction.TransactionStatus;
 import vgrechka.db.DBPile;
 import vgrechka.db.Db_stuffKt;
 import vgrechka.db.ExecuteAndFormatResultForPrinting;
 
+import javax.persistence.EntityManager;
 import java.lang.reflect.Method;
 
 import static vgrechka.Jvm_back_platformKt.getBackPlatform;
 import static vgrechka.Shared_jvmKt.clog;
+import static vgrechka.Shared_jvmKt.wtf;
 
 @SuppressWarnings("unused")
 public class AgnesFuckingAround {
     public static void main(String... args) throws Exception {
+        Logger logger = LoggerFactory.getLogger(AgnesFuckingAround.class);
+        logger.info("Let's fuck around for a little while...");
         new AgnesFuckingAround();
     }
 
@@ -44,7 +52,9 @@ public class AgnesFuckingAround {
                 + "");
 
         String methodName =
-                "fuck_1";
+//                "fuck_1";
+//                "fuck_2";
+                "fuck_3";
 
         Method method = getClass().getDeclaredMethod(methodName);
         clog("====================================================");
@@ -106,6 +116,113 @@ public class AgnesFuckingAround {
         dumpShit();
     }
 
+    private void fuck_2() {
+        AgnesGirlRepository repo = getBackPlatform().getSpringctx().getBean(AgnesGirlRepository.class);
+
+        {
+            AgnesGirl girl = new AgnesGirl();
+            girl.name = "Mandy the Mutant";
+            {
+                AgnesBoob boob = new AgnesBoob();
+                boob.location = "middle";
+                boob.girl = girl;
+                girl.boobs.add(boob);
+            }
+            {
+                AgnesBoob boob = new AgnesBoob();
+                boob.location = "bottom";
+                boob.girl = girl;
+                girl.boobs.add(boob);
+            }
+            repo.save(girl);
+            clog("\n============== After TX 1 ==============\n");
+            dumpShit();
+        }
+
+        {
+            getBackPlatform().tx(tx -> {
+                AgnesGirl girl = repo.findOne(1L);
+                girl.name = "Pizda";
+                girl.boobs.remove(0);
+                return null;
+            });
+
+            clog("\n============== After TX 2 ==============\n");
+            dumpShit();
+        }
+
+    }
+
+    private void fuck_3() {
+        AgnesGirlRepository repo = getBackPlatform().getSpringctx().getBean(AgnesGirlRepository.class);
+
+        {
+            AgnesGirl girl = new AgnesGirl();
+            girl.name = "Mandy the Mutant";
+            {
+                AgnesBoob boob = new AgnesBoob();
+                boob.location = "middle";
+                boob.girl = girl;
+                girl.boobs.add(boob);
+            }
+            {
+                AgnesBoob boob = new AgnesBoob();
+                boob.location = "bottom";
+                boob.girl = girl;
+                girl.boobs.add(boob);
+            }
+            repo.save(girl);
+            clog("\n============== After TX 1 ==============\n");
+            dumpShit();
+        }
+
+        {
+            new Object() {
+                AgnesGirl girl = null;
+                {
+                    getBackPlatform().tx(tx -> {
+                        girl = repo.findOne(1L);
+                        girl.boobs.size();
+                        girl.boobs.get(0).tits.size();
+                        return null;
+                    });
+
+                    girl.name = "Pizda";
+                    girl.boobs.remove(0);
+                    {
+                        AgnesBoob boob = new AgnesBoob();
+                        boob.location = "rear";
+                        boob.girl = girl;
+                        girl.boobs.add(boob);
+                    }
+                    {
+                        AgnesTit tit = new AgnesTit();
+                        tit.description = "A crazy tit";
+                        tit.boob = girl.boobs.get(0);
+                        girl.boobs.get(0).tits.add(tit);
+                    }
+                    getBackPlatform().tx(tx -> {
+                        girl = repo.save(girl);
+                        return null;
+                    });
+
+                    clog("\n============== After TX 2 ==============\n");
+                    dumpShit();
+
+                    girl.boobs.remove(1);
+                    getBackPlatform().tx(tx -> {
+                        girl = repo.save(girl);
+                        return null;
+                    });
+
+                    clog("\n============== After TX 3 ==============\n");
+                    dumpShit();
+                }
+            };
+        }
+
+    }
+
     private void dumpShit() {
         clog("Girls");
         clog("-----");
@@ -128,5 +245,8 @@ public class AgnesFuckingAround {
 
 
 
+
+
+// EntityManager em = DBPile.INSTANCE.getJpaContext().getEntityManagerByManagedType(AgnesGirl.class);
 
 

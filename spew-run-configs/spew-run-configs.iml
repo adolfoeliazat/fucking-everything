@@ -13,7 +13,7 @@
     <orderEntry type="module" module-name="spew" />
     <orderEntry type="module" module-name="botinok-1" />
     <orderEntry type="module-library">
-      <library>
+      <library name="pizda">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../lib-gradle/antlr-2.7.7.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/asm-5.2.jar!/" />
@@ -25,6 +25,7 @@
           <root url="jar://$MODULE_DIR$/../lib-gradle/byte-buddy-1.6.9.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/classmate-1.3.0.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/commons-logging-1.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/datasource-proxy-1.4.1.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/dom4j-1.6.1.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-commons-8.15.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-controls-8.15.jar!/" />
@@ -91,13 +92,16 @@
           <root url="jar://$MODULE_DIR$/../lib-gradle/jsr305-3.0.1.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/junit-4.12.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/kotlin-compiler-1.1.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/logback-classic-1.2.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/logback-core-1.2.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/mockito-core-1.9.5.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/objenesis-1.0.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/okhttp-3.6.0.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/okio-1.11.0.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/parboiled-core-1.1.8.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/parboiled-java-1.1.8.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/protobuf-java-3.0.2.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib-gradle/slf4j-api-1.6.6.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib-gradle/slf4j-api-1.7.24.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/slf4j-api-1.7.25.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/spring-aop-4.3.8.RELEASE.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/spring-beans-4.3.8.RELEASE.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/spring-context-4.3.8.RELEASE.jar!/" />
@@ -120,6 +124,7 @@
         <JAVADOC />
         <SOURCES>
           <root url="jar://$MODULE_DIR$/../lib-gradle/byte-buddy-1.6.9-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/datasource-proxy-1.4.1-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-commons-8.15-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-controls-8.15-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-emojione-2.2.7-2-sources.jar!/" />
@@ -130,6 +135,9 @@
           <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-octicons-4.3.0-5-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-weathericons-2.0.10-5-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/hibernate-core-5.2.10.Final-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/hibernate-jpa-2.1-api-1.0.0.Final-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/logback-classic-1.2.3-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/mockito-core-1.9.5.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/spring-data-jpa-1.11.3.RELEASE-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/spring-orm-4.3.8.RELEASE-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/sqlite-jdbc-3.16.1-sources.jar!/" />

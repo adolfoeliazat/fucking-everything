@@ -12,11 +12,11 @@ public class AgnesBoob {
     @Column(columnDefinition = "text")
     public String location;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @ManyToOne(/*fetch = FetchType.EAGER,*/ /*cascade = {CascadeType.ALL}*/)
     @JoinColumn(name = "girl_id")
     public AgnesGirl girl;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "boob", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(/*fetch = FetchType.LAZY,*/ mappedBy = "boob", cascade = {CascadeType.ALL}, orphanRemoval = true)
     public List<AgnesTit> tits = new ArrayList<>();
 }
 

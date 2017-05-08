@@ -10,7 +10,7 @@ public class AgnesTit {
     @Column(columnDefinition = "text")
     public String description;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @ManyToOne(/*fetch = FetchType.EAGER,*/ /*cascade = {CascadeType.ALL}*/)
     @JoinColumn(name = "boob_id")
     public AgnesBoob boob;
 }
