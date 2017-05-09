@@ -734,6 +734,22 @@ fun <T> List<T>.indexOfOrNull(element: T): Int? {
     }
 }
 
+interface CollectBlockReceiver<in T> {
+    fun yield(x: T)
+}
+
+fun <From, To> Iterable<From>.collect(block: CollectBlockReceiver<To>.(From) -> Unit): List<To> {
+    val res = mutableListOf<To>()
+    val receiver = object : CollectBlockReceiver<To> {
+        override fun yield(x: To) {
+            res += x
+        }
+    }
+    for (x in this)
+        receiver.block(x)
+    return res
+}
+
 
 
 
