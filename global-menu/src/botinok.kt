@@ -127,16 +127,14 @@ class ArenaNode(val treeItem: TreeItem<FuckingNode>,
 }
 
 data class RegionNode(val treeItem: TreeItem<FuckingNode>,
-                      var region: BotinokRegion,
-                      val arenaNode: ArenaNode) : FuckingNode() {
+                      var region: BotinokRegion) : FuckingNode() {
 
     override fun toString() = region.name
 
 }
 
 data class PointerNode(val treeItem: TreeItem<FuckingNode>,
-                       var pointer: BotinokPointer,
-                       val arenaNode: ArenaNode) : FuckingNode() {
+                       var pointer: BotinokPointer) : FuckingNode() {
 
     override fun toString() = pointer.name
 
@@ -551,15 +549,38 @@ class StartBotinok : Application() {
                     addMenuItem(menu, "New Region", this::action_newRegion)
                     addMenuItem(menu, "New Pointer", this::action_newPointer)
                     menu.items += SeparatorMenuItem()
-                    addMenuItem(menu, "Delete") {action_deleteArena(item, value)}
+
+                    addMenuItem(menu, "Delete") {
+                        action_deleteShit<RootNode, ArenaNode, BotinokArena>(
+                            treeItem = item, node = value,
+                            getCollection = {it.play.arenas},
+                            getEntity = {it.arena},
+                            getPositionProperty = {it::position})
+                    }
                 }
 
                 is RegionNode -> {
-                    addMenuItem(menu, "Delete") {action_deleteRegion(item, value)}
+//                    addMenuItem(menu, "Rename") {action_renameRegion(item, value)}
+
+                    addMenuItem(menu, "Delete") {
+                        action_deleteShit<ArenaNode, RegionNode, BotinokRegion>(
+                            treeItem = item, node = value,
+                            getCollection = {it.arena.regions},
+                            getEntity = {it.region},
+                            getPositionProperty = {it::position})
+                    }
                 }
 
                 is PointerNode -> {
-                    addMenuItem(menu, "Delete") {action_deletePointer(item, value)}
+//                    addMenuItem(menu, "Rename") {action_renameRegion(item, value)}
+
+                    addMenuItem(menu, "Delete") {
+                        action_deleteShit<ArenaNode, PointerNode, BotinokPointer>(
+                            treeItem = item, node = value,
+                            getCollection = {it.arena.pointers},
+                            getEntity = {it.pointer},
+                            getPositionProperty = {it::position})
+                    }
                 }
 
                 else -> {}
@@ -572,11 +593,11 @@ class StartBotinok : Application() {
         }
 
         inline fun <reified ParentNode: FuckingNode, Node : FuckingNode, Entity>
-            deleteShit(treeItem: TreeItem<FuckingNode>,
-                       node: Node,
-                       getCollection: (ParentNode) -> MutableList<Entity>,
-                       getEntity: (Node) -> Entity,
-                       getPositionProperty: (Entity) -> KMutableProperty0<Int>)
+            action_deleteShit(treeItem: TreeItem<FuckingNode>,
+                              node: Node,
+                              getCollection: (ParentNode) -> MutableList<Entity>,
+                              getEntity: (Node) -> Entity,
+                              getPositionProperty: (Entity) -> KMutableProperty0<Int>)
         {
             val parentNode = treeItem.parent.value as? ParentNode ?: wtf("6c32dc0c-3ffa-4f4e-875f-d63d587f6132")
             val collection = getCollection(parentNode)
@@ -587,28 +608,8 @@ class StartBotinok : Application() {
                 position.set(position.get() - 1)
             }
             treeItem.parent.children -= treeItem
+            dirty = true
         }
-
-        fun action_deleteArena(treeItem: TreeItem<FuckingNode>, node: ArenaNode) =
-            deleteShit<RootNode, ArenaNode, BotinokArena>(
-                treeItem = treeItem, node = node,
-                getCollection = {it.play.arenas},
-                getEntity = {it.arena},
-                getPositionProperty = {it::position})
-
-        fun action_deleteRegion(treeItem: TreeItem<FuckingNode>, node: RegionNode) =
-            deleteShit<ArenaNode, RegionNode, BotinokRegion>(
-                treeItem = treeItem, node = node,
-                getCollection = {it.arena.regions},
-                getEntity = {it.region},
-                getPositionProperty = {it::position})
-
-        fun action_deletePointer(treeItem: TreeItem<FuckingNode>, node: PointerNode) =
-            deleteShit<ArenaNode, PointerNode, BotinokPointer>(
-                treeItem = treeItem, node = node,
-                getCollection = {it.arena.pointers},
-                getEntity = {it.pointer},
-                getPositionProperty = {it::position})
 
         private fun action_moveArenaIndexDelta(item: TreeItem<FuckingNode>, arenaNode: ArenaNode, i: Int) {
             run { // Entities
@@ -637,7 +638,11 @@ class StartBotinok : Application() {
         }
 
         private fun action_renameArena(treeItem: TreeItem<FuckingNode>, arenaNode: ArenaNode) {
-            val arena = arenaNode.arena
+            action_renameShit(treeItem, arenaNode)
+        }
+
+        private fun action_renameShit(treeItem: TreeItem<FuckingNode>, node: ArenaNode) {
+            val arena = node.arena
             JFXStuff.inputBox("So, name?", arena.name)?.let {
                 arena.name = it
                 treeItem.value = ArenaNode(treeItem, arena)
@@ -797,7 +802,7 @@ class StartBotinok : Application() {
         }
 
         fun selectedArenaNode(): ArenaNode {
-            return selectedTreeItem()!!.arena
+            return selectedTreeItem()!!.arenaNode
         }
 
         fun selectedRegionNode(): RegionNode? {
@@ -819,13 +824,13 @@ class StartBotinok : Application() {
         fun selectedTreeItem(): TreeItem<FuckingNode>? =
             navigationTreeView.selectionModel.selectedItem
 
-        val TreeItem<FuckingNode>.arena: ArenaNode get() {
+        val TreeItem<FuckingNode>.arenaNode: ArenaNode get() {
             val value = value!!
             val arena: ArenaNode = when (value) {
                 is RootNode -> wtf("c420c2f1-7c89-45aa-89b6-0aee7faa4446")
                 is ArenaNode -> value
-                is RegionNode -> value.arenaNode
-                is PointerNode -> value.arenaNode
+                is RegionNode -> this.parent.value as ArenaNode
+                is PointerNode -> this.parent.value as ArenaNode
             }
             return arena
         }
@@ -846,7 +851,7 @@ class StartBotinok : Application() {
 
     private fun addTreeItemForRegion(region: BotinokRegion, arenaNode: ArenaNode): TreeItem<FuckingNode> {
         val regionTreeItem = TreeItem<FuckingNode>()
-        val newRegionNode = RegionNode(regionTreeItem, region, arenaNode)
+        val newRegionNode = RegionNode(regionTreeItem, region)
         regionTreeItem.value = newRegionNode
         arenaNode.treeItem.children += regionTreeItem
         return regionTreeItem
@@ -854,7 +859,7 @@ class StartBotinok : Application() {
 
     private fun addTreeItemForPointer(pointer: BotinokPointer, arenaNode: ArenaNode): TreeItem<FuckingNode> {
         val pointerTreeItem = TreeItem<FuckingNode>()
-        val newPointerNode = PointerNode(pointerTreeItem, pointer, arenaNode)
+        val newPointerNode = PointerNode(pointerTreeItem, pointer)
         pointerTreeItem.value = newPointerNode
         arenaNode.treeItem.children += pointerTreeItem
         return pointerTreeItem
