@@ -30,7 +30,6 @@ import org.jnativehook.keyboard.NativeKeyAdapter
 import org.jnativehook.keyboard.NativeKeyEvent
 import org.jnativehook.mouse.NativeMouseEvent
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
-import org.springframework.data.jpa.repository.JpaContext
 import vgrechka.*
 import java.awt.Rectangle
 import java.awt.Robot
@@ -43,9 +42,13 @@ import java.util.logging.Logger
 import javax.imageio.ImageIO
 import kotlin.concurrent.thread
 import kotlin.properties.Delegates.notNull
+import kotlin.reflect.KMutableProperty0
 import kotlin.system.exitProcess
 
 // delete from botinok_regions; delete from botinok_pointers; delete from botinok_arenas; delete from botinok_plays;
+
+// TODO:vgrechka Sanity check during model loading (e.g. positions are correct)
+//               Show a message if something is messed up
 
 object BotinokStuff {
     val boxEdgeSize = 5.0
@@ -111,7 +114,7 @@ enum class RegionHandle {
 
 sealed class FuckingNode
 
-class RootNode : FuckingNode()
+class RootNode(var play: BotinokPlay) : FuckingNode()
 
 class ArenaNode(val treeItem: TreeItem<FuckingNode>,
                 var arena: BotinokArena) : FuckingNode() {
@@ -146,7 +149,6 @@ class StartBotinok : Application() {
     var bananas by notNullOnce<goBananas2>()
     var handleEnterKeyInPlaySelector by notNull<() -> Unit>()
     var afterPlayEditorOpened = {}
-    var play by notNull<BotinokPlay>()
     @Volatile var running = false
     @Volatile var stopRequested = false
     val robot = Robot()
@@ -190,6 +192,8 @@ class StartBotinok : Application() {
         }
         primaryStage.show()
     }
+
+    val play get() = (bananas.rootTreeItem.value as RootNode).play
 
     var dirty = false
         set(value) {
@@ -251,10 +255,8 @@ class StartBotinok : Application() {
 
     fun action_openPlayEditor(_play: BotinokPlay) {
         backPlatform.tx {
-            this.play = botinokPlayRepo.findOne(_play.id)!!
-
+            bananas = goBananas2(botinokPlayRepo.findOne(_play.id)!!)
             updateStageTitle()
-            bananas = goBananas2()
 
             val arenas = play.arenas //.toMutableList()
             arenas.sortBy {it.position}
@@ -272,7 +274,7 @@ class StartBotinok : Application() {
                 }
             }
 
-            val rootItems = bananas.rootNode.children
+            val rootItems = bananas.rootTreeItem.children
             if (rootItems.isNotEmpty()) {
                 val arenaItem = rootItems.first()
                 bananas.navigationTreeView.selectionModel.select(arenaItem)
@@ -306,7 +308,7 @@ class StartBotinok : Application() {
         }
     }
 
-    inner class goBananas2 {
+    inner class goBananas2(_play: BotinokPlay) {
         var someTextField by notNull<TextField>()
         var navigationTreeView by notNull<TreeView<FuckingNode>>()
         var mainSplitPane by notNull<SplitPane>()
@@ -319,7 +321,7 @@ class StartBotinok : Application() {
         var operationStartRegionParams by notNull<Box>()
         var operationStartMouseX = 0.0
         var operationStartMouseY = 0.0
-        val rootNode: TreeItem<FuckingNode> = TreeItem(RootNode())
+        val rootTreeItem: TreeItem<FuckingNode> = TreeItem(RootNode(_play))
         var drawingAreaStackPane by notNull<StackPane>()
         val pointerWidth = 17
         val pointerHeight = 25
@@ -524,7 +526,7 @@ class StartBotinok : Application() {
                 }
             }
 
-            navigationTreeView.root = rootNode
+            navigationTreeView.root = rootTreeItem
             navigationTreeView.root.isExpanded = true
 
             primaryStage.scene = Scene(vbox)
@@ -539,21 +541,28 @@ class StartBotinok : Application() {
             val value = item?.value
 
             val menu = ContextMenu()
-            when (value) {
+            exhaustive=when (value) {
                 is ArenaNode -> {
                     addMenuItem(menu, "Rename") {action_renameArena(item, value)}
-                    if (item !== rootNode.children.first())
+                    if (item !== rootTreeItem.children.first())
                         addMenuItem(menu, "Move Up") {action_moveArenaIndexDelta(item, value, -1)}
-                    if (item !== rootNode.children.last())
+                    if (item !== rootTreeItem.children.last())
                         addMenuItem(menu, "Move Down") {action_moveArenaIndexDelta(item, value, +1)}
                     addMenuItem(menu, "New Region", this::action_newRegion)
                     addMenuItem(menu, "New Pointer", this::action_newPointer)
                     menu.items += SeparatorMenuItem()
                     addMenuItem(menu, "Delete") {action_deleteArena(item, value)}
                 }
-                is RegionNode -> {
 
+                is RegionNode -> {
+                    addMenuItem(menu, "Delete") {action_deleteRegion(item, value)}
                 }
+
+                is PointerNode -> {
+                    addMenuItem(menu, "Delete") {action_deletePointer(item, value)}
+                }
+
+                else -> {}
             }
 
             if (menu.items.isNotEmpty()) {
@@ -562,15 +571,44 @@ class StartBotinok : Application() {
             }
         }
 
-        private fun action_deleteArena(item: TreeItem<FuckingNode>, arenaNode: ArenaNode) {
-            check(item.parent.value is RootNode) {"6c32dc0c-3ffa-4f4e-875f-d63d587f6132"}
-            val indexToDelete = play.arenas.indexOf(arenaNode.arena)
-            play.arenas.removeAt(indexToDelete)
-            for (index in indexToDelete..play.arenas.lastIndex) {
-                --play.arenas[index].position
+        inline fun <reified ParentNode: FuckingNode, Node : FuckingNode, Entity>
+            deleteShit(treeItem: TreeItem<FuckingNode>,
+                       node: Node,
+                       getCollection: (ParentNode) -> MutableList<Entity>,
+                       getEntity: (Node) -> Entity,
+                       getPositionProperty: (Entity) -> KMutableProperty0<Int>)
+        {
+            val parentNode = treeItem.parent.value as? ParentNode ?: wtf("6c32dc0c-3ffa-4f4e-875f-d63d587f6132")
+            val collection = getCollection(parentNode)
+            val indexToDelete = collection.indexOf(getEntity(node))
+            collection.removeAt(indexToDelete)
+            for (index in indexToDelete..collection.lastIndex) {
+                val position = getPositionProperty(collection[index])
+                position.set(position.get() - 1)
             }
-            item.parent.children -= item
+            treeItem.parent.children -= treeItem
         }
+
+        fun action_deleteArena(treeItem: TreeItem<FuckingNode>, node: ArenaNode) =
+            deleteShit<RootNode, ArenaNode, BotinokArena>(
+                treeItem = treeItem, node = node,
+                getCollection = {it.play.arenas},
+                getEntity = {it.arena},
+                getPositionProperty = {it::position})
+
+        fun action_deleteRegion(treeItem: TreeItem<FuckingNode>, node: RegionNode) =
+            deleteShit<ArenaNode, RegionNode, BotinokRegion>(
+                treeItem = treeItem, node = node,
+                getCollection = {it.arena.regions},
+                getEntity = {it.region},
+                getPositionProperty = {it::position})
+
+        fun action_deletePointer(treeItem: TreeItem<FuckingNode>, node: PointerNode) =
+            deleteShit<ArenaNode, PointerNode, BotinokPointer>(
+                treeItem = treeItem, node = node,
+                getCollection = {it.arena.pointers},
+                getEntity = {it.pointer},
+                getPositionProperty = {it::position})
 
         private fun action_moveArenaIndexDelta(item: TreeItem<FuckingNode>, arenaNode: ArenaNode, i: Int) {
             run { // Entities
@@ -587,10 +625,10 @@ class StartBotinok : Application() {
             }
 
             run { // Tree
-                val index = rootNode.children.indexOfOrNull(item) ?: wtf("5df53fb4-534a-49df-832d-ee31043c7f19")
-                val tmp = rootNode.children[index]
-                rootNode.children[index] = rootNode.children[index + i]
-                rootNode.children[index + i] = tmp
+                val index = rootTreeItem.children.indexOfOrNull(item) ?: wtf("5df53fb4-534a-49df-832d-ee31043c7f19")
+                val tmp = rootTreeItem.children[index]
+                rootTreeItem.children[index] = rootTreeItem.children[index + i]
+                rootTreeItem.children[index + i] = tmp
                 navigationTreeView.selectionModel.clearSelection()
                 selectTreeItem(item)
             }
@@ -890,7 +928,7 @@ class StartBotinok : Application() {
             play.arenas.add(arena)
             dirty = true
             addTreeItemForArena(arena)
-            bananas.navigationTreeView.scrollTo(bananas.rootNode.children.lastIndex)
+            bananas.navigationTreeView.scrollTo(bananas.rootTreeItem.children.lastIndex)
             selectLastTreeItem()
 
             JFXStuff.later {
@@ -907,7 +945,7 @@ class StartBotinok : Application() {
         val arenaNode = ArenaNode(treeItem, arena)
 //        val arenaNode = FuckingNode.Arena(treeItem, arena, Image("file:///$tmpImgPath"))
         treeItem.value = arenaNode
-        bananas.rootNode.children.add(treeItem)
+        bananas.rootTreeItem.children.add(treeItem)
         return treeItem
     }
 
@@ -918,15 +956,15 @@ class StartBotinok : Application() {
 
 
     fun getArenaCount(): Int {
-        return bananas.rootNode.children.size
+        return bananas.rootTreeItem.children.size
     }
 
     fun action_save() {
         backPlatform.tx {
-            play = botinokPlayRepo.save(play)
+            (bananas.rootTreeItem.value as RootNode).play = botinokPlayRepo.save(play)
 
             var arenaIndex = 0
-            for (arenaTreeItem in bananas.rootNode.children) {
+            for (arenaTreeItem in bananas.rootTreeItem.children) {
                 val arenaNode = arenaTreeItem.value as ArenaNode
                 arenaNode.arena = play.arenas[arenaIndex++]
                 var regionIndex = 0
