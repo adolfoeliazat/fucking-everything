@@ -72,35 +72,67 @@ enum class DragMutator {
 
 enum class RegionHandle {
     TOP_LEFT {
-        override fun rectForRegion(box: EntityNode<BotinokRegion>) = Rectangle2D(box.entity.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize, box.entity.y.toDouble() - b.obscureConst2 - b.obscureConst1, b.handleSize, b.handleSize)
+        override fun rectForRegion(r: BotinokRegion) = Rectangle2D(
+            r.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize,
+            r.y.toDouble() - b.obscureConst2 - b.obscureConst1,
+            b.handleSize,
+            b.handleSize)
         override val dragMutators = setOf(DragMutator.TOP, DragMutator.LEFT)
     },
     TOP {
-        override fun rectForRegion(box: EntityNode<BotinokRegion>) = Rectangle2D(box.entity.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.entity.w / 2 - b.handleSize / 2, box.entity.y.toDouble() - b.obscureConst2 - b.obscureConst1, b.handleSize, b.handleSize)
+        override fun rectForRegion(r: BotinokRegion) = Rectangle2D(
+            r.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + r.w / 2 - b.handleSize / 2,
+            r.y.toDouble() - b.obscureConst2 - b.obscureConst1,
+            b.handleSize,
+            b.handleSize)
         override val dragMutators = setOf(DragMutator.TOP)
     },
     TOP_RIGHT {
-        override fun rectForRegion(box: EntityNode<BotinokRegion>) = Rectangle2D(box.entity.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.entity.w, box.entity.y.toDouble() - b.obscureConst2 - b.obscureConst1, b.handleSize, b.handleSize)
+        override fun rectForRegion(r: BotinokRegion) = Rectangle2D(
+            r.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + r.w,
+            r.y.toDouble() - b.obscureConst2 - b.obscureConst1,
+            b.handleSize,
+            b.handleSize)
         override val dragMutators = setOf(DragMutator.TOP, DragMutator.RIGHT)
     },
     RIGHT {
-        override fun rectForRegion(box: EntityNode<BotinokRegion>) = Rectangle2D(box.entity.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.entity.w, box.entity.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.entity.h / 2 + b.handleSize / 2, b.handleSize, b.handleSize)
+        override fun rectForRegion(r: BotinokRegion) = Rectangle2D(
+            r.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + r.w,
+            r.y.toDouble() - b.obscureConst2 - b.obscureConst1 + r.h / 2 + b.handleSize / 2,
+            b.handleSize,
+            b.handleSize)
         override val dragMutators = setOf(DragMutator.RIGHT)
     },
     BOTTOM_RIGHT {
-        override fun rectForRegion(box: EntityNode<BotinokRegion>) = Rectangle2D(box.entity.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.entity.w, box.entity.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.entity.h + b.handleSize, b.handleSize, b.handleSize)
+        override fun rectForRegion(r: BotinokRegion) = Rectangle2D(
+            r.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + r.w,
+            r.y.toDouble() - b.obscureConst2 - b.obscureConst1 + r.h + b.handleSize,
+            b.handleSize,
+            b.handleSize)
         override val dragMutators = setOf(DragMutator.BOTTOM, DragMutator.RIGHT)
     },
     BOTTOM {
-        override fun rectForRegion(box: EntityNode<BotinokRegion>) = Rectangle2D(box.entity.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + box.entity.w / 2 - b.handleSize / 2, box.entity.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.entity.h + b.handleSize, b.handleSize, b.handleSize)
+        override fun rectForRegion(r: BotinokRegion) = Rectangle2D(
+            r.x.toDouble() - b.obscureConst2 + b.obscureConst1 + b.boxEdgeSize + r.w / 2 - b.handleSize / 2,
+            r.y.toDouble() - b.obscureConst2 - b.obscureConst1 + r.h + b.handleSize,
+            b.handleSize,
+            b.handleSize)
         override val dragMutators = setOf(DragMutator.BOTTOM)
     },
     BOTTOM_LEFT {
-        override fun rectForRegion(box: EntityNode<BotinokRegion>) = Rectangle2D(box.entity.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize, box.entity.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.entity.h + b.handleSize, b.handleSize, b.handleSize)
+        override fun rectForRegion(r: BotinokRegion) = Rectangle2D(
+            r.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize,
+            r.y.toDouble() - b.obscureConst2 - b.obscureConst1 + r.h + b.handleSize,
+            b.handleSize,
+            b.handleSize)
         override val dragMutators = setOf(DragMutator.BOTTOM, DragMutator.LEFT)
     },
     LEFT {
-        override fun rectForRegion(box: EntityNode<BotinokRegion>) = Rectangle2D(box.entity.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize, box.entity.y.toDouble() - b.obscureConst2 - b.obscureConst1 + box.entity.h / 2 + b.handleSize / 2, b.handleSize, b.handleSize)
+        override fun rectForRegion(r: BotinokRegion) = Rectangle2D(
+            r.x.toDouble() - b.obscureConst2 + b.obscureConst1 - b.handleSize + b.boxEdgeSize,
+            r.y.toDouble() - b.obscureConst2 - b.obscureConst1 + r.h / 2 + b.handleSize / 2,
+            b.handleSize,
+            b.handleSize)
         override val dragMutators = setOf(DragMutator.LEFT)
     };
 
@@ -108,70 +140,59 @@ enum class RegionHandle {
         private val b = BotinokStuff
     }
 
-    abstract fun rectForRegion(box: EntityNode<BotinokRegion>): Rectangle2D
+    abstract fun rectForRegion(r: BotinokRegion): Rectangle2D
     abstract val dragMutators: Set<DragMutator>
 }
 
-sealed class FuckingNode
+typealias FuckingTreeItem = TreeItem<Any>
 
-class RootNode(var play: BotinokPlay) : FuckingNode()
+class PlayNode(var entity: BotinokPlay) {
+    val treeItem = FuckingTreeItem(this)
+    val childNodes = mutableListOf<ArenaNode>()
+}
 
-class EntityNode<T : Any>(
-    val treeItem: TreeItem<FuckingNode>,
-    var entity: T
-)
-    : FuckingNode()
-{
-    inline fun <reified U : Any> cast(): EntityNode<U> {
-        check(entity is U) {"5bb21908-affd-4cad-95de-97b1e330fdc7"}
-        @Suppress("UNCHECKED_CAST") return this as EntityNode<U>
+class ArenaNode(var arena: BotinokArena, val playNode: PlayNode) : FuckingNode {
+    override val entity get() = arena
+    override val treeItem = FuckingTreeItem(this)
+    val childNodes = mutableListOf<ArenaChildNode<*>>()
+
+    val regionNodes: List<RegionNode> get() = childNodes.collect {if (it is RegionNode) yield(it)}
+    val pointerNodes: List<PointerNode> get() = childNodes.collect {if (it is PointerNode) yield(it)}
+
+    init {
+        treeItem.value = this
+        playNode.treeItem.children += treeItem
+        playNode.childNodes += this
     }
 
-    override fun toString() = entityNameProperty(entity).get()
-}
-
-val EntityNode<BotinokArena>.image by AttachedComputedShit<EntityNode<BotinokArena>, Image> {
-    Image(it.entity.screenshot.inputStream())
-}
-
-inline fun <reified T> Any?.ifIs(block: (T) -> Unit) {
-    if (this is T)
-        block(this)
-}
-
-inline fun <reified T : Any> EntityNode<BotinokArena>.entityNodesOfType(): List<EntityNode<T>> =
-    treeItem.children.collect {treeItem->
-        treeItem.value.ifIs<EntityNode<*>> {node->
-            node.entity.ifIs<T> {
-                yield(node.cast())
-            }
-        }
+    val image by lazy {
+        Image(entity.screenshot.inputStream())
     }
 
-inline fun <reified Entity : Any> TreeItem<FuckingNode>.entityNodeOfType(): EntityNode<Entity>? {
-    val entityNode = this.value as? EntityNode<*> ?: return null
-    return when {
-        entityNode.entity is Entity ->
-            @Suppress("UNCHECKED_CAST")
-            (entityNode as EntityNode<Entity>)
-        else -> null
+    override fun toString() = entity.name
+}
+
+abstract class ArenaChildNode<T : Any>(override var entity: T, val arenaNode: ArenaNode) : FuckingNode {
+    override val treeItem = FuckingTreeItem(this)
+
+    init {
+        treeItem.value = this
+        arenaNode.treeItem.children += treeItem
+        arenaNode.childNodes += this
     }
 }
 
+class RegionNode(entity: BotinokRegion, arenaNode: ArenaNode) : ArenaChildNode<BotinokRegion>(entity, arenaNode) {
+    override fun toString() = entity.name
+}
 
-val EntityNode<BotinokArena>.regions: List<EntityNode<BotinokRegion>>
-    get() = entityNodesOfType()
+class PointerNode(entity: BotinokPointer, arenaNode: ArenaNode) : ArenaChildNode<BotinokPointer>(entity, arenaNode) {
+    override fun toString() = entity.name
+}
 
-val EntityNode<BotinokArena>.pointers: List<EntityNode<BotinokPointer>>
-    get() = entityNodesOfType()
-
-
-fun entityNameProperty(x: Any) = when (x) {
-    // XXX Explicit casts are to work around Kotlin bug
-    is BotinokArena -> (x as BotinokArena)::name
-    is BotinokRegion -> (x as BotinokRegion)::name
-    is BotinokPointer -> (x as BotinokPointer)::name
-    else -> wtf("48e1ea9b-d0da-43fa-a4f0-2ea9cf1c5c36")
+interface FuckingNode {
+    val entity: Any
+    val treeItem: FuckingTreeItem
 }
 
 class StartBotinok : Application() {
@@ -222,8 +243,6 @@ class StartBotinok : Application() {
         }
         primaryStage.show()
     }
-
-    val play get() = (bananas.rootTreeItem.value as RootNode).play
 
     var dirty = false
         set(value) {
@@ -288,23 +307,23 @@ class StartBotinok : Application() {
             bananas = goBananas2(botinokPlayRepo.findOne(_play.id)!!)
             updateStageTitle()
 
-            val arenas = play.arenas //.toMutableList()
+            val arenas = bananas.playNode.entity.arenas
             arenas.sortBy {it.position}
             for (arena in arenas) {
-                val arenaTreeItem = addTreeItemForArena(arena)
-                val regions = arena.regions //.toMutableList()
+                val arenaNode = ArenaNode(arena, bananas.playNode)
+                val regions = arena.regions
                 regions.sortBy {it.position}
                 for (region in regions) {
-                    addTreeItemForEntity(region, (arenaTreeItem.value as EntityNode<*>))
+                    RegionNode(region, arenaNode)
                 }
-                val pointers = arena.pointers //.toMutableList()
+                val pointers = arena.pointers
                 pointers.sortBy {it.position}
                 for (pointer in pointers) {
-                    addTreeItemForEntity(pointer, (arenaTreeItem.value as EntityNode<*>))
+                    PointerNode(pointer, arenaNode)
                 }
             }
 
-            val rootItems = bananas.rootTreeItem.children
+            val rootItems = bananas.playNode.treeItem.children
             if (rootItems.isNotEmpty()) {
                 val arenaItem = rootItems.first()
                 bananas.navigationTreeView.selectionModel.select(arenaItem)
@@ -318,7 +337,7 @@ class StartBotinok : Application() {
     }
 
     private fun updateStageTitle() {
-        primaryStage.title = "Botinok - ${play.name}${dirty.thenElseEmpty{" *"}}"
+        primaryStage.title = "Botinok - ${bananas.playNode.entity.name}${dirty.thenElseEmpty{" *"}}"
     }
 
     private fun seed() {
@@ -340,7 +359,7 @@ class StartBotinok : Application() {
 
     inner class goBananas2(_play: BotinokPlay) {
         var someTextField by notNull<TextField>()
-        var navigationTreeView by notNull<TreeView<FuckingNode>>()
+        var navigationTreeView by notNull<TreeView<Any>>()
         var mainSplitPane by notNull<SplitPane>()
         var detailsPane by notNull<AnchorPane>()
         var currentContextMenu: ContextMenu? = null
@@ -351,7 +370,7 @@ class StartBotinok : Application() {
         var operationStartRegionParams by notNull<Box>()
         var operationStartMouseX = 0.0
         var operationStartMouseY = 0.0
-        val rootTreeItem: TreeItem<FuckingNode> = TreeItem(RootNode(_play))
+//        val rootTreeItem: FuckingTreeItem = TreeItem()
         var drawingAreaStackPane by notNull<StackPane>()
         val pointerWidth = 17
         val pointerHeight = 25
@@ -359,6 +378,7 @@ class StartBotinok : Application() {
         val statusLabel: Label
         var runMenuItem by notNullOnce<MenuItem>()
         var stopMenuItem by notNullOnce<MenuItem>()
+        val playNode: PlayNode
 
         inner class RegionLocation(val x: Int, val y: Int, val w: Int, val h: Int)
 
@@ -367,13 +387,12 @@ class StartBotinok : Application() {
             RegionLocation(x = 100, y = 100, w = 50, h = 150)
         )
 
-        fun isHit(node: EntityNode<*>, testX: Double, testY: Double): Boolean {
-            val e = node.entity
-            return when (e) {
-                is BotinokRegion -> testX >= e.x && testX <= e.x + e.w - 1 && testY >= e.y && testY <= e.y + e.h - 1
-                is BotinokPointer -> testX >= e.x && testX <= e.x + pointerWidth - 1 && testY >= e.y && testY <= e.y + pointerWidth - 1
-                else -> wtf("1236858b-b0ae-4b7e-a8ff-dceb04997f71")
-            }
+        fun isHit(r: BotinokRegion, testX: Double, testY: Double): Boolean {
+            return testX >= r.x && testX <= r.x + r.w - 1 && testY >= r.y && testY <= r.y + r.h - 1
+        }
+
+        fun isHit(p: BotinokPointer, testX: Double, testY: Double): Boolean {
+            return testX >= p.x && testX <= p.x + pointerWidth - 1 && testY >= p.y && testY <= p.y + pointerWidth - 1
         }
 
         val canvas by relazy {
@@ -391,17 +410,17 @@ class StartBotinok : Application() {
                 if (e.button == MouseButton.PRIMARY) {
                     // noise("MOUSE_PRESSED: e.x = ${e.x}; e.y = ${e.y}")
                     hideContextMenus()
-                    val hitRegionNode: EntityNode<BotinokRegion>? = run {
-                        o@for (region in displayedArenaNode().regions) {
+                    val hitRegionNode: RegionNode? = run {
+                        o@for (regionNode in displayedArenaNode().regionNodes) {
                             for (handle in RegionHandle.values()) {
-                                if (handle.rectForRegion(region).contains(e.x, e.y)) {
+                                if (handle.rectForRegion(regionNode.entity).contains(e.x, e.y)) {
                                     selectedRegionHandles = setOf(handle)
-                                    return@run region
+                                    return@run regionNode
                                 }
                             }
-                            if (isHit(region, e.x, e.y)) {
+                            if (isHit(regionNode.entity, e.x, e.y)) {
                                 selectedRegionHandles = RegionHandle.values().toSet()
-                                return@run region
+                                return@run regionNode
                             }
                         }
                         null
@@ -413,7 +432,7 @@ class StartBotinok : Application() {
                         operationStartMouseY = e.y
                         // noise("operationStartMouseX = $operationStartMouseX; operationStartMouseY = $operationStartMouseY")
                     } else {
-                        val hitPointerNode: EntityNode<BotinokPointer>? = displayedArenaNode().pointers.find {
+                        val hitPointerNode: PointerNode? = displayedArenaNode().pointerNodes.find {
                             val p = it.entity
                             val pointerRect = Rectangle2D(p.x.toDouble(), p.y.toDouble(), pointerWidth.toDouble(), pointerHeight.toDouble())
                             pointerRect.contains(e.x, e.y)
@@ -539,8 +558,8 @@ class StartBotinok : Application() {
 
             navigationTreeView.isShowRoot = false
             navigationTreeView.setCellFactory {
-                object : TreeCell<FuckingNode>() {
-                    override fun updateItem(item: FuckingNode?, empty: Boolean) {
+                object : TreeCell<Any>() {
+                    override fun updateItem(item: Any?, empty: Boolean) {
                         super.updateItem(item, empty)
                         if (item == null) {
                             text = ""
@@ -555,7 +574,8 @@ class StartBotinok : Application() {
                 }
             }
 
-            navigationTreeView.root = rootTreeItem
+            playNode = PlayNode(_play)
+            navigationTreeView.root = playNode.treeItem
             navigationTreeView.root.isExpanded = true
 
             primaryStage.scene = Scene(vbox)
@@ -570,42 +590,25 @@ class StartBotinok : Application() {
             val treeItem = navigationTreeView.selectionModel.selectedItem
             val menu = ContextMenu()
 
-            val entity = treeItem.maybeEntity
-            when (entity) {
-                is BotinokArena -> {
-                    addMenuItem(menu, "Rename") {action_renameShit(treeItem)}
-                    if (treeItem !== rootTreeItem.children.first())
-                        addMenuItem(menu, "Move Up") {action_moveArenaIndexDelta(treeItem, -1)}
-                    if (treeItem !== rootTreeItem.children.last())
-                        addMenuItem(menu, "Move Down") {action_moveArenaIndexDelta(treeItem, +1)}
+            val node = treeItem.value as FuckingNode
+            when (node) {
+                is ArenaNode -> {
+                    addRenameMenuItem(menu, node)
+                    addMoveMenuItems(menu, node)
                     addMenuItem(menu, "New Region", this::action_newRegion)
                     addMenuItem(menu, "New Pointer", this::action_newPointer)
                     menu.items += SeparatorMenuItem()
-
-                    addMenuItem(menu, "Delete") {
-                        action_deleteShit<RootNode, BotinokArena>(
-                            treeItem = treeItem,
-                            getCollectionFromParentNode = {it.play.arenas},
-                            getPositionProperty = {it::position})
-                    }
+                    addDeleteMenuItem(menu, node)
                 }
 
-                is BotinokRegion -> {
-                    addMenuItem(menu, "Delete") {
-                        action_deleteShit<EntityNode<BotinokArena>, BotinokRegion>(
-                            treeItem = treeItem,
-                            getCollectionFromParentNode = {it.entity.regions},
-                            getPositionProperty = {it::position})
-                    }
+                is RegionNode -> {
+                    addRenameMenuItem(menu, node)
+                    addDeleteMenuItem(menu, node)
                 }
 
-                is BotinokPointer -> {
-                    addMenuItem(menu, "Delete") {
-                        action_deleteShit<EntityNode<BotinokArena>, BotinokPointer>(
-                            treeItem = treeItem,
-                            getCollectionFromParentNode = {it.entity.pointers},
-                            getPositionProperty = {it::position})
-                    }
+                is PointerNode -> {
+                    addRenameMenuItem(menu, node)
+                    addDeleteMenuItem(menu, node)
                 }
             }
 
@@ -615,55 +618,101 @@ class StartBotinok : Application() {
             }
         }
 
-        inline fun <reified ParentNode: FuckingNode, reified Entity>
-            action_deleteShit(treeItem: TreeItem<FuckingNode>,
-                              getCollectionFromParentNode: (ParentNode) -> MutableList<Entity>,
-                              getPositionProperty: (Entity) -> KMutableProperty0<Int>)
-        {
-            val parentNode = treeItem.parent.value as ParentNode
-            val collection = getCollectionFromParentNode(parentNode)
-            val indexToDelete = collection.indexOf(treeItem.entity as Entity)
-            collection.removeAt(indexToDelete)
-            for (index in indexToDelete..collection.lastIndex) {
-                val position = getPositionProperty(collection[index])
-                position.set(position.get() - 1)
-            }
-            treeItem.parent.children -= treeItem
-            dirty = true
-        }
+        private fun addMoveMenuItems(menu: ContextMenu, node: FuckingNode) {
+            // TODO:vgrechka Generalize. Currently works only for arenas
 
-        private fun action_moveArenaIndexDelta(treeItem: TreeItem<FuckingNode>, delta: Int) {
-            run { // Entities
-                val arena = treeItem.entity
-                val index = play.arenas.indexOfOrNull(arena) ?: wtf("db8f6365-cf88-494f-8f6a-7a07b11c01f5")
+            val treeItem = node.treeItem
 
-                val a = play.arenas[index]
-                play.arenas[index] = play.arenas[index + delta]
-                play.arenas[index + delta] = a
+            fun move(delta: Int) {
+                run { // Entities
+                    val arena = node.entity as BotinokArena
+                    val play = bananas.playNode.entity
+                    val index = play.arenas.indexOfOrNull(arena) ?: wtf("db8f6365-cf88-494f-8f6a-7a07b11c01f5")
 
-                val p = play.arenas[index].position
-                play.arenas[index].position = play.arenas[index + delta].position
-                play.arenas[index + delta].position = p
-            }
+                    val a = play.arenas[index]
+                    play.arenas[index] = play.arenas[index + delta]
+                    play.arenas[index + delta] = a
 
-            run { // Tree
-                val index = rootTreeItem.children.indexOfOrNull(treeItem) ?: wtf("5df53fb4-534a-49df-832d-ee31043c7f19")
-                val tmp = rootTreeItem.children[index]
-                rootTreeItem.children[index] = rootTreeItem.children[index + delta]
-                rootTreeItem.children[index + delta] = tmp
-                navigationTreeView.selectionModel.clearSelection()
-                selectTreeItem(treeItem)
-            }
+                    val p = play.arenas[index].position
+                    play.arenas[index].position = play.arenas[index + delta].position
+                    play.arenas[index + delta].position = p
+                }
 
-            dirty = true
-        }
+                run { // Tree
+                    val rootTreeItem = playNode.treeItem
+                    val index = rootTreeItem.children.indexOfOrNull(treeItem) ?: wtf("5df53fb4-534a-49df-832d-ee31043c7f19")
+                    val tmp = rootTreeItem.children[index]
+                    rootTreeItem.children[index] = rootTreeItem.children[index + delta]
+                    rootTreeItem.children[index + delta] = tmp
+                    navigationTreeView.selectionModel.clearSelection()
+                    selectTreeItem(treeItem)
+                }
 
-        private fun action_renameShit(treeItem: TreeItem<FuckingNode>) {
-            val entity = treeItem.entity
-            JFXStuff.inputBox("So, name?", entityNameProperty(entity).get())?.let {
-                entityNameProperty(entity).set(it)
-                treeItem.value = EntityNode(treeItem, entity)
                 dirty = true
+            }
+
+            if (treeItem !== treeItem.parent.children.first())
+                addMenuItem(menu, "Move Up") {move(-1)}
+            if (treeItem !== treeItem.parent.children.last())
+                addMenuItem(menu, "Move Down") {move(+1)}
+        }
+
+        private fun addDeleteMenuItem(menu: ContextMenu, node: FuckingNode) {
+            addMenuItem(menu, "Delete") {
+                val entity = node.entity
+                val collection = when (entity) {
+                    is BotinokArena -> entity.play.arenas
+                    is BotinokRegion -> entity.arena.regions
+                    is BotinokPointer -> entity.arena.pointers
+                    else -> wtf("4e674ed4-423b-4bc5-9431-bc62692f968a")
+                }
+                val indexToDelete = collection.indexOf(entity)
+                collection.removeAt(indexToDelete)
+
+                for (index in indexToDelete..collection.lastIndex) {
+                    val x = collection[index]
+                    val positionProperty = when (x) {
+                        // `let` here is a workaround for https://youtrack.jetbrains.com/issue/KT-17799
+                        is BotinokArena -> x.let<BotinokArena, KMutableProperty0<Int>> {it::position}
+                        is BotinokRegion -> x.let<BotinokRegion, KMutableProperty0<Int>> {it::position}
+                        is BotinokPointer -> x.let<BotinokPointer, KMutableProperty0<Int>> {it::position}
+                        else -> wtf("22a2f24c-2395-4ad8-806e-70fc3f10c7ec")
+                    }
+                    positionProperty.set(positionProperty.get() - 1)
+                }
+
+                exhaustive=when (node) {
+                    is ArenaNode -> node.playNode.childNodes.remove(node)
+                    is RegionNode -> node.arenaNode.childNodes.remove(node)
+                    is PointerNode -> node.arenaNode.childNodes.remove(node)
+                    else -> wtf("7a057f02-5004-4eb2-b7b7-46fb331f9eae")
+                }
+
+                node.treeItem.parent.children -= node.treeItem
+
+                dirty = true
+            }
+        }
+
+        fun addRenameMenuItem(menu: ContextMenu, node: FuckingNode) {
+            addMenuItem(menu, "Rename") {
+                val entity = node.entity
+                val nameProperty = when (entity) {
+                    // `let` here is a workaround for https://youtrack.jetbrains.com/issue/KT-17799
+                    is BotinokArena -> entity.let {it::name}
+                    is BotinokRegion -> entity.let {it::name}
+                    is BotinokPointer -> entity.let {it::name}
+                    else -> wtf("d980a3e1-ca51-43b1-aaa3-284a5ac277d1")
+                }
+                JFXStuff.inputBox("So, name?", nameProperty.get())?.let {
+                    nameProperty.set(it)
+                    val parentChildren = node.treeItem.parent.children
+                    val index = parentChildren.indexOf(node.treeItem)
+                    parentChildren.removeAt(index)
+                    parentChildren.add(index, node.treeItem)
+                    selectTreeItem(node.treeItem)
+                    dirty = true
+                }
             }
         }
 
@@ -673,12 +722,12 @@ class StartBotinok : Application() {
 //            boxContextMenu.hide()
         }
 
-        fun selectTreeItem(treeItem: TreeItem<out FuckingNode>) {
+        fun selectTreeItem(treeItem: TreeItem<out Any>) {
             @Suppress("UNCHECKED_CAST")
-            navigationTreeView.selectionModel.select(treeItem as TreeItem<FuckingNode>)
+            navigationTreeView.selectionModel.select(treeItem as FuckingTreeItem)
         }
 
-        fun handleTreeSelectionChanged(oldItem: TreeItem<FuckingNode>?, newItem: TreeItem<FuckingNode>?) {
+        fun handleTreeSelectionChanged(oldItem: FuckingTreeItem?, newItem: FuckingTreeItem?) {
             if (leftSplitPane.items.size > 1)
                 leftSplitPane.items.subList(1, leftSplitPane.items.size).clear()
 
@@ -692,7 +741,7 @@ class StartBotinok : Application() {
                 selectedRegionHandles = RegionHandle.values().toSet()
             }
 
-            newItem.pointerNode?.let {pointerNode ->
+            (newItem.value as? PointerNode)?.let {pointerNode->
                 val pileTextArea = TextArea()
                 leftSplitPane.items += pileTextArea
                 leftSplitPane.setDividerPosition(0, 0.8)
@@ -710,7 +759,7 @@ class StartBotinok : Application() {
             val gc = canvas.graphicsContext2D
             gc.drawImage(displayedArenaNode().image, 0.0, 0.0)
 
-            for (regionNode in displayedArenaNode().regions) {
+            for (regionNode in displayedArenaNode().regionNodes) {
                 val darkPaint = Color(0.5, 0.0, 0.0, 1.0)
                 val brightPaint = Color(1.0, 0.0, 0.0, 1.0)
 
@@ -730,13 +779,13 @@ class StartBotinok : Application() {
                             handle in selectedRegionHandles -> brightPaint
                             else -> darkPaint
                         }
-                        val rect = handle.rectForRegion(regionNode)
+                        val rect = handle.rectForRegion(regionNode.entity)
                         gc.fillRect(rect.minX, rect.minY, rect.width, rect.height)
                     }
                 }
             }
 
-            for (pointerNode in displayedArenaNode().pointers) {
+            for (pointerNode in displayedArenaNode().pointerNodes) {
                 val isFocused = selectedPointerNode() === pointerNode
 
                 val w = pointerWidth.toDouble()
@@ -780,18 +829,18 @@ class StartBotinok : Application() {
                 val xywh = initialRegionLocations[nextInitialRegionLocationIndex]
                 if (++nextInitialRegionLocationIndex > initialRegionLocations.lastIndex)
                     nextInitialRegionLocationIndex = 0
-                val newRegion = newBotinokRegion(name = "Region ${arenaNode.regions.size + 1}",
+                val newRegion = newBotinokRegion(name = "Region ${arenaNode.entity.regions.size + 1}",
                                                  x = xywh.x, y = xywh.y,
                                                  w = xywh.w, h = xywh.h,
                                                  arena = arenaNode.entity,
                                                  position = arenaNode.entity.regions.size)
                 arenaNode.entity.regions.add(newRegion)
                 dirty = true
-                val regionTreeItem = addTreeItemForEntity(newRegion, arenaNode)
+                val regionNode = RegionNode(newRegion, arenaNode)
                 arenaNode.treeItem.expandedProperty().set(true)
 
                 navigationTreeView.selectionModel.clearSelection()
-                navigationTreeView.selectionModel.select(regionTreeItem)
+                navigationTreeView.selectionModel.select(regionNode.treeItem)
             } catch (e: Throwable) {
                 e.printStackTrace()
             }
@@ -801,7 +850,7 @@ class StartBotinok : Application() {
             // TODO:vgrechka Dedupe
             try {
                 val arenaNode = displayedArenaNode()
-                val newPointer = newBotinokPointer(name = "Pointer ${arenaNode.pointers.size + 1}",
+                val newPointer = newBotinokPointer(name = "Pointer ${arenaNode.entity.pointers.size + 1}",
                                                    x = 50, y = 50,
                                                    pile = "{}",
                                                    language = "JavaScript",
@@ -810,40 +859,40 @@ class StartBotinok : Application() {
                                                    position = arenaNode.entity.pointers.size)
                 arenaNode.entity.pointers.add(newPointer)
                 dirty = true
-                val pointerTreeItem = addTreeItemForEntity(newPointer, arenaNode)
+                val pointerNode = PointerNode(newPointer, arenaNode)
                 arenaNode.treeItem.expandedProperty().set(true)
 
                 navigationTreeView.selectionModel.clearSelection()
-                navigationTreeView.selectionModel.select(pointerTreeItem)
+                navigationTreeView.selectionModel.select(pointerNode.treeItem)
             } catch (e: Throwable) {
                 e.printStackTrace()
             }
         }
 
-        fun displayedArenaNode(): EntityNode<BotinokArena> {
+        fun displayedArenaNode(): ArenaNode {
             val treeItem = selectedTreeItem()!!
-            treeItem.entityNodeOfType<BotinokArena>()?.let {return it}
-            treeItem.parent.entityNodeOfType<BotinokArena>()?.let {return it}
+            (treeItem.value as? ArenaNode)?.let {return it}
+            (treeItem.value as? ArenaChildNode<*>)?.let {return it.arenaNode}
             wtf("09eb5e83-448b-4b27-98fd-0ba002db4275")
         }
 
-        fun selectedRegionNode(): EntityNode<BotinokRegion>? {
+        fun selectedRegionNode(): RegionNode? {
             return selectedTreeItem()?.regionNode
         }
 
-        fun selectedPointerNode(): EntityNode<BotinokPointer>? {
+        fun selectedPointerNode(): PointerNode? {
             return selectedTreeItem()?.pointerNode
         }
 
-        val TreeItem<FuckingNode>.regionNode: EntityNode<BotinokRegion>? get() {
-            return this.entityNodeOfType()
+        val FuckingTreeItem.regionNode: RegionNode? get() {
+            return this.value as? RegionNode
         }
 
-        val TreeItem<FuckingNode>.pointerNode: EntityNode<BotinokPointer>? get() {
-            return this.entityNodeOfType()
+        val FuckingTreeItem.pointerNode: PointerNode? get() {
+            return this.value as? PointerNode
         }
 
-        fun selectedTreeItem(): TreeItem<FuckingNode>? =
+        fun selectedTreeItem(): FuckingTreeItem? =
             navigationTreeView.selectionModel.selectedItem
     }
 
@@ -860,13 +909,6 @@ class StartBotinok : Application() {
         }
     }
 
-    private fun <Entity : Any> addTreeItemForEntity(entity: Entity, parentNode: EntityNode<*>): TreeItem<FuckingNode> {
-        val newTreeItem = TreeItem<FuckingNode>()
-        val newNode = EntityNode(newTreeItem, entity)
-        newTreeItem.value = newNode
-        parentNode.treeItem.children += newTreeItem
-        return newTreeItem
-    }
 
     private fun installKeyboardHook() {
         val logger = Logger.getLogger(GlobalScreen::class.java.`package`.name)
@@ -903,7 +945,7 @@ class StartBotinok : Application() {
 //                val pointerTreeItem = bananas.selectedArenaNode().treeItem.children
 //                    .find {it.asOfEntityType<BotinokPointer>() != null}
 //                    ?: wtf("228ade45-63d1-4aab-966d-2a8ddc0fedec")
-//                bananas.navigationTreeView.selectionModel.select(pointerTreeItem as TreeItem<FuckingNode>)
+//                bananas.navigationTreeView.selectionModel.select(pointerTreeItem as FuckingTreeItem)
 //            }
 //            Thread.sleep(500)
 //            JFXStuff.later {handleEnterKeyInPlaySelector()}
@@ -930,14 +972,15 @@ class StartBotinok : Application() {
                 noise("Saved screenshot")
             }
 
+            val play = bananas.playNode.entity
             val arena = newBotinokArena(name = "Arena ${getArenaCount() + 1}",
                                         screenshot = File(tmpImgPath).readBytes(),
                                         play = play,
                                         position = play.arenas.size)
             play.arenas.add(arena)
             dirty = true
-            addTreeItemForArena(arena)
-            bananas.navigationTreeView.scrollTo(bananas.rootTreeItem.children.lastIndex)
+            ArenaNode(arena, bananas.playNode)
+            bananas.navigationTreeView.scrollTo(bananas.playNode.treeItem.children.lastIndex)
             selectLastTreeItem()
 
             JFXStuff.later {
@@ -949,39 +992,38 @@ class StartBotinok : Application() {
         }
     }
 
-    private fun addTreeItemForArena(arena: BotinokArena): TreeItem<FuckingNode> {
-        val treeItem = TreeItem<FuckingNode>()
-        val arenaNode = EntityNode(treeItem, arena)
-        treeItem.value = arenaNode
-        bananas.rootTreeItem.children.add(treeItem)
-        return treeItem
-    }
-
     private fun selectLastTreeItem() {
         bananas.navigationTreeView.selectionModel.clearSelection()
         bananas.navigationTreeView.selectionModel.selectLast()
     }
 
-
     fun getArenaCount(): Int {
-        return bananas.rootTreeItem.children.size
+        return bananas.playNode.treeItem.children.size
     }
 
     fun action_save() {
         backPlatform.tx {
-            (bananas.rootTreeItem.value as RootNode).play = botinokPlayRepo.save(play)
+            val playNode = bananas.playNode
+            var swappedEntities = 0
+
+            playNode.entity = botinokPlayRepo.save(playNode.entity)
+            ++swappedEntities
 
             var arenaIndex = 0
-            for (arenaTreeItem in bananas.rootTreeItem.children) {
-                val arenaNode = arenaTreeItem.entityNodeOfType<BotinokArena>() ?: wtf("58560832-c585-443b-a8d5-e5d948f6bb85")
-                arenaNode.entity = play.arenas[arenaIndex++]
-                var regionIndex = 0
-                var pointerIndex = 0
-                for (child in arenaTreeItem.children) {
-                    child.entityNodeOfType<BotinokRegion>()?.let {it.entity = arenaNode.entity.regions[regionIndex++]}
-                    child.entityNodeOfType<BotinokPointer>()?.let {it.entity = arenaNode.entity.pointers[pointerIndex++]}
+            for (arenaNode in playNode.childNodes) {
+                arenaNode.arena = playNode.entity.arenas[arenaIndex++]
+                ++swappedEntities
+                for ((index, regionNode) in arenaNode.regionNodes.withIndex()) {
+                    regionNode.entity = arenaNode.entity.regions[index]
+                    ++swappedEntities
+                }
+                for ((index, pointerNode) in arenaNode.pointerNodes.withIndex()) {
+                    pointerNode.entity = arenaNode.entity.pointers[index]
+                    ++swappedEntities
                 }
             }
+
+            noise("swappedEntities = $swappedEntities")
         }
 
         dirty = false
@@ -996,7 +1038,7 @@ class StartBotinok : Application() {
         bananas.statusLabel.text = "Running..."
         stopRequested = false
         thread {
-            arenas@for (arena in play.arenas) {
+            arenas@for (arena in bananas.playNode.entity.arenas) {
                 if (arena.regions.isEmpty()) {
                     noise("Arena ${arena.name}: no regions -- skipping")
                     continue@arenas
@@ -1087,16 +1129,7 @@ class StartBotinok : Application() {
     }
 
     fun findPointer(arenaIndex: Int, pointerIndex: Int = 0): BotinokPointer {
-        return play.arenas[arenaIndex].pointers[pointerIndex]
-    }
-
-
-    val TreeItem<FuckingNode>.entity: Any get() {
-        return (this.value as EntityNode<*>).entity
-    }
-
-    val TreeItem<FuckingNode>?.maybeEntity: Any? get() {
-        return (this?.value as? EntityNode<*>)?.entity
+        return bananas.playNode.entity.arenas[arenaIndex].pointers[pointerIndex]
     }
 
     companion object {
