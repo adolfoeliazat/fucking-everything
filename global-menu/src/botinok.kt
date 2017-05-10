@@ -47,7 +47,7 @@ import kotlin.system.exitProcess
 
 // delete from botinok_regions; delete from botinok_pointers; delete from botinok_arenas; delete from botinok_plays;
 
-// TODO:vgrechka Sanity check during model loading (e.g. positions are correct)
+// TODO:vgrechka Sanity checks during model loading (e.g. positions are correct)
 //               Show a message if something is messed up
 
 object BotinokStuff {
@@ -116,6 +116,20 @@ sealed class FuckingNode
 
 class RootNode(var play: BotinokPlay) : FuckingNode()
 
+class EntityNode<T : Any>(
+    val treeItem: TreeItem<FuckingNode>,
+    var entity: T
+)
+    : FuckingNode()
+{
+    inline fun <reified U : Any> cast(): EntityNode<U> {
+        check(entity is U) {"5bb21908-affd-4cad-95de-97b1e330fdc7"}
+        @Suppress("UNCHECKED_CAST") return this as EntityNode<U>
+    }
+
+    override fun toString() = entityNameProperty(entity).get()
+}
+
 val EntityNode<BotinokArena>.image by AttachedComputedShit<EntityNode<BotinokArena>, Image> {
     Image(it.entity.screenshot.inputStream())
 }
@@ -134,22 +148,23 @@ inline fun <reified T : Any> EntityNode<BotinokArena>.entityNodesOfType(): List<
         }
     }
 
+inline fun <reified Entity : Any> TreeItem<FuckingNode>.entityNodeOfType(): EntityNode<Entity>? {
+    val entityNode = this.value as? EntityNode<*> ?: return null
+    return when {
+        entityNode.entity is Entity ->
+            @Suppress("UNCHECKED_CAST")
+            (entityNode as EntityNode<Entity>)
+        else -> null
+    }
+}
+
+
 val EntityNode<BotinokArena>.regions: List<EntityNode<BotinokRegion>>
     get() = entityNodesOfType()
 
 val EntityNode<BotinokArena>.pointers: List<EntityNode<BotinokPointer>>
     get() = entityNodesOfType()
 
-class EntityNode<T : Any>(val treeItem: TreeItem<FuckingNode>,
-                          var entity: T) : FuckingNode()
-{
-    inline fun <reified U : Any> cast(): EntityNode<U> {
-        check(entity is U) {"5bb21908-affd-4cad-95de-97b1e330fdc7"}
-        @Suppress("UNCHECKED_CAST") return this as EntityNode<U>
-    }
-
-    override fun toString() = entityNameProperty(entity).get()
-}
 
 fun entityNameProperty(x: Any) = when (x) {
     // XXX Explicit casts are to work around Kotlin bug
@@ -366,7 +381,7 @@ class StartBotinok : Application() {
             val scrollPane = ScrollPane()
             stretch(scrollPane)
             detailsPane.children += scrollPane
-            val canvas = Canvas(selectedArenaNode().image.width, selectedArenaNode().image.height)
+            val canvas = Canvas(displayedArenaNode().image.width, displayedArenaNode().image.height)
 
             drawingAreaStackPane = StackPane()
             drawingAreaStackPane.children += canvas
@@ -377,7 +392,7 @@ class StartBotinok : Application() {
                     // noise("MOUSE_PRESSED: e.x = ${e.x}; e.y = ${e.y}")
                     hideContextMenus()
                     val hitRegionNode: EntityNode<BotinokRegion>? = run {
-                        o@for (region in selectedArenaNode().regions) {
+                        o@for (region in displayedArenaNode().regions) {
                             for (handle in RegionHandle.values()) {
                                 if (handle.rectForRegion(region).contains(e.x, e.y)) {
                                     selectedRegionHandles = setOf(handle)
@@ -398,7 +413,7 @@ class StartBotinok : Application() {
                         operationStartMouseY = e.y
                         // noise("operationStartMouseX = $operationStartMouseX; operationStartMouseY = $operationStartMouseY")
                     } else {
-                        val hitPointerNode: EntityNode<BotinokPointer>? = selectedArenaNode().pointers.find {
+                        val hitPointerNode: EntityNode<BotinokPointer>? = displayedArenaNode().pointers.find {
                             val p = it.entity
                             val pointerRect = Rectangle2D(p.x.toDouble(), p.y.toDouble(), pointerWidth.toDouble(), pointerHeight.toDouble())
                             pointerRect.contains(e.x, e.y)
@@ -409,7 +424,7 @@ class StartBotinok : Application() {
                             operationStartMouseX = e.x
                             operationStartMouseY = e.y
                         } else {
-                            selectTreeItem(selectedArenaNode().treeItem)
+                            selectTreeItem(displayedArenaNode().treeItem)
                         }
                     }
                 }
@@ -693,9 +708,9 @@ class StartBotinok : Application() {
 
         fun drawArena() {
             val gc = canvas.graphicsContext2D
-            gc.drawImage(selectedArenaNode().image, 0.0, 0.0)
+            gc.drawImage(displayedArenaNode().image, 0.0, 0.0)
 
-            for (regionNode in selectedArenaNode().regions) {
+            for (regionNode in displayedArenaNode().regions) {
                 val darkPaint = Color(0.5, 0.0, 0.0, 1.0)
                 val brightPaint = Color(1.0, 0.0, 0.0, 1.0)
 
@@ -721,7 +736,7 @@ class StartBotinok : Application() {
                 }
             }
 
-            for (pointerNode in selectedArenaNode().pointers) {
+            for (pointerNode in displayedArenaNode().pointers) {
                 val isFocused = selectedPointerNode() === pointerNode
 
                 val w = pointerWidth.toDouble()
@@ -761,7 +776,7 @@ class StartBotinok : Application() {
 
         fun action_newRegion() {
             try {
-                val arenaNode = selectedArenaNode()
+                val arenaNode = displayedArenaNode()
                 val xywh = initialRegionLocations[nextInitialRegionLocationIndex]
                 if (++nextInitialRegionLocationIndex > initialRegionLocations.lastIndex)
                     nextInitialRegionLocationIndex = 0
@@ -785,7 +800,7 @@ class StartBotinok : Application() {
         fun action_newPointer() {
             // TODO:vgrechka Dedupe
             try {
-                val arenaNode = selectedArenaNode()
+                val arenaNode = displayedArenaNode()
                 val newPointer = newBotinokPointer(name = "Pointer ${arenaNode.pointers.size + 1}",
                                                    x = 50, y = 50,
                                                    pile = "{}",
@@ -805,8 +820,11 @@ class StartBotinok : Application() {
             }
         }
 
-        fun selectedArenaNode(): EntityNode<BotinokArena> {
-            return selectedTreeItem()!!.correspondingArenaNode
+        fun displayedArenaNode(): EntityNode<BotinokArena> {
+            val treeItem = selectedTreeItem()!!
+            treeItem.entityNodeOfType<BotinokArena>()?.let {return it}
+            treeItem.parent.entityNodeOfType<BotinokArena>()?.let {return it}
+            wtf("09eb5e83-448b-4b27-98fd-0ba002db4275")
         }
 
         fun selectedRegionNode(): EntityNode<BotinokRegion>? {
@@ -827,30 +845,6 @@ class StartBotinok : Application() {
 
         fun selectedTreeItem(): TreeItem<FuckingNode>? =
             navigationTreeView.selectionModel.selectedItem
-
-        inline fun <reified T : Any> EntityNode<*>.asOfEntityType(): EntityNode<T>? {
-            val entity = this.entity
-            return when (entity) {
-                is T -> @Suppress("UNCHECKED_CAST") (this as EntityNode<T>)
-                else -> null
-            }
-        }
-
-        val TreeItem<FuckingNode>.correspondingArenaNode: EntityNode<BotinokArena> get() {
-            this.entityNodeOfType<BotinokArena>()?.let {return it}
-            this.parent.entityNodeOfType<BotinokArena>()?.let {return it}
-            wtf("09eb5e83-448b-4b27-98fd-0ba002db4275")
-        }
-    }
-
-    inline fun <reified Entity : Any> TreeItem<FuckingNode>.entityNodeOfType(): EntityNode<Entity>? {
-        val entityNode = this.value as? EntityNode<*> ?: return null
-        return when {
-            entityNode.entity is Entity ->
-                @Suppress("UNCHECKED_CAST")
-                (entityNode as EntityNode<Entity>)
-            else -> null
-        }
     }
 
     private fun stretch(node: Node) {
@@ -1096,24 +1090,6 @@ class StartBotinok : Application() {
         return play.arenas[arenaIndex].pointers[pointerIndex]
     }
 
-//    inline fun <reified T : Any> TreeItem<*>?.asOfEntityType(): TreeItem<EntityNode<T>>? {
-//        val entityNode = this?.value as? EntityNode<*> ?: return null
-//        val entity = entityNode.entity
-//        return if (entity is T)
-//            @Suppress("UNCHECKED_CAST") (this as TreeItem<EntityNode<T>>)
-//        else
-//            null
-//    }
-
-    inline fun <reified T : Any> TreeItem<FuckingNode>?.entityOfType(): TreeItem<FuckingNode>? {
-        imf("7701073b-fb63-484e-9f3e-8a39458202cd")
-//        val entityNode = this?.value as? EntityNode<*> ?: return null
-//        val entity = entityNode.entity
-//        return if (entity is T)
-//            @Suppress("UNCHECKED_CAST") (this as TreeItem<EntityNode<T>>)
-//        else
-//            null
-    }
 
     val TreeItem<FuckingNode>.entity: Any get() {
         return (this.value as EntityNode<*>).entity
