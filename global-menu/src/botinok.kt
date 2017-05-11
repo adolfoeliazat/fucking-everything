@@ -13,7 +13,6 @@ import javafx.scene.Node
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.*
-import javafx.scene.image.Image
 import javafx.scene.input.ContextMenuEvent
 import javafx.scene.input.KeyCode
 import javafx.scene.input.MouseButton
@@ -47,7 +46,7 @@ import kotlin.system.exitProcess
 
 // delete from botinok_regions; delete from botinok_pointers; delete from botinok_arenas; delete from botinok_plays;
 
-// TODO:vgrechka Sanity checks during model loading (e.g. positions are correct)
+// TODO:vgrechka Sanity checks during model loading (e.g. that positions are correct)
 //               Show a message if something is messed up
 
 object BotinokStuff {
@@ -145,101 +144,6 @@ enum class RegionHandle {
 }
 
 typealias FuckingTreeItem = TreeItem<Any>
-
-fun getNodeType(node: Any): BotinokNodeType {
-    return (node as PussyNode<*, *, *>).type as BotinokNodeType
-}
-
-class NodeShit<Entity : Any>(val node: Any, val parentNodeShit: NodeShit<*>?) {
-    val treeItem = FuckingTreeItem(node)
-    val childNodes = mutableListOf<Any>()
-    var vagina by notNull<Entity>()
-    var parentNode by notNullOnce<Any>()
-
-
-    init {
-        treeItem.value = node
-        if (parentNodeShit != null) {
-            parentNodeShit.treeItem.children += treeItem
-            parentNodeShit.childNodes += node
-        }
-    }
-
-    val entity get() = vagina
-
-    inline fun <reified T> childrenOfType(type: BotinokNodeType): List<T> {
-        return childNodes.collect<Any, Any> {if (getNodeType(it) == type) yield(it)} as List<T>
-    }
-}
-
-
-class PussyNode<Type: Enum<Type>, Entity : Any, Stuff : Any>(
-    val type: Type,
-    val nodeTitle: (PussyNode<Type, Entity, Stuff>) -> String
-) : FuckingNode {
-    override var shit by notNullOnce<NodeShit<Entity>>()
-    var stuff by notNullOnce<Stuff>()
-    override fun toString() = nodeTitle(this)
-}
-
-fun <Type: Enum<Type>, Entity : Any, Stuff : Any>
-    nodeFactory(type: Type,
-                makeStuff: (NodeShit<Entity>) -> Stuff,
-                getNodeTitle: (PussyNode<Type, Entity, Stuff>) -> String)
-    : (Entity, parentNode: PussyNode<*, *, *>?) -> PussyNode<Type, Entity, Stuff>
-{
-    return {entity, parentNode ->
-        val node = PussyNode(type, nodeTitle = getNodeTitle)
-        node.shit = NodeShit<Entity>(node, parentNodeShit = parentNode?.shit)
-        node.shit.vagina = entity
-        if (parentNode != null)
-            node.shit.parentNode = parentNode
-        node.stuff = makeStuff(node.shit)
-        node
-    }
-}
-
-enum class BotinokNodeType {
-    PLAY, ARENA, REGION, POINTER
-}
-
-typealias PlayNode = PussyNode<BotinokNodeType, BotinokPlay, Unit>
-val newPlayNode = nodeFactory<BotinokNodeType, BotinokPlay, Unit>(
-    BotinokNodeType.PLAY,
-    makeStuff = {Unit},
-    getNodeTitle = {it.shit.vagina.name})
-
-typealias ArenaNode = PussyNode<BotinokNodeType, BotinokArena, ArenaNodeStuff>
-val newArenaNode = nodeFactory<BotinokNodeType, BotinokArena, ArenaNodeStuff>(
-    BotinokNodeType.ARENA,
-    makeStuff = {ArenaNodeStuff(it)},
-    getNodeTitle = {it.shit.vagina.name})
-
-class ArenaNodeStuff(val shit: NodeShit<BotinokArena>) {
-    val regionNodes get() = shit.childrenOfType<RegionNode>(BotinokNodeType.REGION)
-    val pointerNodes get() = shit.childrenOfType<PointerNode>(BotinokNodeType.POINTER)
-
-    val image by lazy {
-        Image(shit.vagina.screenshot.inputStream())
-    }
-}
-
-typealias RegionNode = PussyNode<BotinokNodeType, BotinokRegion, Unit>
-val newRegionNode = nodeFactory<BotinokNodeType, BotinokRegion, Unit>(
-    BotinokNodeType.REGION,
-    makeStuff = {Unit},
-    getNodeTitle = {it.shit.vagina.name})
-
-typealias PointerNode = PussyNode<BotinokNodeType, BotinokPointer, Unit>
-val newPointerNode = nodeFactory<BotinokNodeType, BotinokPointer, Unit>(
-    BotinokNodeType.POINTER,
-    makeStuff = {Unit},
-    getNodeTitle = {it.shit.vagina.name})
-
-
-interface FuckingNode {
-    val shit: NodeShit<*>
-}
 
 class StartBotinok : Application() {
     var primaryStage by notNullOnce<Stage>()
@@ -353,7 +257,7 @@ class StartBotinok : Application() {
             bananas = goBananas2(botinokPlayRepo.findOne(_play.id)!!)
             updateStageTitle()
 
-            val arenas = bananas.playNode.shit.entity.arenas
+            val arenas = bananas.playNode.iplay.arenas
             arenas.sortBy {it.position}
             for (arena in arenas) {
                 val arenaNode = newArenaNode(arena, bananas.playNode)
@@ -369,7 +273,7 @@ class StartBotinok : Application() {
                 }
             }
 
-            val rootItems = bananas.playNode.shit.treeItem.children
+            val rootItems = bananas.playNode.treeItem.children
             if (rootItems.isNotEmpty()) {
                 val arenaItem = rootItems.first()
                 bananas.navigationTreeView.selectionModel.select(arenaItem)
@@ -383,7 +287,7 @@ class StartBotinok : Application() {
     }
 
     private fun updateStageTitle() {
-        primaryStage.title = "Botinok - ${bananas.playNode.shit.entity.name}${dirty.thenElseEmpty{" *"}}"
+        primaryStage.title = "Botinok - ${bananas.playNode.iplay.entity.name}${dirty.thenElseEmpty{" *"}}"
     }
 
     private fun seed() {
@@ -424,7 +328,7 @@ class StartBotinok : Application() {
         val statusLabel: Label
         var runMenuItem by notNullOnce<MenuItem>()
         var stopMenuItem by notNullOnce<MenuItem>()
-        val playNode: PlayNode
+        val playNode: PussyNode
 
         inner class RegionLocation(val x: Int, val y: Int, val w: Int, val h: Int)
 
@@ -446,7 +350,7 @@ class StartBotinok : Application() {
             val scrollPane = ScrollPane()
             stretch(scrollPane)
             detailsPane.children += scrollPane
-            val canvas = Canvas(displayedArenaNode().stuff.image.width, displayedArenaNode().stuff.image.height)
+            val canvas = Canvas(displayedArenaNode().image.width, displayedArenaNode().image.height)
 
             drawingAreaStackPane = StackPane()
             drawingAreaStackPane.children += canvas
@@ -456,40 +360,40 @@ class StartBotinok : Application() {
                 if (e.button == MouseButton.PRIMARY) {
                     // noise("MOUSE_PRESSED: e.x = ${e.x}; e.y = ${e.y}")
                     hideContextMenus()
-                    val hitRegionNode: RegionNode? = run {
-                        o@for (regionNode in displayedArenaNode().stuff.regionNodes) {
+                    val hitRegionNode: PussyNode.IRegion? = run {
+                        o@for (iregion in displayedArenaNode().regionNodes) {
                             for (handle in RegionHandle.values()) {
-                                if (handle.rectForRegion(regionNode.shit.vagina).contains(e.x, e.y)) {
+                                if (handle.rectForRegion(iregion.entity).contains(e.x, e.y)) {
                                     selectedRegionHandles = setOf(handle)
-                                    return@run regionNode
+                                    return@run iregion
                                 }
                             }
-                            if (isHit(regionNode.shit.vagina, e.x, e.y)) {
+                            if (isHit(iregion.entity, e.x, e.y)) {
                                 selectedRegionHandles = RegionHandle.values().toSet()
-                                return@run regionNode
+                                return@run iregion
                             }
                         }
                         null
                     }
                     if (hitRegionNode != null) {
-                        selectTreeItem(hitRegionNode.shit.treeItem)
-                        operationStartRegionParams = Box(hitRegionNode.shit.vagina.x, hitRegionNode.shit.vagina.y, hitRegionNode.shit.vagina.w, hitRegionNode.shit.vagina.h)
+                        selectTreeItem(hitRegionNode.node.treeItem)
+                        operationStartRegionParams = Box(hitRegionNode.entity.x, hitRegionNode.entity.y, hitRegionNode.entity.w, hitRegionNode.entity.h)
                         operationStartMouseX = e.x
                         operationStartMouseY = e.y
                         // noise("operationStartMouseX = $operationStartMouseX; operationStartMouseY = $operationStartMouseY")
                     } else {
-                        val hitPointerNode: PointerNode? = displayedArenaNode().stuff.pointerNodes.find {
-                            val p = it.shit.vagina
+                        val hitPointerNode: PussyNode.IPointer? = displayedArenaNode().pointerNodes.find {
+                            val p = it.entity
                             val pointerRect = Rectangle2D(p.x.toDouble(), p.y.toDouble(), pointerWidth.toDouble(), pointerHeight.toDouble())
                             pointerRect.contains(e.x, e.y)
                         }
                         if (hitPointerNode != null) {
-                            selectTreeItem(hitPointerNode.shit.treeItem)
-                            operationStartRegionParams = Box(hitPointerNode.shit.vagina.x, hitPointerNode.shit.vagina.y, -123, -123)
+                            selectTreeItem(hitPointerNode.node.treeItem)
+                            operationStartRegionParams = Box(hitPointerNode.entity.x, hitPointerNode.entity.y, -123, -123)
                             operationStartMouseX = e.x
                             operationStartMouseY = e.y
                         } else {
-                            selectTreeItem(displayedArenaNode().shit.treeItem)
+                            selectTreeItem(displayedArenaNode().node.treeItem)
                         }
                     }
                 }
@@ -518,16 +422,18 @@ class StartBotinok : Application() {
                         val dragMutators = selectedRegionHandles.flatMap{it.dragMutators}.toSet()
                         val points = BoxPoints(operationStartRegionParams.x, operationStartRegionParams.y, operationStartRegionParams.x + operationStartRegionParams.w - 1, operationStartRegionParams.y + operationStartRegionParams.h - 1)
                         dragMutators.forEach {it.mutate(points, dx, dy)}
-                        selectedRegion.shit.vagina.x = points.minX
-                        selectedRegion.shit.vagina.y = points.minY
-                        selectedRegion.shit.vagina.w = points.maxX - points.minX + 1
-                        selectedRegion.shit.vagina.h = points.maxY - points.minY + 1
+                        val en = selectedRegion.entity
+                        en.x = points.minX
+                        en.y = points.minY
+                        en.w = points.maxX - points.minX + 1
+                        en.h = points.maxY - points.minY + 1
                         updateShit()
                     } else {
                         val selectedPointer = selectedPointerNode()
                         if (selectedPointer != null) {
-                            selectedPointer.shit.vagina.x = operationStartRegionParams.x + dx
-                            selectedPointer.shit.vagina.y = operationStartRegionParams.y + dy
+                            val en = selectedPointer.entity
+                            en.x = operationStartRegionParams.x + dx
+                            en.y = operationStartRegionParams.y + dy
                             updateShit()
                         }
                     }
@@ -620,8 +526,8 @@ class StartBotinok : Application() {
                 }
             }
 
-            playNode = newPlayNode(_play, null)
-            navigationTreeView.root = playNode.shit.treeItem
+            playNode = newPlayNode(_play)
+            navigationTreeView.root = playNode.treeItem
             navigationTreeView.root.isExpanded = true
 
             primaryStage.scene = Scene(vbox)
@@ -636,8 +542,8 @@ class StartBotinok : Application() {
             val treeItem = navigationTreeView.selectionModel.selectedItem
             val menu = ContextMenu()
 
-            val node = treeItem.value as PussyNode<*, *, *>
-            exhaustive=when (node.type as BotinokNodeType) {
+            val node = treeItem.value as PussyNode
+            exhaustive=when (node.type) {
                 BotinokNodeType.ARENA -> {
                     addRenameMenuItem(menu, node)
                     addMoveMenuItems(menu, node)
@@ -666,15 +572,15 @@ class StartBotinok : Application() {
             }
         }
 
-        private fun addMoveMenuItems(menu: ContextMenu, node: FuckingNode) {
+        private fun addMoveMenuItems(menu: ContextMenu, node: PussyNode) {
             // TODO:vgrechka Generalize. Currently works only for arenas
-
-            val treeItem = node.shit.treeItem
+            val iarena = node.iarena
+            val treeItem = node.treeItem
 
             fun move(delta: Int) {
                 run { // Entities
-                    val arena = node.shit.entity as BotinokArena
-                    val play = bananas.playNode.shit.entity
+                    val arena = iarena.entity
+                    val play = bananas.playNode.iplay.entity
                     val index = play.arenas.indexOfOrNull(arena) ?: wtf("db8f6365-cf88-494f-8f6a-7a07b11c01f5")
 
                     val a = play.arenas[index]
@@ -685,13 +591,13 @@ class StartBotinok : Application() {
                     play.arenas[index].position = play.arenas[index + delta].position
                     play.arenas[index + delta].position = p
 
-                    val n = playNode.shit.childNodes[index]
-                    playNode.shit.childNodes[index] = playNode.shit.childNodes[index + delta]
-                    playNode.shit.childNodes[index + delta] = n
+                    val n = playNode.childNodes[index]
+                    playNode.childNodes[index] = playNode.childNodes[index + delta]
+                    playNode.childNodes[index + delta] = n
                 }
 
                 run { // Tree
-                    val rootTreeItem = playNode.shit.treeItem
+                    val rootTreeItem = playNode.treeItem
                     val index = rootTreeItem.children.indexOfOrNull(treeItem) ?: wtf("5df53fb4-534a-49df-832d-ee31043c7f19")
                     val tmp = rootTreeItem.children[index]
                     rootTreeItem.children[index] = rootTreeItem.children[index + delta]
@@ -709,9 +615,9 @@ class StartBotinok : Application() {
                 addMenuItem(menu, "Move Down") {move(+1)}
         }
 
-        private fun addDeleteMenuItem(menu: ContextMenu, node: FuckingNode) {
+        private fun addDeleteMenuItem(menu: ContextMenu, node: PussyNode) {
             addMenuItem(menu, "Delete") {
-                val entity = node.shit.entity
+                val entity = node.entity
                 val collection = when (entity) {
                     is BotinokArena -> entity.play.arenas
                     is BotinokRegion -> entity.arena.regions
@@ -725,44 +631,31 @@ class StartBotinok : Application() {
                     val x = collection[index]
                     val positionProperty = when (x) {
                         // `let` here is a workaround for https://youtrack.jetbrains.com/issue/KT-17799
-                        is BotinokArena -> x.let<BotinokArena, KMutableProperty0<Int>> {it::position}
-                        is BotinokRegion -> x.let<BotinokRegion, KMutableProperty0<Int>> {it::position}
-                        is BotinokPointer -> x.let<BotinokPointer, KMutableProperty0<Int>> {it::position}
+                        is BotinokArena -> x.let {it::position}
+                        is BotinokRegion -> x.let {it::position}
+                        is BotinokPointer -> x.let {it::position}
                         else -> wtf("22a2f24c-2395-4ad8-806e-70fc3f10c7ec")
                     }
                     positionProperty.set(positionProperty.get() - 1)
                 }
 
-                exhaustive=when (getNodeType(node)) {
-                    BotinokNodeType.ARENA -> getChildNodes(node).remove(node)
-                    BotinokNodeType.REGION -> getChildNodes(node).remove(node)
-                    BotinokNodeType.POINTER -> getChildNodes(node).remove(node)
-                    else -> wtf("7a057f02-5004-4eb2-b7b7-46fb331f9eae")
-                }
-
-                node.shit.treeItem.parent.children -= node.shit.treeItem
-
+                node.parent!!.childNodes.remove(node)
+                node.treeItem.parent.children -= node.treeItem
                 dirty = true
             }
         }
 
-        fun addRenameMenuItem(menu: ContextMenu, node: FuckingNode) {
+        fun addRenameMenuItem(menu: ContextMenu, node: PussyNode) {
             addMenuItem(menu, "Rename") {
-                val entity = node.shit.entity
-                val nameProperty = when (entity) {
-                    // `let` here is a workaround for https://youtrack.jetbrains.com/issue/KT-17799
-                    is BotinokArena -> entity.let {it::name}
-                    is BotinokRegion -> entity.let {it::name}
-                    is BotinokPointer -> entity.let {it::name}
-                    else -> wtf("d980a3e1-ca51-43b1-aaa3-284a5ac277d1")
-                }
+                val entity = node.entity
+                val nameProperty = BotinokPile.entityNameProperty(entity)
                 JFXStuff.inputBox("So, name?", nameProperty.get())?.let {
                     nameProperty.set(it)
-                    val parentChildren = node.shit.treeItem.parent.children
-                    val index = parentChildren.indexOf(node.shit.treeItem)
+                    val parentChildren = node.treeItem.parent.children
+                    val index = parentChildren.indexOf(node.treeItem)
                     parentChildren.removeAt(index)
-                    parentChildren.add(index, node.shit.treeItem)
-                    selectTreeItem(node.shit.treeItem)
+                    parentChildren.add(index, node.treeItem)
+                    selectTreeItem(node.treeItem)
                     dirty = true
                 }
             }
@@ -793,15 +686,15 @@ class StartBotinok : Application() {
                 selectedRegionHandles = RegionHandle.values().toSet()
             }
 
-            val node = newItem.value
-            val type = getNodeType(node)
+            val node = newItem.value as PussyNode
+            val type = node.type
             if (type == BotinokNodeType.POINTER) {
                 val pileTextArea = TextArea()
                 leftSplitPane.items += pileTextArea
                 leftSplitPane.setDividerPosition(0, 0.8)
-                pileTextArea.text = node.getPropChain("shit.vagina.pile") as String
+                pileTextArea.text = node.ipointer.entity.pile
                 pileTextArea.textProperty().addListener {_, _, newValue->
-                    node.setPropChain("shit.vagina.pile", newValue)
+                    node.ipointer.entity.pile = newValue
                     dirty = true
                 }
             }
@@ -811,13 +704,13 @@ class StartBotinok : Application() {
 
         fun drawArena() {
             val gc = canvas.graphicsContext2D
-            gc.drawImage(displayedArenaNode().stuff.image, 0.0, 0.0)
+            gc.drawImage(displayedArenaNode().image, 0.0, 0.0)
 
-            for (regionNode in displayedArenaNode().stuff.regionNodes) {
+            for (iregion in displayedArenaNode().regionNodes) {
                 val darkPaint = Color(0.5, 0.0, 0.0, 1.0)
                 val brightPaint = Color(1.0, 0.0, 0.0, 1.0)
 
-                val isFocused = selectedRegionNode() === regionNode
+                val isFocused = selectedRegionNode() === iregion
 
                 gc.stroke = when {
                     isFocused -> darkPaint
@@ -825,7 +718,10 @@ class StartBotinok : Application() {
                 }
                 val b = BotinokStuff
                 gc.lineWidth = b.boxEdgeSize
-                gc.strokeRect(regionNode.shit.vagina.x.toDouble() - b.boxEdgeSize / 2, regionNode.shit.vagina.y.toDouble() - b.boxEdgeSize / 2, regionNode.shit.vagina.w.toDouble() + b.boxEdgeSize, regionNode.shit.vagina.h.toDouble() + b.boxEdgeSize)
+                gc.strokeRect(iregion.entity.x.toDouble() - b.boxEdgeSize / 2,
+                              iregion.entity.y.toDouble() - b.boxEdgeSize / 2,
+                              iregion.entity.w.toDouble() + b.boxEdgeSize,
+                              iregion.entity.h.toDouble() + b.boxEdgeSize)
 
                 if (isFocused) {
                     for (handle in RegionHandle.values()) {
@@ -833,19 +729,19 @@ class StartBotinok : Application() {
                             handle in selectedRegionHandles -> brightPaint
                             else -> darkPaint
                         }
-                        val rect = handle.rectForRegion(regionNode.shit.vagina)
+                        val rect = handle.rectForRegion(iregion.entity)
                         gc.fillRect(rect.minX, rect.minY, rect.width, rect.height)
                     }
                 }
             }
 
-            for (pointerNode in displayedArenaNode().stuff.pointerNodes) {
-                val isFocused = selectedPointerNode() === pointerNode
+            for (ipointer in displayedArenaNode().pointerNodes) {
+                val isFocused = selectedPointerNode() === ipointer
 
                 val w = pointerWidth.toDouble()
                 val h = pointerHeight.toDouble()
-                val x0 = pointerNode.shit.vagina.x.toDouble()
-                val y0 = pointerNode.shit.vagina.y.toDouble()
+                val x0 = ipointer.entity.x.toDouble()
+                val y0 = ipointer.entity.y.toDouble()
                 val x1 = x0 + w - 1
                 val y1 = y0 + h - 1
 
@@ -883,18 +779,18 @@ class StartBotinok : Application() {
                 val xywh = initialRegionLocations[nextInitialRegionLocationIndex]
                 if (++nextInitialRegionLocationIndex > initialRegionLocations.lastIndex)
                     nextInitialRegionLocationIndex = 0
-                val newRegion = newBotinokRegion(name = "Region ${arenaNode.shit.vagina.regions.size + 1}",
+                val newRegion = newBotinokRegion(name = "Region ${arenaNode.entity.regions.size + 1}",
                                                  x = xywh.x, y = xywh.y,
                                                  w = xywh.w, h = xywh.h,
-                                                 arena = arenaNode.shit.vagina,
-                                                 position = arenaNode.shit.vagina.regions.size)
-                arenaNode.shit.vagina.regions.add(newRegion)
+                                                 arena = arenaNode.entity,
+                                                 position = arenaNode.entity.regions.size)
+                arenaNode.entity.regions.add(newRegion)
                 dirty = true
-                val regionNode = newRegionNode(newRegion, arenaNode)
-                arenaNode.shit.treeItem.expandedProperty().set(true)
+                val regionNode = newRegionNode(newRegion, arenaNode.node)
+                arenaNode.node.treeItem.expandedProperty().set(true)
 
                 navigationTreeView.selectionModel.clearSelection()
-                navigationTreeView.selectionModel.select(regionNode.shit.treeItem)
+                navigationTreeView.selectionModel.select(regionNode.treeItem)
             } catch (e: Throwable) {
                 e.printStackTrace()
             }
@@ -904,58 +800,57 @@ class StartBotinok : Application() {
             // TODO:vgrechka Dedupe
             try {
                 val arenaNode = displayedArenaNode()
-                val newPointer = newBotinokPointer(name = "Pointer ${arenaNode.shit.vagina.pointers.size + 1}",
+                val newPointer = newBotinokPointer(name = "Pointer ${arenaNode.entity.pointers.size + 1}",
                                                    x = 50, y = 50,
                                                    pile = "{}",
                                                    language = "JavaScript",
                                                    script = "// Fuck you",
-                                                   arena = arenaNode.shit.vagina,
-                                                   position = arenaNode.shit.vagina.pointers.size)
-                arenaNode.shit.vagina.pointers.add(newPointer)
+                                                   arena = arenaNode.entity,
+                                                   position = arenaNode.entity.pointers.size)
+                arenaNode.entity.pointers.add(newPointer)
                 dirty = true
-                val pointerNode = newPointerNode(newPointer, arenaNode)
-                arenaNode.shit.treeItem.expandedProperty().set(true)
+                val pointerNode = newPointerNode(newPointer, arenaNode.node)
+                arenaNode.node.treeItem.expandedProperty().set(true)
 
                 navigationTreeView.selectionModel.clearSelection()
-                navigationTreeView.selectionModel.select(pointerNode.shit.treeItem)
+                navigationTreeView.selectionModel.select(pointerNode.treeItem)
             } catch (e: Throwable) {
                 e.printStackTrace()
             }
         }
 
-        fun displayedArenaNode(): ArenaNode {
+        fun displayedArenaNode(): PussyNode.IArena {
             val treeItem = selectedTreeItem()!!
-            val node = treeItem.value
-            @Suppress("UNCHECKED_CAST")
-            return when (getNodeType(node)) {
-                BotinokNodeType.ARENA -> node as ArenaNode
-                BotinokNodeType.REGION -> getParentNode(node) as ArenaNode
-                BotinokNodeType.POINTER -> getParentNode(node) as ArenaNode
+            val node = treeItem.value as PussyNode
+            return when (node.type) {
+                BotinokNodeType.ARENA -> node.iarena
+                BotinokNodeType.REGION -> node.parent!!.iarena
+                BotinokNodeType.POINTER -> node.parent!!.iarena
                 BotinokNodeType.PLAY -> wtf("09eb5e83-448b-4b27-98fd-0ba002db4275")
             }
         }
 
-        fun selectedRegionNode(): RegionNode? {
+        fun selectedRegionNode(): PussyNode.IRegion? {
             return selectedTreeItem()?.regionNode
         }
 
-        fun selectedPointerNode(): PointerNode? {
+        fun selectedPointerNode(): PussyNode.IPointer? {
             return selectedTreeItem()?.pointerNode
         }
 
-        val FuckingTreeItem.regionNode: RegionNode? get() {
-            val node = this.value
+        val FuckingTreeItem.regionNode: PussyNode.IRegion? get() {
+            val node = this.value as PussyNode?
             if (node != null)
-                if (getNodeType(node) == BotinokNodeType.REGION)
-                    @Suppress("UNCHECKED_CAST") return node as RegionNode
+                if (node.type == BotinokNodeType.REGION)
+                    return node.iregion
             return null
         }
 
-        val FuckingTreeItem.pointerNode: PointerNode? get() {
-            val node = this.value
+        val FuckingTreeItem.pointerNode: PussyNode.IPointer? get() {
+            val node = this.value as PussyNode?
             if (node != null)
-                if (getNodeType(node) == BotinokNodeType.POINTER)
-                    @Suppress("UNCHECKED_CAST") return node as PointerNode
+                if (node.type == BotinokNodeType.POINTER)
+                    return node.ipointer
             return null
         }
 
@@ -1039,7 +934,7 @@ class StartBotinok : Application() {
                 noise("Saved screenshot")
             }
 
-            val play = bananas.playNode.shit.entity
+            val play = bananas.playNode.iplay.entity
             val arena = newBotinokArena(name = "Arena ${getArenaCount() + 1}",
                                         screenshot = File(tmpImgPath).readBytes(),
                                         play = play,
@@ -1047,7 +942,7 @@ class StartBotinok : Application() {
             play.arenas.add(arena)
             dirty = true
             newArenaNode(arena, bananas.playNode)
-            bananas.navigationTreeView.scrollTo(bananas.playNode.shit.treeItem.children.lastIndex)
+            bananas.navigationTreeView.scrollTo(bananas.playNode.treeItem.children.lastIndex)
             selectLastTreeItem()
 
             JFXStuff.later {
@@ -1065,7 +960,7 @@ class StartBotinok : Application() {
     }
 
     fun getArenaCount(): Int {
-        return bananas.playNode.shit.treeItem.children.size
+        return bananas.playNode.treeItem.children.size
     }
 
     fun action_save() {
@@ -1073,22 +968,21 @@ class StartBotinok : Application() {
             val playNode = bananas.playNode
             var swappedEntities = 0
 
-            playNode.shit.vagina = botinokPlayRepo.save(playNode.shit.entity)
+            playNode.entity = botinokPlayRepo.save(playNode.iplay.entity)
             ++swappedEntities
 
             var arenaIndex = 0
-            for (arenaNode in playNode.shit.childNodes) {
-                check(getNodeType(arenaNode) == BotinokNodeType.ARENA) {"1835ecc4-32e7-4603-b382-7296aa2b5b38"}
-                @Suppress("UNCHECKED_CAST") (arenaNode as ArenaNode)
+            for (arenaNode in playNode.childNodes) {
+                check(arenaNode.type == BotinokNodeType.ARENA)
 
-                arenaNode.shit.vagina = playNode.shit.entity.arenas[arenaIndex++]
+                arenaNode.entity = playNode.iplay.entity.arenas[arenaIndex++]
                 ++swappedEntities
-                for ((index, regionNode) in arenaNode.stuff.regionNodes.withIndex()) {
-                    regionNode.shit.vagina = arenaNode.shit.vagina.regions[index]
+                for ((index, iregion) in arenaNode.iarena.regionNodes.withIndex()) {
+                    iregion.node.entity = arenaNode.iarena.entity.regions[index]
                     ++swappedEntities
                 }
-                for ((index, pointerNode) in arenaNode.stuff.pointerNodes.withIndex()) {
-                    pointerNode.shit.vagina = arenaNode.shit.vagina.pointers[index]
+                for ((index, ipointer) in arenaNode.iarena.pointerNodes.withIndex()) {
+                    ipointer.node.entity = arenaNode.iarena.entity.pointers[index]
                     ++swappedEntities
                 }
             }
@@ -1108,7 +1002,7 @@ class StartBotinok : Application() {
         bananas.statusLabel.text = "Running..."
         stopRequested = false
         thread {
-            arenas@for (arena in bananas.playNode.shit.entity.arenas) {
+            arenas@for (arena in bananas.playNode.iplay.entity.arenas) {
                 if (arena.regions.isEmpty()) {
                     noise("Arena ${arena.name}: no regions -- skipping")
                     continue@arenas
@@ -1199,44 +1093,7 @@ class StartBotinok : Application() {
     }
 
     fun findPointer(arenaIndex: Int, pointerIndex: Int = 0): BotinokPointer {
-        return bananas.playNode.shit.entity.arenas[arenaIndex].pointers[pointerIndex]
-    }
-
-    fun Any.getPropChain(chain: String): Any? {
-        val links = chain.split(".")
-        var obj = this
-        for (link in links) {
-            obj = obj::class.java
-                .getMethod("get" + link.capitalize())
-                .invoke(obj)
-        }
-        return obj
-    }
-
-    inline fun <reified Value> Any.setPropChain(chain: String, value: Value) {
-        val links = chain.split(".")
-        var obj = this
-        for (link in links.dropLast(1)) {
-            obj = obj::class.java
-                .getMethod("get" + link.capitalize())
-                .invoke(obj)
-        }
-        obj::class.java
-            .getMethod("set" + links.last().capitalize(), Value::class.java)
-            .invoke(value)
-    }
-
-    fun getChildNodes(node: Any): MutableList<*> {
-        val parentNode = getParentNode(node)
-        val parentNodeShit = parentNode!!::class.java.getMethod("getShit").invoke(parentNode)
-        val parentNodeChildNodes = parentNodeShit::class.java.getMethod("getChildNodes").invoke(parentNodeShit)
-        return parentNodeChildNodes as MutableList<*>
-    }
-
-    fun getParentNode(node: Any): Any? {
-        val shit = node::class.java.getMethod("getShit").invoke(node)
-        val parentNode = shit::class.java.getMethod("getParentNode").invoke(shit)
-        return parentNode
+        return bananas.playNode.iplay.entity.arenas[arenaIndex].pointers[pointerIndex]
     }
 
     companion object {
