@@ -268,7 +268,7 @@ class Boobs(val testParams: TestParams) {
                             }
                         }
 
-                        val res = runProcessAndWait(listOf("git", "diff", "--color", actualFilePath, expectedFilePath), inheritIO = true)
+                        val res = BigPile.runProcessAndWait(listOf("git", "diff", "--color", actualFilePath, expectedFilePath), inheritIO = true)
                         if (res.exitValue != 0) {
                             clog("Diff shitted at us with code ${res.exitValue}")
                         }

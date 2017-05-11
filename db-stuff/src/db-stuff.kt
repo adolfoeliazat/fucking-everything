@@ -2,6 +2,7 @@
 
 package vgrechka.db
 
+import com.zaxxer.hikari.HikariDataSource
 import net.ttddyy.dsproxy.listener.logging.SLF4JLogLevel
 import net.ttddyy.dsproxy.listener.logging.SLF4JQueryLoggingListener
 import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder
@@ -29,6 +30,7 @@ import java.sql.Connection
 import java.sql.ResultSetMetaData
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
+import kotlin.reflect.KClass
 
 class ResultSetColumnMeta(val meta: ResultSetMetaData, val index1: Int) {
     val name get() = meta.getColumnName(index1)!!
@@ -60,6 +62,23 @@ object DBPile {
     }
 
     val jpaContext get() = backPlatform.springctx.getBean(JpaContext::class.java)!!
+
+    fun pg_dump(dbConnectionParams: DBConnectionParams, toFile: String) {
+        val p = dbConnectionParams
+        val passwordPart = when (p.password) {
+            null -> ""
+            else -> ":${p.password}"
+        }
+        val cmdPieces = listOf(
+            BigPile.saucerfulOfSecrets.pg_dump,
+            "--dbname=postgresql://${p.user}$passwordPart@${p.host}:${p.port}/${p.dbName}",
+            "--clean",
+            "--file=$toFile"
+        )
+        val res = BigPile.runProcessAndWait(cmdPieces)
+        if (res.exitValue != 0)
+            bitch("pg_dump said us 'Fuck you'")
+    }
 
 }
 
@@ -147,11 +166,9 @@ data class CommonFields(
 //    }
 }
 
-
 @Configuration
 @EnableTransactionManagement
-abstract class BaseSQLiteAppConfig(val entityPackagesToScan: Array<String>) {
-    protected abstract val databaseURL: String
+abstract class BaseAppConfig(val entityPackagesToScan: Array<String>) {
 
     data class Settings(
         val colorfulConsole: Boolean
@@ -179,25 +196,23 @@ abstract class BaseSQLiteAppConfig(val entityPackagesToScan: Array<String>) {
         colorful = true
     )
 
+    protected abstract val hibernateDialect: KClass<*>?
+
     @Bean open fun entityManagerFactory(dataSource: DataSource) = LocalContainerEntityManagerFactoryBean()-{o->
         o.jpaVendorAdapter = HibernateJpaVendorAdapter()-{o->
-//            o.setShowSql(true)
+            //            o.setShowSql(true)
         }
 //        o.jpaPropertyMap.put(Environment.HBM2DDL_AUTO, "create-drop")
-        o.jpaPropertyMap.put(Environment.DIALECT, SQLiteDialect::class.qualifiedName)
+        hibernateDialect?.let {
+            o.jpaPropertyMap.put(Environment.DIALECT, it.qualifiedName)
+        }
         o.jpaPropertyMap.put(Environment.IMPLICIT_NAMING_STRATEGY, NiceHibernateNamingStrategy::class.qualifiedName)
         o.setPackagesToScan(*entityPackagesToScan)
         o.dataSource = dataSource
     }
 
     @Bean open fun dataSource(): DataSource {
-        val ds = IntoSQLiteConnectionPoolDataSource()-{o->
-            o.url = databaseURL
-            o.config = SQLiteConfig()-{o->
-                o.setDateClass(SQLiteConfig.DateClass.TEXT.value)
-                o.enforceForeignKeys(true)
-            }
-        }
+        val ds = makeDataSource()
         return ProxyDataSourceBuilder()
             .dataSource(ds)
             .listener(SLF4JQueryLoggingListener()-{o->
@@ -209,10 +224,47 @@ abstract class BaseSQLiteAppConfig(val entityPackagesToScan: Array<String>) {
             .build()
     }
 
+    protected abstract fun makeDataSource(): DataSource
+
     @Bean open fun transactionManager(emf: EntityManagerFactory) = JpaTransactionManager()-{o->
         o.entityManagerFactory = emf
     }
+}
 
+abstract class BaseSQLiteAppConfig(entityPackagesToScan: Array<String>) : BaseAppConfig(entityPackagesToScan) {
+    abstract val databaseURL: String
+
+    override val hibernateDialect = SQLiteDialect::class
+
+    override fun makeDataSource(): DataSource {
+        return IntoSQLiteConnectionPoolDataSource()-{o->
+            o.url = databaseURL
+            o.config = SQLiteConfig()-{o->
+                o.setDateClass(SQLiteConfig.DateClass.TEXT.value)
+                o.enforceForeignKeys(true)
+            }
+        }
+    }
+}
+
+abstract class BasePostgresAppConfig(entityPackagesToScan: Array<String>) : BaseAppConfig(entityPackagesToScan) {
+    abstract val dbConnectionParams: DBConnectionParams
+
+    override val hibernateDialect = null
+
+    override fun makeDataSource(): DataSource {
+        return HikariDataSource()-{o->
+            o.dataSourceClassName = "org.postgresql.ds.PGSimpleDataSource"
+            o.dataSourceProperties.let {o->
+                o.put("serverName", dbConnectionParams.host)
+                o.put("portNumber", dbConnectionParams.port)
+                o.put("databaseName", dbConnectionParams.dbName)
+                o.put("user", dbConnectionParams.user)
+                dbConnectionParams.password?.let {o.put("password", it)}
+            }
+            o.connectionInitSql = "set time zone 'UTC';"
+        }
+    }
 }
 
 abstract class BaseTestSQLiteAppConfig(entityPackagesToScan: Array<String>): BaseSQLiteAppConfig(entityPackagesToScan) {

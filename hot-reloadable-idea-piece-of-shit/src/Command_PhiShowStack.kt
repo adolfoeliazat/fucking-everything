@@ -57,7 +57,7 @@ fun runMapPhizdetsStackTool(con: Mumbler, stackItems: MutableList<FileLine>): Ma
     // mumble(inputJSON)
     con.scrollToEnd()
 
-    val res = runProcessAndWait(
+    val res = BigPile.runProcessAndWait(
         listOf("cmd.exe",
                "/c",
                "e:\\fegh\\_run.cmd phizdets.MapPhizdetsStackTool"),

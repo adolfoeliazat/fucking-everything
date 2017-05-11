@@ -17,7 +17,7 @@
     <orderEntry type="module" module-name="botinok-1" />
     <orderEntry type="module" module-name="db-stuff" />
     <orderEntry type="module-library">
-      <library name="pizda">
+      <library name="tits">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../lib-gradle/antlr-2.7.7.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/asm-5.2.jar!/" />
@@ -89,6 +89,7 @@
           <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-util-9.4.3.v20170317.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-webapp-9.4.3.v20170317.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-xml-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jgrapht-core-1.0.1.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/jna-4.4.0.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/jna-platform-4.4.0.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/jnativehook-2.1.0.jar!/" />
@@ -104,6 +105,8 @@
           <root url="jar://$MODULE_DIR$/../lib-gradle/okio-1.11.0.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/parboiled-core-1.1.8.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/parboiled-java-1.1.8.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/postgresql-42.1.1-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/postgresql-42.1.1.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/protobuf-java-3.0.2.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/slf4j-api-1.7.25.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/spring-aop-4.3.8.RELEASE.jar!/" />
@@ -140,8 +143,10 @@
           <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-weathericons-2.0.10-5-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/hibernate-core-5.2.10.Final-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/hibernate-jpa-2.1-api-1.0.0.Final-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jgrapht-core-1.0.1-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/logback-classic-1.2.3-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/mockito-core-1.9.5.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/postgresql-42.1.1-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/spring-data-jpa-1.11.3.RELEASE-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/spring-orm-4.3.8.RELEASE-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/sqlite-jdbc-3.16.1-sources.jar!/" />

@@ -120,6 +120,8 @@
           <root url="jar://$MODULE_DIR$/../lib-gradle/websocket-servlet-9.4.3.v20170317.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/args4j-2.33.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/closure-compiler-v20170218.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/postgresql-42.1.1-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/postgresql-42.1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
@@ -143,6 +145,7 @@
           <root url="jar://$MODULE_DIR$/../lib-gradle/sqlite-jdbc-3.16.1-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/args4j-2.33.jar!/OSGI-OPT/src" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/closure-compiler-v20170218.jar!/OSGI-OPT/src" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/postgresql-42.1.1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

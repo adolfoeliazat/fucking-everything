@@ -39,9 +39,13 @@ object SpewBotinokEntitiesAndRecreateProdDatabaseSchema {
     fun main(args: Array<String>) {
         val res = spewForInputFiles(listOf("%FE%/global-menu/src/botinok-entities.kt"))
         clog(res.ddl)
-        val backupPath = FilePile.backUp().orBitchIfDoesntExist()
-            .ignite(File(BigPile.localSQLiteShebangDBFilePath))
+
+//        val backupPath = FilePile.backUp().orBitchIfDoesntExist()
+//            .ignite(File(BigPile.localSQLiteShebangDBFilePath))
+        val backupPath = BigPile.fuckingBackupsRoot + "/fepg--" + FilePile.currentTimestampForFileName() + ".pg_dump"
+        DBPile.pg_dump(dbConnectionParams = BigPile.fepg.prod, toFile = backupPath)
         clog("Backed shit up to $backupPath")
+
         backPlatform.springctx = AnnotationConfigApplicationContext(BotinokProdAppConfig::class.java)
         DBPile.executeBunchOfSQLStatementsAndCloseConnection(res.ddl.toString())
         clog("OK")

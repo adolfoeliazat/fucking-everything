@@ -49,50 +49,6 @@ data class RunProcessResult(
     val stderr: String
 )
 
-fun runProcessAndWait(cmdPieces: List<String>, inheritIO: Boolean = true, input: String? = null): RunProcessResult {
-    // clog("Executing: " + cmdPieces.joinToString(" "))
-    val pb = ProcessBuilder()
-    val cmd = pb.command()
-    cmd.addAll(cmdPieces)
-    if (inheritIO)
-        pb.inheritIO()
-    val proc = pb.start()
-
-    fun suckAsync(stm: InputStream): StringBuilder {
-        val buf = StringBuilder()
-        thread {
-            val reader = BufferedReader(InputStreamReader(stm, Charsets.UTF_8.name()))
-            while (true) {
-                val line = reader.readLine()
-                if (line == null) {
-                    break
-                } else {
-                    // println(line)
-                    buf.appendln(line)
-                }
-            }
-            // clog("Finished sucker thread")
-        }
-        return buf
-    }
-
-    val stdout = suckAsync(proc.inputStream)
-    val stderr = suckAsync(proc.errorStream)
-
-    if (input != null) {
-        thread {
-            val pw = PrintWriter(proc.outputStream, true)
-            for (line in input.lines()) {
-                pw.println(line)
-            }
-            pw.close()
-            // clog("Finished feeder thread")
-        }
-    }
-
-    val exitValue = proc.waitFor()
-    return RunProcessResult(exitValue = exitValue, stdout = stdout.toString(), stderr = stderr.toString())
-}
 
 /**
  * Fuck thisy builders
@@ -673,7 +629,7 @@ object FilePile {
                     .find {file.path.replace("\\", "/").startsWith(it.root + "/")}
                     ?: bitch("9911cfc6-6435-4a54-aa74-ad492162181a")
 
-                val stamp = TimePile.ldtnow().format(PG_LOCAL_DATE_TIME).replace(Regex("[ :.]"), "-")
+                val stamp = currentTimestampForFileName()
                 val prefixForGeneratedFileName = r2p.generatedPrefix
                 val outPath = (
                     BigPile.fuckingBackupsRoot + "/" +
@@ -699,6 +655,15 @@ object FilePile {
                 return backupPath
             }
         }
+    }
+
+    fun currentTimestampForFileName(): String {
+        // replace(Regex("[ :.]"), "-")
+        return TimePile.ldtnow().format(PG_LOCAL_DATE_TIME)
+            .replace(Regex("-"), "")
+            .replace(Regex(":"), "")
+            .replace(Regex(" "), "-")
+            .replace(Regex("\\."), "-")
     }
 
 }

@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Mon May 08 17:22:35 EEST 2017
+// Generated on Fri May 12 00:36:02 EEST 2017
 // Model: e:/fegh/global-menu/src/botinok-entities.kt
 //
 
@@ -15,6 +15,252 @@ import kotlin.reflect.KClass
 import vgrechka.*
 import vgrechka.spew.*
 import vgrechka.db.*
+
+// ------------------------------------------------------------------
+// BotinokPlay
+// ------------------------------------------------------------------
+
+// Generated at 7-470173f-49ef-43cb-adf7-1c395f07518c
+fun newBotinokPlay(name: String): BotinokPlay {
+    val backing = Generated_BotinokPlay(
+        Generated_BotinokPlayFields().also {it.name = name})
+    return backing.toManuallyDefinedInterface()
+}
+
+val BotinokPlay._backing
+    get() = (this as Generated_BotinokPlayBackingProvider)._backing
+
+val botinokPlayRepo: BotinokPlayRepository by lazy {
+    val generatedRepo = backPlatform.springctx.getBean(Generated_BotinokPlayRepository::class.java)!!
+
+    object:BotinokPlayRepository {
+        override fun findOne(id: Long): BotinokPlay? {
+            val shit = generatedRepo.findOne(id)
+            return shit?.toManuallyDefinedInterface()
+        }
+
+        override fun findAll(): List<BotinokPlay> {
+            val shit = generatedRepo.findAll()
+            return shit.map {it.toManuallyDefinedInterface()}
+        }
+
+        override fun save(x: BotinokPlay): BotinokPlay {
+            val shit = generatedRepo.save(x._backing)
+            return shit.toManuallyDefinedInterface()
+        }
+
+        override fun delete(id: Long) {
+            generatedRepo.delete(id)
+        }
+
+        override fun delete(x : BotinokPlay) {
+            generatedRepo.delete(x._backing)
+        }
+
+        override fun findByName(x: String): BotinokPlay? {
+            val shit = generatedRepo.findByBotinokPlay_Name(x)
+            return shit?.toManuallyDefinedInterface()
+        }
+    }
+}
+
+interface Generated_BotinokPlayRepository : XCrudRepository<Generated_BotinokPlay, Long> {
+    fun findByBotinokPlay_Name(x: String): Generated_BotinokPlay?
+}
+
+interface Generated_BotinokPlayBackingProvider : DBCodeGenUtils.GeneratedBackingEntityProvider<Generated_BotinokPlay> {
+    override val _backing: Generated_BotinokPlay
+}
+
+@XEntity @XTable(name = "botinok_plays")
+class Generated_BotinokPlay( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9e6b
+    @XEmbedded var botinokPlay: Generated_BotinokPlayFields
+)
+    : ClitoralEntity0(), DBCodeGenUtils.GeneratedEntity<BotinokPlay>
+{
+    override fun toManuallyDefinedInterface(): BotinokPlay {
+        return object : BotinokPlay, Generated_BotinokPlayBackingProvider {
+            override val _backing: Generated_BotinokPlay
+                get() = this@Generated_BotinokPlay
+
+            override var id: Long
+                get() = _backing.id!!
+                set(value) {_backing.id = value}
+
+            override var createdAt: XTimestamp
+                get() = _backing.botinokPlay.common.createdAt
+                set(value) {_backing.botinokPlay.common.createdAt = value}
+
+            override var updatedAt: XTimestamp
+                get() = _backing.botinokPlay.common.updatedAt
+                set(value) {_backing.botinokPlay.common.updatedAt = value}
+
+            override var deleted: Boolean
+                get() = _backing.botinokPlay.common.deleted
+                set(value) {_backing.botinokPlay.common.deleted = value}
+
+            override var name: String
+                get() = _backing.botinokPlay.name
+                set(value) {_backing.botinokPlay.name = value}
+
+            override var arenas: MutableList<BotinokArena>
+                by DBCodeGenUtils.FuckingList(getBackingList = {_backing.botinokPlay.arenas})
+
+            override fun toString() = _backing.toString()
+
+            override fun hashCode() = _backing.hashCode()
+
+            override fun equals(other: Any?): Boolean {
+                val otherShit = other as? Generated_BotinokPlayBackingProvider ?: return false
+                return _backing == otherShit._backing
+            }
+        }
+    }
+
+    override fun toString(): String {
+        return "BotinokPlay(name=${botinokPlay.name})"
+    }
+}
+
+@XEmbeddable
+class Generated_BotinokPlayFields { // Generated at 2-e91acff-5613-4b14-b71e-5edee254d029
+    @XEmbedded var common: CommonFields = CommonFields()
+    @XColumn(columnDefinition = "text") lateinit var name: String
+    @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokArena.play", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var arenas: MutableList<Generated_BotinokArena> = mutableListOf()
+}
+
+// ------------------------------------------------------------------
+// BotinokArena
+// ------------------------------------------------------------------
+
+// Generated at 7-470173f-49ef-43cb-adf7-1c395f07518c
+fun newBotinokArena(position: Int,
+                    name: String,
+                    screenshot: ByteArray,
+                    play: BotinokPlay): BotinokArena {
+    val backing = Generated_BotinokArena(
+        Generated_BotinokArenaFields().also {it.position = java.lang.Integer(position)
+                                             it.name = name
+                                             it.screenshot = screenshot
+                                             it.play = play._backing})
+    return backing.toManuallyDefinedInterface()
+}
+
+val BotinokArena._backing
+    get() = (this as Generated_BotinokArenaBackingProvider)._backing
+
+val botinokArenaRepo: BotinokArenaRepository by lazy {
+    val generatedRepo = backPlatform.springctx.getBean(Generated_BotinokArenaRepository::class.java)!!
+
+    object:BotinokArenaRepository {
+        override fun findOne(id: Long): BotinokArena? {
+            val shit = generatedRepo.findOne(id)
+            return shit?.toManuallyDefinedInterface()
+        }
+
+        override fun findAll(): List<BotinokArena> {
+            val shit = generatedRepo.findAll()
+            return shit.map {it.toManuallyDefinedInterface()}
+        }
+
+        override fun save(x: BotinokArena): BotinokArena {
+            val shit = generatedRepo.save(x._backing)
+            return shit.toManuallyDefinedInterface()
+        }
+
+        override fun delete(id: Long) {
+            generatedRepo.delete(id)
+        }
+
+        override fun delete(x : BotinokArena) {
+            generatedRepo.delete(x._backing)
+        }
+
+    }
+}
+
+interface Generated_BotinokArenaRepository : XCrudRepository<Generated_BotinokArena, Long> {
+}
+
+interface Generated_BotinokArenaBackingProvider : DBCodeGenUtils.GeneratedBackingEntityProvider<Generated_BotinokArena> {
+    override val _backing: Generated_BotinokArena
+}
+
+@XEntity @XTable(name = "botinok_arenas")
+class Generated_BotinokArena( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9e6b
+    @XEmbedded var botinokArena: Generated_BotinokArenaFields
+)
+    : ClitoralEntity0(), DBCodeGenUtils.GeneratedEntity<BotinokArena>
+{
+    override fun toManuallyDefinedInterface(): BotinokArena {
+        return object : BotinokArena, Generated_BotinokArenaBackingProvider {
+            override val _backing: Generated_BotinokArena
+                get() = this@Generated_BotinokArena
+
+            override var id: Long
+                get() = _backing.id!!
+                set(value) {_backing.id = value}
+
+            override var createdAt: XTimestamp
+                get() = _backing.botinokArena.common.createdAt
+                set(value) {_backing.botinokArena.common.createdAt = value}
+
+            override var updatedAt: XTimestamp
+                get() = _backing.botinokArena.common.updatedAt
+                set(value) {_backing.botinokArena.common.updatedAt = value}
+
+            override var deleted: Boolean
+                get() = _backing.botinokArena.common.deleted
+                set(value) {_backing.botinokArena.common.deleted = value}
+
+            override var position: Int
+                get() = _backing.botinokArena.position.toInt()
+                set(value) {_backing.botinokArena.position = java.lang.Integer(value)}
+
+            override var name: String
+                get() = _backing.botinokArena.name
+                set(value) {_backing.botinokArena.name = value}
+
+            override var screenshot: ByteArray
+                get() = _backing.botinokArena.screenshot
+                set(value) {_backing.botinokArena.screenshot = value}
+
+            override var play: BotinokPlay
+                get() = _backing.botinokArena.play.toManuallyDefinedInterface()
+                set(value) {_backing.botinokArena.play = value._backing}
+
+            override var regions: MutableList<BotinokRegion>
+                by DBCodeGenUtils.FuckingList(getBackingList = {_backing.botinokArena.regions})
+
+            override var pointers: MutableList<BotinokPointer>
+                by DBCodeGenUtils.FuckingList(getBackingList = {_backing.botinokArena.pointers})
+
+            override fun toString() = _backing.toString()
+
+            override fun hashCode() = _backing.hashCode()
+
+            override fun equals(other: Any?): Boolean {
+                val otherShit = other as? Generated_BotinokArenaBackingProvider ?: return false
+                return _backing == otherShit._backing
+            }
+        }
+    }
+
+    override fun toString(): String {
+        return "BotinokArena(position=${botinokArena.position}, name=${botinokArena.name})"
+    }
+}
+
+@XEmbeddable
+class Generated_BotinokArenaFields { // Generated at 2-e91acff-5613-4b14-b71e-5edee254d029
+    @XEmbedded var common: CommonFields = CommonFields()
+    @XColumn lateinit var position: java.lang.Integer
+    @XColumn(columnDefinition = "text") lateinit var name: String
+    @XColumn lateinit var screenshot: ByteArray
+    @XManyToOne(fetch = XFetchType.EAGER/*, cascade = arrayOf(XCascadeType.ALL)*/) lateinit var play: Generated_BotinokPlay
+    @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokRegion.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var regions: MutableList<Generated_BotinokRegion> = mutableListOf()
+    @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokPointer.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var pointers: MutableList<Generated_BotinokPointer> = mutableListOf()
+}
 
 // ------------------------------------------------------------------
 // BotinokRegion
@@ -315,309 +561,66 @@ class Generated_BotinokPointerFields { // Generated at 2-e91acff-5613-4b14-b71e-
     @XManyToOne(fetch = XFetchType.EAGER/*, cascade = arrayOf(XCascadeType.ALL)*/) lateinit var arena: Generated_BotinokArena
 }
 
-// ------------------------------------------------------------------
-// BotinokArena
-// ------------------------------------------------------------------
-
-// Generated at 7-470173f-49ef-43cb-adf7-1c395f07518c
-fun newBotinokArena(position: Int,
-                    name: String,
-                    screenshot: ByteArray,
-                    play: BotinokPlay): BotinokArena {
-    val backing = Generated_BotinokArena(
-        Generated_BotinokArenaFields().also {it.position = java.lang.Integer(position)
-                                             it.name = name
-                                             it.screenshot = screenshot
-                                             it.play = play._backing})
-    return backing.toManuallyDefinedInterface()
-}
-
-val BotinokArena._backing
-    get() = (this as Generated_BotinokArenaBackingProvider)._backing
-
-val botinokArenaRepo: BotinokArenaRepository by lazy {
-    val generatedRepo = backPlatform.springctx.getBean(Generated_BotinokArenaRepository::class.java)!!
-
-    object:BotinokArenaRepository {
-        override fun findOne(id: Long): BotinokArena? {
-            val shit = generatedRepo.findOne(id)
-            return shit?.toManuallyDefinedInterface()
-        }
-
-        override fun findAll(): List<BotinokArena> {
-            val shit = generatedRepo.findAll()
-            return shit.map {it.toManuallyDefinedInterface()}
-        }
-
-        override fun save(x: BotinokArena): BotinokArena {
-            val shit = generatedRepo.save(x._backing)
-            return shit.toManuallyDefinedInterface()
-        }
-
-        override fun delete(id: Long) {
-            generatedRepo.delete(id)
-        }
-
-        override fun delete(x : BotinokArena) {
-            generatedRepo.delete(x._backing)
-        }
-
-    }
-}
-
-interface Generated_BotinokArenaRepository : XCrudRepository<Generated_BotinokArena, Long> {
-}
-
-interface Generated_BotinokArenaBackingProvider : DBCodeGenUtils.GeneratedBackingEntityProvider<Generated_BotinokArena> {
-    override val _backing: Generated_BotinokArena
-}
-
-@XEntity @XTable(name = "botinok_arenas")
-class Generated_BotinokArena( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9e6b
-    @XEmbedded var botinokArena: Generated_BotinokArenaFields
-)
-    : ClitoralEntity0(), DBCodeGenUtils.GeneratedEntity<BotinokArena>
-{
-    override fun toManuallyDefinedInterface(): BotinokArena {
-        return object : BotinokArena, Generated_BotinokArenaBackingProvider {
-            override val _backing: Generated_BotinokArena
-                get() = this@Generated_BotinokArena
-
-            override var id: Long
-                get() = _backing.id!!
-                set(value) {_backing.id = value}
-
-            override var createdAt: XTimestamp
-                get() = _backing.botinokArena.common.createdAt
-                set(value) {_backing.botinokArena.common.createdAt = value}
-
-            override var updatedAt: XTimestamp
-                get() = _backing.botinokArena.common.updatedAt
-                set(value) {_backing.botinokArena.common.updatedAt = value}
-
-            override var deleted: Boolean
-                get() = _backing.botinokArena.common.deleted
-                set(value) {_backing.botinokArena.common.deleted = value}
-
-            override var position: Int
-                get() = _backing.botinokArena.position.toInt()
-                set(value) {_backing.botinokArena.position = java.lang.Integer(value)}
-
-            override var name: String
-                get() = _backing.botinokArena.name
-                set(value) {_backing.botinokArena.name = value}
-
-            override var screenshot: ByteArray
-                get() = _backing.botinokArena.screenshot
-                set(value) {_backing.botinokArena.screenshot = value}
-
-            override var play: BotinokPlay
-                get() = _backing.botinokArena.play.toManuallyDefinedInterface()
-                set(value) {_backing.botinokArena.play = value._backing}
-
-            override var regions: MutableList<BotinokRegion>
-                by DBCodeGenUtils.FuckingList(getBackingList = {_backing.botinokArena.regions})
-
-            override var pointers: MutableList<BotinokPointer>
-                by DBCodeGenUtils.FuckingList(getBackingList = {_backing.botinokArena.pointers})
-
-            override fun toString() = _backing.toString()
-
-            override fun hashCode() = _backing.hashCode()
-
-            override fun equals(other: Any?): Boolean {
-                val otherShit = other as? Generated_BotinokArenaBackingProvider ?: return false
-                return _backing == otherShit._backing
-            }
-        }
-    }
-
-    override fun toString(): String {
-        return "BotinokArena(position=${botinokArena.position}, name=${botinokArena.name})"
-    }
-}
-
-@XEmbeddable
-class Generated_BotinokArenaFields { // Generated at 2-e91acff-5613-4b14-b71e-5edee254d029
-    @XEmbedded var common: CommonFields = CommonFields()
-    @XColumn lateinit var position: java.lang.Integer
-    @XColumn(columnDefinition = "text") lateinit var name: String
-    @XColumn lateinit var screenshot: ByteArray
-    @XManyToOne(fetch = XFetchType.EAGER/*, cascade = arrayOf(XCascadeType.ALL)*/) lateinit var play: Generated_BotinokPlay
-    @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokRegion.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var regions: MutableList<Generated_BotinokRegion> = mutableListOf()
-    @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokPointer.arena", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var pointers: MutableList<Generated_BotinokPointer> = mutableListOf()
-}
-
-// ------------------------------------------------------------------
-// BotinokPlay
-// ------------------------------------------------------------------
-
-// Generated at 7-470173f-49ef-43cb-adf7-1c395f07518c
-fun newBotinokPlay(name: String): BotinokPlay {
-    val backing = Generated_BotinokPlay(
-        Generated_BotinokPlayFields().also {it.name = name})
-    return backing.toManuallyDefinedInterface()
-}
-
-val BotinokPlay._backing
-    get() = (this as Generated_BotinokPlayBackingProvider)._backing
-
-val botinokPlayRepo: BotinokPlayRepository by lazy {
-    val generatedRepo = backPlatform.springctx.getBean(Generated_BotinokPlayRepository::class.java)!!
-
-    object:BotinokPlayRepository {
-        override fun findOne(id: Long): BotinokPlay? {
-            val shit = generatedRepo.findOne(id)
-            return shit?.toManuallyDefinedInterface()
-        }
-
-        override fun findAll(): List<BotinokPlay> {
-            val shit = generatedRepo.findAll()
-            return shit.map {it.toManuallyDefinedInterface()}
-        }
-
-        override fun save(x: BotinokPlay): BotinokPlay {
-            val shit = generatedRepo.save(x._backing)
-            return shit.toManuallyDefinedInterface()
-        }
-
-        override fun delete(id: Long) {
-            generatedRepo.delete(id)
-        }
-
-        override fun delete(x : BotinokPlay) {
-            generatedRepo.delete(x._backing)
-        }
-
-        override fun findByName(x: String): BotinokPlay? {
-            val shit = generatedRepo.findByBotinokPlay_Name(x)
-            return shit?.toManuallyDefinedInterface()
-        }
-    }
-}
-
-interface Generated_BotinokPlayRepository : XCrudRepository<Generated_BotinokPlay, Long> {
-    fun findByBotinokPlay_Name(x: String): Generated_BotinokPlay?
-}
-
-interface Generated_BotinokPlayBackingProvider : DBCodeGenUtils.GeneratedBackingEntityProvider<Generated_BotinokPlay> {
-    override val _backing: Generated_BotinokPlay
-}
-
-@XEntity @XTable(name = "botinok_plays")
-class Generated_BotinokPlay( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9e6b
-    @XEmbedded var botinokPlay: Generated_BotinokPlayFields
-)
-    : ClitoralEntity0(), DBCodeGenUtils.GeneratedEntity<BotinokPlay>
-{
-    override fun toManuallyDefinedInterface(): BotinokPlay {
-        return object : BotinokPlay, Generated_BotinokPlayBackingProvider {
-            override val _backing: Generated_BotinokPlay
-                get() = this@Generated_BotinokPlay
-
-            override var id: Long
-                get() = _backing.id!!
-                set(value) {_backing.id = value}
-
-            override var createdAt: XTimestamp
-                get() = _backing.botinokPlay.common.createdAt
-                set(value) {_backing.botinokPlay.common.createdAt = value}
-
-            override var updatedAt: XTimestamp
-                get() = _backing.botinokPlay.common.updatedAt
-                set(value) {_backing.botinokPlay.common.updatedAt = value}
-
-            override var deleted: Boolean
-                get() = _backing.botinokPlay.common.deleted
-                set(value) {_backing.botinokPlay.common.deleted = value}
-
-            override var name: String
-                get() = _backing.botinokPlay.name
-                set(value) {_backing.botinokPlay.name = value}
-
-            override var arenas: MutableList<BotinokArena>
-                by DBCodeGenUtils.FuckingList(getBackingList = {_backing.botinokPlay.arenas})
-
-            override fun toString() = _backing.toString()
-
-            override fun hashCode() = _backing.hashCode()
-
-            override fun equals(other: Any?): Boolean {
-                val otherShit = other as? Generated_BotinokPlayBackingProvider ?: return false
-                return _backing == otherShit._backing
-            }
-        }
-    }
-
-    override fun toString(): String {
-        return "BotinokPlay(name=${botinokPlay.name})"
-    }
-}
-
-@XEmbeddable
-class Generated_BotinokPlayFields { // Generated at 2-e91acff-5613-4b14-b71e-5edee254d029
-    @XEmbedded var common: CommonFields = CommonFields()
-    @XColumn(columnDefinition = "text") lateinit var name: String
-    @XOneToMany(fetch = XFetchType.LAZY, mappedBy = "botinokArena.play", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true) var arenas: MutableList<Generated_BotinokArena> = mutableListOf()
-}
-
 object BotinokGeneratedDBPile {
     object ddl {
         val dropCreateAllScript = """
-drop table if exists `botinok_regions`;
-create table `botinok_regions` (
-    `id` integer primary key autoincrement,
-    `botinokRegion_common_createdAt` text not null,
-    `botinokRegion_common_updatedAt` text not null,
-    `botinokRegion_common_deleted` integer not null,
-    `botinokRegion_position` integer not null,
-    `botinokRegion_name` text not null,
-    `botinokRegion_x` integer not null,
-    `botinokRegion_y` integer not null,
-    `botinokRegion_w` integer not null,
-    `botinokRegion_h` integer not null,
-    `botinokRegion_arena__id` bigint not null,
-    foreign key (botinokRegion_arena__id) references botinok_arenas(id)
+drop table if exists "botinok_regions";
+drop table if exists "botinok_pointers";
+drop table if exists "botinok_arenas";
+drop table if exists "botinok_plays";
+create table "botinok_plays" (
+    id bigserial primary key,
+    botinokPlay_common_createdAt timestamp not null,
+    botinokPlay_common_updatedAt timestamp not null,
+    botinokPlay_common_deleted boolean not null,
+    botinokPlay_name text not null
 );
 
-drop table if exists `botinok_pointers`;
-create table `botinok_pointers` (
-    `id` integer primary key autoincrement,
-    `botinokPointer_common_createdAt` text not null,
-    `botinokPointer_common_updatedAt` text not null,
-    `botinokPointer_common_deleted` integer not null,
-    `botinokPointer_position` integer not null,
-    `botinokPointer_name` text not null,
-    `botinokPointer_x` integer not null,
-    `botinokPointer_y` integer not null,
-    `botinokPointer_pile` text not null,
-    `botinokPointer_language` text not null,
-    `botinokPointer_script` text not null,
-    `botinokPointer_arena__id` bigint not null,
-    foreign key (botinokPointer_arena__id) references botinok_arenas(id)
-);
-
-drop table if exists `botinok_arenas`;
-create table `botinok_arenas` (
-    `id` integer primary key autoincrement,
-    `botinokArena_common_createdAt` text not null,
-    `botinokArena_common_updatedAt` text not null,
-    `botinokArena_common_deleted` integer not null,
-    `botinokArena_position` integer not null,
-    `botinokArena_name` text not null,
-    `botinokArena_screenshot` blob not null,
-    `botinokArena_play__id` bigint not null,
+create table "botinok_arenas" (
+    id bigserial primary key,
+    botinokArena_common_createdAt timestamp not null,
+    botinokArena_common_updatedAt timestamp not null,
+    botinokArena_common_deleted boolean not null,
+    botinokArena_position integer not null,
+    botinokArena_name text not null,
+    botinokArena_screenshot bytea not null,
+    botinokArena_play__id bigint not null,
     foreign key (botinokArena_play__id) references botinok_plays(id)
 );
+create index on "botinok_arenas" (botinokArena_play__id);
 
-drop table if exists `botinok_plays`;
-create table `botinok_plays` (
-    `id` integer primary key autoincrement,
-    `botinokPlay_common_createdAt` text not null,
-    `botinokPlay_common_updatedAt` text not null,
-    `botinokPlay_common_deleted` integer not null,
-    `botinokPlay_name` text not null
+create table "botinok_pointers" (
+    id bigserial primary key,
+    botinokPointer_common_createdAt timestamp not null,
+    botinokPointer_common_updatedAt timestamp not null,
+    botinokPointer_common_deleted boolean not null,
+    botinokPointer_position integer not null,
+    botinokPointer_name text not null,
+    botinokPointer_x integer not null,
+    botinokPointer_y integer not null,
+    botinokPointer_pile text not null,
+    botinokPointer_language text not null,
+    botinokPointer_script text not null,
+    botinokPointer_arena__id bigint not null,
+    foreign key (botinokPointer_arena__id) references botinok_arenas(id)
 );
+create index on "botinok_pointers" (botinokPointer_arena__id);
+
+create table "botinok_regions" (
+    id bigserial primary key,
+    botinokRegion_common_createdAt timestamp not null,
+    botinokRegion_common_updatedAt timestamp not null,
+    botinokRegion_common_deleted boolean not null,
+    botinokRegion_position integer not null,
+    botinokRegion_name text not null,
+    botinokRegion_x integer not null,
+    botinokRegion_y integer not null,
+    botinokRegion_w integer not null,
+    botinokRegion_h integer not null,
+    botinokRegion_arena__id bigint not null,
+    foreign key (botinokRegion_arena__id) references botinok_arenas(id)
+);
+create index on "botinok_regions" (botinokRegion_arena__id);
 
         """
     }
@@ -628,59 +631,62 @@ create table `botinok_plays` (
 DDL
 ===
 
-drop table if exists `botinok_regions`;
-create table `botinok_regions` (
-    `id` integer primary key autoincrement,
-    `botinokRegion_common_createdAt` text not null,
-    `botinokRegion_common_updatedAt` text not null,
-    `botinokRegion_common_deleted` integer not null,
-    `botinokRegion_position` integer not null,
-    `botinokRegion_name` text not null,
-    `botinokRegion_x` integer not null,
-    `botinokRegion_y` integer not null,
-    `botinokRegion_w` integer not null,
-    `botinokRegion_h` integer not null,
-    `botinokRegion_arena__id` bigint not null,
-    foreign key (botinokRegion_arena__id) references botinok_arenas(id)
+drop table if exists "botinok_regions";
+drop table if exists "botinok_pointers";
+drop table if exists "botinok_arenas";
+drop table if exists "botinok_plays";
+create table "botinok_plays" (
+    id bigserial primary key,
+    botinokPlay_common_createdAt timestamp not null,
+    botinokPlay_common_updatedAt timestamp not null,
+    botinokPlay_common_deleted boolean not null,
+    botinokPlay_name text not null
 );
 
-drop table if exists `botinok_pointers`;
-create table `botinok_pointers` (
-    `id` integer primary key autoincrement,
-    `botinokPointer_common_createdAt` text not null,
-    `botinokPointer_common_updatedAt` text not null,
-    `botinokPointer_common_deleted` integer not null,
-    `botinokPointer_position` integer not null,
-    `botinokPointer_name` text not null,
-    `botinokPointer_x` integer not null,
-    `botinokPointer_y` integer not null,
-    `botinokPointer_pile` text not null,
-    `botinokPointer_language` text not null,
-    `botinokPointer_script` text not null,
-    `botinokPointer_arena__id` bigint not null,
-    foreign key (botinokPointer_arena__id) references botinok_arenas(id)
-);
-
-drop table if exists `botinok_arenas`;
-create table `botinok_arenas` (
-    `id` integer primary key autoincrement,
-    `botinokArena_common_createdAt` text not null,
-    `botinokArena_common_updatedAt` text not null,
-    `botinokArena_common_deleted` integer not null,
-    `botinokArena_position` integer not null,
-    `botinokArena_name` text not null,
-    `botinokArena_screenshot` blob not null,
-    `botinokArena_play__id` bigint not null,
+create table "botinok_arenas" (
+    id bigserial primary key,
+    botinokArena_common_createdAt timestamp not null,
+    botinokArena_common_updatedAt timestamp not null,
+    botinokArena_common_deleted boolean not null,
+    botinokArena_position integer not null,
+    botinokArena_name text not null,
+    botinokArena_screenshot bytea not null,
+    botinokArena_play__id bigint not null,
     foreign key (botinokArena_play__id) references botinok_plays(id)
 );
+create index on "botinok_arenas" (botinokArena_play__id);
 
-drop table if exists `botinok_plays`;
-create table `botinok_plays` (
-    `id` integer primary key autoincrement,
-    `botinokPlay_common_createdAt` text not null,
-    `botinokPlay_common_updatedAt` text not null,
-    `botinokPlay_common_deleted` integer not null,
-    `botinokPlay_name` text not null
+create table "botinok_pointers" (
+    id bigserial primary key,
+    botinokPointer_common_createdAt timestamp not null,
+    botinokPointer_common_updatedAt timestamp not null,
+    botinokPointer_common_deleted boolean not null,
+    botinokPointer_position integer not null,
+    botinokPointer_name text not null,
+    botinokPointer_x integer not null,
+    botinokPointer_y integer not null,
+    botinokPointer_pile text not null,
+    botinokPointer_language text not null,
+    botinokPointer_script text not null,
+    botinokPointer_arena__id bigint not null,
+    foreign key (botinokPointer_arena__id) references botinok_arenas(id)
 );
+create index on "botinok_pointers" (botinokPointer_arena__id);
+
+create table "botinok_regions" (
+    id bigserial primary key,
+    botinokRegion_common_createdAt timestamp not null,
+    botinokRegion_common_updatedAt timestamp not null,
+    botinokRegion_common_deleted boolean not null,
+    botinokRegion_position integer not null,
+    botinokRegion_name text not null,
+    botinokRegion_x integer not null,
+    botinokRegion_y integer not null,
+    botinokRegion_w integer not null,
+    botinokRegion_h integer not null,
+    botinokRegion_arena__id bigint not null,
+    foreign key (botinokRegion_arena__id) references botinok_arenas(id)
+);
+create index on "botinok_regions" (botinokRegion_arena__id);
 
 */

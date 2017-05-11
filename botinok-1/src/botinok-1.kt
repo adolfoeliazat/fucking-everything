@@ -21,15 +21,15 @@ import javax.sql.DataSource
 @Suppress("unused")
 @EnableJpaRepositories
 @ComponentScan(basePackages = arrayOf("vgrechka.botinok"))
-abstract class BotinokBaseAppConfig : BaseSQLiteAppConfig(entityPackagesToScan = arrayOf("vgrechka.botinok")) {
+abstract class BotinokBaseAppConfig : BasePostgresAppConfig(entityPackagesToScan = arrayOf("vgrechka.botinok")) {
 }
 
 open class BotinokProdAppConfig : BotinokBaseAppConfig() {
-    override val databaseURL = BigPile.localSQLiteShebangDBURL
+    override val dbConnectionParams = BigPile.fepg.prod
 }
 
 open class BotinokTestAppConfig : BotinokBaseAppConfig() {
-    override val databaseURL = BigPile.localSQLiteShebangTestDBURL
+    override val dbConnectionParams = BigPile.fepg.test
 }
 
 

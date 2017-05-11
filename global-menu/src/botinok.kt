@@ -1000,6 +1000,7 @@ class StartBotinok : Application() {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
+            System.setProperty("user.timezone", "GMT")
             launch(StartBotinok::class.java, *args)
         }
     }

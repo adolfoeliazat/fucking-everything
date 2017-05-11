@@ -1,38 +1,23 @@
 @file:GSpit(spew = DBEntitySpew::class, output = "%FE%/global-menu/gen/generated--botinok-entities.kt")
-@file:GDBEntitySpewOptions(pileObject = "BotinokGeneratedDBPile")
+@file:GDBEntitySpewOptions(pileObject = "BotinokGeneratedDBPile",
+                           databaseDialect = GDBEntitySpewDatabaseDialect.POSTGRESQL)
 
 package vgrechka.botinok
 
 import vgrechka.spew.*
 
-@GEntity(table = "botinok_regions")
-interface BotinokRegion : GCommonEntityFields {
-    /*@GIsOrderColumn*/ var position: Int
+@GEntity(table = "botinok_plays")
+interface BotinokPlay : GCommonEntityFields {
     var name: String
-    var x: Int
-    var y: Int
-    var w: Int
-    var h: Int
-    @GManyToOne var arena: BotinokArena
+
+    @GOneToMany(mappedBy = "play"/*, fetch = GFetchType.EAGER*/)
+    var arenas: MutableList<BotinokArena>
 }
 
-interface BotinokRegionRepository : GRepository<BotinokRegion> {
+interface BotinokPlayRepository : GRepository<BotinokPlay> {
+    fun findByName(x: String): BotinokPlay?
 }
 
-@GEntity(table = "botinok_pointers")
-interface BotinokPointer : GCommonEntityFields {
-    /*@GIsOrderColumn*/ var position: Int
-    var name: String
-    var x: Int
-    var y: Int
-    var pile: String
-    var language: String
-    var script: String
-    @GManyToOne var arena: BotinokArena
-}
-
-interface BotinokPointerRepository : GRepository<BotinokPointer> {
-}
 
 @GEntity(table = "botinok_arenas")
 interface BotinokArena : GCommonEntityFields {
@@ -51,17 +36,38 @@ interface BotinokArena : GCommonEntityFields {
 interface BotinokArenaRepository : GRepository<BotinokArena> {
 }
 
-@GEntity(table = "botinok_plays")
-interface BotinokPlay : GCommonEntityFields {
+
+@GEntity(table = "botinok_regions")
+interface BotinokRegion : GCommonEntityFields {
+    /*@GIsOrderColumn*/ var position: Int
     var name: String
-
-    @GOneToMany(mappedBy = "play"/*, fetch = GFetchType.EAGER*/)
-    var arenas: MutableList<BotinokArena>
+    var x: Int
+    var y: Int
+    var w: Int
+    var h: Int
+    @GManyToOne var arena: BotinokArena
 }
 
-interface BotinokPlayRepository : GRepository<BotinokPlay> {
-    fun findByName(x: String): BotinokPlay?
+interface BotinokRegionRepository : GRepository<BotinokRegion> {
 }
+
+
+@GEntity(table = "botinok_pointers")
+interface BotinokPointer : GCommonEntityFields {
+    /*@GIsOrderColumn*/ var position: Int
+    var name: String
+    var x: Int
+    var y: Int
+    var pile: String
+    var language: String
+    var script: String
+    @GManyToOne var arena: BotinokArena
+}
+
+interface BotinokPointerRepository : GRepository<BotinokPointer> {
+}
+
+
 
 
 

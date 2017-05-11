@@ -89,7 +89,7 @@ object JerkMapPhizdetsStackTool2 {
 object JerkMapPhizdetsStackTool {
     @JvmStatic
     fun main(args: Array<String>) {
-        val res = runProcessAndWait(
+        val res = BigPile.runProcessAndWait(
             listOf(
                 "cmd.exe",
                 "/c",

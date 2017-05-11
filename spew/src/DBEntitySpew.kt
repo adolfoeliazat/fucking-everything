@@ -1,14 +1,27 @@
 package vgrechka.spew
 
 import org.jetbrains.kotlin.psi.*
+import org.jgrapht.alg.CycleDetector
 import vgrechka.*
 import vgrechka.BigPile.mangleUUID
+import vgrechka.spew.GDBEntitySpewDatabaseDialect.*
 import java.io.File
 import java.util.*
+import kotlin.Comparator
 import kotlin.properties.Delegates.notNull
+import org.jgrapht.graph.DefaultEdge
+import org.jgrapht.graph.DefaultDirectedGraph
+import org.jgrapht.traverse.TopologicalOrderIterator
+
 
 @Target(AnnotationTarget.FILE)
-annotation class GDBEntitySpewOptions(val pileObject: String = "")
+annotation class GDBEntitySpewOptions(
+    val pileObject: String = "",
+    val databaseDialect: GDBEntitySpewDatabaseDialect)
+
+enum class GDBEntitySpewDatabaseDialect {
+    SQLITE, POSTGRESQL
+}
 
 annotation class GEntity(val table: String)
 annotation class GOneToMany(val mappedBy: String, val fetch: GFetchType = GFetchType.LAZY)
@@ -85,6 +98,8 @@ class DBEntitySpew : Spew {
     private var spewResults by notNullOnce<SpewResults>()
     private var entities by notNull<List<EntitySpec>>()
     private var pileObjectName: String? = null
+    private var databaseDialect by notNullOnce<GDBEntitySpewDatabaseDialect>()
+    private val tableDependsOnTable = mutableListOf<Pair<String, String>>()
 
     override fun ignite(ktFile: KtFile, outputFilePath: String, spewResults: SpewResults) {
         this.ktFile = ktFile
@@ -107,6 +122,8 @@ class DBEntitySpew : Spew {
             entity = _entity
             spitShitForEntity()
         }
+
+        sortDDLStatementGeneratorsAndRunThem()
         spitStuffClass()
         spitDDLComment()
 
@@ -266,10 +283,7 @@ class DBEntitySpew : Spew {
         out.append("}\n")
         out.append("\n")
 
-        generateDDLCommentForEntity()
-
-        /*
-         */
+        generateDDLForEntity()
     }
 
     private fun maybeUnwrapShitFromPlatformType(typed: FieldSpec, shit: String): String {
@@ -387,6 +401,28 @@ class DBEntitySpew : Spew {
 
     private fun maybeQuestion(finder: FinderSpec) = finder.returnsNullable.thenElseEmpty {"?"}
 
+    fun sortDDLStatementGeneratorsAndRunThem() {
+        // https://github.com/jgrapht/jgrapht/wiki/DependencyDemo
+
+        val g = DefaultDirectedGraph<String, DefaultEdge>(DefaultEdge::class.java)
+        for (pair in tableDependsOnTable) {
+            if (!g.containsVertex(pair.first))
+                g.addVertex(pair.first)
+            if (!g.containsVertex(pair.second))
+                g.addVertex(pair.second)
+            g.addEdge(pair.first, pair.second)
+        }
+
+        if (CycleDetector<String, DefaultEdge>(g).detectCycles())
+            bitch("Found some table dependency cycles. So, fuck you")
+
+        val tables = Iterable {TopologicalOrderIterator(g)}.toList()
+        for (table in tables)
+            drops.find {it.table == table}!!.doAppend()
+        for (table in tables.reversed())
+            creates.find {it.table == table}!!.doAppend()
+    }
+
     fun spitStuffClass() {
         if (pileObjectName != null) {
             out.append("object $pileObjectName {\n")
@@ -409,56 +445,134 @@ class DBEntitySpew : Spew {
         out.append("*/")
     }
 
-    fun generateDDLCommentForEntity() {
+    class DDLGenerator(val table: String, val doAppend: () -> Unit)
+    val drops = mutableListOf<DDLGenerator>()
+    val creates = mutableListOf<DDLGenerator>()
+
+    fun generateDDLForEntity() {
+        val entity = entity.copy()
+        val end = end
+
         fun append(x: String) = spewResults.ddl.append(x)
 
-        append("drop table if exists `${entity.tableName}`;\n")
-        append("create table `${entity.tableName}` (\n")
-        append("    `id` integer primary key autoincrement,\n")
-        append("    `${end}_common_createdAt` text not null,\n")
-        append("    `${end}_common_updatedAt` text not null,\n")
-        append("    `${end}_common_deleted` integer not null,\n")
-        val fields = entity.fields.filter {it.kind !is FieldKind.Many}
+        fun quote(s: String) = when (databaseDialect) {
+            SQLITE -> "`$s`"
+            POSTGRESQL -> '"' + s + '"'
+        }
 
-        for ((index, field) in fields.withIndex()) {
-            val sqlType = when (field.kind) {
-                is FieldKind.Simple -> {
-                    when (field.type) {
-                        "Int" -> "integer not null"
-                        "Int?" -> "integer"
-                        "Long" -> "bigint not null"
-                        "Long?" -> "bigint"
-                        "String" -> "text not null"
-                        "String?" -> "text"
-                        "ByteArray" -> "blob not null"
-                        "ByteArray?" -> "blob"
-                        else -> wtf("field.type = ${field.type}    5e84c6fb-b523-43cc-aa45-bdef1dca7ff2")
+        val idColumnDefinition = when (databaseDialect) {
+            SQLITE -> "id integer primary key autoincrement"
+            POSTGRESQL -> "id bigserial primary key"
+        }
+
+        val quotedTableName = quote(entity.tableName)
+
+        val foreignKeyFields = entity.fields.filter {it.kind is FieldKind.One}
+        for (field in foreignKeyFields) {
+            val oneEntity = entities.find {it.name == field.typeWithoutQuestion()} ?: wtf("d8beb50d-dc3f-42ab-8a64-16fb61ecfc42")
+            tableDependsOnTable += entity.tableName to oneEntity.tableName
+        }
+
+        drops += DDLGenerator(
+            table = entity.tableName,
+            doAppend = {
+                append("drop table if exists $quotedTableName;\n")
+            }
+        )
+
+        val timestampType = when (databaseDialect) {
+            GDBEntitySpewDatabaseDialect.SQLITE -> "text"
+            GDBEntitySpewDatabaseDialect.POSTGRESQL -> "timestamp"
+        }
+        val booleanType = when (databaseDialect) {
+            GDBEntitySpewDatabaseDialect.SQLITE -> "integer"
+            GDBEntitySpewDatabaseDialect.POSTGRESQL -> "boolean"
+        }
+
+        creates += DDLGenerator(
+            table = entity.tableName,
+            doAppend = {
+                append("create table $quotedTableName (\n")
+                append("    $idColumnDefinition,\n")
+                append("    ${end}_common_createdAt $timestampType not null,\n")
+                append("    ${end}_common_updatedAt $timestampType not null,\n")
+                append("    ${end}_common_deleted $booleanType not null,\n")
+                val fields = entity.fields.filter {it.kind !is FieldKind.Many}
+
+                for ((index, field) in fields.withIndex()) {
+                    val sqlType = when (field.kind) {
+                        is FieldKind.Simple -> {
+                            when (field.type) {
+                                "Int" -> when (databaseDialect) {
+                                    SQLITE -> "integer not null"
+                                    POSTGRESQL -> "integer not null"
+                                }
+                                "Int?" -> when (databaseDialect) {
+                                    SQLITE -> "integer"
+                                    POSTGRESQL -> "integer"
+                                }
+                                "Long" -> when (databaseDialect) {
+                                    SQLITE -> "bigint not null"
+                                    POSTGRESQL -> "bigint not null"
+                                }
+                                "Long?" -> when (databaseDialect) {
+                                    SQLITE -> "bigint"
+                                    POSTGRESQL -> "bigint"
+                                }
+                                "String" -> when (databaseDialect) {
+                                    SQLITE -> "text not null"
+                                    POSTGRESQL -> "text not null"
+                                }
+                                "String?" -> when (databaseDialect) {
+                                    SQLITE -> "text"
+                                    POSTGRESQL -> "text"
+                                }
+                                "ByteArray" -> when (databaseDialect) {
+                                    SQLITE -> "blob not null"
+                                    POSTGRESQL -> "bytea not null"
+                                }
+                                "ByteArray?" -> when (databaseDialect) {
+                                    SQLITE -> "blob"
+                                    POSTGRESQL -> "bytea"
+                                }
+                                else -> wtf("field.type = ${field.type}    5e84c6fb-b523-43cc-aa45-bdef1dca7ff2")
+                            }
+                        }
+                        is FieldKind.One -> {
+                            val s = when (databaseDialect) {
+                                SQLITE -> "bigint"
+                                POSTGRESQL -> "bigint"
+                            }
+                            s + (!field.isNullable()).thenElseEmpty{" not null"}
+                        }
+                        is FieldKind.Many -> wtf("0f79f787-be13-49ba-ac1d-6855476605da")
+                    }
+
+                    append("    ${end}_${field.name}${(field.kind is FieldKind.One).thenElseEmpty{"__id"}} $sqlType")
+                    if (index < fields.lastIndex) {
+                        append(",\n")
                     }
                 }
-                is FieldKind.One -> {
-                    "bigint" + (!field.isNullable()).thenElseEmpty{" not null"}
+
+                val foreignKeyLines = foreignKeyFields.map {field->
+                    val oneEntity = entities.find {it.name == field.typeWithoutQuestion()} ?: wtf("aa058895-cbce-453a-b0f0-e551abaf95e1")
+                    "    foreign key (${end}_${field.name}__id) references ${oneEntity.tableName}(id)"
                 }
-                is FieldKind.Many -> wtf("0f79f787-be13-49ba-ac1d-6855476605da")
+                if (foreignKeyLines.isNotEmpty())
+                    append(",\n")
+                append(foreignKeyLines.joinToString(",\n"))
+
+                append("\n);\n")
+
+                if (databaseDialect == POSTGRESQL) {
+                    foreignKeyFields.forEach {field->
+                        append("create index on $quotedTableName (${end}_${field.name}__id);\n")
+                    }
+                }
+
+                append("\n")
             }
-
-            append("    `${end}_${field.name}${(field.kind is FieldKind.One).thenElseEmpty{"__id"}}` $sqlType")
-            if (index < fields.lastIndex) {
-                append(",\n")
-            }
-        }
-
-        val foreignKeyLines = entity.fields.filter {it.kind is FieldKind.One}.map {field->
-            val oneEntity = entities.find {it.name == field.typeWithoutQuestion()} ?: wtf("aa058895-cbce-453a-b0f0-e551abaf95e1")
-            "    foreign key (${end}_${field.name}__id) references ${oneEntity.tableName}(id)"
-        }
-        if (foreignKeyLines.isNotEmpty())
-            append(",\n")
-        append(foreignKeyLines.joinToString(",\n"))
-
-        append("\n);\n\n")
-
-        /*
-         */
+        )
     }
 
     private fun noise(x: Any?) {
@@ -476,6 +590,8 @@ class DBEntitySpew : Spew {
                         if (it.isNotBlank())
                             pileObjectName = it
                     }
+                    val dialectText = ann.freakingGetEnumAttributeText(GDBEntitySpewOptions::databaseDialect.name)!!
+                    databaseDialect = GDBEntitySpewDatabaseDialect.valueOf(dialectText.substringAfterLast("."))
                 }
 
                 ktFile.freakingVisitClasses {
