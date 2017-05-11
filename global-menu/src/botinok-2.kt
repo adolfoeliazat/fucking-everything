@@ -5,6 +5,8 @@ import vgrechka.*
 import vgrechka.db.*
 import vgrechka.db.ExecuteAndFormatResultForPrinting.Title.*
 
+// delete from botinok_regions; delete from botinok_pointers; delete from botinok_arenas; delete from botinok_plays;
+
 object DumpBotinokTables {
     @JvmStatic
     fun main(args: Array<String>) {
