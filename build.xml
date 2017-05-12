@@ -10,6 +10,7 @@
         <pathelement location="out/production/spew"/>
         <pathelement location="out/production/botinok-1"/>
         <pathelement location="out/production/db-stuff"/>
+        <pathelement location="out/production/cli"/>
         <fileset dir="lib" includes="*.jar"/>
         <fileset dir="lib-gradle" includes="*.jar" excludes="*-sources.jar"/>
     </path>

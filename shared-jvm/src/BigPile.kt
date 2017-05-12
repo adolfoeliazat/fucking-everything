@@ -51,7 +51,11 @@ object BigPile {
 //                                  password = obj["password"] as String?)
 //    }
 
-    fun runProcessAndWait(cmdPieces: List<String>, inheritIO: Boolean = true, input: String? = null, noisy: Boolean = false): RunProcessResult {
+    fun runProcessAndWait(cmdPieces: List<String>,
+                          inheritIO: Boolean = true,
+                          input: String? = null,
+                          workingDirectory: File? = null,
+                          noisy: Boolean = false): RunProcessResult {
         if (noisy) {
             clog("Executing: " + cmdPieces.joinToString(" "))
         }
@@ -60,6 +64,8 @@ object BigPile {
         cmd.addAll(cmdPieces)
         if (inheritIO)
             pb.inheritIO()
+        if (workingDirectory != null)
+            pb.directory(workingDirectory)
         val proc = pb.start()
 
         fun suckAsync(stm: InputStream): StringBuilder {
@@ -97,6 +103,16 @@ object BigPile {
         val exitValue = proc.waitFor()
         return RunProcessResult(exitValue = exitValue, stdout = stdout.toString(), stderr = stderr.toString())
     }
+
+    fun win2WSL(windowsPath: String): String {
+        var s = windowsPath
+        if (s.startsWith("e:/"))
+            s = "/mnt/e/" + s.substring(3)
+        else
+            wtf("fddaec58-f69c-4974-bb83-4af4e35555d1")
+        return s
+    }
+
 }
 
 @Ser class JSON_SaucerfulOfSecrets(

@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/aps/roots/aps-roots.iml" filepath="$PROJECT_DIR$/aps/roots/aps-roots.iml" group="aps" />
       <module fileurl="file://$PROJECT_DIR$/attic/attic.iml" filepath="$PROJECT_DIR$/attic/attic.iml" />
       <module fileurl="file://$PROJECT_DIR$/botinok-1/botinok-1.iml" filepath="$PROJECT_DIR$/botinok-1/botinok-1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cli/cli.iml" filepath="$PROJECT_DIR$/cli/cli.iml" />
       <module fileurl="file://$PROJECT_DIR$/copyright/copyright.iml" filepath="$PROJECT_DIR$/copyright/copyright.iml" />
       <module fileurl="file://$PROJECT_DIR$/db-stuff/db-stuff.iml" filepath="$PROJECT_DIR$/db-stuff/db-stuff.iml" />
       <module fileurl="file://$PROJECT_DIR$/etc/etc.iml" filepath="$PROJECT_DIR$/etc/etc.iml" />

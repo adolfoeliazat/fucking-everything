@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="kotlin-jvm" level="project" />
+    <orderEntry type="module-library">
+      <library name="zzz">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib-gradle/antlr-2.7.7.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/asm-5.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/asm-analysis-5.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/asm-commons-5.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/asm-tree-5.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/asm-util-5.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/aspectjrt-1.8.10.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/byte-buddy-1.6.9.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/classmate-1.3.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/commons-codec-1.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/commons-logging-1.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/datasource-proxy-1.4.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/dom4j-1.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/dropbox-core-sdk-3.0.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-commons-8.15.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-controls-8.15.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-emojione-2.2.7-2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-fontawesome-4.7.0-5.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-icons525-3.0.0-4.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-materialdesignfont-1.7.22-4.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-materialicons-2.2.0-5.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-octicons-4.3.0-5.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-weathericons-2.0.10-5.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/google-api-client-1.22.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/google-api-services-drive-v3-rev72-1.22.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/google-http-client-1.22.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/google-http-client-jackson2-1.22.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/google-oauth-client-1.22.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/gson-2.7.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/guava-21.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/guava-jdk5-17.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/hamcrest-core-1.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/hibernate-commons-annotations-5.0.1.Final.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/hibernate-core-5.2.10.Final.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/hibernate-jpa-2.1-api-1.0.0.Final.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/HikariCP-2.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/http2-client-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/http2-common-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/http2-hpack-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/http2-server-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/httpclient-4.0.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/httpcore-4.0.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jackson-annotations-2.8.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jackson-core-2.8.7.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jackson-databind-2.8.7.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jandex-2.0.3.Final.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jansi-1.15.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/javassist-3.20.0-GA.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/javax-websocket-client-impl-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/javax-websocket-server-impl-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/javax.activation-1.1.0.v201105071233.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/javax.annotation-api-1.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/javax.mail.glassfish-1.4.1.v201005082020.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/javax.security.auth.message-1.0.0.v201108011116.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/javax.servlet-api-3.1.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/javax.transaction-api-1.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/javax.websocket-api-1.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jboss-logging-3.3.0.Final.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jboss-transaction-api_1.2_spec-1.0.1.Final.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jcl-over-slf4j-1.7.24.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-alpn-client-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-annotations-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-client-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-continuation-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-deploy-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-http-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-io-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-jaspi-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-jmx-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-jndi-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-plus-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-quickstart-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-rewrite-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-security-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-server-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-servlet-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-servlets-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-util-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-webapp-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jetty-xml-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jgrapht-core-1.0.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jna-4.4.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jna-platform-4.4.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jnativehook-2.1.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jsinterop-annotations-1.0.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jsr305-3.0.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/junit-4.12.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/kotlin-compiler-1.1.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/logback-classic-1.2.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/logback-core-1.2.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/mockito-core-1.9.5.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/objenesis-1.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/okhttp-3.6.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/okio-1.11.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/parboiled-core-1.1.8.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/parboiled-java-1.1.8.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/postgresql-42.1.1-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/postgresql-42.1.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/protobuf-java-3.0.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/slf4j-api-1.7.25.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/spring-aop-4.3.8.RELEASE.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/spring-beans-4.3.8.RELEASE.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/spring-context-4.3.8.RELEASE.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/spring-core-4.3.8.RELEASE.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/spring-data-commons-1.13.3.RELEASE.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/spring-data-jpa-1.11.3.RELEASE.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/spring-expression-4.3.8.RELEASE.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/spring-jdbc-4.3.8.RELEASE.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/spring-orm-4.3.8.RELEASE.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/spring-tx-4.3.8.RELEASE.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/sqlite-jdbc-3.16.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/websocket-api-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/websocket-client-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/websocket-common-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/websocket-server-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/websocket-servlet-9.4.3.v20170317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/args4j-2.33.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/closure-compiler-v20170218.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../lib-gradle/byte-buddy-1.6.9-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/datasource-proxy-1.4.1-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/dropbox-core-sdk-3.0.3-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-commons-8.15-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-controls-8.15-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-emojione-2.2.7-2-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-fontawesome-4.7.0-5-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-icons525-3.0.0-4-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-materialdesignfont-1.7.22-4-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-materialicons-2.2.0-5-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-octicons-4.3.0-5-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/fontawesomefx-weathericons-2.0.10-5-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/google-api-services-drive-v3-rev72-1.22.0-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/hibernate-core-5.2.10.Final-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/hibernate-jpa-2.1-api-1.0.0.Final-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/jgrapht-core-1.0.1-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/logback-classic-1.2.3-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/mockito-core-1.9.5.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/postgresql-42.1.1-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/spring-data-jpa-1.11.3.RELEASE-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/spring-orm-4.3.8.RELEASE-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/sqlite-jdbc-3.16.1-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/args4j-2.33.jar!/OSGI-OPT/src" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/closure-compiler-v20170218.jar!/OSGI-OPT/src" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module" module-name="db-stuff" />
+    <orderEntry type="module" module-name="shared-jvm" />
+  </component>
+</module>
