@@ -51,8 +51,10 @@ object BigPile {
 //                                  password = obj["password"] as String?)
 //    }
 
-    fun runProcessAndWait(cmdPieces: List<String>, inheritIO: Boolean = true, input: String? = null): RunProcessResult {
-        // clog("Executing: " + cmdPieces.joinToString(" "))
+    fun runProcessAndWait(cmdPieces: List<String>, inheritIO: Boolean = true, input: String? = null, noisy: Boolean = false): RunProcessResult {
+        if (noisy) {
+            clog("Executing: " + cmdPieces.joinToString(" "))
+        }
         val pb = ProcessBuilder()
         val cmd = pb.command()
         cmd.addAll(cmdPieces)
@@ -97,6 +99,22 @@ object BigPile {
     }
 }
 
+@Ser class JSON_SaucerfulOfSecrets(
+    val fepg: JSON_fepg,
+    val pg_dump: String,
+    val dropbox: JSON_dropbox
+) {
+    @Ser class JSON_fepg(
+        val prod: DBConnectionParams,
+        val test: DBConnectionParams
+    )
+
+    @Ser class JSON_dropbox(
+        val vgrechka: JSON_DropboxAppAccessConfig
+    )
+}
+
+
 @Ser class DBConnectionParams(
     val host: String,
     val port: Int,
@@ -105,15 +123,38 @@ object BigPile {
     val password: String?
 )
 
-@Ser class JSON_SaucerfulOfSecrets(
-    val fepg: JSON_fepg,
-    val pg_dump: String
-) {
-    @Ser class JSON_fepg(
-        val prod: DBConnectionParams,
-        val test: DBConnectionParams
-    )
+@Ser class JSON_DropboxAppAccessConfig(
+    val appName: String,
+    val appKey: String,
+    val appSecret: String,
+    val accessToken: String
+)
+
+class ConsoleBullshitter(val label: String) {
+    fun say(x: Any? = "") = clog("$label $x")
+
+    fun <T> operation(title: String, block: () -> T): T {
+        print("$label $title...")
+        try {
+            val res = block()
+            println("    OK")
+            return res
+        } catch (e: Throwable) {
+            println("    FAILED")
+            throw e
+        }
+    }
+
+    fun section(title: String, block: () -> Unit) {
+        say(title)
+        say("-".repeat(title.length))
+        block()
+        say()
+    }
 }
+
+
+
 
 
 

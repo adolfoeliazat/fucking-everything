@@ -24,9 +24,9 @@ import java.nio.charset.Charset
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
+import java.time.temporal.ChronoField
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.TimeUnit
-import kotlin.concurrent.thread
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.*
@@ -581,15 +581,22 @@ fun reindent(newIndent: Int, it: String): String {
     return dedent(it).split("\n").joinToString("\n") {" ".repeat(newIndent) + it}
 }
 
-val PG_LOCAL_DATE_TIME = DateTimeFormatterBuilder()
-    .parseCaseInsensitive()
-    .append(DateTimeFormatter.ISO_LOCAL_DATE)
-    .appendLiteral(' ')
-    .append(DateTimeFormatter.ISO_LOCAL_TIME)
-    .toFormatter()!!
-
-
 object TimePile {
+    val FMT_PG_LOCAL_DATE_TIME = DateTimeFormatterBuilder()
+        .parseCaseInsensitive()
+        .append(DateTimeFormatter.ISO_LOCAL_DATE)
+        .appendLiteral(' ')
+        .append(DateTimeFormatter.ISO_LOCAL_TIME)
+        .toFormatter()!!
+
+    val FMT_YMD = DateTimeFormatterBuilder()
+        .parseCaseInsensitive()
+        .appendValue(ChronoField.YEAR, 4)
+        .appendValue(ChronoField.MONTH_OF_YEAR, 2)
+        .appendValue(ChronoField.DAY_OF_MONTH, 2)
+        .toFormatter()!!
+
+
     private var testLdtnow: LocalDateTime? = null
 
     fun ldtnow(): LocalDateTime {
@@ -659,7 +666,7 @@ object FilePile {
 
     fun currentTimestampForFileName(): String {
         // replace(Regex("[ :.]"), "-")
-        return TimePile.ldtnow().format(PG_LOCAL_DATE_TIME)
+        return TimePile.ldtnow().format(TimePile.FMT_PG_LOCAL_DATE_TIME)
             .replace(Regex("-"), "")
             .replace(Regex(":"), "")
             .replace(Regex(" "), "-")

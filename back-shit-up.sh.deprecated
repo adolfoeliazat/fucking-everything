@@ -1,6 +1,9 @@
 #!/bin/bash
 
-stamp=20170427
+echo Use _run vgrechka.CLI_BackShitUp. And yes, fuck you...
+exit
+
+stamp=20170512
 
 outdir=/mnt/e/bak/$stamp
 echo Backing shit up...
