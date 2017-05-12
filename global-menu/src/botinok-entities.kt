@@ -9,6 +9,7 @@ import vgrechka.spew.*
 @GEntity(table = "botinok_plays")
 interface BotinokPlay : GCommonEntityFields {
     var name: String
+    var pile: String
 
     @GOneToMany(mappedBy = "play"/*, fetch = GFetchType.EAGER*/)
     var arenas: MutableList<BotinokArena>
@@ -24,6 +25,7 @@ interface BotinokArena : GCommonEntityFields {
     /*@GIsOrderColumn*/ var position: Int
     var name: String
     var screenshot: ByteArray
+    var pile: String
     @GManyToOne var play: BotinokPlay
 
     @GOneToMany(mappedBy = "arena"/*, fetch = GFetchType.EAGER*/)
@@ -45,6 +47,7 @@ interface BotinokRegion : GCommonEntityFields {
     var y: Int
     var w: Int
     var h: Int
+    var pile: String
     @GManyToOne var arena: BotinokArena
 }
 

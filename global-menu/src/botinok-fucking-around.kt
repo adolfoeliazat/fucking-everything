@@ -40,7 +40,7 @@ object BotinokFuckingAround {
         }
 
         run {
-            val play = newBotinokPlay("The Fucking Play")
+            val play = newBotinokPlay(name = "The Fucking Play", pile = "{}")
             botinokPlayRepo.save(play)
         }
         clog("---------- 1 -----------")
@@ -58,12 +58,14 @@ object BotinokFuckingAround {
                 firstArena = newBotinokArena(play = play,
                                              position = 0,
                                              name = "Arena 1",
-                                             screenshot = byteArrayOf())
+                                             screenshot = byteArrayOf(),
+                                             pile = "{}")
                 play.arenas.add(firstArena)
                 play.arenas.add(newBotinokArena(play = play,
                                                 position = 1,
                                                 name = "Arena 2",
-                                                screenshot = byteArrayOf()))
+                                                screenshot = byteArrayOf(),
+                                                pile = "{}"))
                 play = botinokPlayRepo.save(play)
             }
             clog("---------- 2 -----------")
@@ -81,13 +83,13 @@ object BotinokFuckingAround {
 
     fun fuck_txSavesShitAutomatically() {
         run {
-            val play = newBotinokPlay("The Fucking Play")
+            val play = newBotinokPlay(name = "The Fucking Play", pile = "{}")
             botinokPlayRepo.save(play)
         }
         run {
             backPlatform.tx {
                 val play = botinokPlayRepo.findByName("The Fucking Play")!!
-                val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play, position = 0)
+                val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play, position = 0, pile = "{}")
                 play.arenas.add(arena)
             }
         }
@@ -96,13 +98,13 @@ object BotinokFuckingAround {
 
     fun fuck_shitIsNotSavedAutomatically_1() {
         run {
-            val play = newBotinokPlay("The Fucking Play")
+            val play = newBotinokPlay(name = "The Fucking Play", pile = "{}")
             botinokPlayRepo.save(play)
         }
         run {
             val play = botinokPlayRepo.findByName("The Fucking Play")!!
             backPlatform.tx {
-                val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play, position = 0)
+                val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play, position = 0, pile = "{}")
                 play.arenas.add(arena)
             }
         }
@@ -111,12 +113,12 @@ object BotinokFuckingAround {
 
     fun fuck_shitIsNotSavedAutomatically_2() {
         run {
-            val play = newBotinokPlay("The Fucking Play")
+            val play = newBotinokPlay(name = "The Fucking Play", pile = "{}")
             botinokPlayRepo.save(play)
         }
         run {
             val play = botinokPlayRepo.findByName("The Fucking Play")!!
-            val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play, position = 0)
+            val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play, position = 0, pile = "{}")
             play.arenas.add(arena)
         }
         dumpShit()
@@ -124,12 +126,12 @@ object BotinokFuckingAround {
 
     fun fuck_explicitSave() {
         run {
-            val play = newBotinokPlay("The Fucking Play")
+            val play = newBotinokPlay(name = "The Fucking Play", pile = "{}")
             botinokPlayRepo.save(play)
         }
         run {
             val play = botinokPlayRepo.findByName("The Fucking Play")!!
-            val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play, position = 0)
+            val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play, position = 0, pile = "{}")
             play.arenas.add(arena)
             botinokPlayRepo.save(play)
         }
@@ -138,12 +140,12 @@ object BotinokFuckingAround {
 
     fun fuck_bug_arenaSavedTwice() {
         run {
-            val play = newBotinokPlay("The Fucking Play")
+            val play = newBotinokPlay(name = "The Fucking Play", pile = "{}")
             botinokPlayRepo.save(play)
         }
         run {
             var play = botinokPlayRepo.findByName("The Fucking Play")!!
-            val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play, position = 0)
+            val arena = newBotinokArena(name = "Arena 1", screenshot = byteArrayOf(1, 2, 3), play = play, position = 0, pile = "{}")
             play.arenas.add(arena)
             play = botinokPlayRepo.save(play)
 

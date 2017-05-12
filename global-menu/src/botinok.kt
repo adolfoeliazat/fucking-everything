@@ -8,20 +8,16 @@ import javafx.collections.FXCollections
 import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.geometry.Orientation
+import javafx.geometry.Pos
 import javafx.geometry.Rectangle2D
 import javafx.scene.Node
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.*
-import javafx.scene.input.ContextMenuEvent
-import javafx.scene.input.KeyCode
-import javafx.scene.input.MouseButton
-import javafx.scene.input.MouseEvent
-import javafx.scene.layout.AnchorPane
-import javafx.scene.layout.Priority
-import javafx.scene.layout.StackPane
-import javafx.scene.layout.VBox
+import javafx.scene.input.*
+import javafx.scene.layout.*
 import javafx.scene.paint.Color
+import javafx.stage.Modality
 import javafx.stage.Stage
 import javafx.stage.WindowEvent
 import org.jnativehook.GlobalScreen
@@ -192,17 +188,19 @@ class StartBotinok : Application() {
     }
 
     private fun seed() {
-        backPlatform.tx {
-            run {
-                val playName = "Hamlet"
-                if (botinokPlayRepo.findByName(playName) == null) {
-                    botinokPlayRepo.save(newBotinokPlay(name = playName))
+        if (false) {
+            backPlatform.tx {
+                run {
+                    val playName = "Hamlet"
+                    if (botinokPlayRepo.findByName(playName) == null) {
+                        botinokPlayRepo.save(newBotinokPlay(name = playName, pile = "{}"))
+                    }
                 }
-            }
-            run {
-                val playName = "Macbeth"
-                if (botinokPlayRepo.findByName(playName) == null) {
-                    botinokPlayRepo.save(newBotinokPlay(name = playName))
+                run {
+                    val playName = "Macbeth"
+                    if (botinokPlayRepo.findByName(playName) == null) {
+                        botinokPlayRepo.save(newBotinokPlay(name = playName, pile = "{}"))
+                    }
                 }
             }
         }
@@ -349,31 +347,21 @@ class StartBotinok : Application() {
 
             vbox.children += MenuBar()-{o->
                 o.menus += Menu("_File")-{o->
-                    o.items += MenuItem("_Save")-{o->
-                        o.setOnAction {action_save()}
-                    }
-                    o.items += MenuItem("_Quit")-{o->
-                        o.setOnAction {action_quit()}
-                    }
+                    o.addItem("_Save") {action_save()}
+                    o.addItem("_Quit") {action_quit()}
                 }
 
                 o.menus += Menu("_Play")-{o->
-                    runMenuItem = MenuItem("_Run")-{o->
-                        o.setOnAction {action_run()}
-                    }
-                    o.items += runMenuItem
+                    runMenuItem = o.addItem("_Run") {action_run()}
 
-                    stopMenuItem = MenuItem("_Stop")-{o->
-                        o.setOnAction {action_stop()}
-                        o.isDisable = true
-                    }
-                    o.items += stopMenuItem
+                    stopMenuItem = o.addItem("_Stop") {action_stop()}
+                    stopMenuItem.isDisable = true
+
+                    o.addItem("_Properties...") {action_playProperties()}
                 }
 
                 o.menus += Menu("_Tools")-{o->
-                    o.items += MenuItem("_Mess Around")-{o->
-                        o.setOnAction {action_messAround()}
-                    }
+                    o.addItem("_Mess Around") {action_messAround()}
                 }
             }
 
@@ -448,8 +436,8 @@ class StartBotinok : Application() {
                 PussyNode.Type.ARENA -> {
                     addRenameMenuItem(menu, node)
                     addMoveMenuItems(menu, node)
-                    addMenuItem(menu, "New Region", this::action_newRegion)
-                    addMenuItem(menu, "New Pointer", this::action_newPointer)
+                    menu.addItem("New Region", this::action_newRegion)
+                    menu.addItem("New Pointer", this::action_newPointer)
                     menu.items += SeparatorMenuItem()
                     addDeleteMenuItem(menu, node)
                 }
@@ -511,13 +499,13 @@ class StartBotinok : Application() {
             }
 
             if (treeItem !== treeItem.parent.children.first())
-                addMenuItem(menu, "Move Up") {move(-1)}
+                menu.addItem("Move Up") {move(-1)}
             if (treeItem !== treeItem.parent.children.last())
-                addMenuItem(menu, "Move Down") {move(+1)}
+                menu.addItem("Move Down") {move(+1)}
         }
 
         private fun addDeleteMenuItem(menu: ContextMenu, node: PussyNode) {
-            addMenuItem(menu, "Delete") {
+            menu.addItem("Delete") {
                 val entity = node.entity
                 val collection = when (entity) {
                     is BotinokArena -> entity.play.arenas
@@ -531,7 +519,7 @@ class StartBotinok : Application() {
                 for (index in indexToDelete..collection.lastIndex) {
                     val x = collection[index]
                     val positionProperty = when (x) {
-                        // `let` here is a workaround for https://youtrack.jetbrains.com/issue/KT-17799
+                    // `let` here is a workaround for https://youtrack.jetbrains.com/issue/KT-17799
                         is BotinokArena -> x.let {it::position}
                         is BotinokRegion -> x.let {it::position}
                         is BotinokPointer -> x.let {it::position}
@@ -547,7 +535,7 @@ class StartBotinok : Application() {
         }
 
         fun addRenameMenuItem(menu: ContextMenu, node: PussyNode) {
-            addMenuItem(menu, "Rename") {
+            menu.addItem("Rename") {
                 val entity = node.entity
                 val nameProperty = BotinokPile.entityNameProperty(entity)
                 JFXStuff.inputBox("So, name?", nameProperty.get())?.let {
@@ -684,7 +672,8 @@ class StartBotinok : Application() {
                                                  x = xywh.x, y = xywh.y,
                                                  w = xywh.w, h = xywh.h,
                                                  arena = arenaNode.entity,
-                                                 position = arenaNode.entity.regions.size)
+                                                 position = arenaNode.entity.regions.size,
+                                                 pile = "{}")
                 arenaNode.entity.regions.add(newRegion)
                 dirty = true
                 val regionNode = PussyNode.newRegion(newRegion, arenaNode)
@@ -839,7 +828,8 @@ class StartBotinok : Application() {
             val arena = newBotinokArena(name = "Arena ${getArenaCount() + 1}",
                                         screenshot = File(tmpImgPath).readBytes(),
                                         play = play,
-                                        position = play.arenas.size)
+                                        position = play.arenas.size,
+                                        pile = "{}")
             play.arenas.add(arena)
             dirty = true
             PussyNode.newArena(arena, bananas.playNode.iplay)
@@ -997,6 +987,73 @@ class StartBotinok : Application() {
         return bananas.playNode.iplay.entity.arenas[arenaIndex].pointers[pointerIndex]
     }
 
+    fun action_playProperties() {
+        val play = bananas.playNode.iplay.entity
+
+        val dialog = Stage()
+        dialog.title = "Play Properties"
+        dialog.width = 500.0
+        dialog.height = 500.0
+        dialog.initOwner(primaryStage)
+        dialog.initModality(Modality.APPLICATION_MODAL)
+
+        val grid = GridPane()
+        grid.hgap = 8.0
+        grid.vgap = 8.0
+        grid.padding = Insets(8.0, 8.0, 8.0, 8.0)
+        val scene = Scene(grid)
+        dialog.scene = scene
+
+        grid.add(Label("Name"), 0, 0)
+        val nameTextField = TextField()
+        GridPane.setHgrow(nameTextField, Priority.ALWAYS)
+        grid.add(nameTextField, 0, 1)
+        nameTextField.text = play.name
+
+        grid.add(Label("Pile"), 0, 2)
+        val pileTextArea = TextArea()
+        GridPane.setHgrow(pileTextArea, Priority.ALWAYS)
+        GridPane.setVgrow(pileTextArea, Priority.ALWAYS)
+        grid.add(pileTextArea, 0, 3)
+        pileTextArea.style = "-fx-font-family: Consolas;"
+        pileTextArea.text = play.pile
+
+        val buttonHBox = HBox()
+        buttonHBox.spacing = 8.0
+        buttonHBox.alignment = Pos.CENTER_RIGHT
+
+        val okButton = Button("OK")
+        buttonHBox.children += okButton
+        fun onOK() {
+            play.name = nameTextField.text
+            play.pile = pileTextArea.text
+            updateStageTitle()
+            dirty = true
+            dialog.close()
+        }
+        okButton.setOnAction {onOK()}
+
+        val cancelButton = Button("Cancel")
+        buttonHBox.children += cancelButton
+        fun onCancel() {
+            dialog.close()
+        }
+        cancelButton.setOnAction {onCancel()}
+
+        grid.add(buttonHBox, 0, 4)
+
+        dialog.addEventHandler(KeyEvent.KEY_PRESSED) {e->
+            if (e.code == KeyCode.ENTER && e.isControlDown) {
+                onOK()
+            }
+            else if (e.code == KeyCode.ESCAPE) {
+                onCancel()
+            }
+        }
+
+        dialog.showAndWait()
+    }
+
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
@@ -1013,12 +1070,22 @@ private fun noise(s: String) {
     }
 }
 
-private fun addMenuItem(menu: ContextMenu, title: String, handler: () -> Unit) {
-    menu.items += MenuItem(title)-{o->
+private fun ContextMenu.addItem(title: String, handler: () -> Unit) {
+    items += MenuItem(title)-{o->
         o.onAction = EventHandler {e->
             handler()
         }
     }
+}
+
+private fun Menu.addItem(title: String, handler: () -> Unit): MenuItem {
+    val item = MenuItem(title)-{o->
+        o.onAction = EventHandler {e->
+            handler()
+        }
+    }
+    items += item
+    return item
 }
 
 

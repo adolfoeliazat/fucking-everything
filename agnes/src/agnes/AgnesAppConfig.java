@@ -15,7 +15,7 @@ class AgnesAppConfig extends BaseSQLiteAppConfig {
 
     @NotNull
     @Override
-    protected String getDatabaseURL() {
+    public String getDatabaseURL() {
         return BigPile.INSTANCE.getLocalSQLiteShebangTestDBURL();
     }
 }
