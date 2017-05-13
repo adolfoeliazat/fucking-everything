@@ -74,6 +74,9 @@ dependencies {
     compile 'com.google.oauth-client:google-oauth-client:1.22.0:sources'
     compile 'com.google.oauth-client:google-oauth-client-jetty:1.22.0'
     compile 'com.google.oauth-client:google-oauth-client-jetty:1.22.0:sources'
+    compile 'com.github.scribejava:scribejava-apis:4.1.0'
+    compile 'com.github.scribejava:scribejava-apis:4.1.0:sources'
+    compile 'com.github.scribejava:scribejava-core:4.1.0:sources'
 }
 
 task importDeps(type: Copy) {

@@ -12,7 +12,6 @@ import java.time.LocalDateTime
 
 // TODO:vgrechka Change back stamp
 
-// TODO:vgrechka Upload to Google Drive
 // TODO:vgrechka Upload to OneDrive
 
 // NOTE: For some reason Bash doesn't want to work from IDEA console, so run this from cmd.exe
@@ -22,8 +21,8 @@ object CLI_BackShitUp {
     @JvmStatic
     fun main(args: Array<String>) {
         object {
-//            val stamp = "20170512"
-            val stamp = LocalDateTime.now().format(TimePile.FMT_YMD)
+            val stamp = "20170512"
+//            val stamp = LocalDateTime.now().format(TimePile.FMT_YMD)
             val tfvcOutDirWin = "e:/febig/bak/$stamp"
             val tfvcOutDirWSL = BigPile.win2WSL(tfvcOutDirWin)
             val reducedOutDirWin = "e:/bak/$stamp"
@@ -33,17 +32,18 @@ object CLI_BackShitUp {
             init {
                 clog("Backing shit up to $reducedOutDirWSL")
 
-                recreateTFVCOutDir()
-                recreateReducedOutDir()
-                copyIDEASettings()
-                dumpPostgres()
-                zipFuckingEverything()
-                zipAPS()
-                zipFuckingPrivateEverything()
-                hashShit()
-                uploadShitToDropbox()
-                uploadShitToGoogleDrive()
-                checkInToTFVC()
+//                recreateTFVCOutDir()
+//                recreateReducedOutDir()
+//                copyIDEASettings()
+//                dumpPostgres()
+//                zipFuckingEverything()
+//                zipAPS()
+//                zipFuckingPrivateEverything()
+//                hashShit()
+//                uploadShitToDropbox()
+//                uploadShitToGoogleDrive()
+                uploadShitToOneDrive()
+//                checkInToTFVC()
                 clog("\nOK")
             }
 
@@ -198,6 +198,45 @@ object CLI_BackShitUp {
                 }
             }
 
+            private fun uploadShitToOneDrive() {
+                OneDrive()
+                imf("fe8b8840-d241-424b-8147-7821f0428ebd")
+
+                val box = Dropbox(BigPile.saucerfulOfSecrets.dropbox.vgrechka)
+                object : uploadShitSomewhereTemplate() {
+                    override fun getOutputLabel() = "[DROPBOX]"
+
+                    override fun getAccountName(): String {
+                        return box.account.name.displayName
+                    }
+
+                    override fun createFolder(remotePath: String) {
+                        box.client.files().createFolder(remotePath)
+                    }
+
+                    override fun uploadStream(file: File, remoteFilePath: String) {
+                        file.inputStream().use {stm->
+                            box.client.files()
+                                .uploadBuilder(remoteFilePath)
+                                .uploadAndFinish(stm)
+                        }
+                    }
+
+                    override fun listFolder(removeFolder: String, recursive: Boolean): List<Meta> {
+                        return box.listFolder(removeFolder, recursive).map {
+                            object : Meta() {
+                                override val path get() = it.pathLower
+                            }
+                        }
+                    }
+
+                    override fun downloadFile(remotePath: String, stm: FileOutputStream) {
+                        box.client.files()
+                            .download(remotePath)
+                            .download(stm)
+                    }
+                }
+            }
 
             private fun uploadShitToGoogleDrive() {
                 val g = GoogleDrive()

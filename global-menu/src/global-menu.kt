@@ -1,45 +1,29 @@
 package vgrechka.globalmenu
 
-import com.sun.javafx.fxml.builder.JavaFXSceneBuilder
-import com.sun.jna.platform.win32.User32
 import javafx.application.Application
 import javafx.application.Platform
 import javafx.collections.FXCollections
-import javafx.concurrent.Task
 import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.control.*
-import javafx.scene.control.Alert.AlertType
 import javafx.scene.input.*
-import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.stage.WindowEvent
 import org.jnativehook.GlobalScreen
-import org.jnativehook.mouse.NativeMouseAdapter
 import org.jnativehook.mouse.NativeMouseEvent
 import vgrechka.*
 import vgrechka.idea.hripos.*
 import vgrechka.ideabackdoor.*
 import java.awt.Robot
-import java.util.concurrent.ExecutorService
 import java.util.logging.Level
 import java.util.logging.Logger
 import kotlin.properties.Delegates.notNull
 import kotlin.system.exitProcess
-import java.lang.reflect.Array.setShort
-import java.lang.reflect.AccessibleObject.setAccessible
-import org.jnativehook.NativeInputEvent
 import org.jnativehook.keyboard.NativeKeyAdapter
 import org.jnativehook.keyboard.NativeKeyEvent
-import vgrechka.botinok.*
-import java.awt.MouseInfo
-import java.util.concurrent.TimeUnit
-import java.util.ArrayList
-import java.util.concurrent.AbstractExecutorService
 import kotlin.concurrent.thread
-import kotlin.reflect.KFunction
 import kotlin.reflect.KFunction0
 import kotlin.reflect.jvm.isAccessible
 
@@ -55,7 +39,7 @@ object FuckItem : GlobalMenuItem() {
     override fun makeDetailsControl() = Label("I am the Fuck item")
 
     override fun run() {
-        JFXStuff.infoAlert("Fuck, fuck, fuck...")
+        JFXPile.infoAlert("Fuck, fuck, fuck...")
     }
 }
 
@@ -64,7 +48,7 @@ object ShitItem : GlobalMenuItem() {
     override fun makeDetailsControl() = null
 
     override fun run() {
-        JFXStuff.errorAlert("Shit? What shit?", "No shit for you today...")
+        JFXPile.errorAlert("Shit? What shit?", "No shit for you today...")
     }
 }
 
@@ -73,7 +57,7 @@ object BitchItem : GlobalMenuItem() {
     override fun makeDetailsControl() = Label("I am the Bitch item")
 
     override fun run() {
-        JFXStuff.errorAlert("Fuck you. Just fuck you")
+        JFXPile.errorAlert("Fuck you. Just fuck you")
     }
 }
 
@@ -102,7 +86,7 @@ object GlobalMenuItem_Phizdets_MakeSenseOfPHPSpew : GlobalMenuItem() {
             sendCommandToIDEABackdoor(Command_PhiMakeSenseOfPHPSpew(spew))
             GlobalMenuPile.primaryStage.isIconified = true
         } catch(e: Exception) {
-            JFXStuff.errorAlert(e)
+            JFXPile.errorAlert(e)
         }
     }
 }
@@ -191,7 +175,7 @@ class StartGlobalMenu : Application() {
         Thread.setDefaultUncaughtExceptionHandler {thread, exception ->
             try {
                 Platform.runLater {
-                    JFXStuff.errorAlert(exception)
+                    JFXPile.errorAlert(exception)
                 }
 //                if (Platform.isFxApplicationThread()) {
 //                    JFXStuff.errorAlert(exception)

@@ -130,7 +130,7 @@ abstract class CamelToSnakeTool : Application() {
             val parser = Parboiled.createParser(Parser::class.java)
             val result = ReportingParseRunner<Any?>(parser.spew()).run(input)
             if (result.hasErrors()) {
-                JFXStuff.errorAlert("Can't parse your shit")
+                JFXPile.errorAlert("Can't parse your shit")
                 return@addListener
             }
 

@@ -124,7 +124,8 @@ object BigPile {
     val fepg: JSON_fepg,
     val pg_dump: String,
     val dropbox: JSON_dropbox,
-    val gdrive: JSON_gdrive
+    val gdrive: JSON_gdrive,
+    val onedrive: JSON_onedrive
 ) {
     @Ser class JSON_fepg(
         val prod: DBConnectionParams,
@@ -138,6 +139,19 @@ object BigPile {
     ) {
         @Ser class JSON_pepezdus(
             val installed: GoogleClientSecrets.Details)
+    }
+
+    @Ser class JSON_onedrive(
+        val pepezdus: JSON_pepezdus
+    ) {
+        @Ser class JSON_pepezdus(
+            val authorityURL: String,
+            val authorizationEndpoint: String,
+            val tokenEndpoint: String,
+            val tokenID: String,
+            val redirectURI: String,
+            val scopes: String
+        )
     }
 }
 

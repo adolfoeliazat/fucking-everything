@@ -58,16 +58,7 @@ class StartBotinok : Application() {
             seed()
         }
 
-        Thread.setDefaultUncaughtExceptionHandler {thread, exception ->
-            try {
-                Platform.runLater {
-                    exception.printStackTrace()
-                    JFXStuff.errorAlert(exception)
-                }
-            } catch (e: Throwable) {
-                e.printStackTrace()
-            }
-        }
+        JFXPile.installUncaughtExceptionHandler_errorAlert()
 
         installKeyboardHook()
 
@@ -102,13 +93,13 @@ class StartBotinok : Application() {
     class MaybeAskAndSaveResult(val cancelled: Boolean)
     private fun maybeAskAndSave(): MaybeAskAndSaveResult {
         if (dirty) {
-            exhaustive = when (JFXStuff.yesNoCancel("Should I save your shit?")) {
-                JFXStuff.YesNoCancelResult.YES -> {
+            exhaustive = when (JFXPile.yesNoCancel("Should I save your shit?")) {
+                JFXPile.YesNoCancelResult.YES -> {
                     action_save()
                 }
-                JFXStuff.YesNoCancelResult.NO -> {
+                JFXPile.YesNoCancelResult.NO -> {
                 }
-                JFXStuff.YesNoCancelResult.CANCEL -> {
+                JFXPile.YesNoCancelResult.CANCEL -> {
                     return MaybeAskAndSaveResult(cancelled = true)
                 }
             }
@@ -141,7 +132,7 @@ class StartBotinok : Application() {
                     handleEnterKeyInPlaySelector()
                 }
             }
-            JFXStuff.later {
+            JFXPile.later {
                 listView.selectionModel.select(0)
                 listView.requestFocus()
             }
@@ -538,7 +529,7 @@ class StartBotinok : Application() {
             menu.addItem("Rename") {
                 val entity = node.entity
                 val nameProperty = BotinokPile.entityNameProperty(entity)
-                JFXStuff.inputBox("So, name?", nameProperty.get())?.let {
+                JFXPile.inputBox("So, name?", nameProperty.get())?.let {
                     nameProperty.set(it)
                     val parentChildren = node.treeItem.parent.children
                     val index = parentChildren.indexOf(node.treeItem)
@@ -789,7 +780,7 @@ class StartBotinok : Application() {
 
         fun fuck1() {
             Thread.sleep(500)
-            JFXStuff.later {handleEnterKeyInPlaySelector()}
+            JFXPile.later {handleEnterKeyInPlaySelector()}
         }
 
 //        fun fuck3() {
@@ -817,7 +808,7 @@ class StartBotinok : Application() {
 
     private fun action_takeScreenshot() {
         stopRequested = true
-        JFXStuff.later {
+        JFXPile.later {
             run {
                 val image = robot.createScreenCapture(Rectangle(getDefaultToolkit().screenSize))
                 ImageIO.write(image, "png", File(tmpImgPath))
@@ -836,9 +827,9 @@ class StartBotinok : Application() {
             bananas.navigationTreeView.scrollTo(bananas.playNode.treeItem.children.lastIndex)
             selectLastTreeItem()
 
-            JFXStuff.later {
+            JFXPile.later {
                 primaryStage.isIconified = true
-                JFXStuff.later {
+                JFXPile.later {
                     primaryStage.isIconified = false
                 }
             }
@@ -882,7 +873,7 @@ class StartBotinok : Application() {
         }
 
         dirty = false
-        JFXStuff.infoAlert("Your shit was saved OK")
+        JFXPile.infoAlert("Your shit was saved OK")
     }
 
     fun action_run() {
@@ -958,7 +949,7 @@ class StartBotinok : Application() {
             }
 
             running = false
-            JFXStuff.later {
+            JFXPile.later {
                 bananas.runMenuItem.isDisable = false
                 bananas.stopMenuItem.isDisable = true
                 bananas.resetStatusLabel()

@@ -20,7 +20,7 @@ import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.isAccessible
 
-object JFXStuff {
+object JFXPile {
     fun later(block: () -> Unit) {
         Platform.runLater(block)
     }
@@ -74,6 +74,20 @@ object JFXStuff {
             else -> wtf("b29d5532-14cd-4dfe-af1e-6b00aa225028")
         }
     }
+
+    fun installUncaughtExceptionHandler_errorAlert() {
+        Thread.setDefaultUncaughtExceptionHandler {thread, exception ->
+            try {
+                Platform.runLater {
+                    exception.printStackTrace()
+                    JFXPile.errorAlert(exception)
+                }
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 }
 
 private val Any.observables by AttachedComputedShit<Any, MutableList<Observable>>(weak = true) {

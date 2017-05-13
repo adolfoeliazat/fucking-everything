@@ -25,6 +25,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.ChronoField
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.TimeUnit
 import kotlin.properties.ReadOnlyProperty
@@ -673,6 +674,14 @@ object FilePile {
             .replace(Regex("\\."), "-")
     }
 
+    fun ensuringDirectoryExists(path: String): File {
+        val dir = File(path)
+        if (!dir.exists())
+            check(dir.mkdir()) {"3f7eabea-d251-4c9b-91af-4d2785dfb3e2"}
+        if (!dir.isDirectory)
+            bitch("937c3831-fd4d-4a2b-bcf0-489a163448e0")
+        return dir
+    }
 }
 
 interface SuiteMaker<BaseSUT : Any> {
@@ -722,7 +731,28 @@ fun <From, To> Iterable<From>.collect(block: CollectBlockReceiver<To>.(From) -> 
     return res
 }
 
+fun finally(finallyBlock: () -> Unit, block: () -> Unit) {
+    try {
+        block()
+    } finally {
+        finallyBlock()
+    }
+}
 
+class Once {
+    val keys = ConcurrentHashMap<Any, Boolean>()
+
+    operator fun invoke(key: Any, block: () -> Unit) {
+        keys.computeIfAbsent(key) {
+            block()
+            true
+        }
+    }
+
+    fun wasExecuted(key: Any): Boolean {
+        return keys.contains(key)
+    }
+}
 
 
 
