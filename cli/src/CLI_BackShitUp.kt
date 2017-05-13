@@ -1,15 +1,19 @@
 package vgrechka
 
+import com.google.api.client.http.FileContent
 import com.google.common.hash.Hashing
 import vgrechka.CLIPile.regexpTag
 import vgrechka.db.*
 import java.io.File
+import java.io.FileOutputStream
+import com.google.api.client.http.GenericUrl
+import com.google.api.client.googleapis.media.MediaHttpDownloader
 import java.time.LocalDateTime
 
-// TODO:vgrechka Back up Postgres
+// TODO:vgrechka Change back stamp
+
 // TODO:vgrechka Upload to Google Drive
 // TODO:vgrechka Upload to OneDrive
-// TODO:vgrechka Upload to to TFVC
 
 // NOTE: For some reason Bash doesn't want to work from IDEA console, so run this from cmd.exe
 
@@ -18,6 +22,7 @@ object CLI_BackShitUp {
     @JvmStatic
     fun main(args: Array<String>) {
         object {
+//            val stamp = "20170512"
             val stamp = LocalDateTime.now().format(TimePile.FMT_YMD)
             val tfvcOutDirWin = "e:/febig/bak/$stamp"
             val tfvcOutDirWSL = BigPile.win2WSL(tfvcOutDirWin)
@@ -37,6 +42,7 @@ object CLI_BackShitUp {
                 zipFuckingPrivateEverything()
                 hashShit()
                 uploadShitToDropbox()
+                uploadShitToGoogleDrive()
                 checkInToTFVC()
                 clog("\nOK")
             }
@@ -156,61 +162,198 @@ object CLI_BackShitUp {
             }
 
             private fun uploadShitToDropbox() {
-                clog()
-                val bs = ConsoleBullshitter("[DROPBOX]")
                 val box = Dropbox(BigPile.saucerfulOfSecrets.dropbox.vgrechka)
-                bs.say("Account: " + box.account.name.displayName)
+                object : uploadShitSomewhereTemplate() {
+                    override fun getOutputLabel() = "[DROPBOX]"
 
-                val targetFolder = "/bak/$stamp"
+                    override fun getAccountName(): String {
+                        return box.account.name.displayName
+                    }
 
-                bs.operation("Creating folder $targetFolder") {
-                    box.client.files().createFolder(targetFolder)
-                }
+                    override fun createFolder(remotePath: String) {
+                        box.client.files().createFolder(remotePath)
+                    }
 
-                for (localFile in File(reducedOutDirWin).listFiles()) {
-                    bs.operation("Uploading ${localFile.name}") {
-                        localFile.inputStream().use {stm ->
+                    override fun uploadStream(file: File, remoteFilePath: String) {
+                        file.inputStream().use {stm->
                             box.client.files()
-                                .uploadBuilder("$targetFolder/${localFile.name}")
+                                .uploadBuilder(remoteFilePath)
                                 .uploadAndFinish(stm)
                         }
                     }
-                }
-                bs.say()
 
-                bs.section("Listing shit under $targetFolder") {
-                    val metas = box.listFolder(targetFolder, recursive = true)
-                    for (meta in metas) {
-                        bs.say(meta.pathLower)
-                    }
-                }
-
-                bs.section("Double-checking shit") {
-                    for (origFile in File(reducedOutDirWin).listFiles()) {
-                        val downloadedFile = File("$tmpDirWin/checking--${origFile.name}")
-                        if (downloadedFile.exists()) {
-                            check(downloadedFile.delete()) {"f683d3b4-d096-40b6-85a6-43395c1181c0"}
-                        }
-
-                        bs.operation("Downloading ${origFile.name}") {
-                            downloadedFile.outputStream().use {stm->
-                                box.client.files()
-                                    .download("$targetFolder/${origFile.name}")
-                                    .download(stm)
+                    override fun listFolder(removeFolder: String, recursive: Boolean): List<Meta> {
+                        return box.listFolder(removeFolder, recursive).map {
+                            object : Meta() {
+                                override val path get() = it.pathLower
                             }
                         }
+                    }
 
-                        bs.operation("Comparing with original") {
-                            val downloadedBytes = downloadedFile.readBytes()
-                            val origBytes = origFile.readBytes()
-                            if (downloadedBytes.size != origBytes.size)
-                                bitch("Sizes don't match")
-                            for (i in downloadedBytes.indices)
-                                if (downloadedBytes[i] != origBytes[i])
-                                    bitch("Bytes don't batch")
+                    override fun downloadFile(remotePath: String, stm: FileOutputStream) {
+                        box.client.files()
+                            .download(remotePath)
+                            .download(stm)
+                    }
+                }
+            }
+
+
+            private fun uploadShitToGoogleDrive() {
+                val g = GoogleDrive()
+
+                object : uploadShitSomewhereTemplate() {
+                    override fun getOutputLabel() = "[GDRIVE]"
+
+                    override fun getAccountName(): String {
+                        return g.drive.about().get().setFields("user").execute()
+                            .user.displayName
+                    }
+
+                    inner class FilePathShit(val parentID: String, val name: String)
+
+                    override fun createFolder(remotePath: String) {
+                        val fps = getFilePathShit(remotePath)
+
+                        val fileMetadata = com.google.api.services.drive.model.File()
+                        fileMetadata.name = fps.name
+                        fileMetadata.parents = listOf(fps.parentID)
+                        fileMetadata.mimeType = "application/vnd.google-apps.folder"
+
+                        g.drive.files().create(fileMetadata)
+                            .execute()
+                    }
+
+                    fun getFilePathShit(remotePath: String): FilePathShit {
+                        check(remotePath.startsWith("/"))
+                        val theRemotePath = remotePath.substring(1)
+
+                        val steps = theRemotePath.split("/")
+                        val name = steps.last()
+                        val parentID = getRemoteFileID(steps.dropLast(1))
+                        return FilePathShit(parentID, name)
+                    }
+
+                    private fun getRemoteFile(pathParts: List<String>): com.google.api.services.drive.model.File {
+                        var parentID = "root"
+                        val parentsSoFar = mutableListOf(parentID)
+                        var file: com.google.api.services.drive.model.File? = null
+                        for (name in pathParts) {
+                            val q = "name = '$name' and '$parentID' in parents and trashed = false"
+                            // clog("q = $q")
+                            val list = g.drive.files().list()
+                                .setQ(q)
+                                .execute()
+                            if (list.files.size == 0)
+                                bitch("File `$name` not found under `${parentsSoFar.joinToString("/")}`")
+                            check(list.files.size == 1)
+                            val f = list.files.first()
+                            file = f
+                            parentID = f.id
+                            parentsSoFar += parentID
+                        }
+                        return file!!
+                    }
+
+                    private fun getRemoteFileID(pathParts: List<String>): String {
+                        return getRemoteFile(pathParts).id
+                    }
+
+                    override fun uploadStream(file: File, remoteFilePath: String) {
+                        val fps = getFilePathShit(remoteFilePath)
+
+                        val fileMetadata = com.google.api.services.drive.model.File()
+                        fileMetadata.name = fps.name
+                        fileMetadata.parents = listOf(fps.parentID)
+
+                        val fileContent = FileContent(BigPile.mime.octetStream, file)
+
+                        val insert = g.drive.files().create(fileMetadata, fileContent)
+                        val uploader = insert.mediaHttpUploader
+                        uploader.isDirectUploadEnabled = true
+                        // uploader.setProgressListener(...)
+                        insert.execute()
+                    }
+
+                    override fun listFolder(remoteFolder: String, recursive: Boolean): List<Meta> {
+                        imf("5f958cdc-5fdc-4767-8f66-a446a4e76b5a")
+                    }
+
+                    override fun downloadFile(remotePath: String, stm: FileOutputStream) {
+                        check(remotePath.startsWith("/"))
+                        val theRemotePath = remotePath.substring(1)
+                        val id = getRemoteFileID(theRemotePath.split("/"))
+                        val remoteFile = g.drive.files().get(id)
+                        remoteFile.executeMediaAndDownloadTo(stm)
+                    }
+                }
+            }
+
+            abstract inner class uploadShitSomewhereTemplate {
+                abstract fun getOutputLabel(): String
+                abstract fun getAccountName(): String
+                abstract fun createFolder(remotePath: String)
+                abstract fun uploadStream(file: File, remoteFilePath: String)
+                abstract fun listFolder(remoteFolder: String, recursive: Boolean): List<Meta>
+                abstract fun downloadFile(remotePath: String, stm: FileOutputStream)
+
+                abstract inner class Meta {
+                    abstract val path: String
+                }
+
+                init {
+                    clog()
+                    val bs = ConsoleBullshitter(getOutputLabel())
+                    bs.say("Account: " + getAccountName())
+
+                    val targetFolder = "/bak/$stamp"
+
+                    bs.operation("Creating folder $targetFolder") {
+                        createFolder(targetFolder)
+                    }
+
+                    for (localFile in File(reducedOutDirWin).listFiles()) {
+                        bs.operation("Uploading ${localFile.name}") {
+                            uploadStream(localFile, "$targetFolder/${localFile.name}")
+                        }
+                    }
+                    bs.say()
+
+                    if (false) {
+                        bs.section("Listing shit under $targetFolder") {
+                            val metas = listFolder(targetFolder, recursive = true)
+                            for (meta in metas) {
+                                bs.say(meta.path)
+                            }
+                        }
+                    }
+
+                    bs.section("Double-checking shit") {
+                        for (origFile in File(reducedOutDirWin).listFiles()) {
+                            val downloadedFile = File("$tmpDirWin/checking--${origFile.name}")
+                            if (downloadedFile.exists()) {
+                                check(downloadedFile.delete()) {"f683d3b4-d096-40b6-85a6-43395c1181c0"}
+                            }
+
+                            bs.operation("Downloading ${origFile.name}") {
+                                downloadedFile.outputStream().use {stm->
+                                    downloadFile("$targetFolder/${origFile.name}", stm)
+                                }
+                            }
+
+                            bs.operation("Comparing with original") {
+                                val downloadedBytes = downloadedFile.readBytes()
+                                val origBytes = origFile.readBytes()
+                                if (downloadedBytes.size != origBytes.size)
+                                    bitch("Sizes don't match. Expected ${origBytes.size}, got ${downloadedBytes.size}")
+                                for (i in downloadedBytes.indices)
+                                    if (downloadedBytes[i] != origBytes[i])
+                                        bitch("Bytes don't batch")
+                            }
                         }
                     }
                 }
+
             }
 
             private fun copyIDEASettings() {

@@ -70,6 +70,10 @@ dependencies {
     compile 'com.dropbox.core:dropbox-core-sdk:3.0.3:sources'
     compile 'com.google.apis:google-api-services-drive:v3-rev72-1.22.0'
     compile 'com.google.apis:google-api-services-drive:v3-rev72-1.22.0:sources'
+    compile 'com.google.oauth-client:google-oauth-client:1.22.0'
+    compile 'com.google.oauth-client:google-oauth-client:1.22.0:sources'
+    compile 'com.google.oauth-client:google-oauth-client-jetty:1.22.0'
+    compile 'com.google.oauth-client:google-oauth-client-jetty:1.22.0:sources'
 }
 
 task importDeps(type: Copy) {

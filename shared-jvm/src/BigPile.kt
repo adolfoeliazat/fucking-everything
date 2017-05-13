@@ -1,6 +1,7 @@
 package vgrechka
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets
 import java.io.*
 import kotlin.concurrent.thread
 
@@ -25,6 +26,10 @@ object BigPile {
 
     val saucerfulOfSecrets by lazy {
         ObjectMapper().readValue(File(getEnvOrBitch("SAUCERFUL_OF_SECRETS")), JSON_SaucerfulOfSecrets::class.java)!!
+    }
+
+    object mime {
+        val octetStream = "application/octet-stream"
     }
 
     private fun getEnvOrBitch(name: String) =
@@ -118,16 +123,22 @@ object BigPile {
 @Ser class JSON_SaucerfulOfSecrets(
     val fepg: JSON_fepg,
     val pg_dump: String,
-    val dropbox: JSON_dropbox
+    val dropbox: JSON_dropbox,
+    val gdrive: JSON_gdrive
 ) {
     @Ser class JSON_fepg(
         val prod: DBConnectionParams,
-        val test: DBConnectionParams
-    )
+        val test: DBConnectionParams)
 
     @Ser class JSON_dropbox(
-        val vgrechka: JSON_DropboxAppAccessConfig
-    )
+        val vgrechka: JSON_DropboxAppAccessConfig)
+
+    @Ser class JSON_gdrive(
+        val pepezdus: JSON_pepezdus
+    ) {
+        @Ser class JSON_pepezdus(
+            val installed: GoogleClientSecrets.Details)
+    }
 }
 
 
