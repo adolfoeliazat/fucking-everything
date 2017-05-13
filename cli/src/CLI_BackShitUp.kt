@@ -6,9 +6,7 @@ import vgrechka.CLIPile.regexpTag
 import vgrechka.db.*
 import java.io.File
 import java.io.FileOutputStream
-import com.google.api.client.http.GenericUrl
-import com.google.api.client.googleapis.media.MediaHttpDownloader
-import java.time.LocalDateTime
+import kotlin.system.exitProcess
 
 // TODO:vgrechka Change back stamp
 
@@ -30,23 +28,32 @@ object CLI_BackShitUp {
             val tmpDirWin = "c:/tmp"
 
             init {
-                clog("Backing shit up to $reducedOutDirWSL")
-
-//                recreateTFVCOutDir()
-//                recreateReducedOutDir()
-//                copyIDEASettings()
-//                dumpPostgres()
-//                zipFuckingEverything()
-//                zipAPS()
-//                zipFuckingPrivateEverything()
-//                hashShit()
-//                uploadShitToDropbox()
-//                uploadShitToGoogleDrive()
-                uploadShitToOneDrive()
-//                checkInToTFVC()
-                clog("\nOK")
+                exitingProcessDespitePossibleJavaFXThread {
+                    clog("Backing shit up to $reducedOutDirWSL")
+//                    recreateTFVCOutDir()
+//                    recreateReducedOutDir()
+//                    copyIDEASettings()
+//                    dumpPostgres()
+//                    zipFuckingEverything()
+//                    zipAPS()
+//                    zipFuckingPrivateEverything()
+//                    hashShit()
+//                    uploadShitToDropbox()
+//                    uploadShitToGoogleDrive()
+                    uploadShitToOneDrive()
+//                    checkInToTFVC()
+                    clog("\nOK")
+                }
             }
 
+            fun exitingProcessDespitePossibleJavaFXThread(block: () -> Unit) {
+                Thread.currentThread().setUncaughtExceptionHandler {t, e ->
+                    e.printStackTrace()
+                    exitProcess(1)
+                }
+                block()
+                exitProcess(0)
+            }
 
             fun runTFAndCheckOutput(cmdPieces: List<String>, expectedLines: List<String>) {
                 val res = BigPile.runProcessAndWait(
@@ -200,42 +207,41 @@ object CLI_BackShitUp {
 
             private fun uploadShitToOneDrive() {
                 OneDrive()
-                imf("fe8b8840-d241-424b-8147-7821f0428ebd")
 
-                val box = Dropbox(BigPile.saucerfulOfSecrets.dropbox.vgrechka)
-                object : uploadShitSomewhereTemplate() {
-                    override fun getOutputLabel() = "[DROPBOX]"
-
-                    override fun getAccountName(): String {
-                        return box.account.name.displayName
-                    }
-
-                    override fun createFolder(remotePath: String) {
-                        box.client.files().createFolder(remotePath)
-                    }
-
-                    override fun uploadStream(file: File, remoteFilePath: String) {
-                        file.inputStream().use {stm->
-                            box.client.files()
-                                .uploadBuilder(remoteFilePath)
-                                .uploadAndFinish(stm)
-                        }
-                    }
-
-                    override fun listFolder(removeFolder: String, recursive: Boolean): List<Meta> {
-                        return box.listFolder(removeFolder, recursive).map {
-                            object : Meta() {
-                                override val path get() = it.pathLower
-                            }
-                        }
-                    }
-
-                    override fun downloadFile(remotePath: String, stm: FileOutputStream) {
-                        box.client.files()
-                            .download(remotePath)
-                            .download(stm)
-                    }
-                }
+//                val box = Dropbox(BigPile.saucerfulOfSecrets.dropbox.vgrechka)
+//                object : uploadShitSomewhereTemplate() {
+//                    override fun getOutputLabel() = "[DROPBOX]"
+//
+//                    override fun getAccountName(): String {
+//                        return box.account.name.displayName
+//                    }
+//
+//                    override fun createFolder(remotePath: String) {
+//                        box.client.files().createFolder(remotePath)
+//                    }
+//
+//                    override fun uploadStream(file: File, remoteFilePath: String) {
+//                        file.inputStream().use {stm->
+//                            box.client.files()
+//                                .uploadBuilder(remoteFilePath)
+//                                .uploadAndFinish(stm)
+//                        }
+//                    }
+//
+//                    override fun listFolder(removeFolder: String, recursive: Boolean): List<Meta> {
+//                        return box.listFolder(removeFolder, recursive).map {
+//                            object : Meta() {
+//                                override val path get() = it.pathLower
+//                            }
+//                        }
+//                    }
+//
+//                    override fun downloadFile(remotePath: String, stm: FileOutputStream) {
+//                        box.client.files()
+//                            .download(remotePath)
+//                            .download(stm)
+//                    }
+//                }
             }
 
             private fun uploadShitToGoogleDrive() {

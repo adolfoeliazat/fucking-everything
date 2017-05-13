@@ -94,7 +94,11 @@ class OneDrive {
 
                 OneDrive.AuthenticationState.HAS_CODE -> {
                     try {
-                        accessToken = service.getAccessToken(code).accessToken
+                        val debug_actLikeGotAccessToken = true
+                        accessToken = when {
+                            debug_actLikeGotAccessToken -> "fucking-token"
+                            else -> service.getAccessToken(code).accessToken
+                        }
                         accessTokenFile.writeText(accessToken)
                         state = AuthenticationState.HAS_ACCESS_TOKEN
                     } catch(e: Throwable) {
@@ -104,7 +108,8 @@ class OneDrive {
 
                 OneDrive.AuthenticationState.HAS_ACCESS_TOKEN -> {
                     try {
-                        imf("check token    183a2be8-8cd3-49ab-b01f-362edbafe91a")
+                        // imf("check token    183a2be8-8cd3-49ab-b01f-362edbafe91a")
+                        state = AuthenticationState.ACCESS_TOKEN_SEEMS_VALID
                     } catch (e: Throwable) {
                         state = AuthenticationState.VIRGIN
                     }
