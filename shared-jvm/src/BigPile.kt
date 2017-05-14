@@ -3,6 +3,7 @@ package vgrechka
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets
 import java.io.*
+import java.nio.charset.Charset
 import kotlin.concurrent.thread
 import kotlin.system.exitProcess
 
@@ -29,8 +30,16 @@ object BigPile {
         ObjectMapper().readValue(File(getEnvOrBitch("SAUCERFUL_OF_SECRETS")), JSON_SaucerfulOfSecrets::class.java)!!
     }
 
-    object mime {
+    object charset {
+        val utf8 = Charset.forName("UTF-8")!!
+    }
+
+    object mediaType {
         val octetStream = "application/octet-stream"
+        val json = "application/json"
+        val xml = "application/xml"
+        val plain = "text/plain"
+        val html = "text/html"
     }
 
     private fun getEnvOrBitch(name: String) =

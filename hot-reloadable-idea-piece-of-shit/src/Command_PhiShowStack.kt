@@ -118,7 +118,7 @@ object Command_PhiShowStackTest {
         HTTPClientRequest()
             .url("http://localhost:12312?proc=PhiShowStack")
             .method_post {it
-                .mediaTypeName(HTTPClientRequest.MediaTypeName.JSON)
+                .mediaTypeName(BigPile.mediaType.json)
                 .content(json)
             }
             .ignite()

@@ -2,15 +2,22 @@
 
 package vgrechka
 
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 import org.junit.Test
 import vgrechka.spew.*
+import java.util.concurrent.TimeUnit
 
 @GOptsBuilder
 class HTTPClientRequest : Generated_BaseFor_HTTPClientRequest() {
     data class Opts(
         val url: String,
         val readTimeoutSeconds: Long? = null,
+        val headers: List<Pair<String, String>> = listOf(),
         val method: MethodOpts,
+        val bitchUnless200: Boolean = true,
         val weirdLogging: WeirdLoggingOpts = WeirdLoggingOpts.None()) {
 
         sealed class MethodOpts {
@@ -25,8 +32,7 @@ class HTTPClientRequest : Generated_BaseFor_HTTPClientRequest() {
                 }
             }
 
-            data class Get(
-                val uselessOption: String) : MethodOpts()
+            class Get : MethodOpts()
         }
 
         sealed class WeirdLoggingOpts {
@@ -38,36 +44,47 @@ class HTTPClientRequest : Generated_BaseFor_HTTPClientRequest() {
         }
     }
 
-
-    object MediaTypeName {
-        val JSON = "application/json"
-        val XML = "application/xml"
-    }
+    data class Response(
+        val code: Int,
+        val body: String
+    )
 
     class Ignition(val opts: Opts) {
-        fun ignite(): String {
-            imf("99ffcd25-a35f-404b-9177-6e289a5fd18c")
+        fun ignite(): Response {
+            val client = OkHttpClient.Builder()
+                .readTimeout(opts.readTimeoutSeconds ?: 5, TimeUnit.SECONDS)
+                .build()
+
+            var requestBuilder = Request.Builder()
+                .url(opts.url)
+            for ((name, value) in opts.headers) {
+                requestBuilder = requestBuilder.header(name, value)
+            }
+
+            exhaustive=when (opts.method) {
+                is Opts.MethodOpts.Post -> {
+                    val mediaType = MediaType.parse(opts.method.mediaTypeName + "; charset=utf-8")
+                    val body = RequestBody.create(mediaType, opts.method.content)
+                    requestBuilder = requestBuilder.post(body)
+                }
+                is Opts.MethodOpts.Get -> {
+                    requestBuilder = requestBuilder.get()
+                }
+            }
+
+            val request = requestBuilder.build()
+            val response = client.newCall(request).execute()
+            val code = response.code()
+            if (code != 200 && opts.bitchUnless200)
+                bitch("Shitty HTTP response code: $code")
+
+            val charset = BigPile.charset.utf8
+            return Response(
+                code = code,
+                body = response.body().source().readString(charset)
+            )
         }
     }
-
-    //    fun post(mediaTypeName: String, url: String, content: String, readTimeoutSeconds: Long? = null): String {
-//        val mediaType = MediaType.parse(mediaTypeName + "; charset=utf-8")
-//        val client = OkHttpClient.Builder()
-//            .readTimeout(readTimeoutSeconds ?: 5, TimeUnit.SECONDS)
-//            .build()
-//        val body = RequestBody.create(mediaType, content)
-//        val request = Request.Builder()
-//            .url(url)
-//            .post(body)
-//            .build()
-//        val response = client.newCall(request).execute()
-//        val code = response.code()
-//        if (code != 200)
-//            bitch("Shitty HTTP response code: $code")
-//
-//        val charset = Charset.forName("UTF-8")
-//        return response.body().source().readString(charset)
-//    }
 
 }
 

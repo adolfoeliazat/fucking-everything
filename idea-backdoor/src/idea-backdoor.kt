@@ -159,7 +159,7 @@ object SendSomeShitToBackdoor {
             .url(url)
             .readTimeoutSeconds(null)
             .method_post {it
-                .mediaTypeName(HTTPClientRequest.MediaTypeName.JSON)
+                .mediaTypeName(BigPile.mediaType.json)
                 .content(json)
             }
             .ignite()

@@ -7,7 +7,6 @@ import vgrechka.CLIPile.regexpTag
 import vgrechka.db.*
 import java.io.File
 import java.io.FileOutputStream
-import kotlin.system.exitProcess
 
 // TODO:vgrechka Change back stamp
 
@@ -303,7 +302,7 @@ object CLI_BackShitUp {
                         fileMetadata.name = fps.name
                         fileMetadata.parents = listOf(fps.parentID)
 
-                        val fileContent = FileContent(BigPile.mime.octetStream, file)
+                        val fileContent = FileContent(BigPile.mediaType.octetStream, file)
 
                         val insert = g.drive.files().create(fileMetadata, fileContent)
                         val uploader = insert.mediaHttpUploader

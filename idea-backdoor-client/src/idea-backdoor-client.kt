@@ -22,7 +22,7 @@ fun sendCommandToIDEABackdoor(cmd: Any) {
         .url(url)
         .readTimeoutSeconds(null)
         .method_post {it
-            .mediaTypeName(HTTPClientRequest.MediaTypeName.JSON)
+            .mediaTypeName(BigPile.mediaType.json)
             .content(json)
         }
         .ignite()
@@ -47,10 +47,10 @@ fun rubRemoteIdeaTits(localProject: Project?, data: Any, taskTitle: String? = nu
                 .url( "http://localhost:${BackdoorClientGlobal.defaultRPCServerPort}?proc=$theProc")
                 .readTimeoutSeconds(readTimeoutSeconds)
                 .method_post {it
-                    .mediaTypeName(HTTPClientRequest.MediaTypeName.JSON)
+                    .mediaTypeName(BigPile.mediaType.json)
                     .content(json)
                 }
-                .ignite()
+                .ignite().body
             indicator.fraction = 1.0
         }
 

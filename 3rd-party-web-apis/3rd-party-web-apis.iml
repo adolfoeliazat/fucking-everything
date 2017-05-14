@@ -8,10 +8,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="kotlin-jvm" level="project" />
-    <orderEntry type="module" module-name="db-stuff" />
-    <orderEntry type="module" module-name="shared-jvm" />
     <orderEntry type="module-library">
-      <library name="zzzz">
+      <library name="qwe">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../lib-gradle/antlr-2.7.7.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/asm-5.2.jar!/" />
@@ -116,6 +114,8 @@
           <root url="jar://$MODULE_DIR$/../lib-gradle/postgresql-42.1.1-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/postgresql-42.1.1.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/protobuf-java-3.0.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/scribejava-apis-4.1.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/scribejava-core-4.1.0.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/servlet-api-2.5-20081211.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/slf4j-api-1.7.25.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/spring-aop-4.3.8.RELEASE.jar!/" />
@@ -160,6 +160,8 @@
           <root url="jar://$MODULE_DIR$/../lib-gradle/logback-classic-1.2.3-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/mockito-core-1.9.5.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/postgresql-42.1.1-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/scribejava-apis-4.1.0-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib-gradle/scribejava-core-4.1.0-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/spring-data-jpa-1.11.3.RELEASE-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/spring-orm-4.3.8.RELEASE-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/sqlite-jdbc-3.16.1-sources.jar!/" />
@@ -168,6 +170,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="3rd-party-web-apis" />
+    <orderEntry type="module" module-name="shared-jvm" />
+    <orderEntry type="module" module-name="shared-jvm-2" />
   </component>
 </module>

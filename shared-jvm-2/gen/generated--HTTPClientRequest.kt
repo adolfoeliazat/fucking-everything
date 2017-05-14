@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Sun May 14 17:11:01 EEST 2017
+// Generated on Sun May 14 17:56:46 EEST 2017
 // Model: e:/fegh/shared-jvm-2/src/HTTPClientRequest.kt
 //
 
@@ -23,6 +23,7 @@ import vgrechka.HTTPClientRequest.Opts.MethodOpts.Get.*
 import vgrechka.HTTPClientRequest.Opts.WeirdLoggingOpts.*
 import vgrechka.HTTPClientRequest.Opts.WeirdLoggingOpts.None.*
 import vgrechka.HTTPClientRequest.Opts.WeirdLoggingOpts.Simple.*
+import vgrechka.HTTPClientRequest.Response.*
 import vgrechka.HTTPClientRequest.Ignition.*
 import vgrechka.HTTPClientRequestTests.*
 
@@ -33,7 +34,9 @@ abstract class Generated_BaseFor_HTTPClientRequest {
     class Generated_OptsMaking {
         var url: String? = null    
         var readTimeoutSeconds: Long? = null    
+        var headers: List<Pair<String, String>> = listOf()    
         var method: MethodOpts? = null    
+        var bitchUnless200: Boolean = true    
         var weirdLogging: WeirdLoggingOpts = WeirdLoggingOpts.None()    
     }
 
@@ -56,7 +59,7 @@ abstract class Generated_BaseFor_HTTPClientRequest {
             fun whiskersLength(x: Int): Generated_BuilderFor_AnimalOpts_Cat {optsMaking.whiskersLength = x; return this }
             fun hardenOpts(): Cat {
                 return Cat(
-                    whiskersLength = optsMaking.whiskersLength ?: wtf("I want `whiskersLength`    aa1f4e90-e2d6-45fb-9c3a-2c014c0d863b")            
+                    whiskersLength = optsMaking.whiskersLength ?: wtf("I want `whiskersLength`    94bc812f-4fe6-4317-8103-15e81c723b42")            
                 )
             }
         }
@@ -71,7 +74,7 @@ abstract class Generated_BaseFor_HTTPClientRequest {
             fun tailLength(x: Int): Generated_BuilderFor_AnimalOpts_Rat {optsMaking.tailLength = x; return this }
             fun hardenOpts(): Rat {
                 return Rat(
-                    tailLength = optsMaking.tailLength ?: wtf("I want `tailLength`    41e3e3a2-5572-4bc9-922b-4ba8075d9d0c")            
+                    tailLength = optsMaking.tailLength ?: wtf("I want `tailLength`    3fef683e-03d3-4e76-99d1-dba35941248c")            
                 )
             }
         }
@@ -99,8 +102,8 @@ abstract class Generated_BaseFor_HTTPClientRequest {
 
         fun hardenOpts(): Post {
             return Post(
-                mediaTypeName = optsMaking.mediaTypeName ?: wtf("I want `mediaTypeName`    52046615-2603-4405-8709-4db670c07e5e"),        
-                content = optsMaking.content ?: wtf("I want `content`    724a7925-a611-4877-861f-f08846b06c22"),        
+                mediaTypeName = optsMaking.mediaTypeName ?: wtf("I want `mediaTypeName`    cacd6b43-c62e-4e72-b01e-4ab886b69124"),        
+                content = optsMaking.content ?: wtf("I want `content`    2d03f9f2-4cdd-4dbb-bb24-824e0905f81e"),        
                 weirdAttachedPicture = optsMaking.weirdAttachedPicture        
             )
         }
@@ -110,13 +113,10 @@ abstract class Generated_BaseFor_HTTPClientRequest {
     class Generated_BuilderFor_MethodOpts_Get {
         val optsMaking = Generated_OptsMaking()
         class Generated_OptsMaking {
-            var uselessOption: String? = null        
         }
 
-        fun uselessOption(x: String): Generated_BuilderFor_MethodOpts_Get {optsMaking.uselessOption = x; return this }
         fun hardenOpts(): Get {
             return Get(
-                uselessOption = optsMaking.uselessOption ?: wtf("I want `uselessOption`    adbbd432-561d-4848-b59e-cf6214df08d9")        
             )
         }
     }
@@ -145,7 +145,7 @@ abstract class Generated_BaseFor_HTTPClientRequest {
         fun swearing(x: Boolean): Generated_BuilderFor_WeirdLoggingOpts_Simple {optsMaking.swearing = x; return this }
         fun hardenOpts(): Simple {
             return Simple(
-                level = optsMaking.level ?: wtf("I want `level`    8f9255dc-cbb6-4d75-9815-26078840809e"),        
+                level = optsMaking.level ?: wtf("I want `level`    1c1a50ee-4d37-4c9a-b67f-1b5793926986"),        
                 swearing = optsMaking.swearing        
             )
         }
@@ -153,6 +153,7 @@ abstract class Generated_BaseFor_HTTPClientRequest {
 
     fun url(x: String): HTTPClientRequest {optsMaking.url = x; return this as HTTPClientRequest}
     fun readTimeoutSeconds(x: Long?): HTTPClientRequest {optsMaking.readTimeoutSeconds = x; return this as HTTPClientRequest}
+    fun headers(x: List<Pair<String, String>>): HTTPClientRequest {optsMaking.headers = x; return this as HTTPClientRequest}
 
     fun method_post(block: (Generated_BuilderFor_MethodOpts_Post) -> Unit = {}): HTTPClientRequest {
         // TODO:vgrechka Option to prevent calling this (or related _*s) more than once
@@ -171,6 +172,8 @@ abstract class Generated_BaseFor_HTTPClientRequest {
         optsMaking.method = builder.hardenOpts()
         return this as HTTPClientRequest
     }
+
+    fun bitchUnless200(x: Boolean): HTTPClientRequest {optsMaking.bitchUnless200 = x; return this as HTTPClientRequest}
 
     fun weirdLogging_none(block: (Generated_BuilderFor_WeirdLoggingOpts_None) -> Unit = {}): HTTPClientRequest {
         // TODO:vgrechka Option to prevent calling this (or related _*s) more than once
@@ -192,9 +195,11 @@ abstract class Generated_BaseFor_HTTPClientRequest {
 
     fun hardenOpts(): HTTPClientRequest.Opts {
         return HTTPClientRequest.Opts(
-            url = optsMaking.url ?: wtf("I want `url`    fc52bf41-1a2d-4839-9236-2a960220011a"),    
+            url = optsMaking.url ?: wtf("I want `url`    88cbc922-1fd7-4f12-be52-4a108d9bfe0a"),    
             readTimeoutSeconds = optsMaking.readTimeoutSeconds,    
-            method = optsMaking.method ?: wtf("I want `method`    c4566dea-81cd-430a-8ca0-63b8cc93555b"),    
+            headers = optsMaking.headers,    
+            method = optsMaking.method ?: wtf("I want `method`    f0b9c158-4bb1-467a-a6a6-fc7857428060"),    
+            bitchUnless200 = optsMaking.bitchUnless200,    
             weirdLogging = optsMaking.weirdLogging    
         )
     }

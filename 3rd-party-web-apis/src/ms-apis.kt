@@ -1,5 +1,6 @@
 package vgrechka
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.scribejava.core.builder.ServiceBuilder
 import com.github.scribejava.core.builder.api.DefaultApi20
 import javafx.application.Application
@@ -37,6 +38,8 @@ class OneDrive {
     var code by notNull<String>()
     val once = Once()
 
+    val debug_actLikeGotAccessToken = false
+
     enum class AuthenticationState {
         INITIAL, VIRGIN, HAS_CODE, HAS_ACCESS_TOKEN, ACCESS_TOKEN_SEEMS_VALID
     }
@@ -46,6 +49,7 @@ class OneDrive {
 
     init {
         val secrets = BigPile.saucerfulOfSecrets.onedrive.pepezdus
+        clog("secrets.scopes = " + secrets.scopes)
         val service = ServiceBuilder()
             .apiKey(secrets.tokenID)
 //            .callback("http://localhost:$redirectURIPort")
@@ -94,10 +98,13 @@ class OneDrive {
 
                 AuthenticationState.HAS_CODE -> {
                     try {
-                        val debug_actLikeGotAccessToken = false
                         accessToken = when {
                             debug_actLikeGotAccessToken -> "fucking-token"
-                            else -> service.getAccessToken(code).accessToken
+                            else -> {
+                                val token = service.getAccessToken(code)
+                                clog("token.rawResponse = " + token.rawResponse)
+                                token.accessToken
+                            }
                         }
                         accessTokenFile.writeText(accessToken)
                         state = AuthenticationState.HAS_ACCESS_TOKEN
@@ -108,9 +115,25 @@ class OneDrive {
 
                 AuthenticationState.HAS_ACCESS_TOKEN -> {
                     try {
-                        // https://graph.microsoft.com/v1.0/me/
-                        state = AuthenticationState.ACCESS_TOKEN_SEEMS_VALID
+                        val res = HTTPClientRequest()
+                            .url("https://graph.microsoft.com/v1.0/me/")
+                            .headers(listOf(
+                                "Authorization" to "Bearer " + accessTokenFile.readText(),
+                                "Content-type" to "application/json"))
+                            .bitchUnless200(false)
+                            .method_get()
+                            .ignite()
+                        // clog(res)
+
+                        if (res.code == 200) {
+                            val map = ObjectMapper().readValue(res.body, Map::class.java)
+                            clog("User: " + map["displayName"])
+                            state = AuthenticationState.ACCESS_TOKEN_SEEMS_VALID
+                        } else {
+                            state = AuthenticationState.VIRGIN
+                        }
                     } catch (e: Throwable) {
+                        e.printStackTrace()
                         state = AuthenticationState.VIRGIN
                     }
                 }
@@ -168,7 +191,7 @@ class OneDrive {
                 }
 
                 stage.width = 500.0
-                stage.height = 550.0
+                stage.height = 600.0
                 stage.title = "Authentication"
 
                 vbox.children += MenuBar()-{o->
@@ -184,7 +207,7 @@ class OneDrive {
                 engine = webView.engine
                 loadWorker = engine.loadWorker
 
-                debug_doSomeShit()
+//                debug_doSomeShit()
 
                 loadWorker.progressProperty().addListener {_,_,_-> handleLoadWorkerState()}
                 loadWorker.stateProperty().addListener {_,_,_-> handleLoadWorkerState()}

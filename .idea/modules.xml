@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/3rd-party-web-apis/3rd-party-web-apis.iml" filepath="$PROJECT_DIR$/3rd-party-web-apis/3rd-party-web-apis.iml" />
       <module fileurl="file://$PROJECT_DIR$/agnes/agnes.iml" filepath="$PROJECT_DIR$/agnes/agnes.iml" />
       <module fileurl="file://$PROJECT_DIR$/aps/back-php/aps-back-php.iml" filepath="$PROJECT_DIR$/aps/back-php/aps-back-php.iml" group="aps" />
       <module fileurl="file://$PROJECT_DIR$/aps/roots/aps-roots.iml" filepath="$PROJECT_DIR$/aps/roots/aps-roots.iml" group="aps" />

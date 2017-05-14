@@ -178,12 +178,12 @@ class Boobs(val testParams: TestParams) {
                         .url("http://localhost/phi-tests/${testParams.testName}/${testParams.testName}.php?${entry.queryString}")
                         .readTimeoutSeconds(null)
                         .method_post {it
-                            .mediaTypeName(HTTPClientRequest.MediaTypeName.JSON)
+                            .mediaTypeName(BigPile.mediaType.json)
                             .content(adaptedRequestJSON)
                         }
                         .ignite()
                     val expectedResponseJSON = entry.responseJSON
-                    val actualPreparedResponse = prepare(actualResponseJSON)
+                    val actualPreparedResponse = prepare(actualResponseJSON.body)
                     val expectedPreparedResponse = prepare(expectedResponseJSON)
 
                     if (logFile.exists()) {
