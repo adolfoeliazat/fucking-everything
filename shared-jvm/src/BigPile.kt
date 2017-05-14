@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets
 import java.io.*
 import kotlin.concurrent.thread
+import kotlin.system.exitProcess
 
 object BigPile {
     val fuckingEverythingSmallRoot = "e:/fegh"
@@ -116,6 +117,15 @@ object BigPile {
         else
             wtf("fddaec58-f69c-4974-bb83-4af4e35555d1")
         return s
+    }
+
+    fun exitingProcessDespitePossibleJavaFXThread(block: () -> Unit) {
+        Thread.currentThread().setUncaughtExceptionHandler {t, e ->
+            e.printStackTrace()
+            exitProcess(1)
+        }
+        block()
+        exitProcess(0)
     }
 
 }

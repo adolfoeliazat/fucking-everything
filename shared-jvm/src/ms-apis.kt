@@ -62,7 +62,7 @@ class OneDrive {
             })
 
         val codeFile = File(getDirToStoreAccessTokenIn().path + "/code")
-        val accessTokenFile = File(getDirToStoreAccessTokenIn().path + "/accessToken")
+        val accessTokenFile = File(getDirToStoreAccessTokenIn().path + "/access-token")
 
         o@while (true) {
             clog("state = $state")
@@ -71,7 +71,7 @@ class OneDrive {
                     break@o
                 }
 
-                OneDrive.AuthenticationState.INITIAL -> {
+                AuthenticationState.INITIAL -> {
                     if (accessTokenFile.exists()) {
                         accessToken = accessTokenFile.readText()
                         state = AuthenticationState.HAS_ACCESS_TOKEN
@@ -85,16 +85,16 @@ class OneDrive {
                     }
                 }
 
-                OneDrive.AuthenticationState.VIRGIN -> {
+                AuthenticationState.VIRGIN -> {
                     val url = service.getAuthorizationUrl(mapOf())
                     code = ObtainCodeViaJavaFX(url).ignite()
                     codeFile.writeText(code)
                     state = AuthenticationState.HAS_CODE
                 }
 
-                OneDrive.AuthenticationState.HAS_CODE -> {
+                AuthenticationState.HAS_CODE -> {
                     try {
-                        val debug_actLikeGotAccessToken = true
+                        val debug_actLikeGotAccessToken = false
                         accessToken = when {
                             debug_actLikeGotAccessToken -> "fucking-token"
                             else -> service.getAccessToken(code).accessToken
@@ -106,9 +106,9 @@ class OneDrive {
                     }
                 }
 
-                OneDrive.AuthenticationState.HAS_ACCESS_TOKEN -> {
+                AuthenticationState.HAS_ACCESS_TOKEN -> {
                     try {
-                        // imf("check token    183a2be8-8cd3-49ab-b01f-362edbafe91a")
+                        // https://graph.microsoft.com/v1.0/me/
                         state = AuthenticationState.ACCESS_TOKEN_SEEMS_VALID
                     } catch (e: Throwable) {
                         state = AuthenticationState.VIRGIN
@@ -184,7 +184,7 @@ class OneDrive {
                 engine = webView.engine
                 loadWorker = engine.loadWorker
 
-                testSomeShit()
+                debug_doSomeShit()
 
                 loadWorker.progressProperty().addListener {_,_,_-> handleLoadWorkerState()}
                 loadWorker.stateProperty().addListener {_,_,_-> handleLoadWorkerState()}
@@ -237,7 +237,7 @@ class OneDrive {
                     yieldCode(loc.substring(prefix.length))
             }
 
-            fun testSomeShit() {
+            fun debug_doSomeShit() {
                 if (false) {
                     thread {
                         while (true) {

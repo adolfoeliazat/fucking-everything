@@ -1,24 +1,19 @@
 package vgrechka.ideabackdoor
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.ide.plugins.PluginManager
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.components.ApplicationComponent
-import com.intellij.openapi.progress.ProgressIndicator
-import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
-import com.intellij.openapi.ui.Messages
 import com.intellij.util.lang.UrlClassLoader
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletHandler
 import org.eclipse.jetty.servlet.ServletHolder
 import vgrechka.*
-import vgrechka.idea.*
 import java.io.File
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
@@ -160,7 +155,7 @@ object SendSomeShitToBackdoor {
         val json = args[1]
         clog("url =", url)
         clog("json =", json)
-        val res = HTTPClient.post(HTTPClient.MediaTypeName.JSON, url, json)
+        val res = HTTPClientRequest().post(HTTPClientRequest.MediaTypeName.JSON, url, json)
         clog("Response: $res")
         clog("OK")
     }

@@ -3,44 +3,19 @@ package phizdets
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.common.cache.CacheBuilder
-import com.google.common.cache.CacheLoader
-import com.google.common.cache.LoadingCache
-import com.google.debugging.sourcemap.SourceMapConsumerFactory
-import com.google.debugging.sourcemap.SourceMapping
 import org.jetbrains.kotlin.cli.js.K2PhizdetsCompiler
-import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
-import org.jetbrains.kotlin.descriptors.SimpleFunctionDescriptor
 import org.jetbrains.kotlin.js.backend.ast.*
-import org.jetbrains.kotlin.js.facade.K2JSTranslator
-import org.jetbrains.kotlin.js.translate.utils.jsAstUtils.array
-import org.jetbrains.kotlin.js.translate.utils.jsAstUtils.index
 import vgrechka.*
 import java.io.File
-import java.io.StringWriter
 import java.util.*
-import javax.xml.bind.JAXB
 import javax.xml.bind.JAXBContext
 import javax.xml.bind.annotation.*
 import kotlin.properties.Delegates.notNull
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
 import kotlin.system.exitProcess
-import jdk.nashorn.internal.ir.*
-import jdk.nashorn.internal.ir.visitor.NodeVisitor
-import jdk.nashorn.internal.parser.Parser
-import jdk.nashorn.internal.parser.TokenType
-import jdk.nashorn.internal.runtime.Context
-import jdk.nashorn.internal.runtime.ErrorManager
-import jdk.nashorn.internal.runtime.Source
-import jdk.nashorn.internal.runtime.options.Options
 import org.jetbrains.kotlin.js.sourceMap.PhizdetsSourceGenerationVisitor
 import org.jetbrains.kotlin.js.util.TextOutputImpl
-import org.jetbrains.kotlin.utils.addToStdlib.indexOfOrNull
 import phizdets.compiler.CompileStdlib
 import phizdets.compiler.PhizdetscGlobal
-import vgrechka.HTTPClient.post
-import vgrechka.idea.hripos.*
 
 
 object CurrentTestFiddling {
@@ -199,8 +174,8 @@ class Boobs(val testParams: TestParams) {
                     if (logFile.exists()) {
                         check(logFile.delete()) {"a30068f4-835c-48b1-9068-72e8b9136aec"}
                     }
-                    val actualResponseJSON = post(
-                        mediaTypeName = HTTPClient.MediaTypeName.JSON,
+                    val actualResponseJSON = HTTPClientRequest().post(
+                        mediaTypeName = HTTPClientRequest.MediaTypeName.JSON,
                         url = "http://localhost/phi-tests/${testParams.testName}/${testParams.testName}.php?${entry.queryString}",
                         content = adaptedRequestJSON)
                     val expectedResponseJSON = entry.responseJSON

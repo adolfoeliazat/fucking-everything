@@ -2,6 +2,7 @@ package vgrechka
 
 import com.google.api.client.http.FileContent
 import com.google.common.hash.Hashing
+import vgrechka.BigPile.exitingProcessDespitePossibleJavaFXThread
 import vgrechka.CLIPile.regexpTag
 import vgrechka.db.*
 import java.io.File
@@ -44,15 +45,6 @@ object CLI_BackShitUp {
 //                    checkInToTFVC()
                     clog("\nOK")
                 }
-            }
-
-            fun exitingProcessDespitePossibleJavaFXThread(block: () -> Unit) {
-                Thread.currentThread().setUncaughtExceptionHandler {t, e ->
-                    e.printStackTrace()
-                    exitProcess(1)
-                }
-                block()
-                exitProcess(0)
             }
 
             fun runTFAndCheckOutput(cmdPieces: List<String>, expectedLines: List<String>) {

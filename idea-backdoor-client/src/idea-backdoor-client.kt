@@ -18,7 +18,7 @@ fun sendCommandToIDEABackdoor(cmd: Any) {
     val port = BackdoorClientGlobal.defaultRPCServerPort
     val url = "http://localhost:$port?proc=$proc"
     val json = ObjectMapper().writeValueAsString(cmd)
-    HTTPClient.post(HTTPClient.MediaTypeName.JSON, url, json)
+    HTTPClientRequest().post(HTTPClientRequest.MediaTypeName.JSON, url, json)
 }
 
 fun rubRemoteIdeaTits(localProject: Project?, data: Any, taskTitle: String? = null, proc: String? = null, readTimeoutSeconds: Long? = null, onError: ((String) -> Unit)? = null) {
@@ -36,8 +36,8 @@ fun rubRemoteIdeaTits(localProject: Project?, data: Any, taskTitle: String? = nu
             indicator.text = title
             indicator.fraction = 0.5
             val json = ObjectMapper().writeValueAsString(data)
-            rawResponse = HTTPClient.post(
-                mediaTypeName = HTTPClient.MediaTypeName.JSON,
+            rawResponse = HTTPClientRequest().post(
+                mediaTypeName = HTTPClientRequest.MediaTypeName.JSON,
                 url = "http://localhost:${BackdoorClientGlobal.defaultRPCServerPort}?proc=$theProc",
                 content = json,
                 readTimeoutSeconds = readTimeoutSeconds)

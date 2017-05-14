@@ -1,6 +1,7 @@
 <project name="fucking-everything">
     <path id="cp">
         <pathelement location="out/production/shared-jvm"/>
+        <pathelement location="out/production/shared-jvm-2"/>
         <pathelement location="out/production/shared-idea"/>
         <pathelement location="out/production/idea-backdoor"/>
         <pathelement location="out/production/idea-backdoor-client"/>

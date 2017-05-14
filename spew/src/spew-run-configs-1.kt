@@ -10,3 +10,11 @@ object SpewForDBStuff {
     }
 }
 
+object SpewForHTTPClientRequest {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        spewForInputFiles(listOf("%FE%/shared-jvm-2/src/HTTPClientRequest.kt"))
+        clog("OK")
+    }
+}
+

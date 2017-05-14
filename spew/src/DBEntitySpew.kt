@@ -106,8 +106,7 @@ class DBEntitySpew : Spew {
         this.outputFilePath = outputFilePath
         this.spewResults = spewResults
         val file = File(outputFilePath)
-        val code = StringBuilder()
-        out = CodeShitter(code, indent = 0)
+        out = CodeShitter()
 
 //        val entities = fakeEntities()
         analyzeSources()
@@ -128,7 +127,7 @@ class DBEntitySpew : Spew {
         spitDDLComment()
 
         FilePile.backUp().ifExists().ignite(file)
-        file.writeText(code.toString())
+        file.writeText(out.reify())
         clog("Written ${file.path}")
     }
 

@@ -192,31 +192,6 @@ class relazy<out T>(val initializer: () -> T) {
 }
 
 
-object HTTPClient {
-    object MediaTypeName {
-        val JSON = "application/json"
-        val XML = "application/xml"
-    }
-
-    fun post(mediaTypeName: String, url: String, content: String, readTimeoutSeconds: Long? = null): String {
-        val mediaType = MediaType.parse(mediaTypeName + "; charset=utf-8")
-        val client = OkHttpClient.Builder()
-            .readTimeout(readTimeoutSeconds ?: 5, TimeUnit.SECONDS)
-            .build()
-        val body = RequestBody.create(mediaType, content)
-        val request = Request.Builder()
-            .url(url)
-            .post(body)
-            .build()
-        val response = client.newCall(request).execute()
-        val code = response.code()
-        if (code != 200)
-            bitch("Shitty HTTP response code: $code")
-
-        val charset = Charset.forName("UTF-8")
-        return response.body().source().readString(charset)
-    }
-}
 
 val relaxedObjectMapper by lazy {
     ObjectMapper()-{o->

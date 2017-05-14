@@ -3,39 +3,7 @@ package vgrechka.idea.hripos
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.type.TypeFactory
-import com.intellij.execution.ExecutionManager
-import com.intellij.execution.Executor
-import com.intellij.execution.executors.DefaultRunExecutor
-import com.intellij.execution.filters.TextConsoleBuilderFactory
-import com.intellij.execution.impl.ConsoleViewImpl
-import com.intellij.execution.impl.ConsoleViewUtil
-import com.intellij.execution.ui.*
-import com.intellij.execution.ui.actions.CloseAction
-import com.intellij.ide.impl.ProjectUtil
-import com.intellij.openapi.actionSystem.*
-import com.intellij.openapi.application.Application
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.Messages
-import com.intellij.openapi.util.Key
-import com.intellij.openapi.wm.WindowManager
-import com.intellij.project.stateStore
-import com.intellij.unscramble.AnnotateStackTraceAction
-import com.intellij.util.containers.ConcurrentIntObjectMap
-import org.jetbrains.kotlin.utils.stackTraceStr
-import java.awt.BorderLayout
-import javax.swing.JPanel
 import vgrechka.*
-import java.io.PrintWriter
-import java.io.StringWriter
-import java.util.*
-import vgrechka.*
-import vgrechka.idea.*
-import java.awt.Frame
-import java.util.*
-import javax.swing.JFrame
-import kotlin.properties.Delegates.notNull
-import kotlin.reflect.KFunction0
 
 object MapPhizdetsStackToolIO {
     @Ser class Input(val projectName: String, val stack: List<FileLine>)
@@ -147,7 +115,7 @@ fun runMapPhizdetsStackTool(con: Mumbler, stackItems: MutableList<FileLine>): Ma
 object Command_PhiShowStackTest {
     @JvmStatic
     fun main(args: Array<String>) {
-        HTTPClient.post(HTTPClient.MediaTypeName.JSON, "http://localhost:12312?proc=PhiShowStack", json)
+        HTTPClientRequest().post(HTTPClientRequest.MediaTypeName.JSON, "http://localhost:12312?proc=PhiShowStack", json)
     }
 
     val json = """
