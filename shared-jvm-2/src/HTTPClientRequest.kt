@@ -11,31 +11,33 @@ class HTTPClientRequest : Generated_BaseFor_HTTPClientRequest() {
         val url: String,
         val readTimeoutSeconds: Long? = null,
         val method: MethodOpts,
-        val weirdLogging: WeirdLoggingOpts = WeirdLoggingOpts.None())
+        val weirdLogging: WeirdLoggingOpts = WeirdLoggingOpts.None()) {
 
-    sealed class MethodOpts {
-        data class Post(
-            val mediaTypeName: String,
-            val content: String,
-            val weirdAttachedPicture: AnimalOpts? = null) : MethodOpts() {
+        sealed class MethodOpts {
+            data class Post(
+                val mediaTypeName: String,
+                val content: String,
+                val weirdAttachedPicture: AnimalOpts? = null) : MethodOpts() {
 
-            sealed class AnimalOpts {
-                data class Cat(val whiskersLength: Int): AnimalOpts()
-                data class Rat(val tailLength: Int): AnimalOpts()
+                sealed class AnimalOpts {
+                    data class Cat(val whiskersLength: Int): AnimalOpts()
+                    data class Rat(val tailLength: Int): AnimalOpts()
+                }
             }
+
+            data class Get(
+                val uselessOption: String) : MethodOpts()
         }
 
-        data class Get(
-            val uselessOption: String) : MethodOpts()
+        sealed class WeirdLoggingOpts {
+            class None : WeirdLoggingOpts()
+
+            data class Simple(
+                val level: String,
+                val swearing: Boolean = false) : WeirdLoggingOpts()
+        }
     }
 
-    sealed class WeirdLoggingOpts {
-        class None : WeirdLoggingOpts()
-
-        data class Simple(
-            val level: String,
-            val swearing: Boolean = false) : WeirdLoggingOpts()
-    }
 
     object MediaTypeName {
         val JSON = "application/json"
@@ -48,11 +50,7 @@ class HTTPClientRequest : Generated_BaseFor_HTTPClientRequest() {
         }
     }
 
-    fun post(mediaTypeName: String, url: String, content: String, readTimeoutSeconds: Long? = null): String {
-        imf("7eab5930-329a-4ad3-86d5-b5fe9deae7e4")
-    }
-
-//    fun post(mediaTypeName: String, url: String, content: String, readTimeoutSeconds: Long? = null): String {
+    //    fun post(mediaTypeName: String, url: String, content: String, readTimeoutSeconds: Long? = null): String {
 //        val mediaType = MediaType.parse(mediaTypeName + "; charset=utf-8")
 //        val client = OkHttpClient.Builder()
 //            .readTimeout(readTimeoutSeconds ?: 5, TimeUnit.SECONDS)

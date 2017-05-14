@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Sun May 14 15:53:23 EEST 2017
+// Generated on Sun May 14 17:11:01 EEST 2017
 // Model: e:/fegh/shared-jvm-2/src/HTTPClientRequest.kt
 //
 
@@ -14,16 +14,17 @@ package vgrechka
 import vgrechka.*
 import vgrechka.HTTPClientRequest.*
 import vgrechka.HTTPClientRequest.Opts.*
-import vgrechka.HTTPClientRequest.MethodOpts.*
-import vgrechka.HTTPClientRequest.MethodOpts.Post.*
-import vgrechka.HTTPClientRequest.MethodOpts.Post.AnimalOpts.*
-import vgrechka.HTTPClientRequest.MethodOpts.Post.AnimalOpts.Cat.*
-import vgrechka.HTTPClientRequest.MethodOpts.Post.AnimalOpts.Rat.*
-import vgrechka.HTTPClientRequest.MethodOpts.Get.*
-import vgrechka.HTTPClientRequest.WeirdLoggingOpts.*
-import vgrechka.HTTPClientRequest.WeirdLoggingOpts.None.*
-import vgrechka.HTTPClientRequest.WeirdLoggingOpts.Simple.*
+import vgrechka.HTTPClientRequest.Opts.MethodOpts.*
+import vgrechka.HTTPClientRequest.Opts.MethodOpts.Post.*
+import vgrechka.HTTPClientRequest.Opts.MethodOpts.Post.AnimalOpts.*
+import vgrechka.HTTPClientRequest.Opts.MethodOpts.Post.AnimalOpts.Cat.*
+import vgrechka.HTTPClientRequest.Opts.MethodOpts.Post.AnimalOpts.Rat.*
+import vgrechka.HTTPClientRequest.Opts.MethodOpts.Get.*
+import vgrechka.HTTPClientRequest.Opts.WeirdLoggingOpts.*
+import vgrechka.HTTPClientRequest.Opts.WeirdLoggingOpts.None.*
+import vgrechka.HTTPClientRequest.Opts.WeirdLoggingOpts.Simple.*
 import vgrechka.HTTPClientRequest.Ignition.*
+import vgrechka.HTTPClientRequestTests.*
 
 
 // Generated at c-90a18a2-0dbd-4513-adfa-8165932eedc7
@@ -32,8 +33,8 @@ abstract class Generated_BaseFor_HTTPClientRequest {
     class Generated_OptsMaking {
         var url: String? = null    
         var readTimeoutSeconds: Long? = null    
-        var method: HTTPClientRequest.MethodOpts? = null    
-        var weirdLogging: HTTPClientRequest.WeirdLoggingOpts = WeirdLoggingOpts.None()    
+        var method: MethodOpts? = null    
+        var weirdLogging: WeirdLoggingOpts = WeirdLoggingOpts.None()    
     }
 
     // Generated at c-90a18a2-0dbd-4513-adfa-8165932eedc7
@@ -55,7 +56,7 @@ abstract class Generated_BaseFor_HTTPClientRequest {
             fun whiskersLength(x: Int): Generated_BuilderFor_AnimalOpts_Cat {optsMaking.whiskersLength = x; return this }
             fun hardenOpts(): Cat {
                 return Cat(
-                    whiskersLength = optsMaking.whiskersLength ?: wtf("I want `whiskersLength`    a325b7c6-ad86-418f-a5bb-e70beda198be")            
+                    whiskersLength = optsMaking.whiskersLength ?: wtf("I want `whiskersLength`    aa1f4e90-e2d6-45fb-9c3a-2c014c0d863b")            
                 )
             }
         }
@@ -70,7 +71,7 @@ abstract class Generated_BaseFor_HTTPClientRequest {
             fun tailLength(x: Int): Generated_BuilderFor_AnimalOpts_Rat {optsMaking.tailLength = x; return this }
             fun hardenOpts(): Rat {
                 return Rat(
-                    tailLength = optsMaking.tailLength ?: wtf("I want `tailLength`    172abd33-82e6-4916-9722-ab0756c0b0b7")            
+                    tailLength = optsMaking.tailLength ?: wtf("I want `tailLength`    41e3e3a2-5572-4bc9-922b-4ba8075d9d0c")            
                 )
             }
         }
@@ -98,8 +99,8 @@ abstract class Generated_BaseFor_HTTPClientRequest {
 
         fun hardenOpts(): Post {
             return Post(
-                mediaTypeName = optsMaking.mediaTypeName ?: wtf("I want `mediaTypeName`    d65099d9-a10f-404e-967b-3f52346f9343"),        
-                content = optsMaking.content ?: wtf("I want `content`    3c1594a0-f6b7-472a-91f9-e251b7592cfc"),        
+                mediaTypeName = optsMaking.mediaTypeName ?: wtf("I want `mediaTypeName`    52046615-2603-4405-8709-4db670c07e5e"),        
+                content = optsMaking.content ?: wtf("I want `content`    724a7925-a611-4877-861f-f08846b06c22"),        
                 weirdAttachedPicture = optsMaking.weirdAttachedPicture        
             )
         }
@@ -115,7 +116,7 @@ abstract class Generated_BaseFor_HTTPClientRequest {
         fun uselessOption(x: String): Generated_BuilderFor_MethodOpts_Get {optsMaking.uselessOption = x; return this }
         fun hardenOpts(): Get {
             return Get(
-                uselessOption = optsMaking.uselessOption ?: wtf("I want `uselessOption`    03b49b5c-0ce1-4d91-8fb1-ea8951014ad2")        
+                uselessOption = optsMaking.uselessOption ?: wtf("I want `uselessOption`    adbbd432-561d-4848-b59e-cf6214df08d9")        
             )
         }
     }
@@ -144,7 +145,7 @@ abstract class Generated_BaseFor_HTTPClientRequest {
         fun swearing(x: Boolean): Generated_BuilderFor_WeirdLoggingOpts_Simple {optsMaking.swearing = x; return this }
         fun hardenOpts(): Simple {
             return Simple(
-                level = optsMaking.level ?: wtf("I want `level`    a27da50b-f073-4497-888e-9f96793cc8ec"),        
+                level = optsMaking.level ?: wtf("I want `level`    8f9255dc-cbb6-4d75-9815-26078840809e"),        
                 swearing = optsMaking.swearing        
             )
         }
@@ -191,9 +192,9 @@ abstract class Generated_BaseFor_HTTPClientRequest {
 
     fun hardenOpts(): HTTPClientRequest.Opts {
         return HTTPClientRequest.Opts(
-            url = optsMaking.url ?: wtf("I want `url`    4319d761-7b78-4790-b821-cc8a279964ef"),    
+            url = optsMaking.url ?: wtf("I want `url`    fc52bf41-1a2d-4839-9236-2a960220011a"),    
             readTimeoutSeconds = optsMaking.readTimeoutSeconds,    
-            method = optsMaking.method ?: wtf("I want `method`    5f7d8d3e-38b8-4958-871c-948077b8eaf4"),    
+            method = optsMaking.method ?: wtf("I want `method`    c4566dea-81cd-430a-8ca0-63b8cc93555b"),    
             weirdLogging = optsMaking.weirdLogging    
         )
     }

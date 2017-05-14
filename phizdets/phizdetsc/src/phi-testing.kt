@@ -174,10 +174,14 @@ class Boobs(val testParams: TestParams) {
                     if (logFile.exists()) {
                         check(logFile.delete()) {"a30068f4-835c-48b1-9068-72e8b9136aec"}
                     }
-                    val actualResponseJSON = HTTPClientRequest().post(
-                        mediaTypeName = HTTPClientRequest.MediaTypeName.JSON,
-                        url = "http://localhost/phi-tests/${testParams.testName}/${testParams.testName}.php?${entry.queryString}",
-                        content = adaptedRequestJSON)
+                    val actualResponseJSON = HTTPClientRequest()
+                        .url("http://localhost/phi-tests/${testParams.testName}/${testParams.testName}.php?${entry.queryString}")
+                        .readTimeoutSeconds(null)
+                        .method_post {it
+                            .mediaTypeName(HTTPClientRequest.MediaTypeName.JSON)
+                            .content(adaptedRequestJSON)
+                        }
+                        .ignite()
                     val expectedResponseJSON = entry.responseJSON
                     val actualPreparedResponse = prepare(actualResponseJSON)
                     val expectedPreparedResponse = prepare(expectedResponseJSON)
