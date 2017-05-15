@@ -26,6 +26,7 @@ import java.io.FileOutputStream
 import java.io.RandomAccessFile
 import java.util.*
 import java.util.concurrent.ArrayBlockingQueue
+import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 import kotlin.properties.Delegates.notNull
 
@@ -428,7 +429,9 @@ class OneDrive {
             .header("Authorization", "Bearer " + accessToken)
             .get()
             .build()
-        val client = OkHttpClient.Builder().build()
+        val client = OkHttpClient.Builder()
+            .readTimeout(25, TimeUnit.SECONDS)
+            .build()
         val response = client.newCall(request).execute()
         bitchUnlessCode(response, HTTPPile.code.ok, "Failed to download shit from OneDrive")
         val chunk = ByteArray(1024 * 1024)
