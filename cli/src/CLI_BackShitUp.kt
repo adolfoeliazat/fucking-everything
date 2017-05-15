@@ -7,20 +7,26 @@ import vgrechka.CLIPile.regexpTag
 import vgrechka.db.*
 import java.io.File
 import java.io.FileOutputStream
+import java.time.LocalDateTime
 
 // TODO:vgrechka Change back stamp
 
-// TODO:vgrechka Upload to OneDrive
+// NOTE: For some reason WSL Bash doesn't want to work from IDEA console, so run this from cmd.exe
 
-// NOTE: For some reason Bash doesn't want to work from IDEA console, so run this from cmd.exe
+object CLI_CheckUploadedShit {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val stamp = args[0]
+        clog("fuck")
+    }
+}
 
 // Ex: _run vgrechka.CLI_BackShitUp
 object CLI_BackShitUp {
     @JvmStatic
     fun main(args: Array<String>) {
         object {
-            val stamp = "20170512"
-//            val stamp = LocalDateTime.now().format(TimePile.FMT_YMD)
+            val stamp = LocalDateTime.now().format(TimePile.FMT_YMD)
             val tfvcOutDirWin = "e:/febig/bak/$stamp"
             val tfvcOutDirWSL = BigPile.win2WSL(tfvcOutDirWin)
             val reducedOutDirWin = "e:/bak/$stamp"
@@ -30,18 +36,18 @@ object CLI_BackShitUp {
             init {
                 exitingProcessDespitePossibleJavaFXThread {
                     clog("Backing shit up to $reducedOutDirWSL")
-//                    recreateTFVCOutDir()
-//                    recreateReducedOutDir()
-//                    copyIDEASettings()
-//                    dumpPostgres()
-//                    zipFuckingEverything()
-//                    zipAPS()
-//                    zipFuckingPrivateEverything()
-//                    hashShit()
-//                    uploadShitToDropbox()
-//                    uploadShitToGoogleDrive()
+                    recreateTFVCOutDir()
+                    recreateReducedOutDir()
+                    copyIDEASettings()
+                    dumpPostgres()
+                    zipFuckingEverything()
+                    zipAPS()
+                    zipFuckingPrivateEverything()
+                    hashShit()
+                    uploadShitToDropbox()
+                    uploadShitToGoogleDrive()
                     uploadShitToOneDrive()
-//                    checkInToTFVC()
+                    checkInToTFVC()
                     clog("\nOK")
                 }
             }
@@ -172,7 +178,7 @@ object CLI_BackShitUp {
                         box.client.files().createFolder(remotePath)
                     }
 
-                    override fun uploadStream(file: File, remoteFilePath: String) {
+                    override fun uploadFile(file: File, remoteFilePath: String) {
                         file.inputStream().use {stm->
                             box.client.files()
                                 .uploadBuilder(remoteFilePath)
@@ -197,42 +203,31 @@ object CLI_BackShitUp {
             }
 
             private fun uploadShitToOneDrive() {
-                OneDrive()
+                val drive = OneDrive()
 
-//                val box = Dropbox(BigPile.saucerfulOfSecrets.dropbox.vgrechka)
-//                object : uploadShitSomewhereTemplate() {
-//                    override fun getOutputLabel() = "[DROPBOX]"
-//
-//                    override fun getAccountName(): String {
-//                        return box.account.name.displayName
-//                    }
-//
-//                    override fun createFolder(remotePath: String) {
-//                        box.client.files().createFolder(remotePath)
-//                    }
-//
-//                    override fun uploadStream(file: File, remoteFilePath: String) {
-//                        file.inputStream().use {stm->
-//                            box.client.files()
-//                                .uploadBuilder(remoteFilePath)
-//                                .uploadAndFinish(stm)
-//                        }
-//                    }
-//
-//                    override fun listFolder(removeFolder: String, recursive: Boolean): List<Meta> {
-//                        return box.listFolder(removeFolder, recursive).map {
-//                            object : Meta() {
-//                                override val path get() = it.pathLower
-//                            }
-//                        }
-//                    }
-//
-//                    override fun downloadFile(remotePath: String, stm: FileOutputStream) {
-//                        box.client.files()
-//                            .download(remotePath)
-//                            .download(stm)
-//                    }
-//                }
+                object : uploadShitSomewhereTemplate() {
+                    override fun getOutputLabel() = "[ONEDRIVE]"
+
+                    override fun getAccountName(): String {
+                        return drive.account.displayName
+                    }
+
+                    override fun createFolder(remotePath: String) {
+                        drive.createFolder(remotePath)
+                    }
+
+                    override fun uploadFile(file: File, remoteFilePath: String) {
+                        drive.uploadFile(file, remoteFilePath)
+                    }
+
+                    override fun listFolder(remoteFolder: String, recursive: Boolean): List<Meta> {
+                        imf("0e7e2391-83aa-4d0c-8d05-07262d893305")
+                    }
+
+                    override fun downloadFile(remotePath: String, stm: FileOutputStream) {
+                        drive.downloadFile(remotePath, stm)
+                    }
+                }
             }
 
             private fun uploadShitToGoogleDrive() {
@@ -295,14 +290,14 @@ object CLI_BackShitUp {
                         return getRemoteFile(pathParts).id
                     }
 
-                    override fun uploadStream(file: File, remoteFilePath: String) {
+                    override fun uploadFile(file: File, remoteFilePath: String) {
                         val fps = getFilePathShit(remoteFilePath)
 
                         val fileMetadata = com.google.api.services.drive.model.File()
                         fileMetadata.name = fps.name
                         fileMetadata.parents = listOf(fps.parentID)
 
-                        val fileContent = FileContent(BigPile.mediaType.octetStream, file)
+                        val fileContent = FileContent(HTTPPile.contentType.octetStream, file)
 
                         val insert = g.drive.files().create(fileMetadata, fileContent)
                         val uploader = insert.mediaHttpUploader
@@ -329,7 +324,7 @@ object CLI_BackShitUp {
                 abstract fun getOutputLabel(): String
                 abstract fun getAccountName(): String
                 abstract fun createFolder(remotePath: String)
-                abstract fun uploadStream(file: File, remoteFilePath: String)
+                abstract fun uploadFile(file: File, remoteFilePath: String)
                 abstract fun listFolder(remoteFolder: String, recursive: Boolean): List<Meta>
                 abstract fun downloadFile(remotePath: String, stm: FileOutputStream)
 
@@ -350,7 +345,7 @@ object CLI_BackShitUp {
 
                     for (localFile in File(reducedOutDirWin).listFiles()) {
                         bs.operation("Uploading ${localFile.name}") {
-                            uploadStream(localFile, "$targetFolder/${localFile.name}")
+                            uploadFile(localFile, "$targetFolder/${localFile.name}")
                         }
                     }
                     bs.say()

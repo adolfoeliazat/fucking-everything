@@ -10,10 +10,7 @@ import net.bytebuddy.description.modifier.Ownership
 import net.bytebuddy.description.modifier.Visibility
 import net.bytebuddy.dynamic.DynamicType
 import net.bytebuddy.implementation.MethodDelegation
-import okhttp3.MediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
+import okhttp3.*
 import org.junit.Assert.*
 import org.junit.BeforeClass
 import org.junit.Test
@@ -729,7 +726,17 @@ class Once {
     }
 }
 
+fun CharSequence.lastIndexOfOrNull(string: String, startIndex: Int = lastIndex, ignoreCase: Boolean = false): Int? {
+    val res = this.lastIndexOf(string, startIndex, ignoreCase)
+    return when (res) {
+        -1 -> null
+        else -> res
+    }
+}
 
+fun Response.readUTF8(): String {
+    return this.body().source().readString(BigPile.charset.utf8)
+}
 
 
 

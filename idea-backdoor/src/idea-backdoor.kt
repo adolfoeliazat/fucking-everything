@@ -155,14 +155,7 @@ object SendSomeShitToBackdoor {
         val json = args[1]
         clog("url =", url)
         clog("json =", json)
-        val res = HTTPClientRequest()
-            .url(url)
-            .readTimeoutSeconds(null)
-            .method_post {it
-                .mediaTypeName(BigPile.mediaType.json)
-                .content(json)
-            }
-            .ignite()
+        val res = HTTPPile.postJSON_bitchUnlessOK(url, json)
         clog("Response: $res")
         clog("OK")
     }

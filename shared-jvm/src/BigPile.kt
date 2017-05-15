@@ -2,6 +2,7 @@ package vgrechka
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets
+import okhttp3.*
 import java.io.*
 import java.nio.charset.Charset
 import kotlin.concurrent.thread
@@ -32,14 +33,6 @@ object BigPile {
 
     object charset {
         val utf8 = Charset.forName("UTF-8")!!
-    }
-
-    object mediaType {
-        val octetStream = "application/octet-stream"
-        val json = "application/json"
-        val xml = "application/xml"
-        val plain = "text/plain"
-        val html = "text/html"
     }
 
     private fun getEnvOrBitch(name: String) =
@@ -137,6 +130,51 @@ object BigPile {
         exitProcess(0)
     }
 
+
+}
+
+object HTTPPile {
+    object contentType {
+        val octetStream = "application/octet-stream"
+        val json = "application/json"
+        val xml = "application/xml"
+        val plain = "text/plain"
+        val html = "text/html"
+    }
+
+    object code {
+        val ok = 200
+        val created = 201
+        val accepted = 202
+    }
+
+    data class StringResponse(
+        val code: Int,
+        val body: String
+    )
+
+    fun send_receiveUTF8(request: Request): StringResponse {
+        val client = OkHttpClient.Builder().build()
+        val response = client.newCall(request).execute()
+        return StringResponse(
+            code = response.code(),
+            body = response.readUTF8())
+    }
+
+    fun postJSON_bitchUnlessOK(url: String, content: String): String {
+        val request = Request.Builder()
+            .url(url)
+            .post(makeJSONRequestBody(content))
+            .build()
+        val response = send_receiveUTF8(request)
+        if (response.code != 200)
+            bitch("Shitty HTTP response code: ${response.code}")
+        return response.body
+    }
+
+    fun makeJSONRequestBody(content: String) =
+        RequestBody.create(MediaType.parse(contentType.json), content)!!
+
 }
 
 @Ser class JSON_SaucerfulOfSecrets(
@@ -213,6 +251,13 @@ class ConsoleBullshitter(val label: String) {
     }
 }
 
+object JSONPile {
+    fun prettyPrint(s: String): String {
+        val om = ObjectMapper()
+        val shit = om.readValue(s, Any::class.java)
+        return om.writerWithDefaultPrettyPrinter().writeValueAsString(shit)
+    }
+}
 
 
 
