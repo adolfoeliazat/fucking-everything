@@ -147,7 +147,7 @@ fun openFile(project: Project, path: String, line: Int): Boolean {
     return true
 }
 
-object IDEAStuff {
+object IDEAPile {
     fun showErrorBalloonForDebugToolWindow(project: Project, fullMessage: String) {
         val toolWindowManager = ToolWindowManager.getInstance(project)
         val toolWindowId = ToolWindowId.DEBUG
@@ -166,8 +166,8 @@ object IDEAStuff {
         later {
             val res = getRunningContentDescriptors(project, configurationName, debug)
             val candy = when (res) {
-                is IDEAStuff.GetRunningDescriptorsResult.Poop -> bitch(res.error)
-                is IDEAStuff.GetRunningDescriptorsResult.Candy -> res
+                is IDEAPile.GetRunningDescriptorsResult.Poop -> bitch(res.error)
+                is IDEAPile.GetRunningDescriptorsResult.Candy -> res
             }
 
             if (candy.descriptors.isNotEmpty()) {
@@ -231,7 +231,7 @@ object IDEAStuff {
         try {
             block()
         } catch (e: Throwable ) {
-            IDEAStuff.errorDialog(e)
+            IDEAPile.errorDialog(e)
         }
     }
 

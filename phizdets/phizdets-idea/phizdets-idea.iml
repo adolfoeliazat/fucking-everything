@@ -16,7 +16,7 @@
       <sourceFolder url="file://$MODULE_DIR$/eclipse-src/org.eclipse.php.core.parser/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/eclipse-src/org.eclipse.php.ui/src" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="idea-sdk-4-phizdets" jdkType="IDEA JDK" />
+    <orderEntry type="jdk" jdkName="idea-172.2103.15" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="shared-jvm" />
     <orderEntry type="module" module-name="shared-idea" />

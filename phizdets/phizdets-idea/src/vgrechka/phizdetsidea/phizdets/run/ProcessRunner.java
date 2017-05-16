@@ -68,7 +68,7 @@ public class ProcessRunner {
     osProcessHandler.addProcessListener(new OutputListener(out, err));
     osProcessHandler.startNotify();
 
-    ExecutionHelper.executeExternalProcess(project, osProcessHandler, new ExecutionModes.ModalProgressMode(null), commandLine);
+    ExecutionHelper.executeExternalProcess(project, osProcessHandler, new ExecutionModes.ModalProgressMode(null), new GeneralCommandLine(command));
 
     final Output output = new Output(out.toString(), err.toString());
     if (showErrors && !StringUtil.isEmpty(output.getStderr())) {

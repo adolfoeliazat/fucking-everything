@@ -1,6 +1,5 @@
 package vgrechka.idea.hripos
 
-import com.intellij.openapi.application.Application
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
@@ -8,8 +7,6 @@ import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.util.PsiUtil
-import com.intellij.util.PlatformUtils
-import com.intellij.util.ui.UIUtil
 import org.jetbrains.kotlin.psi.*
 import vgrechka.*
 import vgrechka.idea.*
@@ -68,21 +65,21 @@ class Command_MessAround(val projectName: String) : Servant {
 //        val bs = Bullshitter(project, title = title)
 //        bs.mumble("Just messing around... (${Date()})")
 
-        IDEAStuff.showingErrorOnException {
-//            serve1(project, title)
-            serve2(project)
+        IDEAPile.showingErrorOnException {
+            serve1(project, title)
+//            serve2(project)
         }
     }
 
     private fun serve2(project: Project) {
         thread {
-            IDEAStuff.showingErrorOnException {
+            IDEAPile.showingErrorOnException {
                 run { // Generate shit
                     val name = "vgrechka.spew.SpewSomeShit2"
-                    IDEAStuff.runConfiguration(project, name, debug = false)
-                    IDEAStuff.waitForConfigurationToRunAndThenTerminate(project, name, debug = false, runTimeout = 5000, terminationTimeout = 10000)
+                    IDEAPile.runConfiguration(project, name, debug = false)
+                    IDEAPile.waitForConfigurationToRunAndThenTerminate(project, name, debug = false, runTimeout = 5000, terminationTimeout = 10000)
                 }
-                IDEAStuff.runConfiguration(project, "BotinokTest1.test1", debug = true)
+                IDEAPile.runConfiguration(project, "BotinokTest1.test1", debug = true)
             }
         }
     }
@@ -157,7 +154,7 @@ class Command_Photlin_BreakOnDebugTag(val debugTag: String) : Servant {
                 }
             }
 
-            IDEAStuff.runConfiguration(project, "photlinc.TryPhotlin", debug = true)
+            IDEAPile.runConfiguration(project, "photlinc.TryPhotlin", debug = true)
 
             //p.showDialog()
         }

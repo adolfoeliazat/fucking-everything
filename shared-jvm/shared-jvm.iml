@@ -103,7 +103,6 @@
           <root url="jar://$MODULE_DIR$/../lib-gradle/jsinterop-annotations-1.0.0.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/jsr305-3.0.1.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/junit-4.12.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib-gradle/kotlin-compiler-1.1.0.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/logback-classic-1.2.3.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/logback-core-1.2.3.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/mockito-core-1.9.5.jar!/" />

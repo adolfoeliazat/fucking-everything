@@ -18,11 +18,16 @@ import java.util.*
 
 class GoogleDrive(val dataStoreDirPath: String? = null) {
     val applicationName = "pepezdus"
+    val readTimeoutSeconds = 1000 * 30
 
     val httpTransport = GoogleNetHttpTransport.newTrustedTransport()!!
     val jsonFactory = JacksonFactory.getDefaultInstance()!!
     val credential = authorize()
     val drive = Drive.Builder(httpTransport, jsonFactory, credential)
+        .setHttpRequestInitializer {
+            credential.initialize(it)
+            it.readTimeout = readTimeoutSeconds
+        }
         .setApplicationName(applicationName)
         .build()!!
 

@@ -38,6 +38,7 @@ import kotlin.properties.Delegates.notNull
 class OneDrive {
 //    val redirectURIPort = 8000
     val uploadChunkSize = 320 * 1024 * 32 // OneDrive wants chunk size to be divisible by 320KB
+    val readTimeoutWhenDownloadingSeconds = 5 * 60
 
     var state: AuthenticationState = AuthenticationState.INITIAL
     var accessToken by notNull<String>()
@@ -430,7 +431,7 @@ class OneDrive {
             .get()
             .build()
         val client = OkHttpClient.Builder()
-            .readTimeout(25, TimeUnit.SECONDS)
+            .readTimeout(readTimeoutWhenDownloadingSeconds.toLong(), TimeUnit.SECONDS)
             .build()
         val response = client.newCall(request).execute()
         bitchUnlessCode(response, HTTPPile.code.ok, "Failed to download shit from OneDrive")

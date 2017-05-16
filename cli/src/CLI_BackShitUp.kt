@@ -44,12 +44,21 @@ object CLI_BackShitUp {
     }
 }
 
+object CLI_BackShitUp_Partial {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        BackShitUpStuff {
+            it.uploadShitToOneDrive()
+            it.checkInToTFVC()
+        }
+    }
+}
 
 private class BackShitUpStuff(stamp: String? = null, block: (BackShitUpStuff) -> Unit) {
     val stamp = stamp ?: LocalDateTime.now().format(TimePile.FMT_YMD)!!
-    val tfvcOutDirWin = "e:/febig/bak/$stamp"
+    val tfvcOutDirWin = "e:/febig/bak/${this.stamp}"
     val tfvcOutDirWSL = BigPile.win2WSL(tfvcOutDirWin)
-    val reducedOutDirWin = "e:/bak/$stamp"
+    val reducedOutDirWin = "e:/bak/${this.stamp}"
     val reducedOutDirWSL = BigPile.win2WSL(reducedOutDirWin)
     val tmpDirWin = "c:/tmp"
 
@@ -253,6 +262,9 @@ private class BackShitUpStuff(stamp: String? = null, block: (BackShitUpStuff) ->
             inner class FilePathShit(val parentID: String, val name: String)
 
             override fun createFolder(remotePath: String) {
+                // GDrive can happily create several files/folders with same name, which is a little bit confusing
+                if (fileExists(remotePath)) bitch("793558ff-6fc3-46b3-a89a-08a56f30fa00")
+
                 val fps = getFilePathShit(remotePath)
 
                 val fileMetadata = com.google.api.services.drive.model.File()
@@ -262,6 +274,24 @@ private class BackShitUpStuff(stamp: String? = null, block: (BackShitUpStuff) ->
 
                 g.drive.files().create(fileMetadata)
                     .execute()
+            }
+
+            fun fileExists(remotePath: String): Boolean {
+                check(remotePath.startsWith("/"))
+                val theRemotePath = remotePath.substring(1)
+                var parentID = "root"
+                for (name in theRemotePath.split("/")) {
+                    val q = "name = '$name' and '$parentID' in parents and trashed = false"
+                    val list = g.drive.files().list()
+                        .setQ(q)
+                        .execute()
+                    if (list.files.size == 0)
+                        return false
+                    check(list.files.size == 1)
+                    val f = list.files.first()
+                    parentID = f.id
+                }
+                return true
             }
 
             fun getFilePathShit(remotePath: String): FilePathShit {

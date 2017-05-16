@@ -21,7 +21,13 @@ fun sendCommandToIDEABackdoor(cmd: Any) {
     HTTPPile.postJSON_bitchUnlessOK(url, json)
 }
 
-fun rubRemoteIdeaTits(localProject: Project?, data: Any, taskTitle: String? = null, proc: String? = null, readTimeoutSeconds: Long? = null, onError: ((String) -> Unit)? = null) {
+fun rubRemoteIdeaTits(localProject: Project?,
+                      data: Any,
+                      taskTitle: String? = null,
+                      proc: String? = null,
+                      readTimeoutSeconds: Long? = null,
+                      port: Int? = null,
+                      onError: ((String) -> Unit)? = null) {
     val title = taskTitle ?: "Rubbing remote IDEA tits"
     val theProc = proc ?: run {
         val s = data::class.simpleName!!
@@ -37,7 +43,7 @@ fun rubRemoteIdeaTits(localProject: Project?, data: Any, taskTitle: String? = nu
             indicator.fraction = 0.5
             val json = ObjectMapper().writeValueAsString(data)
             rawResponse = HTTPPile.postJSON_bitchUnlessOK(
-                "http://localhost:${BackdoorClientGlobal.defaultRPCServerPort}?proc=$theProc",
+                "http://localhost:${port ?: BackdoorClientGlobal.defaultRPCServerPort}?proc=$theProc",
                 json)
             indicator.fraction = 1.0
         }

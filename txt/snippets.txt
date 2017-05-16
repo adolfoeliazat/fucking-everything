@@ -65,6 +65,8 @@
         // @phi-running-shit
         // @phi-debug-1
 
+    vgrechka.idea.hripos.Command_MessAround
+
 
 
 ========== SQLite ==========

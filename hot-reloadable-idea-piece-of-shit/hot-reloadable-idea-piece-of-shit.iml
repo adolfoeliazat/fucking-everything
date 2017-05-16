@@ -5,7 +5,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="idea-sdk-4-idea-backdoor" jdkType="IDEA JDK" />
+    <orderEntry type="jdk" jdkName="idea-172.2103.15" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="kotlin-jvm" level="project" />
     <orderEntry type="module" module-name="shared-idea" />

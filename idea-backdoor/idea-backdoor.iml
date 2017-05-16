@@ -7,13 +7,12 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/resources" type="java-resource" />
     </content>
-    <orderEntry type="jdk" jdkName="idea-sdk-4-idea-backdoor" jdkType="IDEA JDK" />
+    <orderEntry type="jdk" jdkName="4backdoor-172.2103.15" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="kotlin-jvm" level="project" />
     <orderEntry type="module" module-name="shared-jvm" />
     <orderEntry type="module" module-name="shared-idea" />
     <orderEntry type="library" name="lib-gradle" level="project" />
     <orderEntry type="module" module-name="idea-backdoor-client" />
-    <orderEntry type="module" module-name="shared-jvm-2" />
   </component>
 </module>

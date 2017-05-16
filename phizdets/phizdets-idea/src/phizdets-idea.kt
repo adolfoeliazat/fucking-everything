@@ -1,73 +1,45 @@
 package vgrechka.phizdetsidea
 
-import com.intellij.debugger.DebuggerManager
 import com.intellij.execution.ExecutionException
-import com.intellij.ide.actions.ShowStructureSettingsAction
-import com.intellij.ide.plugins.PluginManager
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ApplicationComponent
-import com.intellij.openapi.options.ex.SingleConfigurableEditor
-import com.intellij.openapi.options.newEditor.SettingsDialog
-import com.intellij.openapi.progress.ProgressIndicator
-import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
-import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable
-import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.wm.ToolWindowId
-import com.intellij.openapi.wm.ToolWindowManager
-import com.intellij.pom.Navigatable
-import com.intellij.pom.NonNavigatable
-import com.intellij.util.PlatformUtils
-import com.intellij.util.lang.UrlClassLoader
-import com.intellij.util.ui.UIUtil
 import com.intellij.xdebugger.XDebugSession
 import com.intellij.xdebugger.XDebuggerManager
 import com.intellij.xdebugger.XDebuggerUtil
 import com.intellij.xdebugger.XSourcePosition
-import com.intellij.xdebugger.breakpoints.XLineBreakpointType
 import com.intellij.xdebugger.frame.XExecutionStack
 import com.intellij.xdebugger.frame.XStackFrame
 import com.intellij.xdebugger.frame.XSuspendContext
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointManagerImpl
 import com.intellij.xdebugger.impl.breakpoints.XLineBreakpointImpl
-import com.siyeh.ig.memory.ZeroLengthArrayInitializationInspectionBase
 import com.sun.jna.platform.win32.User32
 import org.eclipse.core.runtime.ILog
 import org.eclipse.core.runtime.ILogListener
 import org.eclipse.core.runtime.IStatus
 import org.eclipse.debug.core.DebugEvent
-import org.eclipse.debug.core.DebugPlugin
-import org.eclipse.debug.core.IDebugEventSetListener
 import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpCommand
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener
-import org.eclipse.php.internal.debug.daemon.DaemonPlugin
 import org.osgi.framework.Bundle
 //import phizdets.MapPhizdetsStack
 import vgrechka.*
 import vgrechka.idea.*
 import java.io.File
 import kotlin.concurrent.thread
-import vgrechka.*
-import vgrechka.phizdetsidea.phizdets.debugger.*
-import java.awt.MouseInfo
 import java.awt.Robot
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
@@ -474,7 +446,7 @@ class XDebugDaemonAndShit(val project: Project) {
         frames = mutableListOf<MyStackFrame>()
 
         for (fileLine in filesLines) {
-            var virtualFile = IDEAStuff.getVirtualFileByPath(fileLine.file)!!
+            var virtualFile = IDEAPile.getVirtualFileByPath(fileLine.file)!!
             var line = fileLine.line - 1
 
             val mapFilePath = virtualFile.path + ".map"
@@ -483,7 +455,7 @@ class XDebugDaemonAndShit(val project: Project) {
                 val originalMapping = mapping.getMappingForLine(fileLine.line, 1)
                 if (originalMapping != null) {
                     val originalFilePath = originalMapping.originalFile.replace(Regex("^file://"), "")
-                    val originalVirtualFile = IDEAStuff.getVirtualFileByPath(originalFilePath)
+                    val originalVirtualFile = IDEAPile.getVirtualFileByPath(originalFilePath)
                     if (originalVirtualFile == null) {
                         wtfBalloon("50f8d771-a7ff-4c42-9ac9-aa0326529e70")
                     } else {
@@ -614,7 +586,7 @@ class XDebugDaemonAndShit(val project: Project) {
 
     private fun wtfBalloon(message: String) {
         ApplicationManager.getApplication().invokeLater {
-            IDEAStuff.showErrorBalloonForDebugToolWindow(project, "WTF: " + message)
+            IDEAPile.showErrorBalloonForDebugToolWindow(project, "WTF: " + message)
         }
     }
 }

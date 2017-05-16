@@ -18,6 +18,7 @@ package vgrechka.phizdetsidea.phizdets.configuration;
 import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.SimpleContent;
 import com.intellij.openapi.diff.impl.settings.DiffPreviewProvider;
+import org.jetbrains.annotations.NotNull;
 import vgrechka.phizdetsidea.phizdets.PhizdetsFileType;
 import org.jetbrains.annotations.NonNls;
 
@@ -25,54 +26,59 @@ import org.jetbrains.annotations.NonNls;
  * @author oleg
  */
 public class PyDiffPreviewProvider extends DiffPreviewProvider {
+  @NotNull
   @Override
-  public DiffContent[] createContents() {
-    return new DiffContent[]{createContent(LEFT_TEXT), createContent(CENTER_TEXT), createContent(RIGHT_TEXT)};
+  public com.intellij.diff.contents.DiffContent[] createContents() {
+    throw new RuntimeException("e04b2dde-63db-4f25-8825-6aca4d32e40b");
   }
-
-  private static SimpleContent createContent(final String text) {
-    return new SimpleContent(text, PhizdetsFileType.INSTANCE);
-  }
-
-  @NonNls private static final String LEFT_TEXT =   "class MyClass\n" +
-                                                    "  value = 123\n" +
-                                                    "\n" +
-                                                    "  def left_only(self):\n" +
-                                                    "    bar(123)\n" +
-                                                    "\n" +
-                                                    "  def foo(self):\n" +
-                                                    "    # Left changes\n" +
-                                                    "    pass\n" +
-                                                    "\n" +
-                                                    "  def bar(self, a, b)\n" +
-                                                    "\n" +
-                                                    "    print a\n" +
-                                                    "    print b";
-  @NonNls private static final String CENTER_TEXT = "class MyClass\n" +
-                                                    "  value = 123\n" +
-                                                    "\n" +
-                                                    "  def foo(self):\n" +
-                                                    "    pass\n" +
-                                                    "\n" +
-                                                    "  def removed_from_left(self):\n" +
-                                                    "    bar('PyCharmRulezzz')\n" +
-                                                    "\n" +
-                                                    "  def bar(self, a, b)\n" +
-                                                    "\n" +
-                                                    "    print a\n" +
-                                                    "    print b";
-  @NonNls private static final String RIGHT_TEXT =  "class MyClass\n" +
-                                                    "  value = -123\n" +
-                                                    "\n" +
-                                                    "  def foo(self):\n" +
-                                                    "    # Right changes\n" +
-                                                    "    pass\n" +
-                                                    "\n" +
-                                                    "  def removed_from_left(self):\n" +
-                                                    "    bar('PyCharmRulezzz')\n" +
-                                                    "\n" +
-                                                    "  def bar(self, a, b)\n" +
-                                                    "    print a\n" +
-                                                    "\n" +
-                                                    "    print b";
+//  @Override
+//  public DiffContent[] createContents() {
+//    return new DiffContent[]{createContent(LEFT_TEXT), createContent(CENTER_TEXT), createContent(RIGHT_TEXT)};
+//  }
+//
+//  private static SimpleContent createContent(final String text) {
+//    return new SimpleContent(text, PhizdetsFileType.INSTANCE);
+//  }
+//
+//  @NonNls private static final String LEFT_TEXT =   "class MyClass\n" +
+//                                                    "  value = 123\n" +
+//                                                    "\n" +
+//                                                    "  def left_only(self):\n" +
+//                                                    "    bar(123)\n" +
+//                                                    "\n" +
+//                                                    "  def foo(self):\n" +
+//                                                    "    # Left changes\n" +
+//                                                    "    pass\n" +
+//                                                    "\n" +
+//                                                    "  def bar(self, a, b)\n" +
+//                                                    "\n" +
+//                                                    "    print a\n" +
+//                                                    "    print b";
+//  @NonNls private static final String CENTER_TEXT = "class MyClass\n" +
+//                                                    "  value = 123\n" +
+//                                                    "\n" +
+//                                                    "  def foo(self):\n" +
+//                                                    "    pass\n" +
+//                                                    "\n" +
+//                                                    "  def removed_from_left(self):\n" +
+//                                                    "    bar('PyCharmRulezzz')\n" +
+//                                                    "\n" +
+//                                                    "  def bar(self, a, b)\n" +
+//                                                    "\n" +
+//                                                    "    print a\n" +
+//                                                    "    print b";
+//  @NonNls private static final String RIGHT_TEXT =  "class MyClass\n" +
+//                                                    "  value = -123\n" +
+//                                                    "\n" +
+//                                                    "  def foo(self):\n" +
+//                                                    "    # Right changes\n" +
+//                                                    "    pass\n" +
+//                                                    "\n" +
+//                                                    "  def removed_from_left(self):\n" +
+//                                                    "    bar('PyCharmRulezzz')\n" +
+//                                                    "\n" +
+//                                                    "  def bar(self, a, b)\n" +
+//                                                    "    print a\n" +
+//                                                    "\n" +
+//                                                    "    print b";
 }

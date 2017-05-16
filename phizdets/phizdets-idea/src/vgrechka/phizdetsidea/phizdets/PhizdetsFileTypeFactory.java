@@ -27,8 +27,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PhizdetsFileTypeFactory extends FileTypeFactory {
   public void createFileTypes(@NonNls @NotNull final FileTypeConsumer consumer) {
-    consumer.consume(PhizdetsFileType.INSTANCE, "py;pyw;");
+//    consumer.consume(PhizdetsFileType.INSTANCE, "py;pyw;");
 //    consumer.consume(QtUIFileType.INSTANCE, "ui");
-    consumer.consume(XmlFileType.INSTANCE, "qrc");
+//    consumer.consume(XmlFileType.INSTANCE, "qrc");
   }
 }
