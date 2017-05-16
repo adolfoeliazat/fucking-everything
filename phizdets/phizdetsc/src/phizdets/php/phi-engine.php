@@ -1868,14 +1868,25 @@ class PhiBinaryOperation extends PhiExpression {
         if ($this->lhs instanceof PhiNameRef) {
             $varName = $this->lhs->getName();
             $currentValue = Phi::getCurrentEnv()->getVar($varName);
-            if (!($currentValue instanceof PhiNumber))
+
+            if ($currentValue instanceof PhiNumber) {
+                $arg = phiEvaluate($this->rhs);
+                if (!($arg instanceof PhiNumber))
+                    throw new PhiIllegalStateException("4c5ca9a3-cd5a-4f6c-936c-c2a9ca090f55");
+
+                $res = new PhiNumber($shit($currentValue->getValue(), $arg->getValue()));
+            }
+            else if ($currentValue instanceof PhiString) {
+                $arg = phiEvaluate($this->rhs);
+                if (!($arg instanceof PhiString))
+                    throw new PhiIllegalStateException("1d13ef95-7ca3-4156-89fb-d7882e71d44a");
+
+                $res = new PhiString($shit($currentValue->getValue(), $arg->getValue()));
+            }
+            else {
                 throw new PhiIllegalStateException("320b9acf-4f54-4ebf-84c6-429a45607769");
+            }
 
-            $arg = phiEvaluate($this->rhs);
-            if (!($arg instanceof PhiNumber))
-                throw new PhiIllegalStateException("4c5ca9a3-cd5a-4f6c-936c-c2a9ca090f55");
-
-            $res = new PhiNumber($shit($currentValue->getValue(), $arg->getValue()));
             Phi::getCurrentEnv()->setVar($varName, $res);
             return $res;
         }

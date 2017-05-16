@@ -12,6 +12,7 @@ import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.task.ProjectTaskManager
 import com.intellij.xdebugger.XDebugSession
 import com.intellij.xdebugger.XDebuggerManager
 import com.intellij.xdebugger.XDebuggerUtil
@@ -38,6 +39,7 @@ import org.osgi.framework.Bundle
 //import phizdets.MapPhizdetsStack
 import vgrechka.*
 import vgrechka.idea.*
+import java.awt.MouseInfo
 import java.io.File
 import kotlin.concurrent.thread
 import java.awt.Robot
@@ -66,6 +68,8 @@ class PhizdetsIDEAPlugin : ApplicationComponent {
                 clog("Opened project", project.name)
             }
         })
+
+        addBuildMenuItems()
 
         val am = ActionManager.getInstance()
         val group = am.getAction("ToolsMenu") as DefaultActionGroup
@@ -240,6 +244,44 @@ class PhizdetsIDEAPlugin : ApplicationComponent {
             }
             group.add(action)
         }
+    }
+
+    private fun addBuildMenuItems() {
+        val am = ActionManager.getInstance()
+        val group = am.getAction("BuildMenu") as DefaultActionGroup
+        group.addSeparator()
+        group.addAction(object : AnAction("Build and Run in _Browser") {
+            override fun actionPerformed(e: AnActionEvent) {
+                ProjectTaskManager.getInstance(e.project).buildAllModules {
+                    if (it.errors == 0) {
+                        thread {
+                            try {
+                                Thread.sleep(500) // TODO:vgrechka Wait till JS2Phizdets finishes
+
+                                val hwnd =
+                                    User32.INSTANCE.FindWindow(null, "APS - Google Chrome")
+                                        // ?: User32.INSTANCE.FindWindow(null, "Writer UA - Google Chrome")
+                                        ?: bitch("No necessary Chrome window")
+                                User32.INSTANCE.SetForegroundWindow(hwnd) || bitch("Cannot bring Chrome to foreground")
+                                val origLocation = MouseInfo.getPointerInfo().location
+                                val robot = Robot()
+                                robot.mouseMove(600, 190) // Somewhere in page (or modal, so it won't be closed!) title
+                                robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+                                robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+                                robot.mouseMove(origLocation.x, origLocation.y)
+
+                                robot.keyPress(KeyEvent.VK_CONTROL)
+                                robot.keyPress('R'.toInt())
+                                robot.keyRelease('R'.toInt())
+                                robot.keyRelease(KeyEvent.VK_CONTROL)
+                            } catch(e: Throwable) {
+                                IDEAPile.later {IDEAPile.errorDialog(e)}
+                            }
+                        }
+                    }
+                }
+            }
+        })
     }
 
 }

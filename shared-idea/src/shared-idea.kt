@@ -235,7 +235,7 @@ object IDEAPile {
         }
     }
 
-    private fun later(block: () -> Unit) {
+    fun later(block: () -> Unit) {
         ApplicationManager.getApplication().invokeLater(block)
     }
 
