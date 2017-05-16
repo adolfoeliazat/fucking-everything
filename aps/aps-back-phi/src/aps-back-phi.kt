@@ -5,7 +5,7 @@ fun main(args: Array<String>) {
 }
 
 private fun goBananas() {
-    printSomeShit("Fuck")
+    printSomeShit("Fuck 5")
     printSomeShit("Shit")
     printSomeShit("Bitch")
 }
@@ -19,6 +19,7 @@ fun printSomeShit(shit: String) {
 fun yetAnotherShit() {
     println("I am yet another shit")
 }
+
 
 
 
