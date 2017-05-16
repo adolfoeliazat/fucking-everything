@@ -99,6 +99,8 @@ private fun spitBasicTemplate(p: TemplateParams) {
         ln("    <script src='node_modules/bootstrap/dist/js/bootstrap.min.js'></script>")
         ln("    <script src='https://apis.google.com/js/api:client.js'></script>")
         ln("    <script src='out-front/lib/kotlin.js'></script>")
+        ln("    <script src='symlinks/out/shared-x/shared-x.js'></script>")
+        ln("    <script src='symlinks/out/shared-kjs/shared-kjs.js'></script>")
         ln("    <script src='out-front/alraune-front.js'></script>")
         ln("</body>")
         ln("</html>")

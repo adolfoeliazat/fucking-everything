@@ -11,5 +11,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="kotlin-js" level="project" />
     <orderEntry type="module" module-name="shared-x" />
+    <orderEntry type="module" module-name="shared-kjs" />
   </component>
 </module>
