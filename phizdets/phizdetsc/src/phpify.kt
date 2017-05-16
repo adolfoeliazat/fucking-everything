@@ -378,8 +378,11 @@ class Phpifier(val program: JsProgram, val opts: Opts = Opts()) {
                 val replacement = when {
                     x.qualifier == null -> {
                         val dd = x.declarationDescriptor
+                        val isExternal =
+                            dd is SimpleFunctionDescriptor && dd.isExternal
+                            || x.ident.startsWith("phi") && x.ident.length > 3 && x.ident[3].isUpperCase()
                         val shit = when {
-                            dd is SimpleFunctionDescriptor && dd.isExternal -> "PhiExternalNameRef"
+                            isExternal -> "PhiExternalNameRef"
                             else -> "PhiNameRef"
                         }
                         new(shit, listOf(JsStringLiteral(x.ident)))

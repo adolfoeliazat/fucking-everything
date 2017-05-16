@@ -2044,8 +2044,23 @@ class PhiStringLiteral extends PhiExpression {
      * @param string $value
      */
     public function __construct($value) {
+        $s = $value;
+
+        // `\/` in JS is `/`
+        $s = mb_ereg_replace('\\\\/', '/', $s);
+
+        $s = preg_replace_callback('|(\\\\u....)|', function($m) {return json_decode('"' . $m[1] . '"');}, $s);
+        $this->value = $s;
+
+        /*
+        $s = mb_ereg_replace('"', '\"', $value);
+        $s = mb_ereg_replace('\', '\\', $s);
+        $this->value = json_decode('"' . $s . '"');
+        */
+        /*
         // `\/` in JS is `/`
         $this->value = mb_ereg_replace('\\\\/', '/', $value);
+        */
     }
 
     function __toString() {
