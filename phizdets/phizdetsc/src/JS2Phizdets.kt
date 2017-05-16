@@ -1,63 +1,62 @@
 package phizdets.compiler
 
 import vgrechka.*
-import com.fasterxml.jackson.core.JsonParseException
-import com.fasterxml.jackson.databind.JsonMappingException
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.debugging.sourcemap.SourceMapping
 import com.google.debugging.sourcemap.proto.Mapping
-import org.jetbrains.kotlin.cli.js.K2PhizdetsCompiler
-import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
-import org.jetbrains.kotlin.descriptors.SimpleFunctionDescriptor
 import org.jetbrains.kotlin.js.backend.ast.*
-import org.jetbrains.kotlin.js.facade.K2JSTranslator
-import org.jetbrains.kotlin.js.translate.utils.jsAstUtils.array
-import org.jetbrains.kotlin.js.translate.utils.jsAstUtils.index
-import vgrechka.*
 import java.io.File
-import java.io.StringWriter
-import java.util.*
-import javax.xml.bind.JAXB
-import javax.xml.bind.JAXBContext
-import javax.xml.bind.annotation.*
-import kotlin.properties.Delegates.notNull
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
-import kotlin.system.exitProcess
 import jdk.nashorn.internal.ir.*
-import jdk.nashorn.internal.ir.visitor.NodeVisitor
 import jdk.nashorn.internal.parser.Parser
 import jdk.nashorn.internal.parser.TokenType
 import jdk.nashorn.internal.runtime.Context
 import jdk.nashorn.internal.runtime.ErrorManager
 import jdk.nashorn.internal.runtime.Source
 import jdk.nashorn.internal.runtime.options.Options
-import org.jetbrains.kotlin.incremental.makeModuleFile
-import org.jetbrains.kotlin.js.config.JSConfigurationKeys
 import org.jetbrains.kotlin.js.facade.SourceMapBuilderConsumer
 import org.jetbrains.kotlin.js.sourceMap.PhizdetsSourceGenerationVisitor
 import org.jetbrains.kotlin.js.sourceMap.SourceMap3Builder
 import org.jetbrains.kotlin.js.util.TextOutputImpl
-import org.junit.Assert
-import org.junit.Assert.fail
 import org.junit.Test
+import kotlin.system.exitProcess
 
 object JS2Phizdets {
     @JvmStatic
     fun main(args: Array<String>) {
-        val inputFile = File(args[0])
-        clog("JS2Phizdets: ${inputFile.name}")
+        val outDir = run {
+            val outDirArg = args[0]
+            val prefix = "--outdir="
+            check(outDirArg.startsWith(prefix)) {"36f1648d-de92-459b-9b7e-20e01b741c1b"}
+            val outDir = outDirArg.substring(prefix.length)
+            val f = File(outDir)
+            if (f.exists()) {
+                check(f.isDirectory) {"d7430618-4ef7-4bde-a878-be72a18c4df8"}
+            } else {
+                check(f.mkdir()) {"a7368590-0720-4513-aa87-c9c1ee0e3840"}
+            }
+            f.absolutePath
+        }
 
-        Barbos(inputFilePath = inputFile.absolutePath,
-               outputFilePath = run {
-                   val fuck = inputFile.absolutePath
-                   check(fuck.endsWith(".js")) {"cfaf84a6-215a-4f49-ae37-6b106deb1347"}
-                   fuck.substring(0, fuck.length - 3) + ".php"},
-               copyPhiEngine = true,
-               copyPhiStdlib = true)
-            .ignite()
+        val inputFilePaths = args.drop(1)
+        check(inputFilePaths.isNotEmpty()) {"53a38c02-63db-4065-9f32-1a722954ef7b"}
+        for ((index, path) in inputFilePaths.withIndex()) {
+            val inputFile = File(path)
+            check(inputFile.exists()) {"7b117f2b-684d-460d-a2cd-5c514d11b86a"}
+            check(inputFile.isFile) {"13165475-8265-4e5c-86de-a143c3b933ae"}
+            check(inputFile.absolutePath.endsWith(".js")) {"cfaf84a6-215a-4f49-ae37-6b106deb1347"}
 
-        clog("OK, strange")
+            val outputFilePath = run {
+                val fuck = inputFile.name
+                outDir + "/" + fuck.substring(0, fuck.length - ".js".length) + ".php"
+            }
+            clog("JS2Phizdets: ${inputFile.name} --> $outputFilePath")
+            Barbos(inputFilePath = inputFile.absolutePath,
+                   outputFilePath = outputFilePath,
+                   copyPhiEngine = index == 0,
+                   copyPhiStdlib = index == 0)
+                .ignite()
+        }
+
+        clog("OK. Strange enough...")
     }
 }
 

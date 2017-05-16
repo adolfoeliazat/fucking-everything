@@ -1,5 +1,7 @@
 package alraune.back
 
+import vgrechka.*
+
 external fun phiPrintln(x: String?)
 external fun phiEval(code: String): dynamic
 external fun phiEvalToNative(code: String): dynamic
@@ -76,11 +78,6 @@ class TemplateParams(
     val pageTitle: String,
     val body: String
 )
-
-fun StringBuilder.ln(x: Any?) {
-    append(x)
-    append("\n")
-}
 
 private fun spitBasicTemplate(p: TemplateParams) {
     println(buildString {

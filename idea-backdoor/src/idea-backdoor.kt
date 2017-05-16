@@ -223,7 +223,9 @@ class BackdoorToolsGroup : DefaultActionGroup() {
                                            "E:/fegh/lib-gradle/closure-compiler-v20170218.jar")
                                         .joinToString(File.pathSeparator),
                                     "phizdets.compiler.JS2Phizdets",
-                                    "E:/fegh/alraune/alraune-back/out-back/alraune-back.js"
+                                    "--outdir=E:/fegh/alraune/alraune-back/out-back",
+                                    "E:/fegh/alraune/alraune-back/out-back/alraune-back.js",
+                                    "E:/fegh/out/production/shared-x/shared-x.js"
                                 ))
                                 if (res.exitValue != 0) {
                                     IDEAPile.errorDialog(res.stdout + "\n" + res.stderr)
