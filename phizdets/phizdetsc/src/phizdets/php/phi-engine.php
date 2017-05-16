@@ -1584,7 +1584,8 @@ class PhiBinaryOperation extends PhiExpression {
     }
 
     function __toString() {
-        return "{$this->lhs} {$this->op} {$this->rhs}";
+        return '[TODO PhiBinaryOperation.toString]';
+        // return "{$this->lhs} {$this->op} {$this->rhs}";
     }
 
     /**

@@ -496,4 +496,3 @@ class Phpifier(val program: JsProgram, val opts: Opts = Opts()) {
     }
 }
 
-

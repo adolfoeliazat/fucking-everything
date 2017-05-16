@@ -5,17 +5,27 @@ import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
+import com.intellij.openapi.application.Application
 import com.intellij.openapi.components.ApplicationComponent
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
+import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.ui.popup.JBPopupFactory
+import com.intellij.openapi.wm.WindowManager
+import com.intellij.openapi.wm.ex.StatusBarEx
+import com.intellij.task.ProjectTaskManager
 import com.intellij.util.lang.UrlClassLoader
+import com.sun.jna.platform.win32.User32
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletHandler
 import org.eclipse.jetty.servlet.ServletHolder
 import vgrechka.*
 import vgrechka.idea.*
+import java.awt.MouseInfo
+import java.awt.Robot
+import java.awt.event.InputEvent
+import java.awt.event.KeyEvent
 import java.io.File
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
@@ -194,6 +204,67 @@ private fun loadHotClass(className: String): Class<*> {
 
 class BackdoorToolsGroup : DefaultActionGroup() {
     init {
+        add(object : AnAction("Build Alraune and show in browser") {
+            override fun actionPerformed(e: AnActionEvent) {
+                ProjectTaskManager.getInstance(e.project).buildAllModules {
+                    if (it.errors == 0) {
+                        thread {
+                            try {
+                                val res = BigPile.runProcessAndWait(inheritIO = false, cmdPieces = listOf(
+                                    "java", "-cp",
+                                    listOf("C:/opt/jdk1.8.0_121/jre/lib/ext/nashorn.jar",
+                                           "C:/opt/jdk1.8.0_121/jre/lib/rt.jar",
+                                           "E:/fegh/out/production/shared-jvm",
+                                           "E:/fegh/out/production/phizdetsc",
+                                           "E:/fegh/lib/kotlin-runtime.jar",
+                                           "E:/fegh/lib/kotlin-reflect.jar",
+                                           "E:/fegh/lib-gradle/guava-21.0.jar",
+                                           "E:/fegh/lib-gradle/kotlin-compiler-1.1.0.jar",
+                                           "E:/fegh/lib-gradle/closure-compiler-v20170218.jar")
+                                        .joinToString(File.pathSeparator),
+                                    "phizdets.compiler.JS2Phizdets",
+                                    "E:/fegh/alraune/alraune-back/out-back/alraune-back.js"
+                                ))
+                                if (res.exitValue != 0) {
+                                    IDEAPile.errorDialog(res.stdout + "\n" + res.stderr)
+                                    return@thread
+                                }
+
+                                IDEAPile.later {
+                                    val ideFrame = WindowManager.getInstance().getIdeFrame(e.project!!)
+                                    if (ideFrame != null) {
+                                        val statusBar = ideFrame.statusBar as StatusBarEx
+                                        statusBar.notifyProgressByBalloon(MessageType.INFO, "Phizdets compiled shit OK", null, null)
+                                    }
+                                }
+
+                                val hwnd =
+                                    User32.INSTANCE.FindWindow(null, "Alraune - Google Chrome")
+                                        // ?: User32.INSTANCE.FindWindow(null, "Writer UA - Google Chrome")
+                                        ?: bitch("No necessary Chrome window")
+                                User32.INSTANCE.SetForegroundWindow(hwnd) || bitch("Cannot bring Chrome to foreground")
+                                val origLocation = MouseInfo.getPointerInfo().location
+                                val robot = Robot()
+                                robot.mouseMove(600, 190) // Somewhere in page (or modal, so it won't be closed!) title
+                                robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+                                robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+                                robot.mouseMove(origLocation.x, origLocation.y)
+
+                                robot.keyPress(KeyEvent.VK_CONTROL)
+                                robot.keyPress('R'.toInt())
+                                robot.keyRelease('R'.toInt())
+                                robot.keyRelease(KeyEvent.VK_CONTROL)
+                            } catch(e: Throwable) {
+                                IDEAPile.later {IDEAPile.errorDialog(e)}
+                            }
+                        }
+                    }
+                }
+
+
+            }
+        })
+
         add(object : AnAction("Say 'fuck you'") {
             override fun actionPerformed(e: AnActionEvent?) {
                 IDEAPile.infoDialog("fuuuuuck youuuuuuuuu")

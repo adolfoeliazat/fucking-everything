@@ -1,4 +1,4 @@
-package aps.back
+package alraune.back
 
 external fun phiPrintln(x: String?)
 external fun phiEval(code: String): dynamic
@@ -10,7 +10,6 @@ fun main(args: Array<String>) {
         "order" -> spitOrderPage()
         else -> spitLandingPage()
     }
-
 }
 
 
@@ -21,7 +20,7 @@ fun t(en: String, ru: String): String {
 
 fun spitOrderPage() {
     spitBasicTemplate(TemplateParams(
-        pageTitle = "APS",
+        pageTitle = "Alraune",
         body = buildString {
             ln("<div class='container'>")
             ln("<form>")
@@ -54,7 +53,7 @@ fun spitLandingPage() {
     }
 
     spitBasicTemplate(TemplateParams(
-        pageTitle = "APS",
+        pageTitle = "Alraune",
         body = buildString {
             ln("<div class='container'>")
             ln("    <div class='row'>")
@@ -102,7 +101,8 @@ private fun spitBasicTemplate(p: TemplateParams) {
         ln("    <script src='node_modules/jquery/dist/jquery.min.js'></script>")
         ln("    <script src='node_modules/bootstrap/dist/js/bootstrap.min.js'></script>")
         ln("    <script src='https://apis.google.com/js/api:client.js'></script>")
-        ln("    <script src='assets/aps.js'></script>")
+        ln("    <script src='out-front/lib/kotlin.js'></script>")
+        ln("    <script src='out-front/alraune-front.js'></script>")
         ln("</body>")
         ln("</html>")
     })

@@ -219,6 +219,10 @@ object IDEAPile {
         return executor
     }
 
+    fun errorDialog(msg: String) {
+        later {Messages.showErrorDialog(msg, "Shit Didn't Work")}
+    }
+
     fun errorDialog(e: Throwable) {
         later {Messages.showErrorDialog(e.stackTraceString, "Shit Didn't Work")}
     }
