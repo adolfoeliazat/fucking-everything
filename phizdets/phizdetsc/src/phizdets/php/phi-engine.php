@@ -1497,7 +1497,7 @@ function phi__printlnAndExit($x) {
 }
 
 class PhiBoolean extends PhiValue {
-    /**@var boolean*/ private $value;
+    /**@var boolean*/ public $value;
 
     /**
      * PhiBoolean constructor.
