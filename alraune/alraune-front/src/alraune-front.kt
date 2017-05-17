@@ -1,13 +1,59 @@
 package alraune.front
 
+import vgrechka.*
 import vgrechka.kjs.*
+import kotlin.js.json
+
+// https://developers.google.com/api-client-library/javascript/reference/referencedocs
 
 fun main(args: Array<String>) {
     clog("I am alraune-front")
     jq {
-        clog("piiiiiiiiii")
+        initGoogleAuth()
     }
 }
+
+object AlFrontPile {
+    object google {
+        var auth2 by notNullOnce<gapi.auth2.GoogleAuth>()
+    }
+}
+
+fun initGoogleAuth() {
+    gapi.load("auth2") {
+        clog("gapi.load")
+        AlFrontPile.google.auth2 = gapi.auth2.init(GApiClientConfig(
+            client_id = "1064147176813-n6l5pddt9qggcp9n4losnknb2dm5hl9t.apps.googleusercontent.com",
+            cookiepolicy = "single_host_origin"
+        ))
+        AlFrontPile.google.auth2.then(
+            onInit = {
+                clog("onInit: AlFrontPile.google.auth2.then")
+            },
+            onError = {e->
+                clog("onError: AlFrontPile.google.auth2.then", e)
+            }
+        )
+    }
+}
+
+external object gapi {
+    fun load(what: String, block: () -> Unit)
+
+    object auth2 {
+        class GoogleAuth {
+            fun then(onInit: () -> Unit, onError: (dynamic) -> Unit)
+        }
+
+        fun init(params: GApiClientConfig): GoogleAuth
+    }
+}
+
+class GApiClientConfig(
+    val client_id: String,
+    val cookiepolicy: String
+)
+
 
 /*
 // google.auth2.disconnect()

@@ -57,6 +57,7 @@ fun stringBuild(block: (StringBuilder) -> Unit) =
 annotation class Ser
 annotation class AllOpen
 
+// d405bf42-54e2-481e-8b31-457d53eb3293
 inline operator fun <T, FRet> T.minus(f: (T) -> FRet): T { f(this); return this }
 
 fun Boolean.thenElseEmpty(block: () -> String): String = when {
@@ -72,6 +73,8 @@ fun <T> Boolean.thenElseNull(block: () -> T): T? = when {
 //fun <T: Any> notNullOnce(): ReadWriteProperty<Any?, T> = NotNullOnceVar()
 
 //private class NotNullOnceVar<T: Any> : ReadWriteProperty<Any?, T> {
+
+// e0841d01-e09d-49e0-8d60-7f4f77f42ca8
 class notNullOnce<T: Any> : ReadWriteProperty<Any?, T> {
     private var value: T? = null
 
