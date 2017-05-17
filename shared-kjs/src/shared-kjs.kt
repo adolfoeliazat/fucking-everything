@@ -1,6 +1,10 @@
 package vgrechka.kjs
 
 fun main(args: Array<String>) {
-    console.log("I am shared-kjs")
+    clog("I am shared-kjs")
+}
+
+fun clog(vararg xs: Any?) {
+    console.log(*xs)
 }
 

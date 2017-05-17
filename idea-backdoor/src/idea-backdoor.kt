@@ -93,13 +93,29 @@ class IdeaBackdoorPlugin : ApplicationComponent {
 
                     popup.showInBestPositionFor(dataContext)
                 }
-
             })
         }
+
+        addBuildMenuItems()
 
         startRPCServer()
     }
 
+    private fun addBuildMenuItems() {
+        val am = ActionManager.getInstance()
+        val group = am.getAction("BuildMenu") as DefaultActionGroup
+        group.addSeparator()
+        for (key in listOf('b', 'o', 'n', 'q', 'w')) {
+            group.addAction(object : AnAction("Custom Build: _${key.toUpperCase()}") {
+                override fun actionPerformed(e: AnActionEvent) {
+                    val clazz = loadHotClass(CustomBuildHandler::class.qualifiedName!!)
+                    val method = clazz.getMethod(CustomBuildHandler::onCustomBuild.name, AnActionEvent::class.java, Char::class.java)
+                    val inst = clazz.newInstance()
+                    method.invoke(inst, e, key)
+                }
+            })
+        }
+    }
 
     inner class startRPCServer {
         init {
@@ -164,6 +180,16 @@ object SendSomeShitToBackdoor {
     }
 }
 
+class CustomBuildHandler {
+    fun onCustomBuild(e: AnActionEvent, key: Char) {
+        when (key) {
+            'b' -> CustomBuilds.buildAlrauneAndShowInBrowser(e)
+            else -> IDEAPile.infoDialog("I have no idea how to custom build '$key'")
+        }
+
+    }
+}
+
 private fun loadHotClass(className: String): Class<*> {
     val loader = object : UrlClassLoader(
         build()
@@ -202,68 +228,72 @@ private fun loadHotClass(className: String): Class<*> {
     return clazz
 }
 
+object CustomBuilds {
+    fun buildAlrauneAndShowInBrowser(e: AnActionEvent) {
+        ProjectTaskManager.getInstance(e.project).buildAllModules {
+            if (it.errors == 0) {
+                thread {
+                    try {
+                        val res = BigPile.runProcessAndWait(inheritIO = false, cmdPieces = listOf(
+                            "java", "-cp",
+                            listOf("C:/opt/jdk1.8.0_121/jre/lib/ext/nashorn.jar",
+                                   "C:/opt/jdk1.8.0_121/jre/lib/rt.jar",
+                                   "E:/fegh/out/production/shared-jvm",
+                                   "E:/fegh/out/production/phizdetsc",
+                                   "E:/fegh/lib/kotlin-runtime.jar",
+                                   "E:/fegh/lib/kotlin-reflect.jar",
+                                   "E:/fegh/lib-gradle/guava-21.0.jar",
+                                   "E:/fegh/lib-gradle/kotlin-compiler-1.1.0.jar",
+                                   "E:/fegh/lib-gradle/closure-compiler-v20170218.jar")
+                                .joinToString(File.pathSeparator),
+                            "phizdets.compiler.JS2Phizdets",
+                            "--outdir=E:/fegh/alraune/alraune-back/out-back",
+                            "E:/fegh/alraune/alraune-back/out-back/alraune-back.js",
+                            "E:/fegh/out/production/shared-x/shared-x.js"
+                        ))
+                        if (res.exitValue != 0) {
+                            IDEAPile.errorDialog(res.stdout + "\n" + res.stderr)
+                            return@thread
+                        }
+
+                        IDEAPile.later {
+                            val ideFrame = WindowManager.getInstance().getIdeFrame(e.project!!)
+                            if (ideFrame != null) {
+                                val statusBar = ideFrame.statusBar as StatusBarEx
+                                statusBar.notifyProgressByBalloon(MessageType.INFO, "Phizdets compiled shit OK", null, null)
+                            }
+                        }
+
+                        val hwnd =
+                            User32.INSTANCE.FindWindow(null, "Alraune - Google Chrome")
+                                // ?: User32.INSTANCE.FindWindow(null, "Writer UA - Google Chrome")
+                                ?: bitch("No necessary Chrome window")
+                        User32.INSTANCE.SetForegroundWindow(hwnd) || bitch("Cannot bring Chrome to foreground")
+                        val origLocation = MouseInfo.getPointerInfo().location
+                        val robot = Robot()
+                        robot.mouseMove(600, 190) // Somewhere in page (or modal, so it won't be closed!) title
+                        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+                        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+                        robot.mouseMove(origLocation.x, origLocation.y)
+
+                        robot.keyPress(KeyEvent.VK_CONTROL)
+                        robot.keyPress('R'.toInt())
+                        robot.keyRelease('R'.toInt())
+                        robot.keyRelease(KeyEvent.VK_CONTROL)
+                    } catch(e: Throwable) {
+                        IDEAPile.later {IDEAPile.errorDialog(e)}
+                    }
+                }
+            }
+        }
+    }
+}
+
 class BackdoorToolsGroup : DefaultActionGroup() {
     init {
         add(object : AnAction("Build Alraune and show in browser") {
             override fun actionPerformed(e: AnActionEvent) {
-                ProjectTaskManager.getInstance(e.project).buildAllModules {
-                    if (it.errors == 0) {
-                        thread {
-                            try {
-                                val res = BigPile.runProcessAndWait(inheritIO = false, cmdPieces = listOf(
-                                    "java", "-cp",
-                                    listOf("C:/opt/jdk1.8.0_121/jre/lib/ext/nashorn.jar",
-                                           "C:/opt/jdk1.8.0_121/jre/lib/rt.jar",
-                                           "E:/fegh/out/production/shared-jvm",
-                                           "E:/fegh/out/production/phizdetsc",
-                                           "E:/fegh/lib/kotlin-runtime.jar",
-                                           "E:/fegh/lib/kotlin-reflect.jar",
-                                           "E:/fegh/lib-gradle/guava-21.0.jar",
-                                           "E:/fegh/lib-gradle/kotlin-compiler-1.1.0.jar",
-                                           "E:/fegh/lib-gradle/closure-compiler-v20170218.jar")
-                                        .joinToString(File.pathSeparator),
-                                    "phizdets.compiler.JS2Phizdets",
-                                    "--outdir=E:/fegh/alraune/alraune-back/out-back",
-                                    "E:/fegh/alraune/alraune-back/out-back/alraune-back.js",
-                                    "E:/fegh/out/production/shared-x/shared-x.js"
-                                ))
-                                if (res.exitValue != 0) {
-                                    IDEAPile.errorDialog(res.stdout + "\n" + res.stderr)
-                                    return@thread
-                                }
-
-                                IDEAPile.later {
-                                    val ideFrame = WindowManager.getInstance().getIdeFrame(e.project!!)
-                                    if (ideFrame != null) {
-                                        val statusBar = ideFrame.statusBar as StatusBarEx
-                                        statusBar.notifyProgressByBalloon(MessageType.INFO, "Phizdets compiled shit OK", null, null)
-                                    }
-                                }
-
-                                val hwnd =
-                                    User32.INSTANCE.FindWindow(null, "Alraune - Google Chrome")
-                                        // ?: User32.INSTANCE.FindWindow(null, "Writer UA - Google Chrome")
-                                        ?: bitch("No necessary Chrome window")
-                                User32.INSTANCE.SetForegroundWindow(hwnd) || bitch("Cannot bring Chrome to foreground")
-                                val origLocation = MouseInfo.getPointerInfo().location
-                                val robot = Robot()
-                                robot.mouseMove(600, 190) // Somewhere in page (or modal, so it won't be closed!) title
-                                robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
-                                robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
-                                robot.mouseMove(origLocation.x, origLocation.y)
-
-                                robot.keyPress(KeyEvent.VK_CONTROL)
-                                robot.keyPress('R'.toInt())
-                                robot.keyRelease('R'.toInt())
-                                robot.keyRelease(KeyEvent.VK_CONTROL)
-                            } catch(e: Throwable) {
-                                IDEAPile.later {IDEAPile.errorDialog(e)}
-                            }
-                        }
-                    }
-                }
-
-
+                CustomBuilds.buildAlrauneAndShowInBrowser(e)
             }
         })
 

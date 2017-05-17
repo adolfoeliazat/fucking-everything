@@ -3,7 +3,10 @@ package alraune.front
 import vgrechka.kjs.*
 
 fun main(args: Array<String>) {
-    console.log("I am alraune-front")
+    clog("I am alraune-front")
+    jq {
+        clog("piiiiiiiiii")
+    }
 }
 
 /*

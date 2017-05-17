@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>vgrechka.idea-backdoor</id>
   <name>Backdoor</name>
-  <version>0.0.4</version>
+  <version>0.0.5</version>
   <vendor email="vladimir.grechka@gmail.com">Vladimir Grechka</vendor>
 
   <description><![CDATA[
