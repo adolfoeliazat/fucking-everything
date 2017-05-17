@@ -10,10 +10,10 @@ object SpewForDBStuff {
     }
 }
 
-object SpewForHTTPClientRequest {
+object SpewForAlrauneEntities {
     @JvmStatic
     fun main(args: Array<String>) {
-        spewForInputFiles(listOf("%FE%/shared-jvm-2/src/HTTPClientRequest.kt"))
+        spewForInputFiles(listOf("%FE%/db-stuff/src/db-stuff.kt"))
         clog("OK")
     }
 }

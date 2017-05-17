@@ -2,5 +2,6 @@
 /out-front
 /node_modules
 /symlinks
+/link--*
 
 

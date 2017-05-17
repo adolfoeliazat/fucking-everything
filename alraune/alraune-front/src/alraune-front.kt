@@ -9,29 +9,42 @@ import kotlin.js.Promise
 
 fun main(args: Array<String>) {
     clog("I am alraune-front")
-    window.asDynamic().AlDebug = AlDebug
+    window.asDynamic()[AlDebug::class.simpleName] = AlDebug
 
     @Suppress("UnsafeCastFromDynamic")
     AlFrontPile.shitFromBack = window.asDynamic()[ShitPassedFromBackToFront::class.simpleName]
 
     jq {
         initGoogleAuth()
-
-        val pageID = AlFrontPile.shitFromBack.pageID
-        when (pageID) {
-            AlSharedPile.pageID.order -> initOrderPage()
-            AlSharedPile.pageID.landing -> initLandingPage()
-            else -> initLandingPage()
-        }
+        async {initPage()}
     }
 }
 
-fun initLandingPage() {
+private suspend fun initPage() {
+    val pageID = AlFrontPile.shitFromBack.pageID
+    when (pageID) {
+        AlSharedPile.pageID.order -> initOrderPage()
+        AlSharedPile.pageID.landing -> initLandingPage()
+        else -> initLandingPage()
+    }
+}
+
+suspend fun initLandingPage() {
     clog("initLandingPage")
 }
 
-fun initOrderPage() {
+suspend fun initOrderPage() {
     clog("initOrderPage")
+    if (AlFrontPile.security.isSignedIn()) {
+    }
+    else {
+    }
+}
+
+class AlFrontSecurity {
+    fun isSignedIn(): Boolean {
+        return false
+    }
 }
 
 object AlDebug {
@@ -46,6 +59,9 @@ object AlFrontPile {
     object google {
         var auth2 by notNullOnce<gapi.auth2.GoogleAuth>()
     }
+
+    val localStorage = AlLocalStorage(RealLocalStorage)
+    val security = AlFrontSecurity()
 }
 
 fun initGoogleAuth() {

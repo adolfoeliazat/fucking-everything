@@ -9,10 +9,34 @@ external fun phiEval(code: String): dynamic
 external fun phiEvalToNative(code: String): dynamic
 
 fun main(args: Array<String>) {
+    val userToken = AlBackPile.cookies.get("userToken")
+    if (userToken == null)
+        println("no fucking token")
+    else
+        println("userToken = $userToken")
+
     val page = phiEval("return isset(\$_GET['page']) ? \$_GET['page'] : 'landing';") as String
     when (page) {
         "order" -> spitOrderPage()
         else -> spitLandingPage()
+    }
+}
+
+object AlBackPile {
+    val cookies: BackCookiesShim = PHPBackCookies()
+}
+
+interface BackCookiesShim {
+    fun get(name: String): String?
+}
+
+class PHPBackCookies : BackCookiesShim {
+    override fun get(name: String): String? {
+        val exists = phiEval("return isset(\$_COOKIE['$name']);") as Boolean
+        return when {
+            exists -> phiEval("return \$_COOKIE['$name'];") as String
+            else -> null
+        }
     }
 }
 

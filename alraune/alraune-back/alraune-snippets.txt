@@ -1,0 +1,42 @@
+============= Hosts ================
+
+127.0.0.1 alraune.local
+
+
+============= MySQL ================
+
+    phpMyAdmin
+        In config.inc.php:
+            $cfg['Servers'][$i]['user'] = 'root';
+            $cfg['Servers'][$i]['password'] = '';
+            $cfg['Servers'][$i]['controluser'] = 'root';
+            $cfg['Servers'][$i]['controlpass'] = '';
+
+    Setting up
+        drop user ''@'localhost'; -- Otherwise no one with `%` host will be able to connect
+
+        create database alraune character set = utf8;
+        use alraune;
+
+    Console
+        mysqld
+        mysql -u root
+        mysql -u root -e shutdown
+        show databases;
+        select host, user, password from mysql.user;
+
+    Memory drive
+        mysql -u root -e shutdown
+        imdisk -a -t vm -s 300M -m r:
+        Click "Format"
+        Copy all freaking C:\opt\mariadb-10.1.22-winx64\data to R:
+        Rename original `data` to something
+        mklink /j C:\opt\mariadb-10.1.22-winx64\data r:\data
+        mysqld
+
+============= Misc ================
+
+Remove cookie
+    document.cookie = 'userToken=; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+
+
