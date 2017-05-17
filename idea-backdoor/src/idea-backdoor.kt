@@ -234,6 +234,7 @@ object CustomBuilds {
             if (it.errors == 0) {
                 thread {
                     try {
+                        Thread.sleep(50)
                         val res = BigPile.runProcessAndWait(inheritIO = false, cmdPieces = listOf(
                             "java", "-cp",
                             listOf("C:/opt/jdk1.8.0_121/jre/lib/ext/nashorn.jar",
@@ -249,7 +250,8 @@ object CustomBuilds {
                             "phizdets.compiler.JS2Phizdets",
                             "--outdir=E:/fegh/alraune/alraune-back/out-back",
                             "E:/fegh/alraune/alraune-back/out-back/alraune-back.js",
-                            "E:/fegh/out/production/shared-x/shared-x.js"
+                            "E:/fegh/out/production/shared-x/shared-x.js",
+                            "E:/fegh/out/production/alraune-shared/alraune-shared.js"
                         ))
                         if (res.exitValue != 0) {
                             IDEAPile.errorDialog(res.stdout + "\n" + res.stderr)

@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/agnes/agnes.iml" filepath="$PROJECT_DIR$/agnes/agnes.iml" />
       <module fileurl="file://$PROJECT_DIR$/alraune/alraune-back/alraune-back.iml" filepath="$PROJECT_DIR$/alraune/alraune-back/alraune-back.iml" group="alraune" />
       <module fileurl="file://$PROJECT_DIR$/alraune/alraune-front/alraune-front.iml" filepath="$PROJECT_DIR$/alraune/alraune-front/alraune-front.iml" group="alraune" />
+      <module fileurl="file://$PROJECT_DIR$/alraune/alraune-shared/alraune-shared.iml" filepath="$PROJECT_DIR$/alraune/alraune-shared/alraune-shared.iml" group="alraune" />
       <module fileurl="file://$PROJECT_DIR$/aps/back-php/aps-back-php.iml" filepath="$PROJECT_DIR$/aps/back-php/aps-back-php.iml" group="aps" />
       <module fileurl="file://$PROJECT_DIR$/aps/roots/aps-roots.iml" filepath="$PROJECT_DIR$/aps/roots/aps-roots.iml" group="aps" />
       <module fileurl="file://$PROJECT_DIR$/attic/attic.iml" filepath="$PROJECT_DIR$/attic/attic.iml" />

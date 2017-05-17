@@ -1,5 +1,7 @@
 package alraune.back
 
+import alraune.shared.AlSharedPile
+import alraune.shared.ShitPassedFromBackToFront
 import vgrechka.*
 
 external fun phiPrintln(x: String?)
@@ -22,15 +24,17 @@ fun t(en: String, ru: String): String {
 
 fun spitOrderPage() {
     spitBasicTemplate(TemplateParams(
+        pageID = AlSharedPile.pageID.order,
         pageTitle = "Alraune",
         body = buildString {
+            val id = AlSharedPile.dom.id
             ln("<div class='container'>")
             ln("<form>")
             ln("    <div class='form-group'>")
             ln("        <label>${t("Sign in via", "Войти через")}</label>")
             ln("        <div>")
-            ln("            <button id='googleSignInButton' class='btn btn-default'>${t("Google", "Google")}</button>")
-            ln("            <button class='btn btn-default'>${t("Facebook", "Facebook")}</button>")
+            ln("            <button id='${id.googleSignInButton}' class='btn btn-default'>${t("Google", "Google")}</button>")
+            ln("            <button id='${id.facebookSignInButton}' class='btn btn-default'>${t("Facebook", "Facebook")}</button>")
             ln("        </div>")
             ln("    </div>")
             ln("</form>")
@@ -55,6 +59,7 @@ fun spitLandingPage() {
     }
 
     spitBasicTemplate(TemplateParams(
+        pageID = AlSharedPile.pageID.landing,
         pageTitle = "Alraune",
         body = buildString {
             ln("<div class='container'>")
@@ -75,11 +80,13 @@ fun spitLandingPage() {
 }
 
 class TemplateParams(
+    val pageID: String,
     val pageTitle: String,
     val body: String
 )
 
 private fun spitBasicTemplate(p: TemplateParams) {
+//    println(ShitPassedFromBackToFront::pageID.name)
     println(buildString {
         ln("<!DOCTYPE html>")
         ln("<html lang='en'>")
@@ -89,6 +96,14 @@ private fun spitBasicTemplate(p: TemplateParams) {
         ln("    <meta name='viewport' content='width=device-width, initial-scale=1'>")
         ln("    <meta name='google-signin-client_id' content='1064147176813-n6l5pddt9qggcp9n4losnknb2dm5hl9t.apps.googleusercontent.com'>")
         ln("    <title>${p.pageTitle}</title>")
+        ln("    <script>")
+        ln("        window.${ShitPassedFromBackToFront::class.simpleName} = {")
+        ln("            ${ShitPassedFromBackToFront::pageID.name}: '${p.pageID}'")
+        ln("        }")
+        ln("    </script>")
+        ln("")
+        ln("")
+        ln("")
         ln("")
         ln("    <link href='node_modules/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet'>")
         ln("</head>")
@@ -101,6 +116,7 @@ private fun spitBasicTemplate(p: TemplateParams) {
         ln("    <script src='out-front/lib/kotlin.js'></script>")
         ln("    <script src='symlinks/out/shared-x/shared-x.js'></script>")
         ln("    <script src='symlinks/out/shared-kjs/shared-kjs.js'></script>")
+        ln("    <script src='symlinks/out/alraune-shared/alraune-shared.js'></script>")
         ln("    <script src='out-front/alraune-front.js'></script>")
         ln("</body>")
         ln("</html>")

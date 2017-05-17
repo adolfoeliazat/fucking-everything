@@ -5,7 +5,6 @@ import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty
 
 fun main(args: Array<String>) {
-    println("I am shared-x")
 }
 
 fun StringBuilder.ln(x: Any?) {

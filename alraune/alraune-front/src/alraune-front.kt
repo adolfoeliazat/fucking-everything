@@ -1,19 +1,48 @@
 package alraune.front
 
+import alraune.shared.AlSharedPile
+import alraune.shared.ShitPassedFromBackToFront
 import vgrechka.*
 import vgrechka.kjs.*
-import kotlin.js.json
-
-// https://developers.google.com/api-client-library/javascript/reference/referencedocs
+import kotlin.browser.window
+import kotlin.js.Promise
 
 fun main(args: Array<String>) {
     clog("I am alraune-front")
+    window.asDynamic().AlDebug = AlDebug
+
+    @Suppress("UnsafeCastFromDynamic")
+    AlFrontPile.shitFromBack = window.asDynamic()[ShitPassedFromBackToFront::class.simpleName]
+
     jq {
         initGoogleAuth()
+
+        val pageID = AlFrontPile.shitFromBack.pageID
+        when (pageID) {
+            AlSharedPile.pageID.order -> initOrderPage()
+            AlSharedPile.pageID.landing -> initLandingPage()
+            else -> initLandingPage()
+        }
     }
 }
 
+fun initLandingPage() {
+    clog("initLandingPage")
+}
+
+fun initOrderPage() {
+    clog("initOrderPage")
+}
+
+object AlDebug {
+    // Ex: AlDebug.AlFrontPile.google.auth2
+
+    val AlFrontPile = alraune.front.AlFrontPile
+}
+
 object AlFrontPile {
+    var shitFromBack by notNullOnce<ShitPassedFromBackToFront>()
+
     object google {
         var auth2 by notNullOnce<gapi.auth2.GoogleAuth>()
     }
@@ -37,21 +66,29 @@ fun initGoogleAuth() {
     }
 }
 
+// https://developers.google.com/api-client-library/javascript/reference/referencedocs
 external object gapi {
     fun load(what: String, block: () -> Unit)
 
     object auth2 {
         class GoogleAuth {
             fun then(onInit: () -> Unit, onError: (dynamic) -> Unit)
+            fun signIn(options: GApiSignInOptions): Promise<dynamic>
         }
 
         fun init(params: GApiClientConfig): GoogleAuth
     }
 }
 
+// https://developers.google.com/api-client-library/javascript/reference/referencedocs#gapiauth2clientconfig
 class GApiClientConfig(
     val client_id: String,
     val cookiepolicy: String
+)
+
+// https://developers.google.com/api-client-library/javascript/reference/referencedocs#gapiauth2signinoptions
+class GApiSignInOptions(
+    val redirect_uri: String
 )
 
 
