@@ -4,15 +4,24 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty
 
+// TODO:vgrechka @unduplicate shared-jvm
+
 fun main(args: Array<String>) {
 }
+
+var exhaustive: Any? = null
+
+fun clog(vararg xs: Any?): Unit = println(xs.joinToString(" "))
+fun wtf(msg: String = "...WTF didn't you describe this WTF?"): Nothing = throw Exception("WTF: $msg")
+fun die(msg: String = "You've just killed me, motherfucker!"): Nothing = throw Exception("Aarrgghh... $msg")
+fun imf(what: String = "me"): Nothing = throw Exception("Implement $what, please, fuck you")
+fun bitch(msg: String = "Just bitching..."): Nothing = throw Exception(msg)
 
 fun StringBuilder.ln(x: Any?) {
     append(x)
     append("\n")
 }
 
-// TODO:vgrechka @unduplicate e0841d01-e09d-49e0-8d60-7f4f77f42ca8
 class notNullOnce<T: Any> : ReadWriteProperty<Any?, T> {
     private var value: T? = null
 
@@ -26,7 +35,6 @@ class notNullOnce<T: Any> : ReadWriteProperty<Any?, T> {
     }
 }
 
-// TODO:vgrechka @unduplicate d405bf42-54e2-481e-8b31-457d53eb3293
 inline operator fun <T, FRet> T.minus(f: (T) -> FRet): T { f(this); return this }
 
 

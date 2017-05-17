@@ -48,40 +48,24 @@ ${'$'}opt = array(
     PDO::ATTR_EMULATE_PREPARES   => false,
 );
 ${'$'}pdo = new PDO(${'$'}dsn, ${'$'}user, ${'$'}pass, ${'$'}opt);
+${'$'}pdo->exec("set time_zone = '+0:00'");
     """)
 
-    val sql = buildString {
-        ln("insert into `alraune_users`(")
-        ln("    `alUser_common_createdAt`,")
-        ln("    `alUser_common_updatedAt`,")
-        ln("    `alUser_common_deleted`,")
-        ln("    `alUser_firstName`,")
-        ln("    `alUser_email`,")
-        ln("    `alUser_lastName`,")
-        ln("    `alUser_passwordHash`,")
-        ln("    `alUser_profilePhone`,")
-        ln("    `alUser_adminNotes`,")
-        ln("    `alUser_aboutMe`,")
-        ln("    `alUser_profileRejectionReason`,")
-        ln("    `alUser_banReason`,")
-        ln("    `alUser_subscribedToAllCategories`")
-        ln(") values (utc_timestamp(), utc_timestamp(), false, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-    }
-    phiEval("\$x = Phi::getCurrentEnv(); \$x = \$x->getVar('sql'); \$x = \$x->value; \$GLOBALS['sql'] = \$x;")
+    val fucko = newAlUser(
+        firstName = "Fucko",
+        lastName = "Pidoracko",
+        email = "fucko@pidoracko.net",
+        passwordHash = "bloody-secret",
+        profilePhone = "911",
+        aboutMe = "I am not pidar, it's just a name",
+        adminNotes = "Pidar. Definitely",
+        profileRejectionReason = "We don't tolerate any pidars in our community",
+        banReason = "Achtung",
+        subscribedToAllCategories = true
+    )
 
-    val params = listOf("fuck1", "fuck2", "fuck3", "fuck4", "fuck5", "fuck6", "fuck7", "fuck8", "fuck9", true)
-    phiEval("\$GLOBALS['params'] = array();")
-    for (param in params) {
-        phiEval("\$x = Phi::getCurrentEnv(); \$x = \$x->getVar('param'); \$x = \$x->value; array_push(\$GLOBALS['params'], \$x);")
-    }
+    val savedFucko = alUserRepo.save(fucko)
 
-    phiEval("""
-global ${'$'}pdo, ${'$'}sql, ${'$'}params;
-// var_dump(${'$'}sql);
-// var_dump(${'$'}params);
-${'$'}stmt = ${'$'}pdo->prepare(${'$'}sql);
-${'$'}stmt->execute(${'$'}params);
-    """)
 
     println("Hello, pizda")
 }
