@@ -3,12 +3,15 @@ package vgrechka.spew
 import vgrechka.*
 
 @Target(AnnotationTarget.FILE)
+annotation class GSpit(val spewClassName: String, val output: String)
+
+@Target(AnnotationTarget.FILE)
 annotation class GDBEntitySpewOptions(
     val pileObject: String = "",
     val databaseDialect: GDBEntitySpewDatabaseDialect)
 
 enum class GDBEntitySpewDatabaseDialect {
-    SQLITE, POSTGRESQL
+    SQLITE, POSTGRESQL, MYSQL
 }
 
 annotation class GEntity(val table: String)

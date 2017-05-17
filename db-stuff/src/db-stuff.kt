@@ -1,4 +1,4 @@
-@file:GSpit(spew = OptsBuilderSpew::class, output = "%FE%/db-stuff/gen/generated--db-stuff.kt")
+@file:GSpit(spewClassName = "vgrechka.spew.OptsBuilderSpew", output = "%FE%/db-stuff/gen/generated--db-stuff.kt")
 
 package vgrechka.db
 

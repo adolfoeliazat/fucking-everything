@@ -5,7 +5,6 @@ import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
-import com.intellij.openapi.application.Application
 import com.intellij.openapi.components.ApplicationComponent
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
@@ -184,6 +183,7 @@ class CustomBuildHandler {
     fun onCustomBuild(e: AnActionEvent, key: Char) {
         when (key) {
             'b' -> CustomBuilds.buildAlrauneAndShowInBrowser(e)
+            'n' -> CustomBuilds.buildAlrauneAndRunPhucking1(e)
             else -> IDEAPile.infoDialog("I have no idea how to custom build '$key'")
         }
 
@@ -230,6 +230,47 @@ private fun loadHotClass(className: String): Class<*> {
 
 object CustomBuilds {
     fun buildAlrauneAndShowInBrowser(e: AnActionEvent) {
+        buildAlrauneAndThen(e) {
+            val hwnd =
+                User32.INSTANCE.FindWindow(null, "Alraune - Google Chrome")
+                    // ?: User32.INSTANCE.FindWindow(null, "Writer UA - Google Chrome")
+                    ?: bitch("No necessary Chrome window")
+            User32.INSTANCE.SetForegroundWindow(hwnd) || bitch("Cannot bring Chrome to foreground")
+            val origLocation = MouseInfo.getPointerInfo().location
+            val robot = Robot()
+            robot.mouseMove(600, 190) // Somewhere in page (or modal, so it won't be closed!) title
+            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+            robot.mouseMove(origLocation.x, origLocation.y)
+
+            robot.keyPress(KeyEvent.VK_CONTROL)
+            robot.keyPress('R'.toInt())
+            robot.keyRelease('R'.toInt())
+            robot.keyRelease(KeyEvent.VK_CONTROL)
+        }
+    }
+
+    fun buildAlrauneAndRunPhucking1(e: AnActionEvent) {
+        buildAlrauneAndThen(e) {
+            val windowTitle = "phucking1"
+            val hwnd =
+                User32.INSTANCE.FindWindow(null, windowTitle)
+                    ?: bitch("I want a cmd.exe window titled `$windowTitle`")
+            User32.INSTANCE.SetForegroundWindow(hwnd) || bitch("Cannot bring window to foreground")
+
+            val robot = Robot()
+
+//            val origLocation = MouseInfo.getPointerInfo().location
+//            robot.mouseMove(600, 190) // Somewhere in page (or modal, so it won't be closed!) title
+//            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+//            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+//            robot.mouseMove(origLocation.x, origLocation.y)
+
+            RobotPile.typeTextCR("cls & php index.php phucking1")
+        }
+    }
+
+    private fun buildAlrauneAndThen(e: AnActionEvent, block: () -> Unit) {
         ProjectTaskManager.getInstance(e.project).buildAllModules {
             if (it.errors == 0) {
                 thread {
@@ -266,22 +307,7 @@ object CustomBuilds {
                             }
                         }
 
-                        val hwnd =
-                            User32.INSTANCE.FindWindow(null, "Alraune - Google Chrome")
-                                // ?: User32.INSTANCE.FindWindow(null, "Writer UA - Google Chrome")
-                                ?: bitch("No necessary Chrome window")
-                        User32.INSTANCE.SetForegroundWindow(hwnd) || bitch("Cannot bring Chrome to foreground")
-                        val origLocation = MouseInfo.getPointerInfo().location
-                        val robot = Robot()
-                        robot.mouseMove(600, 190) // Somewhere in page (or modal, so it won't be closed!) title
-                        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
-                        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
-                        robot.mouseMove(origLocation.x, origLocation.y)
-
-                        robot.keyPress(KeyEvent.VK_CONTROL)
-                        robot.keyPress('R'.toInt())
-                        robot.keyRelease('R'.toInt())
-                        robot.keyRelease(KeyEvent.VK_CONTROL)
+                        block()
                     } catch(e: Throwable) {
                         IDEAPile.later {IDEAPile.errorDialog(e)}
                     }

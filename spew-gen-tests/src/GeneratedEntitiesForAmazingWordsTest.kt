@@ -1,4 +1,4 @@
-@file:GSpit(spew = DBEntitySpew::class, output = "%FE%/spew-gen-tests/gen/generated--for-GeneratedEntitiesForAmazingWordsTest.kt")
+@file:GSpit(spewClassName = "vgrechka.spew.KotlinDBEntitySpew", output = "%FE%/spew-gen-tests/gen/generated--for-GeneratedEntitiesForAmazingWordsTest.kt")
 
 package vgrechka.spewgentests
 

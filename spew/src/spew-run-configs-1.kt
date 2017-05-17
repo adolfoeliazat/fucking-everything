@@ -13,7 +13,7 @@ object SpewForDBStuff {
 object SpewForAlrauneEntities {
     @JvmStatic
     fun main(args: Array<String>) {
-        spewForInputFiles(listOf("%FE%/db-stuff/src/db-stuff.kt"))
+        spewForInputFiles(listOf("%FE%/alraune/alraune-back/src/alraune-entities.kt"))
         clog("OK")
     }
 }

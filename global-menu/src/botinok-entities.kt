@@ -1,4 +1,4 @@
-@file:GSpit(spew = DBEntitySpew::class, output = "%FE%/global-menu/gen/generated--botinok-entities.kt")
+@file:GSpit(spewClassName = "vgrechka.spew.KotlinDBEntitySpew", output = "%FE%/global-menu/gen/generated--botinok-entities.kt")
 @file:GDBEntitySpewOptions(pileObject = "BotinokGeneratedDBPile",
                            databaseDialect = GDBEntitySpewDatabaseDialect.POSTGRESQL)
 

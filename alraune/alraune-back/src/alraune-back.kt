@@ -9,6 +9,16 @@ external fun phiEval(code: String): dynamic
 external fun phiEvalToNative(code: String): dynamic
 
 fun main(args: Array<String>) {
+    val hasArgs = phiEval("global \$argv; return isset(\$argv[1]);") as Boolean
+    if (hasArgs) {
+        val arg1 = phiEval("global \$argv; return \$argv[1];") as String
+        when (arg1) {
+            "phucking1" -> phucking1()
+            else -> println("What the fuck do you mean by that args?")
+        }
+        return
+    }
+
     val userToken = AlBackPile.cookies.get("userToken")
     if (userToken == null)
         println("no fucking token")
@@ -20,6 +30,10 @@ fun main(args: Array<String>) {
         "order" -> spitOrderPage()
         else -> spitLandingPage()
     }
+}
+
+fun phucking1() {
+    println("Hello, pizda 2")
 }
 
 object AlBackPile {

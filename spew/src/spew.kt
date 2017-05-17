@@ -5,9 +5,6 @@ import vgrechka.*
 import java.util.*
 import kotlin.reflect.KClass
 
-@Target(AnnotationTarget.FILE)
-annotation class GSpit(val spew: KClass<out Spew>, val output: String)
-
 interface Spew {
     fun ignite(ktFile: KtFile, outputFilePath: String, spewResults: SpewResults)
 }
@@ -29,9 +26,13 @@ fun spewForInputFiles(paths: List<String>): SpewResults {
     val spewResults = SpewResults()
     for (ktFile in ktFiles) {
         for (ann in ktFile.freakingFindAnnotations(GSpit::class.simpleName!!)) {
-            val spewAttributeText = ann.freakingGetClassAttributeText(GSpit::spew.name) ?: wtf("c301fe3f-a716-44c7-9931-70353676036b")
-            val colonColonIndex = spewAttributeText.indexOfOrNull("::") ?: wtf("e194e277-2f5f-40f8-9664-fd9b162f69b6")
-            val spewClass = Class.forName("vgrechka.spew.${spewAttributeText.substring(0, colonColonIndex)}")
+            val spewClassName = ann.freakingGetStringAttribute(GSpit::spewClassName.name) ?: wtf("c301fe3f-a716-44c7-9931-70353676036b")
+            val spewClass = Class.forName(spewClassName)
+
+//            val spewAttributeText = ann.freakingGetClassAttributeText(GSpit::spew.name) ?: wtf("c301fe3f-a716-44c7-9931-70353676036b")
+//            val colonColonIndex = spewAttributeText.indexOfOrNull("::") ?: wtf("e194e277-2f5f-40f8-9664-fd9b162f69b6")
+//            val spewClass = Class.forName("vgrechka.spew.${spewAttributeText.substring(0, colonColonIndex)}")
+
             val spew = spewClass.newInstance() as Spew
             val outputFilePath = ann.freakingGetStringAttribute(GSpit::output.name) ?: wtf("3af6ca59-bae4-4659-8806-28e0b1395a0c")
             spew.ignite(ktFile, outputFilePath.substituteMyVars(), spewResults)
