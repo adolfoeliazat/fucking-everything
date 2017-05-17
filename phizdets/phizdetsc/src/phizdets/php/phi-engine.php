@@ -1753,18 +1753,29 @@ class PhiBinaryOperation extends PhiExpression {
             if (phiIsInstanceOf($rhsPhiValue, Phi::$String)) {
                 $rhsPhiValue = phiEvaluate(new PhiInvocation(new PhiDot($this->rhs, 'toString'), array()));
             }
+
             if (($lhsPhiValue instanceof PhiString) && ($rhsPhiValue instanceof PhiString)) {
                 return new PhiString($lhsPhiValue->getValue() . $rhsPhiValue->getValue());
             }
+
             else if (($lhsPhiValue instanceof PhiString) && ($rhsPhiValue instanceof PhiNumber)) {
                 return new PhiString($lhsPhiValue->getValue() . $rhsPhiValue->getValue());
             }
             else if (($lhsPhiValue instanceof PhiNumber) && ($rhsPhiValue instanceof PhiString)) {
                 return new PhiString($lhsPhiValue->getValue() . $rhsPhiValue->getValue());
             }
+
+            else if (($lhsPhiValue instanceof PhiString) && ($rhsPhiValue instanceof PhiBoolean)) {
+                return new PhiString($lhsPhiValue->getValue() . var_export($rhsPhiValue->getValue(), true));
+            }
+            else if (($lhsPhiValue instanceof PhiBoolean) && ($rhsPhiValue instanceof PhiString)) {
+                return new PhiString(var_export($lhsPhiValue->getValue(), true) . $rhsPhiValue->getValue());
+            }
+
             else if (($lhsPhiValue instanceof PhiNumber) && ($rhsPhiValue instanceof PhiNumber)) {
                 return new PhiNumber($lhsPhiValue->getValue() + $rhsPhiValue->getValue());
             }
+
             else {
                 throw new PhiIllegalStateException("d79e06d2-dcc0-4d51-a73a-0585c168e404");
             }

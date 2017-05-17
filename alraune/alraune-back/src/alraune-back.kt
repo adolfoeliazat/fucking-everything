@@ -65,9 +65,9 @@ ${'$'}pdo->exec("set time_zone = '+0:00'");
     )
 
     val savedFucko = alUserRepo.save(fucko)
+    println(savedFucko)
 
-
-    println("Hello, pizda")
+    println("OK")
 }
 
 object AlBackPile {

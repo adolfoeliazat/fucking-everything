@@ -9,7 +9,11 @@ import vgrechka.*
 import vgrechka.spew.*
 
 @GEntity(table = "alraune_users")
-interface AlUser : GCommonEntityFields {
+interface AlUser {
+    var id: String
+    var createdAt: PHPTimestamp
+    var updatedAt: PHPTimestamp
+    var deleted: Boolean
     var firstName: String
     var email: String // TODO:vgrechka Index
     var lastName: String
@@ -25,7 +29,12 @@ interface AlUser : GCommonEntityFields {
     var subscribedToAllCategories: Boolean
 }
 
-interface AlUserRepository : GRepository<AlUser> {
+interface AlUserRepository {
+    fun findOne(id: Long): AlUser?
+    fun findAll(): List<AlUser>
+    fun save(x: AlUser): AlUser
+    fun delete(id: Long)
+    fun delete(x: AlUser)
     fun findByName(x: String): AlUser?
 }
 
