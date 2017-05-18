@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
 
     val userToken = AlBackPile.cookies.get("userToken")
     if (userToken == null)
-        println("no fucking token")
+        println("no fucking token...")
     else
         println("userToken = $userToken")
 
@@ -35,8 +35,8 @@ fun main(args: Array<String>) {
 fun phucking1() {
     DBPile.init()
 
-    DBPile.execute(alUserRepo.dropTableSQL)
-    DBPile.execute(alUserRepo.createTableSQL)
+    DBPile.execute(alUserRepo.dropTableDDL)
+    DBPile.execute(alUserRepo.createTableDDL)
 
     DBPile.tx {
         val fucko = newAlUser(
@@ -231,6 +231,7 @@ class TemplateParams(
 
 private fun spitBasicTemplate(p: TemplateParams) {
 //    println(ShitPassedFromBackToFront::pageID.name)
+    val scriptSuffix = "?" + PHPPile.time()
     println(buildString {
         ln("<!DOCTYPE html>")
         ln("<html lang='en'>")
@@ -258,10 +259,10 @@ private fun spitBasicTemplate(p: TemplateParams) {
         ln("    <script src='node_modules/bootstrap/dist/js/bootstrap.min.js'></script>")
         ln("    <script src='https://apis.google.com/js/api:client.js'></script>")
         ln("    <script src='out-front/lib/kotlin.js'></script>")
-        ln("    <script src='symlinks/out/shared-x/shared-x.js'></script>")
-        ln("    <script src='symlinks/out/shared-kjs/shared-kjs.js'></script>")
-        ln("    <script src='symlinks/out/alraune-shared/alraune-shared.js'></script>")
-        ln("    <script src='out-front/alraune-front.js'></script>")
+        ln("    <script src='symlinks/out/shared-x/shared-x.js$scriptSuffix'></script>")
+        ln("    <script src='symlinks/out/shared-kjs/shared-kjs.js$scriptSuffix'></script>")
+        ln("    <script src='symlinks/out/alraune-shared/alraune-shared.js$scriptSuffix'></script>")
+        ln("    <script src='out-front/alraune-front.js$scriptSuffix'></script>")
         ln("</body>")
         ln("</html>")
     })

@@ -42,7 +42,7 @@ fun spewForInputFiles(paths: List<String>): SpewResults {
     return spewResults
 }
 
-class CodeShitter(val indent: Int = 0) {
+class CodeShitter(val indent: Int = 0, val beforeReification: (CodeShitter) -> Unit = {}) {
     val buf = StringBuilder()
     val tag = "{{" + UUID.randomUUID().toString() + "}}"
     val subPlaces = mutableListOf<CodeShitter>()
@@ -84,6 +84,7 @@ class CodeShitter(val indent: Int = 0) {
 
 
     fun reify(): String {
+        beforeReification(this)
         var res = buf.toString()
         for (subPlace in subPlaces) {
             val reifiedSubPlace = subPlace.reify()

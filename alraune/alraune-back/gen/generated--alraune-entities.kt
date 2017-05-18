@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Thu May 18 15:36:22 EEST 2017
+// Generated on Thu May 18 21:03:35 EEST 2017
 // Model: e:/fegh/alraune/alraune-back/src/alraune-entities.kt
 //
 
@@ -55,10 +55,10 @@ val alUserRepo: AlUserRepository by lazy {
             val params = mutableListOf<Any?>()
             val sql = buildString {
                 ln("select")
-                ln("    cast(id as char),")
-                ln("    unix_timestamp(alUser_common_createdAt),")
-                ln("    unix_timestamp(alUser_common_updatedAt),")
-                ln("    alUser_common_deleted,")
+                ln("    alUser_id,")
+                ln("    unix_timestamp(alUser_createdAt),")
+                ln("    unix_timestamp(alUser_updatedAt),")
+                ln("    alUser_deleted,")
                 ln("    alUser_firstName,")
                 ln("    alUser_email,")
                 ln("    alUser_lastName,")
@@ -74,7 +74,7 @@ val alUserRepo: AlUserRepository by lazy {
                 ln("${propertyToColumnName(prop)} ${op.sql} ?")
                 params.add(arg)
             }
-            val rows = DBPile.query(sql, params, uuid = "26a933e5-97ea-4516-8475-135c2943f8a3")
+            val rows = DBPile.query(sql, params, uuid = "216e9c45-55a0-4921-a3e9-162293885221")
             println("findBy: Found ${rows.size} rows")
             val items = mutableListOf<AlUser>()
             for (row in rows) {
@@ -105,9 +105,9 @@ val alUserRepo: AlUserRepository by lazy {
             DBPile.execute(
                 sql = buildString {
                     ln("insert into `alraune_users`(")
-                    ln("    `alUser_common_createdAt`,")
-                    ln("    `alUser_common_updatedAt`,")
-                    ln("    `alUser_common_deleted`,")
+                    ln("    `alUser_createdAt`,")
+                    ln("    `alUser_updatedAt`,")
+                    ln("    `alUser_deleted`,")
                     ln("    `alUser_firstName`,")
                     ln("    `alUser_email`,")
                     ln("    `alUser_lastName`,")
@@ -135,18 +135,59 @@ val alUserRepo: AlUserRepository by lazy {
                     x.banReason,
                     x.subscribedToAllCategories
                 ),
-                uuid = "396ddcaa-c7a3-4934-a6d4-5a26d0b55288"
+                uuid = "03f7d7b9-0b78-42ed-893c-9cd4ed3e8145"
             )
 
             val res = DBPile.query(
                 sql = "select cast(last_insert_id() as char)",
-                uuid = "2a0b11dc-8090-435a-a104-7c9c6a06ce30"
+                uuid = "2d8b8185-0769-47c3-b7ec-f7560abe12cc"
             )
 
             x.id = res.first().first() as String
             return x
         }
     }
+}
+
+fun AlUserRepository.propertyToColumnName(prop: KMutableProperty1<AlUser, String>): String {
+    if (prop.name == AlUser::id.name) return "alUser_id"
+    if (prop.name == AlUser::createdAt.name) return "alUser_createdAt"
+    if (prop.name == AlUser::updatedAt.name) return "alUser_updatedAt"
+    if (prop.name == AlUser::deleted.name) return "alUser_deleted"
+    if (prop.name == AlUser::firstName.name) return "alUser_firstName"
+    if (prop.name == AlUser::email.name) return "alUser_email"
+    if (prop.name == AlUser::lastName.name) return "alUser_lastName"
+    if (prop.name == AlUser::passwordHash.name) return "alUser_passwordHash"
+    if (prop.name == AlUser::profilePhone.name) return "alUser_profilePhone"
+    if (prop.name == AlUser::adminNotes.name) return "alUser_adminNotes"
+    if (prop.name == AlUser::aboutMe.name) return "alUser_aboutMe"
+    if (prop.name == AlUser::profileRejectionReason.name) return "alUser_profileRejectionReason"
+    if (prop.name == AlUser::banReason.name) return "alUser_banReason"
+    if (prop.name == AlUser::subscribedToAllCategories.name) return "alUser_subscribedToAllCategories"
+    throw Exception("9f1c1817-4fb8-438c-86f1-d9f2dcdf9fea")
+
+}
+
+val AlUserRepository.dropTableDDL get() = buildString {
+    ln("drop table if exists `alraune_users`")
+}
+val AlUserRepository.createTableDDL get() = buildString {
+    ln("create table `alraune_users` (")
+    ln("    alUser_id bigint not null auto_increment primary key,")
+    ln("    alUser_createdAt datetime not null,")
+    ln("    alUser_updatedAt datetime not null,")
+    ln("    alUser_deleted boolean not null,")
+    ln("    alUser_firstName longtext not null,")
+    ln("    alUser_email longtext not null,")
+    ln("    alUser_lastName longtext not null,")
+    ln("    alUser_passwordHash longtext not null,")
+    ln("    alUser_profilePhone longtext not null,")
+    ln("    alUser_adminNotes longtext not null,")
+    ln("    alUser_aboutMe longtext not null,")
+    ln("    alUser_profileRejectionReason longtext,")
+    ln("    alUser_banReason longtext,")
+    ln("    alUser_subscribedToAllCategories boolean not null")
+    ln(") engine=InnoDB;")
 }
 class Generated_AlUser : AlUser {
     override var id by notNull<String>()
@@ -190,11 +231,7 @@ object AlGeneratedDBPile {
         val dropCreateAllScript = """
 drop table if exists `alraune_users`;
 create table `alraune_users` (
-    id bigint not null auto_increment primary key,
-    alUser_common_createdAt datetime not null,
-    alUser_common_updatedAt datetime not null,
-    alUser_common_deleted boolean not null,
-    alUser_id longtext not null,
+    alUser_id bigint not null auto_increment primary key,
     alUser_createdAt datetime not null,
     alUser_updatedAt datetime not null,
     alUser_deleted boolean not null,
@@ -208,7 +245,7 @@ create table `alraune_users` (
     alUser_profileRejectionReason longtext,
     alUser_banReason longtext,
     alUser_subscribedToAllCategories boolean not null
-);
+) engine=InnoDB;
 
         """
     }
@@ -221,11 +258,7 @@ DDL
 
 drop table if exists `alraune_users`;
 create table `alraune_users` (
-    id bigint not null auto_increment primary key,
-    alUser_common_createdAt datetime not null,
-    alUser_common_updatedAt datetime not null,
-    alUser_common_deleted boolean not null,
-    alUser_id longtext not null,
+    alUser_id bigint not null auto_increment primary key,
     alUser_createdAt datetime not null,
     alUser_updatedAt datetime not null,
     alUser_deleted boolean not null,
@@ -239,6 +272,6 @@ create table `alraune_users` (
     alUser_profileRejectionReason longtext,
     alUser_banReason longtext,
     alUser_subscribedToAllCategories boolean not null
-);
+) engine=InnoDB;
 
 */

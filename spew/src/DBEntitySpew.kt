@@ -3,7 +3,6 @@ package vgrechka.spew
 import org.jetbrains.kotlin.psi.*
 import org.jgrapht.alg.CycleDetector
 import vgrechka.*
-import vgrechka.BigPile.mangleUUID
 import vgrechka.spew.GDBEntitySpewDatabaseDialect.*
 import java.io.File
 import java.util.*
@@ -51,7 +50,7 @@ data class EntitySpec(
     val finders: List<FinderSpec>)
 
 
-class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spewResults: SpewResults, val pedro: Pedro) {
+class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spewResults: SpewResults, makePedro: (CommonDBEntitySpew) -> Pedro) {
     val out = CodeShitter()
     val entities = mutableListOf<EntitySpec>()
     var pileObjectName: String? = null
@@ -59,15 +58,22 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
     val tableDependsOnTable = mutableListOf<Pair<String, String>>()
     val drops = mutableListOf<DDLGenerator>()
     val creates = mutableListOf<DDLGenerator>()
+    val pedro = makePedro(this)
 
-    class DDLGenerator(val table: String, val doAppend: () -> Unit)
+    class DDLGenerator(val table: String, val doAppend: (CodeShitter?) -> Unit)
+
+    interface Juan {
+        fun spitEntityCtor()
+        fun spitEntityClass()
+        fun spitVariousShit()
+        fun spitRepo()
+        fun spitDDLForSpecialColumns(ddlCtx: spitShitForEntity.generateDDLForEntity, out: CodeShitter?)
+    }
 
     interface Pedro {
-        fun spitEntityCtor(ctx: spitShitForEntity)
-        fun spitImports(ctx: CommonDBEntitySpew)
-        fun spitEntityClass(ctx: spitShitForEntity, ctx2: CommonDBEntitySpew)
-        fun spitVariousShit(ctx: spitShitForEntity, ctx2: CommonDBEntitySpew)
-        fun spitRepo(ctx: spitShitForEntity, ctx2: CommonDBEntitySpew)
+        fun makeJuan(juanCtx: spitShitForEntity): Juan
+        fun spitImports()
+        fun createTableSuffix(): String
     }
 
     companion object {
@@ -177,35 +183,53 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
         }
 
         for (table in allTables)
-            drops.find {it.table == table}!!.doAppend()
+            drops.find {it.table == table}!!.doAppend(null)
         for (table in allTables.reversed())
-            creates.find {it.table == table}!!.doAppend()
+            creates.find {it.table == table}!!.doAppend(null)
     }
-
 
 
     inner class spitShitForEntity(val entity: EntitySpec) {
         val en = entity.name
         val end = en.decapitalize()
         val out get() = this@CommonDBEntitySpew.out
+        val juan = pedro.makeJuan(this)
 
         init {
             out.smallSection(en)
-            pedro.spitEntityCtor(this)
+            juan.spitEntityCtor()
 
-            pedro.spitRepo(this, this@CommonDBEntitySpew)
-            pedro.spitVariousShit(this, this@CommonDBEntitySpew)
+            juan.spitRepo()
+            juan.spitVariousShit()
 
-            pedro.spitEntityClass(this, this@CommonDBEntitySpew)
+            juan.spitEntityClass()
 
             generateDDLForEntity()
         }
 
-        fun generateDDLForEntity() {
-            val entity = entity.copy()
-            val end = end
+        val timestampType = when (databaseDialect) {
+            SQLITE -> "text"
+            POSTGRESQL -> "timestamp"
+            MYSQL -> "datetime"
+        }
 
-            fun append(x: String) = spewResults.ddl.append(x)
+        val booleanType = when (databaseDialect) {
+            SQLITE -> "integer"
+            POSTGRESQL -> "boolean"
+            MYSQL -> "boolean"
+        }
+
+
+        inner class generateDDLForEntity {
+            val entity = this@spitShitForEntity.entity.copy()
+//            val end = end
+
+            fun append(out: CodeShitter?, x: String) {
+                if (out != null)
+                    out.append(x)
+                else
+                    spewResults.ddl.append(x)
+            }
 
             fun quote(s: String) = when (databaseDialect) {
                 SQLITE -> "`$s`"
@@ -213,126 +237,112 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
                 MYSQL -> "`$s`"
             }
 
-            val idColumnDefinition = when (databaseDialect) {
-                SQLITE -> "id integer primary key autoincrement"
-                POSTGRESQL -> "id bigserial primary key"
-                MYSQL -> "id bigint not null auto_increment primary key"
-            }
+            init {
+                val quotedTableName = quote(entity.tableName)
 
-            val quotedTableName = quote(entity.tableName)
-
-            val foreignKeyFields = entity.fields.filter {it.kind is FieldKind.One}
-            for (field in foreignKeyFields) {
-                val oneEntity = entities.find {it.name == field.typeWithoutQuestion()} ?: wtf("d8beb50d-dc3f-42ab-8a64-16fb61ecfc42")
-                tableDependsOnTable += entity.tableName to oneEntity.tableName
-            }
-
-            drops += DDLGenerator(
-                table = entity.tableName,
-                doAppend = {
-                    append("drop table if exists $quotedTableName;\n")
+                val foreignKeyFields = entity.fields.filter {it.kind is FieldKind.One}
+                for (field in foreignKeyFields) {
+                    val oneEntity = entities.find {it.name == field.typeWithoutQuestion()} ?: wtf("d8beb50d-dc3f-42ab-8a64-16fb61ecfc42")
+                    tableDependsOnTable += entity.tableName to oneEntity.tableName
                 }
-            )
 
-            val timestampType = when (databaseDialect) {
-                SQLITE -> "text"
-                POSTGRESQL -> "timestamp"
-                MYSQL -> "datetime"
-            }
-            val booleanType = when (databaseDialect) {
-                SQLITE -> "integer"
-                POSTGRESQL -> "boolean"
-                MYSQL -> "boolean"
-            }
+                drops += DDLGenerator(
+                    table = entity.tableName,
+                    doAppend = {out ->
+                        append(out, "drop table if exists $quotedTableName;\n")
+                    }
+                )
 
-            creates += DDLGenerator(
-                table = entity.tableName,
-                doAppend = {
-                    append("create table $quotedTableName (\n")
-                    append("    $idColumnDefinition,\n")
-                    append("    ${end}_common_createdAt $timestampType not null,\n")
-                    append("    ${end}_common_updatedAt $timestampType not null,\n")
-                    append("    ${end}_common_deleted $booleanType not null,\n")
-                    val fields = entity.fields.filter {it.kind !is FieldKind.Many}
+                creates += DDLGenerator(
+                    table = entity.tableName,
+                    doAppend = {out ->
+                        append(out, "create table $quotedTableName (\n")
+                        juan.spitDDLForSpecialColumns(this, out)
+                        val fields = entity.fields.filter {
+                            it.kind !is FieldKind.Many
+                            && it.name !in setOf("id", "createdAt", "updatedAt", "deleted")
+                        }
 
-                    for ((index, field) in fields.withIndex()) {
-                        val sqlType = when (field.kind) {
-                            is FieldKind.Simple -> {
-                                val fieldTypeWithoutQuestion = field.type.replace(Regex("\\?$"), "")
-                                val sql = when (fieldTypeWithoutQuestion) {
-                                    "Int" -> when (databaseDialect) {
-                                        SQLITE -> "integer"
-                                        POSTGRESQL -> "integer"
-                                        MYSQL -> "integer"
+                        for ((index, field) in fields.withIndex()) {
+                            val sqlType = when (field.kind) {
+                                is FieldKind.Simple -> {
+                                    val fieldTypeWithoutQuestion = field.type.replace(Regex("\\?$"), "")
+                                    val sql = when (fieldTypeWithoutQuestion) {
+                                        "Int" -> when (databaseDialect) {
+                                            SQLITE -> "integer"
+                                            POSTGRESQL -> "integer"
+                                            MYSQL -> "integer"
+                                        }
+                                        "Long" -> when (databaseDialect) {
+                                            SQLITE -> "bigint"
+                                            POSTGRESQL -> "bigint"
+                                            MYSQL -> "bigint"
+                                        }
+                                        "Boolean" -> when (databaseDialect) {
+                                            SQLITE -> "int"
+                                            POSTGRESQL -> "boolean"
+                                            MYSQL -> "boolean"
+                                        }
+                                        "String" -> when (databaseDialect) {
+                                            SQLITE -> "text"
+                                            POSTGRESQL -> "text"
+                                            MYSQL -> "longtext"
+                                        }
+                                        "ByteArray" -> when (databaseDialect) {
+                                            SQLITE -> "blob"
+                                            POSTGRESQL -> "bytea"
+                                            MYSQL -> "longblob"
+                                        }
+                                        "PHPTimestamp" -> when (databaseDialect) {
+                                            SQLITE -> imf("696a10c7-83f1-4562-8b71-2a1d6e48a08c")
+                                            POSTGRESQL -> imf("6d372efa-62d0-4573-a98f-f8134f91b4ae")
+                                            MYSQL -> "datetime"
+                                        }
+                                        else -> wtf("field.type = ${field.type}    5e84c6fb-b523-43cc-aa45-bdef1dca7ff2")
                                     }
-                                    "Long" -> when (databaseDialect) {
+                                    if (field.type.endsWith("?"))
+                                        sql
+                                    else
+                                        sql + " not null"
+                                }
+                                is FieldKind.One -> {
+                                    val s = when (databaseDialect) {
                                         SQLITE -> "bigint"
                                         POSTGRESQL -> "bigint"
                                         MYSQL -> "bigint"
                                     }
-                                    "Boolean" -> when (databaseDialect) {
-                                        SQLITE -> "int"
-                                        POSTGRESQL -> "boolean"
-                                        MYSQL -> "boolean"
-                                    }
-                                    "String" -> when (databaseDialect) {
-                                        SQLITE -> "text"
-                                        POSTGRESQL -> "text"
-                                        MYSQL -> "longtext"
-                                    }
-                                    "ByteArray" -> when (databaseDialect) {
-                                        SQLITE -> "blob"
-                                        POSTGRESQL -> "bytea"
-                                        MYSQL -> "longblob"
-                                    }
-                                    "PHPTimestamp" -> when (databaseDialect) {
-                                        SQLITE -> imf("696a10c7-83f1-4562-8b71-2a1d6e48a08c")
-                                        POSTGRESQL -> imf("6d372efa-62d0-4573-a98f-f8134f91b4ae")
-                                        MYSQL -> "datetime"
-                                    }
-                                    else -> wtf("field.type = ${field.type}    5e84c6fb-b523-43cc-aa45-bdef1dca7ff2")
+                                    s + (!field.isNullable()).thenElseEmpty{" not null"}
                                 }
-                                if (field.type.endsWith("?"))
-                                    sql
-                                else
-                                    sql + " not null"
+                                is FieldKind.Many -> wtf("0f79f787-be13-49ba-ac1d-6855476605da")
                             }
-                            is FieldKind.One -> {
-                                val s = when (databaseDialect) {
-                                    SQLITE -> "bigint"
-                                    POSTGRESQL -> "bigint"
-                                    MYSQL -> "bigint"
-                                }
-                                s + (!field.isNullable()).thenElseEmpty{" not null"}
+
+                            append(out, "    ${end}_${field.name}${(field.kind is FieldKind.One).thenElseEmpty{"__id"}} $sqlType")
+                            if (index < fields.lastIndex) {
+                                append(out, ",\n")
                             }
-                            is FieldKind.Many -> wtf("0f79f787-be13-49ba-ac1d-6855476605da")
                         }
 
-                        append("    ${end}_${field.name}${(field.kind is FieldKind.One).thenElseEmpty{"__id"}} $sqlType")
-                        if (index < fields.lastIndex) {
-                            append(",\n")
+                        val foreignKeyLines = foreignKeyFields.map {field->
+                            val oneEntity = entities.find {it.name == field.typeWithoutQuestion()} ?: wtf("aa058895-cbce-453a-b0f0-e551abaf95e1")
+                            "    foreign key (${end}_${field.name}__id) references ${oneEntity.tableName}(id)"
                         }
-                    }
+                        if (foreignKeyLines.isNotEmpty())
+                            append(out, ",\n")
+                        append(out, foreignKeyLines.joinToString(",\n"))
 
-                    val foreignKeyLines = foreignKeyFields.map {field->
-                        val oneEntity = entities.find {it.name == field.typeWithoutQuestion()} ?: wtf("aa058895-cbce-453a-b0f0-e551abaf95e1")
-                        "    foreign key (${end}_${field.name}__id) references ${oneEntity.tableName}(id)"
-                    }
-                    if (foreignKeyLines.isNotEmpty())
-                        append(",\n")
-                    append(foreignKeyLines.joinToString(",\n"))
+                        append(out, "\n) ${pedro.createTableSuffix()};\n")
 
-                    append("\n);\n")
-
-                    if (databaseDialect == POSTGRESQL) {
-                        foreignKeyFields.forEach {field->
-                            append("create index on $quotedTableName (${end}_${field.name}__id);\n")
+                        if (databaseDialect == POSTGRESQL) {
+                            foreignKeyFields.forEach {field->
+                                append(out, "create index on $quotedTableName (${end}_${field.name}__id);\n")
+                            }
                         }
-                    }
 
-                    append("\n")
-                }
-            )
+                        append(out, "\n")
+                    }
+                )
+            }
+
         }
 
     }
@@ -352,7 +362,7 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
                 import vgrechka.*
                 import vgrechka.spew.*
             """)
-        pedro.spitImports(this)
+        pedro.spitImports()
         out.line("")
     }
 

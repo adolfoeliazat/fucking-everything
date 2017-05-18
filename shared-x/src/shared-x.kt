@@ -11,7 +11,6 @@ fun main(args: Array<String>) {
 
 var exhaustive: Any? = null
 
-fun clog(vararg xs: Any?): Unit = println(xs.joinToString(" "))
 fun wtf(msg: String = "...WTF didn't you describe this WTF?"): Nothing = throw Exception("WTF: $msg")
 fun die(msg: String = "You've just killed me, motherfucker!"): Nothing = throw Exception("Aarrgghh... $msg")
 fun imf(what: String = "me"): Nothing = throw Exception("Implement $what, please, fuck you")

@@ -76,7 +76,7 @@ fun initGoogleAuth() {
                 clog("onInit: AlFrontPile.google.auth2.then")
             },
             onError = {e->
-                clog("onError: AlFrontPile.google.auth2.then", e)
+                console.log("onError: AlFrontPile.google.auth2.then", e)
             }
         )
     }

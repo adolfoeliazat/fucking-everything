@@ -10,9 +10,6 @@ class PHPTimestamp(val time: Int) {
     }
 }
 
-object PHPTimePile {
-}
-
 object PHPPile {
     fun getType(x: dynamic): String {
         return phiEval(buildString {
@@ -21,6 +18,10 @@ object PHPPile {
             ln("${'$'}x = ${'$'}x->value;")
             ln("return gettype(${'$'}x);")
         }) as String
+    }
+
+    fun time(): Int {
+        return phiEval("return time();") as Int
     }
 
 }
