@@ -100,7 +100,7 @@ fun AlUserRepository.propertyToColumnName(prop: KMutableProperty1<AlUser, String
 
 val alUserRepo: AlUserRepository by lazy {
     object : AlUserRepository {
-        override fun findBy(prop: KMutableProperty1<AlUser, String>, op: DBPile.Operator, arg: Any?): List<AlUser> {
+        override fun select(prop: KMutableProperty1<AlUser, String>, op: DBPile.Operator, arg: Any?): List<AlUser> {
             println("findBy(prop = ${prop.name}; op = ${op.toString()}; arg = $arg)")
             val params = mutableListOf<Any?>()
             val sql = buildString {
@@ -152,19 +152,7 @@ val alUserRepo: AlUserRepository by lazy {
             return items
         }
 
-        override fun findByName(x: String): AlUser? {
-            imf("54de8c1e-f912-4001-853e-6f282a01af6b")
-        }
-
-        override fun findOne(id: Long): AlUser? {
-            imf("59b778ee-ad34-4d6e-8426-38e79bb64a2a")
-        }
-
-        override fun findAll(): List<AlUser> {
-            imf("8e99d48a-6392-4fe8-9d7c-d290fac40d8f")
-        }
-
-        override fun save(x: AlUser): AlUser {
+        override fun insert(x: AlUser): AlUser {
             DBPile.execute(
                 sql = buildString {
                     ln("insert into `alraune_users`(")
@@ -208,14 +196,6 @@ val alUserRepo: AlUserRepository by lazy {
 
             x.id = res.first().first() as String
             return x
-        }
-
-        override fun delete(id: Long) {
-            imf("fdc64b89-6dd4-452f-ac75-fb8fd6d4b8b7")
-        }
-
-        override fun delete(x: AlUser) {
-            imf("c8213e46-345c-49bc-9737-25554377b726")
         }
     }
 }

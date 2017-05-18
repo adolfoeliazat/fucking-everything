@@ -31,16 +31,11 @@ interface AlUser {
 }
 
 interface WickedRepo<T> {
-    fun findBy(prop: KMutableProperty1<T, String>, op: DBPile.Operator, arg: Any?): List<T>
+    fun select(prop: KMutableProperty1<T, String>, op: DBPile.Operator, arg: Any?): List<T>
+    fun insert(x: T): T
 }
 
-interface AlUserRepository : WickedRepo<AlUser> {
-    fun findOne(id: Long): AlUser?
-    fun findAll(): List<AlUser>
-    fun save(x: AlUser): AlUser
-    fun delete(id: Long)
-    fun delete(x: AlUser)
-    fun findByName(x: String): AlUser?
-}
+interface AlUserRepository : WickedRepo<AlUser>
+
 
 

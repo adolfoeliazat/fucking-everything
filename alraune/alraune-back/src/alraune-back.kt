@@ -51,7 +51,7 @@ fun phucking1() {
             banReason = "Achtung",
             subscribedToAllCategories = true
         )
-         val savedFucko = alUserRepo.save(fucko)
+         val savedFucko = alUserRepo.insert(fucko)
         println("savedFucko = " + savedFucko)
 
         val fucko2 = newAlUser(
@@ -66,7 +66,7 @@ fun phucking1() {
             banReason = "Achtung",
             subscribedToAllCategories = true
         )
-        val savedFucko2 = alUserRepo.save(fucko2)
+        val savedFucko2 = alUserRepo.insert(fucko2)
         println("savedFucko2 = " + savedFucko2)
     }
 
@@ -84,7 +84,7 @@ fun phucking1() {
                 banReason = "Achtung",
                 subscribedToAllCategories = true
             )
-            val savedFucko3 = alUserRepo.save(fucko3)
+            val savedFucko3 = alUserRepo.insert(fucko3)
             println("savedFucko3 = " + savedFucko3)
             throw Exception("pizdets")
         }
@@ -105,7 +105,7 @@ fun phucking1() {
             banReason = "Achtung",
             subscribedToAllCategories = true
         )
-        val savedFucko4 = alUserRepo.save(fucko4)
+        val savedFucko4 = alUserRepo.insert(fucko4)
         println("savedFucko4 = " + savedFucko4)
     }
 
@@ -119,7 +119,7 @@ fun phucking1() {
 
     println("\n----- With specific secret -----\n")
     run {
-        val items = alUserRepo.findBy(AlUser::passwordHash, DBPile.op.eq, "bloody-secret-2")
+        val items = alUserRepo.select(AlUser::passwordHash, DBPile.op.eq, "bloody-secret-2")
         for ((index, item) in items.withIndex()) {
             println("${index + 1})")
             println("    id = ${item.id}")
