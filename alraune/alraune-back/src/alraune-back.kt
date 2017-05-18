@@ -52,23 +52,21 @@ fun phucking1() {
             subscribedToAllCategories = true
         )
          val savedFucko = alUserRepo.save(fucko)
-//        val savedFucko = fucko; savedFucko.id = "111"
         println("savedFucko = " + savedFucko)
 
         val fucko2 = newAlUser(
             firstName = "Fucko 2",
             lastName = "Pidoracko",
-            email = "fucko@pidoracko.net",
-            passwordHash = "bloody-secret",
+            email = "fucko2@pidoracko.net",
+            passwordHash = "bloody-secret-2",
             profilePhone = "911",
             aboutMe = "I am not pidar, it's just a name",
             adminNotes = "Pidar. Definitely",
-            profileRejectionReason = "We don't tolerate any pidars in our community",
+            profileRejectionReason = null,
             banReason = "Achtung",
             subscribedToAllCategories = true
         )
         val savedFucko2 = alUserRepo.save(fucko2)
-//        val savedFucko2 = fucko2; savedFucko2.id = "222"
         println("savedFucko2 = " + savedFucko2)
     }
 
@@ -77,8 +75,8 @@ fun phucking1() {
             val fucko3 = newAlUser(
                 firstName = "Fucko 3",
                 lastName = "Pidoracko",
-                email = "fucko@pidoracko.net",
-                passwordHash = "bloody-secret",
+                email = "fucko3@pidoracko.net",
+                passwordHash = "bloody-secret-3",
                 profilePhone = "911",
                 aboutMe = "I am not pidar, it's just a name",
                 adminNotes = "Pidar. Definitely",
@@ -87,7 +85,6 @@ fun phucking1() {
                 subscribedToAllCategories = true
             )
             val savedFucko3 = alUserRepo.save(fucko3)
-//            val savedFucko3 = fucko3; savedFucko3.id = "333"
             println("savedFucko3 = " + savedFucko3)
             throw Exception("pizdets")
         }
@@ -95,15 +92,54 @@ fun phucking1() {
         println("Caught exception: " + e.message)
     }
 
-    println("")
-    println("----- Selecting -----")
-    println("")
-    val rows = DBPile.query("select alUser_firstName, alUser_lastName from alraune_users;")
-    for ((index, row) in rows.withIndex()) {
-        println("${index + 1}) ${row[0]}    ${row[1]}")
+    DBPile.tx {
+        val fucko4 = newAlUser(
+            firstName = "Fucko 4",
+            lastName = "Pidoracko",
+            email = "fucko4@pidoracko.net",
+            passwordHash = "bloody-secret-4",
+            profilePhone = "911",
+            aboutMe = "I am not pidar, it's just a name",
+            adminNotes = "Pidar. Definitely",
+            profileRejectionReason = "We don't tolerate any pidars in our community",
+            banReason = "Achtung",
+            subscribedToAllCategories = true
+        )
+        val savedFucko4 = alUserRepo.save(fucko4)
+        println("savedFucko4 = " + savedFucko4)
     }
 
-    println("OK")
+    println("\n----- Select all -----\n")
+    run {
+        val rows = DBPile.query("select alUser_firstName, alUser_lastName from alraune_users;")
+        for ((index, row) in rows.withIndex()) {
+            println("${index + 1}) ${row[0]}    ${row[1]}")
+        }
+    }
+
+    println("\n----- With specific secret -----\n")
+    run {
+        val items = alUserRepo.findBy(AlUser::passwordHash, DBPile.op.eq, "bloody-secret-2")
+        for ((index, item) in items.withIndex()) {
+            println("${index + 1})")
+            println("    id = ${item.id}")
+            println("    createdAt = ${item.createdAt.toString()}")
+            println("    updatedAt = ${item.updatedAt.toString()}")
+            println("    deleted = ${item.deleted}")
+            println("    firstName = ${item.firstName}")
+            println("    lastName = ${item.lastName}")
+            println("    email = ${item.email}")
+            println("    passwordHash = ${item.passwordHash}")
+            println("    profilePhone = ${item.profilePhone}")
+            println("    adminNotes = ${item.adminNotes}")
+            println("    aboutMe = ${item.aboutMe}")
+            println("    profileRejectionReason = ${item.profileRejectionReason}")
+            println("    banReason = ${item.banReason}")
+            println("    subscribedToAllCategories = ${item.subscribedToAllCategories}")
+        }
+    }
+
+    println("\nOK")
 }
 
 object AlBackPile {

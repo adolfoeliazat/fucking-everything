@@ -4,8 +4,20 @@ import alraune.back.*
 
 object DBPile {
 
+    interface Operator {
+        val sql: String
+    }
+
+    object op {
+        object eq : Operator {
+            override fun toString() = "EQ"
+            override val sql: String = "="
+        }
+    }
+
     fun init() {
         phiEval("""
+            // 572cf316-de85-468f-8af9-c2097f39de51
             global ${'$'}pdo;
             ${'$'}host = '127.0.0.1';
             ${'$'}db   = 'alraune';
@@ -91,6 +103,17 @@ object DBPile {
             execute("rollback", uuid = "b0bb24e9-81d7-4b6a-8bc0-bcf54dea4a13")
             throw e
         }
+    }
+
+    fun mysqlValueToBoolean(x: Any?): Boolean {
+        return when(x as String) {
+            "1" -> true
+            else -> false
+        }
+    }
+
+    fun mysqlValueToPHPTimestamp(x: Any?): XTimestamp {
+        return PHPTimestamp((x as String).toInt())
     }
 
 }

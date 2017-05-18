@@ -7,6 +7,7 @@ package alraune.back
 
 import vgrechka.*
 import vgrechka.spew.*
+import kotlin.reflect.KMutableProperty1
 
 @GEntity(table = "alraune_users")
 interface AlUser {
@@ -29,7 +30,11 @@ interface AlUser {
     var subscribedToAllCategories: Boolean
 }
 
-interface AlUserRepository {
+interface WickedRepo<T> {
+    fun findBy(prop: KMutableProperty1<T, String>, op: DBPile.Operator, arg: Any?): List<T>
+}
+
+interface AlUserRepository : WickedRepo<AlUser> {
     fun findOne(id: Long): AlUser?
     fun findAll(): List<AlUser>
     fun save(x: AlUser): AlUser

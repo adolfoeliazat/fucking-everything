@@ -2,6 +2,7 @@ package alraune.back
 
 import vgrechka.*
 import kotlin.properties.Delegates.notNull
+import kotlin.reflect.KMutableProperty1
 
 object AlGeneratedDBPile {
 
@@ -92,8 +93,65 @@ val AlUserRepository.createTableSQL get() = buildString {
     ln(") engine=InnoDB")
 }
 
+fun AlUserRepository.propertyToColumnName(prop: KMutableProperty1<AlUser, String>): String {
+    if (prop.name == AlUser::passwordHash.name) return "alUser_passwordHash"
+    throw Exception("TODO: Generate 59e545e8-7042-4978-bea2-a2e48d6d290e")
+}
+
 val alUserRepo: AlUserRepository by lazy {
     object : AlUserRepository {
+        override fun findBy(prop: KMutableProperty1<AlUser, String>, op: DBPile.Operator, arg: Any?): List<AlUser> {
+            println("findBy(prop = ${prop.name}; op = ${op.toString()}; arg = $arg)")
+            val params = mutableListOf<Any?>()
+            val sql = buildString {
+                ln("select")
+                ln("    cast(id as char),")
+                ln("    unix_timestamp(alUser_common_createdAt),")
+                ln("    unix_timestamp(alUser_common_updatedAt),")
+                ln("    alUser_common_deleted,")
+                ln("    alUser_firstName,")
+                ln("    alUser_email,")
+                ln("    alUser_lastName,")
+                ln("    alUser_passwordHash,")
+                ln("    alUser_profilePhone,")
+                ln("    alUser_adminNotes,")
+                ln("    alUser_aboutMe,")
+                ln("    alUser_profileRejectionReason,")
+                ln("    alUser_banReason,")
+                ln("    alUser_subscribedToAllCategories")
+                ln("from alraune_users")
+                ln("where")
+                ln("${propertyToColumnName(prop)} ${op.sql} ?")
+                params.add(arg)
+            }
+            val rows = DBPile.query(sql, params, uuid = "TODO: Generate e8bd8a84-b3bd-42c9-bc88-160d6e7a94a9")
+            println("findBy: Found ${rows.size} rows")
+            val items = mutableListOf<AlUser>()
+            for (row in rows) {
+//                run {
+//                    val value = row[13]
+//                    println("--- type = ${PHPPile.getType(value)}; value = $value")
+//                }
+                items += Generated_AlUser().also {
+                    it.id = row[0] as String
+                    it.createdAt = DBPile.mysqlValueToPHPTimestamp(row[1])
+                    it.updatedAt = DBPile.mysqlValueToPHPTimestamp(row[2])
+                    it.deleted = DBPile.mysqlValueToBoolean(row[3])
+                    it.firstName = row[4] as String
+                    it.email = row[5] as String
+                    it.lastName = row[6] as String
+                    it.passwordHash = row[7] as String
+                    it.profilePhone = row[8] as String
+                    it.adminNotes = row[9] as String
+                    it.aboutMe = row[10] as String
+                    it.profileRejectionReason = row[11] as String?
+                    it.banReason = row[12] as String?
+                    it.subscribedToAllCategories = DBPile.mysqlValueToBoolean(row[13])
+                }
+            }
+            return items
+        }
+
         override fun findByName(x: String): AlUser? {
             imf("54de8c1e-f912-4001-853e-6f282a01af6b")
         }
@@ -107,13 +165,6 @@ val alUserRepo: AlUserRepository by lazy {
         }
 
         override fun save(x: AlUser): AlUser {
-//            phiEval("\$x = Phi::getCurrentEnv(); \$x = \$x->getVar('sql'); \$x = \$x->value; \$GLOBALS['sql'] = \$x;")
-
-//            phiEval("\$GLOBALS['params'] = array();")
-//            for (param in params) {
-//                phiEval("\$x = Phi::getCurrentEnv(); \$x = \$x->getVar('param'); \$x = \$x->value; array_push(\$GLOBALS['params'], \$x);")
-//            }
-
             DBPile.execute(
                 sql = buildString {
                     ln("insert into `alraune_users`(")
@@ -150,39 +201,10 @@ val alUserRepo: AlUserRepository by lazy {
                 uuid = "// TODO:vgrechka [Generated UUID of statement here, in comment, for debugging]"
             )
 
-//            val id = phiEval("""
-//                global ${'$'}pdo, ${'$'}sql, ${'$'}params;
-//                // var_dump(${'$'}sql);
-//                // var_dump(${'$'}params);
-//                ${'$'}st = ${'$'}pdo->prepare(${'$'}sql);
-//                ${'$'}res = ${'$'}st->execute(${'$'}params);
-//                if (!${'$'}res) {
-//                    throw new Exception('PDO error ' . ${'$'}st->errorCode() . '    1a7ebebb-bf1f-4f4b-8a91-26edaca0795e');
-//                }
-//                // ${'$'}st->closeCursor();
-//
-//                ${'$'}st = ${'$'}pdo->prepare('select cast(last_insert_id() as char)');
-//                ${'$'}res = ${'$'}st->execute();
-//                if (!${'$'}res) {
-//                    throw new Exception('PDO error ' . ${'$'}st->errorCode() . '    6a831ee1-26d2-49b2-b827-af8c801a5574');
-//                }
-//                ${'$'}res = ${'$'}st->fetch(PDO::FETCH_NUM);
-//                if (!${'$'}res) {
-//                    throw new Exception('ab92fe49-e6e7-4892-b32e-200c08502f03');
-//                }
-//                ${'$'}id = ${'$'}res[0];
-//                // ${'$'}st->closeCursor();
-//                return ${'$'}id;
-//            """) as String
-//
-//            x.id = id
-
             val res = DBPile.query(
                 sql = "select cast(last_insert_id() as char)",
                 uuid = "TODOOOOOOOOOOOOOO"
             )
-
-            // val res: List<List<Any?>> = listOf(listOf("444"))
 
             x.id = res.first().first() as String
             return x

@@ -467,6 +467,8 @@ abstract class PhiValue {
 }
 
 class PhiUndefined extends PhiValue {
+    public $value = null;
+
     public function typeof() {
         return 'undefined';
     }
@@ -499,6 +501,8 @@ class PhiNullLiteral extends PhiExpression {
 }
 
 class PhiNull extends PhiValue {
+    public $value = null;
+
     /**
      * @return string
      */
