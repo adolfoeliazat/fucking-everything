@@ -33,39 +33,75 @@ fun main(args: Array<String>) {
 }
 
 fun phucking1() {
-    phiEval("""
-global ${'$'}pdo;
-${'$'}host = '127.0.0.1';
-${'$'}db   = 'alraune';
-${'$'}user = 'root';
-${'$'}pass = '';
-${'$'}charset = 'utf8';
+    DBPile.init()
 
-${'$'}dsn = "mysql:host=${'$'}host;dbname=${'$'}db;charset=${'$'}charset";
-${'$'}opt = array(
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
-);
-${'$'}pdo = new PDO(${'$'}dsn, ${'$'}user, ${'$'}pass, ${'$'}opt);
-${'$'}pdo->exec("set time_zone = '+0:00'");
-    """)
+    DBPile.execute(alUserRepo.dropTableSQL)
+    DBPile.execute(alUserRepo.createTableSQL)
 
-    val fucko = newAlUser(
-        firstName = "Fucko",
-        lastName = "Pidoracko",
-        email = "fucko@pidoracko.net",
-        passwordHash = "bloody-secret",
-        profilePhone = "911",
-        aboutMe = "I am not pidar, it's just a name",
-        adminNotes = "Pidar. Definitely",
-        profileRejectionReason = "We don't tolerate any pidars in our community",
-        banReason = "Achtung",
-        subscribedToAllCategories = true
-    )
+    DBPile.tx {
+        val fucko = newAlUser(
+            firstName = "Fucko",
+            lastName = "Pidoracko",
+            email = "fucko@pidoracko.net",
+            passwordHash = "bloody-secret",
+            profilePhone = "911",
+            aboutMe = "I am not pidar, it's just a name",
+            adminNotes = "Pidar. Definitely",
+            profileRejectionReason = "We don't tolerate any pidars in our community",
+            banReason = "Achtung",
+            subscribedToAllCategories = true
+        )
+         val savedFucko = alUserRepo.save(fucko)
+//        val savedFucko = fucko; savedFucko.id = "111"
+        println("savedFucko = " + savedFucko)
 
-    val savedFucko = alUserRepo.save(fucko)
-    println(savedFucko)
+        val fucko2 = newAlUser(
+            firstName = "Fucko 2",
+            lastName = "Pidoracko",
+            email = "fucko@pidoracko.net",
+            passwordHash = "bloody-secret",
+            profilePhone = "911",
+            aboutMe = "I am not pidar, it's just a name",
+            adminNotes = "Pidar. Definitely",
+            profileRejectionReason = "We don't tolerate any pidars in our community",
+            banReason = "Achtung",
+            subscribedToAllCategories = true
+        )
+        val savedFucko2 = alUserRepo.save(fucko2)
+//        val savedFucko2 = fucko2; savedFucko2.id = "222"
+        println("savedFucko2 = " + savedFucko2)
+    }
+
+    try {
+        DBPile.tx {
+            val fucko3 = newAlUser(
+                firstName = "Fucko 3",
+                lastName = "Pidoracko",
+                email = "fucko@pidoracko.net",
+                passwordHash = "bloody-secret",
+                profilePhone = "911",
+                aboutMe = "I am not pidar, it's just a name",
+                adminNotes = "Pidar. Definitely",
+                profileRejectionReason = "We don't tolerate any pidars in our community",
+                banReason = "Achtung",
+                subscribedToAllCategories = true
+            )
+            val savedFucko3 = alUserRepo.save(fucko3)
+//            val savedFucko3 = fucko3; savedFucko3.id = "333"
+            println("savedFucko3 = " + savedFucko3)
+            throw Exception("pizdets")
+        }
+    } catch (e: Throwable) {
+        println("Caught exception: " + e.message)
+    }
+
+    println("")
+    println("----- Selecting -----")
+    println("")
+    val rows = DBPile.query("select alUser_firstName, alUser_lastName from alraune_users;")
+    for ((index, row) in rows.withIndex()) {
+        println("${index + 1}) ${row[0]}    ${row[1]}")
+    }
 
     println("OK")
 }

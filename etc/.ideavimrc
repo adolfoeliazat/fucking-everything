@@ -42,6 +42,7 @@ nmap cc ct
 imap <c-=> <c-right>
 
 
+nmap gb :action AceAction<CR>
 
 
 
