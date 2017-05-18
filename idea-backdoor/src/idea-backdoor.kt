@@ -21,8 +21,12 @@ import org.eclipse.jetty.servlet.ServletHandler
 import org.eclipse.jetty.servlet.ServletHolder
 import vgrechka.*
 import vgrechka.idea.*
+import vgrechka.idea.hripos.*
 import java.awt.MouseInfo
 import java.awt.Robot
+import java.awt.Toolkit
+import java.awt.datatransfer.Clipboard
+import java.awt.datatransfer.DataFlavor
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.io.File
@@ -319,11 +323,24 @@ object CustomBuilds {
 
 class BackdoorToolsGroup : DefaultActionGroup() {
     init {
-        add(object : AnAction("Build Alraune and show in browser") {
+        add(object : AnAction("lns") {
             override fun actionPerformed(e: AnActionEvent) {
-                CustomBuilds.buildAlrauneAndShowInBrowser(e)
+                val clipboard = Toolkit.getDefaultToolkit().systemClipboard
+                val transferable = clipboard.getContents(null)
+                val shit = transferable.getTransferData(DataFlavor.stringFlavor) as String? ?: ""
+                val p = HriposDebugOutput(e.project!!)
+                for (line in shit.lines()) {
+                    p.println("ln(\"" + line.replace("\"", "\\\"").replace("$", "\\$") + "\")")
+                }
+                p.showDialog(title = "lns")
             }
         })
+
+//        add(object : AnAction("Build Alraune and show in browser") {
+//            override fun actionPerformed(e: AnActionEvent) {
+//                CustomBuilds.buildAlrauneAndShowInBrowser(e)
+//            }
+//        })
 
         add(object : AnAction("Say 'fuck you'") {
             override fun actionPerformed(e: AnActionEvent?) {

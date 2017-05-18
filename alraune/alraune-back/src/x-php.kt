@@ -10,10 +10,6 @@ class PHPTimestamp(val time: Int) {
     }
 }
 
-fun currentTimestampForEntity(): PHPTimestamp {
-    return PHPTimestamp(phiEval("return time();") as Int)
-}
-
 object PHPTimePile {
 }
 
@@ -26,6 +22,7 @@ object PHPPile {
             ln("return gettype(${'$'}x);")
         }) as String
     }
+
 }
 
 

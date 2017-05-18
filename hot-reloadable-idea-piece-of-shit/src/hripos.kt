@@ -97,7 +97,7 @@ class Command_MessAround(val projectName: String) : Servant {
     }
 }
 
-internal class HriposDebugOutput(val project: Project) {
+class HriposDebugOutput(val project: Project) {
     val sw = StringWriter()
     val p = PrintWriter(sw)
 

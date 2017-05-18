@@ -1,5 +1,5 @@
 @file:GSpit(spewClassName = "vgrechka.spew.PHPDBEntitySpew",
-            output = "%FE%/alraune/alraune-back/gen/generated--alraune-entities.kt1")
+            output = "%FE%/alraune/alraune-back/gen/generated--alraune-entities.kt")
 
 @file:GDBEntitySpewOptions(pileObject = "AlGeneratedDBPile",
                            databaseDialect = GDBEntitySpewDatabaseDialect.MYSQL)

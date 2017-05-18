@@ -7,7 +7,6 @@ import vgrechka.BigPile.mangleUUID
 import vgrechka.spew.GDBEntitySpewDatabaseDialect.*
 import java.io.File
 import java.util.*
-import kotlin.properties.Delegates.notNull
 import org.jgrapht.graph.DefaultEdge
 import org.jgrapht.graph.DefaultDirectedGraph
 import org.jgrapht.traverse.TopologicalOrderIterator
@@ -51,7 +50,8 @@ data class EntitySpec(
     val fields: List<FieldSpec>,
     val finders: List<FinderSpec>)
 
-class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spewResults: SpewResults) {
+
+class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spewResults: SpewResults, val pedro: Pedro) {
     val out = CodeShitter()
     val entities = mutableListOf<EntitySpec>()
     var pileObjectName: String? = null
@@ -61,6 +61,51 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
     val creates = mutableListOf<DDLGenerator>()
 
     class DDLGenerator(val table: String, val doAppend: () -> Unit)
+
+    interface Pedro {
+        fun spitEntityCtor(ctx: spitShitForEntity)
+        fun spitImports(ctx: CommonDBEntitySpew)
+        fun spitEntityClass(ctx: spitShitForEntity, ctx2: CommonDBEntitySpew)
+        fun spitVariousShit(ctx: spitShitForEntity, ctx2: CommonDBEntitySpew)
+        fun spitRepo(ctx: spitShitForEntity, ctx2: CommonDBEntitySpew)
+    }
+
+    companion object {
+        fun maybeQuestion(finder: FinderSpec) =
+            finder.returnsNullable.thenElseEmpty {"?"}
+
+        fun maybeWrapShitIntoPlatformType(typed: FieldSpec, shit: String): String {
+            val platformType = platformType(typed)
+            return when {
+                platformType != typed.type -> "$platformType($shit)"
+                else -> shit
+            }
+        }
+
+        fun platformType(fieldSpec: FieldSpec): String {
+            val platformFieldType = when (fieldSpec.type) {
+                "Int" -> "java.lang.Integer"
+                "Long" -> "java.lang.Long"
+                "Boolean" -> "java.lang.Boolean"
+                else -> fieldSpec.type
+            }
+            return platformFieldType
+        }
+
+        fun maybeUnwrapShitFromPlatformType(typed: FieldSpec, shit: String): String {
+            val platformType = platformType(typed)
+            return when {
+                platformType != typed.type -> when (typed.type) {
+                    "Int" -> "$shit.toInt()"
+                    "Long" -> "$shit.toLong()"
+                    "Boolean" -> "$shit.booleanValue()"
+                    else -> wtf("f8ef6767-4bfd-4bad-8ee3-9b5fbd768990")
+                }
+                else -> shit
+            }
+        }
+
+    }
 
     init {
         val file = File(outputFilePath)
@@ -137,191 +182,21 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
             creates.find {it.table == table}!!.doAppend()
     }
 
-    fun FieldSpec.platformType(): String {
-        val platformFieldType = when (type) {
-            "Int" -> "java.lang.Integer"
-            "Long" -> "java.lang.Long"
-            "Boolean" -> "java.lang.Boolean"
-            else -> type
-        }
-        return platformFieldType
-    }
-
-
-    fun maybeUnwrapShitFromPlatformType(typed: FieldSpec, shit: String): String {
-        val platformType = typed.platformType()
-        return when {
-            platformType != typed.type -> when (typed.type) {
-                "Int" -> "$shit.toInt()"
-                "Long" -> "$shit.toLong()"
-                "Boolean" -> "$shit.booleanValue()"
-                else -> wtf("f8ef6767-4bfd-4bad-8ee3-9b5fbd768990")
-            }
-            else -> shit
-        }
-    }
-
-    fun maybeWrapShitIntoPlatformType(typed: FieldSpec, shit: String): String {
-        val platformType = typed.platformType()
-        return when {
-            platformType != typed.type -> "$platformType($shit)"
-            else -> shit
-        }
-    }
 
 
     inner class spitShitForEntity(val entity: EntitySpec) {
         val en = entity.name
         val end = en.decapitalize()
+        val out get() = this@CommonDBEntitySpew.out
 
         init {
             out.smallSection(en)
-            out.append("// Generated at ${mangleUUID("7470173f-49ef-43cb-adf7-1c395f07518c")}\n")
-            val fuck10 = "fun new$en("
-            out.append(fuck10)
-            val ctorParams = entity.fields.filter {it.kind !is FieldKind.Many && !it.isOrderColumn}
-            for ((ctorParamIndex, ctorParam) in ctorParams.withIndex()) {
-                out.append("${ctorParam.name}: ${ctorParam.type}")
-                if (ctorParamIndex < ctorParams.lastIndex)
-                    out.append(",\n" + " ".repeat(fuck10.length))
-            }
-            out.append("): $en {\n")
+            pedro.spitEntityCtor(this)
 
-            out.append(  "    val backing = Generated_$en(\n")
-            val fuck20 = "        Generated_${en}Fields().also {"
-            out.append(fuck20)
-            for ((ctorParamIndex, ctorParam) in ctorParams.withIndex()) {
-                out.append("it.${ctorParam.name} = ${maybeWrapShitIntoPlatformType(ctorParam, ctorParam.name)}")
-                if (ctorParam.isEntity)
-                    out.append("._backing")
-                if (ctorParamIndex < ctorParams.lastIndex)
-                    out.append("\n" + " ".repeat(fuck20.length))
-            }
-            out.append("})\n")
-            out.append("    return backing.toManuallyDefinedInterface()\n")
-            out.append("}\n\n")
+            pedro.spitRepo(this, this@CommonDBEntitySpew)
+            pedro.spitVariousShit(this, this@CommonDBEntitySpew)
 
-            out.append("val $en._backing\n")
-            out.append("    get() = (this as Generated_${en}BackingProvider)._backing\n\n")
-
-            spitRepo()
-            spitGeneratedRepo()
-
-            out.append("interface Generated_${en}BackingProvider : DBCodeGenUtils.GeneratedBackingEntityProvider<Generated_$en> {\n")
-            out.append("    override val _backing: Generated_$en\n")
-            out.append("}\n\n")
-
-            out.append("@XEntity @XTable(name = \"${entity.tableName}\")\n")
-            out.append("class Generated_$en( // Generated at ${mangleUUID("f21265f2-3d69-4ab8-a07c-5595106a9e6b")}\n")
-            out.append("    @XEmbedded var $end: Generated_${en}Fields\n")
-            out.append(")\n")
-            out.append("    : ClitoralEntity0(), DBCodeGenUtils.GeneratedEntity<$en>\n")
-            out.append("{\n")
-            out.append("    override fun toManuallyDefinedInterface(): $en {\n")
-            out.append("        return object : $en, Generated_${en}BackingProvider {\n")
-            out.append("            override val _backing: Generated_$en\n")
-            out.append("                get() = this@Generated_$en\n")
-            out.append("\n")
-            out.append("            override var id: Long\n")
-            out.append("                get() = _backing.id!!\n")
-            out.append("                set(value) {_backing.id = value}\n")
-            out.append("\n")
-            out.append("            override var createdAt: XTimestamp\n")
-            out.append("                get() = _backing.$end.common.createdAt\n")
-            out.append("                set(value) {_backing.$end.common.createdAt = value}\n")
-            out.append("\n")
-            out.append("            override var updatedAt: XTimestamp\n")
-            out.append("                get() = _backing.$end.common.updatedAt\n")
-            out.append("                set(value) {_backing.$end.common.updatedAt = value}\n")
-            out.append("\n")
-            out.append("            override var deleted: Boolean\n")
-            out.append("                get() = _backing.$end.common.deleted\n")
-            out.append("                set(value) {_backing.$end.common.deleted = value}\n")
-            out.append("\n")
-
-            for (field in entity.fields) {
-                exhaustive=when (field.kind) {
-                    is FieldKind.Simple -> {
-                        out.append("            override var ${field.name}: ${field.type}\n")
-                        out.append("                get() = ${maybeUnwrapShitFromPlatformType(field, "_backing.$end.${field.name}")}\n")
-                        out.append("                set(value) {_backing.$end.${field.name} = ${maybeWrapShitIntoPlatformType(field, "value")}}\n")
-                        out.append("\n")
-                    }
-                    is FieldKind.One -> {
-                        out.append("            override var ${field.name}: ${field.type}\n")
-                        out.append("                get() = _backing.$end.${field.name}.toManuallyDefinedInterface()\n")
-                        out.append("                set(value) {_backing.$end.${field.name} = value._backing}\n")
-                        out.append("\n")
-                    }
-                    is FieldKind.Many -> {
-                        out.append("            override var ${field.name}: MutableList<${field.type}>\n")
-                        out.append("                by DBCodeGenUtils.FuckingList(getBackingList = {_backing.$end.${field.name}})\n")
-                        out.append("\n")
-                    }
-                }
-            }
-
-            out.append("            override fun toString() = _backing.toString()\n")
-            out.append("\n")
-            out.append("            override fun hashCode() = _backing.hashCode()\n")
-            out.append("\n")
-            out.append("            override fun equals(other: Any?): Boolean {\n")
-            out.append("                val otherShit = other as? Generated_${en}BackingProvider ?: return false\n")
-            out.append("                return _backing == otherShit._backing\n")
-            out.append("            }\n")
-            out.append("        }\n")
-            out.append("    }\n")
-            out.append("\n")
-            out.append("    override fun toString(): String {\n")
-
-
-            out.append("        return \"$en(")
-            val toStringFields = entity.fields.filter {it.isInToString}
-            for ((index, field) in toStringFields.withIndex()) {
-                out.append("${field.name}=\${$end.${field.name}}")
-                if (index < toStringFields.lastIndex)
-                    out.append(", ")
-            }
-            out.append(")\"\n")
-
-            out.append("    }\n")
-            out.append("}\n")
-            out.append("\n")
-
-            out.append("@XEmbeddable\n")
-            out.append("class Generated_${en}Fields { // Generated at ${mangleUUID("2e91acff-5613-4b14-b71e-5edee254d029")}\n")
-            out.append("    @XEmbedded var common: CommonFields = CommonFields()\n")
-            for ((index, field) in entity.fields.withIndex()) {
-                exhaustive=when (field.kind) {
-                    is FieldKind.Simple -> {
-                        out.append("    @XColumn")
-                        if (field.type == "String")
-                            out.append("(columnDefinition = \"text\")")
-                        if (field.type.endsWith("?"))
-                            out.append(" var ${field.name}: ${field.type} = null")
-                        else
-                            out.append(" lateinit var ${field.name}: ${field.platformType()}")
-                    }
-                    is FieldKind.One -> {
-                        out.append("    @XManyToOne(fetch = XFetchType.${field.kind.fetchType.name}/*, cascade = arrayOf(XCascadeType.ALL)*/)")
-                        out.append(" lateinit var ${field.name}: Generated_${field.type}")
-                    }
-                    is FieldKind.Many -> {
-                        out.append("    @XOneToMany(fetch = XFetchType.${field.kind.fetchType.name}, mappedBy = \"${field.kind.mappedBy}\", cascade = arrayOf(XCascadeType.ALL), orphanRemoval = true)")
-                        val entity = entities.find {it.name == field.type} ?: wtf("68c50078-c088-476b-9a52-7c1657412fc3")
-                        val orderColumnField = entity.fields.find {it.isOrderColumn}
-                        if (orderColumnField != null) {
-                            out.append(" @XOrderColumn(name = \"${field.type.decapitalize()}_${orderColumnField.name}\")")
-                        }
-                        out.append(" var ${field.name}: MutableList<Generated_${field.type}> = mutableListOf()")
-                    }
-                }
-//            if (index < entity.fields.lastIndex)
-//                out.append(",")
-                out.append("\n")
-            }
-            out.append("}\n")
-            out.append("\n")
+            pedro.spitEntityClass(this, this@CommonDBEntitySpew)
 
             generateDDLForEntity()
         }
@@ -383,59 +258,44 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
                     for ((index, field) in fields.withIndex()) {
                         val sqlType = when (field.kind) {
                             is FieldKind.Simple -> {
-                                when (field.type) {
+                                val fieldTypeWithoutQuestion = field.type.replace(Regex("\\?$"), "")
+                                val sql = when (fieldTypeWithoutQuestion) {
                                     "Int" -> when (databaseDialect) {
-                                        SQLITE -> "integer not null"
-                                        POSTGRESQL -> "integer not null"
-                                        MYSQL -> "integer not null"
-                                    }
-                                    "Int?" -> when (databaseDialect) {
                                         SQLITE -> "integer"
                                         POSTGRESQL -> "integer"
                                         MYSQL -> "integer"
                                     }
                                     "Long" -> when (databaseDialect) {
-                                        SQLITE -> "bigint not null"
-                                        POSTGRESQL -> "bigint not null"
-                                        MYSQL -> "bigint not null"
-                                    }
-                                    "Long?" -> when (databaseDialect) {
                                         SQLITE -> "bigint"
                                         POSTGRESQL -> "bigint"
                                         MYSQL -> "bigint"
                                     }
                                     "Boolean" -> when (databaseDialect) {
-                                        SQLITE -> "int not null"
-                                        POSTGRESQL -> "boolean not null"
-                                        MYSQL -> "boolean not null"
-                                    }
-                                    "Boolean?" -> when (databaseDialect) {
                                         SQLITE -> "int"
                                         POSTGRESQL -> "boolean"
                                         MYSQL -> "boolean"
                                     }
                                     "String" -> when (databaseDialect) {
-                                        SQLITE -> "text not null"
-                                        POSTGRESQL -> "text not null"
-                                        MYSQL -> "longtext not null"
-                                    }
-                                    "String?" -> when (databaseDialect) {
                                         SQLITE -> "text"
                                         POSTGRESQL -> "text"
                                         MYSQL -> "longtext"
                                     }
                                     "ByteArray" -> when (databaseDialect) {
-                                        SQLITE -> "blob not null"
-                                        POSTGRESQL -> "bytea not null"
-                                        MYSQL -> "longblob not null"
-                                    }
-                                    "ByteArray?" -> when (databaseDialect) {
                                         SQLITE -> "blob"
                                         POSTGRESQL -> "bytea"
                                         MYSQL -> "longblob"
                                     }
+                                    "PHPTimestamp" -> when (databaseDialect) {
+                                        SQLITE -> imf("696a10c7-83f1-4562-8b71-2a1d6e48a08c")
+                                        POSTGRESQL -> imf("6d372efa-62d0-4573-a98f-f8134f91b4ae")
+                                        MYSQL -> "datetime"
+                                    }
                                     else -> wtf("field.type = ${field.type}    5e84c6fb-b523-43cc-aa45-bdef1dca7ff2")
                                 }
+                                if (field.type.endsWith("?"))
+                                    sql
+                                else
+                                    sql + " not null"
                             }
                             is FieldKind.One -> {
                                 val s = when (databaseDialect) {
@@ -475,90 +335,6 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
             )
         }
 
-        fun spitGeneratedRepo() {
-            out.append("interface Generated_${en}Repository : XCrudRepository<Generated_$en, Long> {\n")
-            for (finder in entity.finders) {
-                if (finder.definedFinderName in setOf("findAll")) continue
-
-                val paramsCode = StringBuilder()
-                for ((paramIndex, param) in finder.params.withIndex()) {
-                    paramsCode += "${param.name}: ${param.type}"
-                    if (paramIndex < finder.params.lastIndex) {
-                        paramsCode += ", "
-                    }
-                }
-                val returnTypeCode = when {
-                    finder.returnsList -> "List<Generated_$en>"
-                    else -> "Generated_$en${maybeQuestion(finder)}"
-                }
-                out.append("    fun ${finder.generatedFinderName}($paramsCode): $returnTypeCode\n")
-            }
-            out.append("}\n\n")
-        }
-
-        fun maybeQuestion(finder: FinderSpec) =
-            finder.returnsNullable.thenElseEmpty {"?"}
-
-        fun spitRepo() {
-            out.append("val ${end}Repo: ${en}Repository by lazy {\n")
-            out.append("    val generatedRepo = backPlatform.springctx.getBean(Generated_${en}Repository::class.java)!!\n")
-            out.append("\n")
-            out.append("    object:${en}Repository {\n")
-            out.append("        override fun findOne(id: Long): $en? {\n")
-            out.append("            val shit = generatedRepo.findOne(id)\n")
-            out.append("            return shit?.toManuallyDefinedInterface()\n")
-            out.append("        }\n")
-            out.append("\n")
-            out.append("        override fun findAll(): List<$en> {\n")
-            out.append("            val shit = generatedRepo.findAll()\n")
-            out.append("            return shit.map {it.toManuallyDefinedInterface()}\n")
-            out.append("        }\n")
-            out.append("\n")
-            out.append("        override fun save(x: $en): $en {\n")
-            out.append("            val shit = generatedRepo.save(x._backing)\n")
-            out.append("            return shit.toManuallyDefinedInterface()\n")
-            out.append("        }\n")
-            out.append("\n")
-            out.append("        override fun delete(id: Long) {\n")
-            out.append("            generatedRepo.delete(id)\n")
-            out.append("        }\n")
-            out.append("\n")
-            out.append("        override fun delete(x : $en) {\n")
-            out.append("            generatedRepo.delete(x._backing)\n")
-            out.append("        }\n")
-            out.append("\n")
-
-            for ((finderIndex, finder) in entity.finders.withIndex()) {
-                val paramsCode = StringBuilder()
-                val generatedFinderArgsCode = StringBuilder()
-                for ((paramIndex, param) in finder.params.withIndex()) {
-                    paramsCode += "${param.name}: ${param.type}"
-                    generatedFinderArgsCode += param.name
-                    if (paramIndex < finder.params.lastIndex) {
-                        paramsCode += ", "
-                        generatedFinderArgsCode += ", "
-                    }
-                }
-                val returnTypeCode = when {
-                    finder.returnsList -> "List<$en>"
-                    else -> en
-                }
-
-                out.append("        override fun ${finder.definedFinderName}($paramsCode): $returnTypeCode${maybeQuestion(finder)} {\n")
-                out.append("            val shit = generatedRepo.${finder.generatedFinderName}($generatedFinderArgsCode)\n")
-                if (finder.returnsList) {
-                    out.append("            return shit${maybeQuestion(finder)}.map {it.toManuallyDefinedInterface()}\n")
-                } else {
-                    out.append("            return shit${maybeQuestion(finder)}.toManuallyDefinedInterface()\n")
-                }
-                out.append("        }\n")
-                if (finderIndex < entity.finders.lastIndex)
-                    out.append("\n")
-            }
-
-            out.append("    }\n")
-            out.append("}\n\n")
-        }
     }
 
 
@@ -575,8 +351,8 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
                 import kotlin.reflect.KClass
                 import vgrechka.*
                 import vgrechka.spew.*
-                import vgrechka.db.*
             """)
+        pedro.spitImports(this)
         out.line("")
     }
 
@@ -715,14 +491,6 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
     }
 }
 
-class KotlinDBEntitySpew : Spew {
-    override fun ignite(ktFile: KtFile, outputFilePath: String, spewResults: SpewResults) {
-        CommonDBEntitySpew(ktFile, outputFilePath, spewResults)
-    }
-    private fun noise(x: Any?) {
-        if (false) clog(x)
-    }
-}
 
 
 

@@ -47,6 +47,22 @@ class CodeShitter(val indent: Int = 0) {
     val tag = "{{" + UUID.randomUUID().toString() + "}}"
     val subPlaces = mutableListOf<CodeShitter>()
 
+    fun deleteLastCommaBeforeNewLine() {
+        val shit = listOf(",\r\n", ",\n").find {buf.endsWith(it)}
+        if (shit != null) {
+            buf.setLength(buf.length - shit.length)
+            buf.append("\n")
+        }
+    }
+
+    fun deleteLastCommaBeforeDoubleQuoteClosingParenAndNewLine() {
+        val shit = listOf(",\")\r\n", ",\")\n").find {buf.endsWith(it)}
+        if (shit != null) {
+            buf.setLength(buf.length - shit.length)
+            buf.append("\")\n")
+        }
+    }
+
     fun append(text: String) {
         buf += text
     }

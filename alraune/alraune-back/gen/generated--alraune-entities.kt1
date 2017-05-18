@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Wed May 17 17:43:16 EEST 2017
+// Generated on Thu May 18 11:42:01 EEST 2017
 // Model: e:/fegh/alraune/alraune-back/src/alraune-entities.kt
 //
 
@@ -21,7 +21,11 @@ import vgrechka.db.*
 // ------------------------------------------------------------------
 
 // Generated at 7-470173f-49ef-43cb-adf7-1c395f07518c
-fun newAlUser(firstName: String,
+fun newAlUser(id: String,
+              createdAt: PHPTimestamp,
+              updatedAt: PHPTimestamp,
+              deleted: Boolean,
+              firstName: String,
               email: String,
               lastName: String,
               passwordHash: String,
@@ -32,7 +36,11 @@ fun newAlUser(firstName: String,
               banReason: String?,
               subscribedToAllCategories: Boolean): AlUser {
     val backing = Generated_AlUser(
-        Generated_AlUserFields().also {it.firstName = firstName
+        Generated_AlUserFields().also {it.id = id
+                                       it.createdAt = createdAt._backing
+                                       it.updatedAt = updatedAt._backing
+                                       it.deleted = java.lang.Boolean(deleted)
+                                       it.firstName = firstName
                                        it.email = email
                                        it.lastName = lastName
                                        it.passwordHash = passwordHash
@@ -75,15 +83,10 @@ val alUserRepo: AlUserRepository by lazy {
             generatedRepo.delete(x._backing)
         }
 
-        override fun findByName(x: String): AlUser? {
-            val shit = generatedRepo.findByAlUser_Name(x)
-            return shit?.toManuallyDefinedInterface()
-        }
     }
 }
 
 interface Generated_AlUserRepository : XCrudRepository<Generated_AlUser, Long> {
-    fun findByAlUser_Name(x: String): Generated_AlUser?
 }
 
 interface Generated_AlUserBackingProvider : DBCodeGenUtils.GeneratedBackingEntityProvider<Generated_AlUser> {
@@ -116,6 +119,22 @@ class Generated_AlUser( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9e6b
             override var deleted: Boolean
                 get() = _backing.alUser.common.deleted
                 set(value) {_backing.alUser.common.deleted = value}
+
+            override var id: String
+                get() = _backing.alUser.id
+                set(value) {_backing.alUser.id = value}
+
+            override var createdAt: PHPTimestamp
+                get() = _backing.alUser.createdAt
+                set(value) {_backing.alUser.createdAt = value}
+
+            override var updatedAt: PHPTimestamp
+                get() = _backing.alUser.updatedAt
+                set(value) {_backing.alUser.updatedAt = value}
+
+            override var deleted: Boolean
+                get() = _backing.alUser.deleted.booleanValue()
+                set(value) {_backing.alUser.deleted = java.lang.Boolean(value)}
 
             override var firstName: String
                 get() = _backing.alUser.firstName
@@ -169,13 +188,17 @@ class Generated_AlUser( // Generated at f-21265f2-3d69-4ab8-a07c-5595106a9e6b
     }
 
     override fun toString(): String {
-        return "AlUser(firstName=${alUser.firstName}, email=${alUser.email}, lastName=${alUser.lastName}, passwordHash=${alUser.passwordHash}, profilePhone=${alUser.profilePhone}, adminNotes=${alUser.adminNotes}, aboutMe=${alUser.aboutMe}, subscribedToAllCategories=${alUser.subscribedToAllCategories})"
+        return "AlUser(id=${alUser.id}, deleted=${alUser.deleted}, firstName=${alUser.firstName}, email=${alUser.email}, lastName=${alUser.lastName}, passwordHash=${alUser.passwordHash}, profilePhone=${alUser.profilePhone}, adminNotes=${alUser.adminNotes}, aboutMe=${alUser.aboutMe}, subscribedToAllCategories=${alUser.subscribedToAllCategories})"
     }
 }
 
 @XEmbeddable
 class Generated_AlUserFields { // Generated at 2-e91acff-5613-4b14-b71e-5edee254d029
     @XEmbedded var common: CommonFields = CommonFields()
+    @XColumn(columnDefinition = "text") lateinit var id: String
+    @XColumn lateinit var createdAt: PHPTimestamp
+    @XColumn lateinit var updatedAt: PHPTimestamp
+    @XColumn lateinit var deleted: java.lang.Boolean
     @XColumn(columnDefinition = "text") lateinit var firstName: String
     @XColumn(columnDefinition = "text") lateinit var email: String
     @XColumn(columnDefinition = "text") lateinit var lastName: String
@@ -197,6 +220,10 @@ create table `alraune_users` (
     alUser_common_createdAt datetime not null,
     alUser_common_updatedAt datetime not null,
     alUser_common_deleted boolean not null,
+    alUser_id longtext not null,
+    alUser_createdAt datetime not null,
+    alUser_updatedAt datetime not null,
+    alUser_deleted boolean not null,
     alUser_firstName longtext not null,
     alUser_email longtext not null,
     alUser_lastName longtext not null,
@@ -224,6 +251,10 @@ create table `alraune_users` (
     alUser_common_createdAt datetime not null,
     alUser_common_updatedAt datetime not null,
     alUser_common_deleted boolean not null,
+    alUser_id longtext not null,
+    alUser_createdAt datetime not null,
+    alUser_updatedAt datetime not null,
+    alUser_deleted boolean not null,
     alUser_firstName longtext not null,
     alUser_email longtext not null,
     alUser_lastName longtext not null,

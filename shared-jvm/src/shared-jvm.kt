@@ -741,6 +741,14 @@ fun Response.readUTF8(): String {
     return this.body().source().readString(BigPile.charset.utf8)
 }
 
+fun <T> T.repeatToList(count: Int): List<T> {
+    val list = mutableListOf<T>()
+    for (i in 1..count) {
+        list += this
+    }
+    return list
+}
+
 
 
 

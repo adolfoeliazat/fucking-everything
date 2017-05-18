@@ -116,6 +116,10 @@ object DBPile {
         return PHPTimestamp((x as String).toInt())
     }
 
+    fun currentTimestampForEntity(): PHPTimestamp {
+        return PHPTimestamp(phiEval("return time();") as Int)
+    }
+
 }
 
 
