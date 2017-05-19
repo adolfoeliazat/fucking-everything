@@ -14,7 +14,11 @@ object AlSharedPile {
     }
 
     enum class GetParam {
-        page, testDataSeeder
+        page, fakeSetting
+    }
+
+    enum class Cookie {
+        sessionID
     }
 }
 

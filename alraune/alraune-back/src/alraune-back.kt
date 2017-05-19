@@ -21,17 +21,16 @@ fun main(args: Array<String>) {
 
     DBPile.init()
 
-    val testDataSeederName = AlSharedPile.GetParam.testDataSeeder.get()
-    if (testDataSeederName != null) {
-        val seeder = TestDataSeeders.values().find {it.name == testDataSeederName} ?: wtf("bd7f0b1a-e78d-4f9d-8fd1-aa26c2f4141d")
+    val fakeSetting = AlSharedPile.GetParam.fakeSetting.get()
+    if (fakeSetting != null) {
+        val seeder = FakeSetting.values().find {it.name == fakeSetting} ?: wtf("bd7f0b1a-e78d-4f9d-8fd1-aa26c2f4141d")
         seeder.ignite()
     }
 
-    val userToken = AlBackPile.cookies.get("userToken")
-    if (userToken == null)
-        println("no fucking token...")
-    else
-        println("userToken = $userToken")
+    val sessionID = AlSharedPile.Cookie.sessionID.get()
+    if (sessionID != null) {
+        AlDebugLogger.info("sessionID = $sessionID")
+    }
 
     val page = AlSharedPile.GetParam.page.get() ?: "landing"
     when (page) {
@@ -40,133 +39,67 @@ fun main(args: Array<String>) {
     }
 }
 
-enum class TestDataSeeders {
-    Dunduk1 {
-        override fun ignite() {
-            DBPile.execute(AlGeneratedDBPile.ddl.dropCreateAllScript)
-        }
-    };
-
-    abstract fun ignite()
-}
-
 fun AlSharedPile.GetParam.get() = PHPPile.getGetParam(this.name)
 
-fun phucking1() {
-    DBPile.init()
-    DBPile.execute(alUserRepo.dropTableDDL)
-    DBPile.execute(alUserRepo.createTableDDL)
+fun AlSharedPile.Cookie.get() = AlBackPile.cookies.get(this.name)
 
-    DBPile.tx {
-        val fucko = newAlUser(
-            firstName = "Fucko",
-            lastName = "Pidoracko",
-            email = "fucko@pidoracko.net",
-            passwordHash = "bloody-secret",
-            profilePhone = "911",
-            aboutMe = "I am not pidar, it's just a name",
-            adminNotes = "Pidar. Definitely",
-            profileRejectionReason = "We don't tolerate any pidars in our community",
-            banReason = "Achtung",
-            subscribedToAllCategories = true
-        )
-         val savedFucko = alUserRepo.insert(fucko)
-        println("savedFucko = " + savedFucko)
+class PHPInteropVar(initialValue: Any? = null, initCode: String? = null) {
+    val name = "PHPInteropVar${PHPPile.nextPUID()}"
+    val code = "\$GLOBALS['$name']"
 
-        val fucko2 = newAlUser(
-            firstName = "Fucko 2",
-            lastName = "Pidoracko",
-            email = "fucko2@pidoracko.net",
-            passwordHash = "bloody-secret-2",
-            profilePhone = "911",
-            aboutMe = "I am not pidar, it's just a name",
-            adminNotes = "Pidar. Definitely",
-            profileRejectionReason = null,
-            banReason = "Achtung",
-            subscribedToAllCategories = true
-        )
-        val savedFucko2 = alUserRepo.insert(fucko2)
-        println("savedFucko2 = " + savedFucko2)
-    }
-
-    try {
-        DBPile.tx {
-            val fucko3 = newAlUser(
-                firstName = "Fucko 3",
-                lastName = "Pidoracko",
-                email = "fucko3@pidoracko.net",
-                passwordHash = "bloody-secret-3",
-                profilePhone = "911",
-                aboutMe = "I am not pidar, it's just a name",
-                adminNotes = "Pidar. Definitely",
-                profileRejectionReason = "We don't tolerate any pidars in our community",
-                banReason = "Achtung",
-                subscribedToAllCategories = true
-            )
-            val savedFucko3 = alUserRepo.insert(fucko3)
-            println("savedFucko3 = " + savedFucko3)
-            throw Exception("pizdets")
-        }
-    } catch (e: Throwable) {
-        println("Caught exception: " + e.message)
-    }
-
-    DBPile.tx {
-        val fucko4 = newAlUser(
-            firstName = "Fucko 4",
-            lastName = "Pidoracko",
-            email = "fucko4@pidoracko.net",
-            passwordHash = "bloody-secret-4",
-            profilePhone = "911",
-            aboutMe = "I am not pidar, it's just a name",
-            adminNotes = "Pidar. Definitely",
-            profileRejectionReason = "We don't tolerate any pidars in our community",
-            banReason = "Achtung",
-            subscribedToAllCategories = true
-        )
-        val savedFucko4 = alUserRepo.insert(fucko4)
-        println("savedFucko4 = " + savedFucko4)
-    }
-
-    println("\n----- Select all -----\n")
-    run {
-        val rows = DBPile.query("select alUser_firstName, alUser_lastName from alraune_users;")
-        for ((index, row) in rows.withIndex()) {
-            println("${index + 1}) ${row[0]}    ${row[1]}")
+    init {
+        if (initCode == null) {
+            PHPPile.setGlobal(name, initialValue)
+        } else {
+            phiEval("$code = $initCode;")
         }
     }
 
-    println("\n----- With specific secret -----\n")
-    run {
-        val items = alUserRepo.select(AlUser::passwordHash, DBPile.op.eq, "bloody-secret-2")
-        for ((index, item) in items.withIndex()) {
-            println("${index + 1})")
-            println("    id = ${item.id}")
-            println("    createdAt = ${item.createdAt.toString()}")
-            println("    updatedAt = ${item.updatedAt.toString()}")
-            println("    deleted = ${item.deleted}")
-            println("    firstName = ${item.firstName}")
-            println("    lastName = ${item.lastName}")
-            println("    email = ${item.email}")
-            println("    passwordHash = ${item.passwordHash}")
-            println("    profilePhone = ${item.profilePhone}")
-            println("    adminNotes = ${item.adminNotes}")
-            println("    aboutMe = ${item.aboutMe}")
-            println("    profileRejectionReason = ${item.profileRejectionReason}")
-            println("    banReason = ${item.banReason}")
-            println("    subscribedToAllCategories = ${item.subscribedToAllCategories}")
-        }
+    override fun toString() = code
+
+    fun get(): Any? {
+        return phiEval("return $code;") as Any?
     }
 
-    println("\nOK")
+    fun isFalse(): Boolean {
+        return phiEval("return $code === false;") as Boolean
+    }
+}
+
+object AlDebugLogger {
+    fun info(msg: String) {
+        val fileNameVar = PHPInteropVar(AlBackPile.config.debugLogFile)
+        val resourceVar = PHPInteropVar(initCode = "fopen($fileNameVar, 'a')")
+        if (resourceVar.isFalse()) {
+            bitch("Cannot open debug log file: ${fileNameVar.get()}")
+        } else {
+            println("Fucking OK")
+        }
+
+        val msgVar = PHPInteropVar(msg + "\n")
+        val fwriteResVar = PHPInteropVar(initCode = "fwrite($resourceVar, $msgVar)")
+    }
 }
 
 object AlBackPile {
-    val cookies: BackCookiesShim = PHPBackCookies()
+    var cookies: BackCookiesShim = PHPBackCookies()
+    val config = AlBackConfig(debugLogFile = "c:/tmp/alraune-debug.log")
 }
+
+class AlBackConfig(
+    val debugLogFile: String
+)
 
 interface BackCookiesShim {
     fun get(name: String): String?
+}
+
+class FakeCookies : BackCookiesShim {
+    val nameToValue = mutableMapOf<String, String>()
+
+    override fun get(name: String): String? {
+        return nameToValue[name]
+    }
 }
 
 class PHPBackCookies : BackCookiesShim {

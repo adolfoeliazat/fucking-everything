@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Fri May 19 09:03:36 EEST 2017
+// Generated on Fri May 19 13:31:49 EEST 2017
 // Model: e:/fegh/alraune/alraune-back/src/alraune-entities.kt
 //
 
@@ -27,6 +27,7 @@ fun newAlUser(
     email: String,
     lastName: String,
     passwordHash: String,
+    sessionID: String,
     profilePhone: String,
     adminNotes: String,
     aboutMe: String,
@@ -39,6 +40,7 @@ fun newAlUser(
         it.email = email
         it.lastName = lastName
         it.passwordHash = passwordHash
+        it.sessionID = sessionID
         it.profilePhone = profilePhone
         it.adminNotes = adminNotes
         it.aboutMe = aboutMe
@@ -63,6 +65,7 @@ val alUserRepo: AlUserRepository by lazy {
                 ln("    alUser_email,")
                 ln("    alUser_lastName,")
                 ln("    alUser_passwordHash,")
+                ln("    alUser_sessionID,")
                 ln("    alUser_profilePhone,")
                 ln("    alUser_adminNotes,")
                 ln("    alUser_aboutMe,")
@@ -74,7 +77,7 @@ val alUserRepo: AlUserRepository by lazy {
                 ln("${propertyToColumnName(prop)} ${op.sql} ?")
                 params.add(arg)
             }
-            val rows = DBPile.query(sql, params, uuid = "42d78104-a482-4ce1-bfa6-684d9632b3b2")
+            val rows = DBPile.query(sql, params, uuid = "7a25556d-0083-49a0-bd41-bdd4b42764ca")
             println("findBy: Found ${rows.size} rows")
             val items = mutableListOf<AlUser>()
             for (row in rows) {
@@ -91,12 +94,13 @@ val alUserRepo: AlUserRepository by lazy {
                     it.email = row[5] as String
                     it.lastName = row[6] as String
                     it.passwordHash = row[7] as String
-                    it.profilePhone = row[8] as String
-                    it.adminNotes = row[9] as String
-                    it.aboutMe = row[10] as String
-                    it.profileRejectionReason = row[11] as String?
-                    it.banReason = row[12] as String?
-                    it.subscribedToAllCategories = DBPile.mysqlValueToBoolean(row[13])
+                    it.sessionID = row[8] as String
+                    it.profilePhone = row[9] as String
+                    it.adminNotes = row[10] as String
+                    it.aboutMe = row[11] as String
+                    it.profileRejectionReason = row[12] as String?
+                    it.banReason = row[13] as String?
+                    it.subscribedToAllCategories = DBPile.mysqlValueToBoolean(row[14])
                 }
             }
             return items
@@ -112,13 +116,14 @@ val alUserRepo: AlUserRepository by lazy {
                     ln("    `alUser_email`,")
                     ln("    `alUser_lastName`,")
                     ln("    `alUser_passwordHash`,")
+                    ln("    `alUser_sessionID`,")
                     ln("    `alUser_profilePhone`,")
                     ln("    `alUser_adminNotes`,")
                     ln("    `alUser_aboutMe`,")
                     ln("    `alUser_profileRejectionReason`,")
                     ln("    `alUser_banReason`,")
                     ln("    `alUser_subscribedToAllCategories`")
-                    ln(") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                    ln(") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
                 },
                 params = listOf(
                     phiEval("return gmdate('Y-m-d H:i:s', ${x.createdAt.time});") as String,
@@ -128,6 +133,7 @@ val alUserRepo: AlUserRepository by lazy {
                     x.email,
                     x.lastName,
                     x.passwordHash,
+                    x.sessionID,
                     x.profilePhone,
                     x.adminNotes,
                     x.aboutMe,
@@ -135,12 +141,12 @@ val alUserRepo: AlUserRepository by lazy {
                     x.banReason,
                     x.subscribedToAllCategories
                 ),
-                uuid = "e01c42db-20db-4a57-9579-c25427f5706d"
+                uuid = "5b5be5e7-5eb9-44e7-8618-c513fb577b0c"
             )
 
             val res = DBPile.query(
                 sql = "select cast(last_insert_id() as char)",
-                uuid = "ed0c1c92-381b-4166-8abe-9f2de7723ad6"
+                uuid = "1c969a58-f1d4-4410-923b-bea78697c069"
             )
 
             x.id = res.first().first() as String
@@ -158,13 +164,14 @@ fun AlUserRepository.propertyToColumnName(prop: KMutableProperty1<AlUser, String
     if (prop.name == AlUser::email.name) return "alUser_email"
     if (prop.name == AlUser::lastName.name) return "alUser_lastName"
     if (prop.name == AlUser::passwordHash.name) return "alUser_passwordHash"
+    if (prop.name == AlUser::sessionID.name) return "alUser_sessionID"
     if (prop.name == AlUser::profilePhone.name) return "alUser_profilePhone"
     if (prop.name == AlUser::adminNotes.name) return "alUser_adminNotes"
     if (prop.name == AlUser::aboutMe.name) return "alUser_aboutMe"
     if (prop.name == AlUser::profileRejectionReason.name) return "alUser_profileRejectionReason"
     if (prop.name == AlUser::banReason.name) return "alUser_banReason"
     if (prop.name == AlUser::subscribedToAllCategories.name) return "alUser_subscribedToAllCategories"
-    throw Exception("31d67557-0b33-4ee2-b601-265523caddec")
+    throw Exception("03f6ab91-79cf-4633-a7d0-06dd05ab9dd2")
 
 }
 
@@ -181,6 +188,7 @@ val AlUserRepository.createTableDDL get() = buildString {
     ln("    alUser_email longtext not null,")
     ln("    alUser_lastName longtext not null,")
     ln("    alUser_passwordHash longtext not null,")
+    ln("    alUser_sessionID longtext not null,")
     ln("    alUser_profilePhone longtext not null,")
     ln("    alUser_adminNotes longtext not null,")
     ln("    alUser_aboutMe longtext not null,")
@@ -198,6 +206,7 @@ class Generated_AlUser : AlUser {
     override var email by notNull<String>()
     override var lastName by notNull<String>()
     override var passwordHash by notNull<String>()
+    override var sessionID by notNull<String>()
     override var profilePhone by notNull<String>()
     override var adminNotes by notNull<String>()
     override var aboutMe by notNull<String>()
@@ -215,6 +224,7 @@ class Generated_AlUser : AlUser {
             append("firstName=$firstName, ")
             append("email=$email, ")
             append("lastName=$lastName, ")
+            append("sessionID=$sessionID, ")
             append("profilePhone=$profilePhone, ")
             append("adminNotes=$adminNotes, ")
             append("aboutMe=$aboutMe, ")
@@ -239,6 +249,7 @@ create table `alraune_users` (
     alUser_email longtext not null,
     alUser_lastName longtext not null,
     alUser_passwordHash longtext not null,
+    alUser_sessionID longtext not null,
     alUser_profilePhone longtext not null,
     alUser_adminNotes longtext not null,
     alUser_aboutMe longtext not null,
@@ -266,6 +277,7 @@ create table `alraune_users` (
     alUser_email longtext not null,
     alUser_lastName longtext not null,
     alUser_passwordHash longtext not null,
+    alUser_sessionID longtext not null,
     alUser_profilePhone longtext not null,
     alUser_adminNotes longtext not null,
     alUser_aboutMe longtext not null,

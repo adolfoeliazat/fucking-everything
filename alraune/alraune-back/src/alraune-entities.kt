@@ -19,6 +19,7 @@ interface AlUser {
     var email: String // TODO:vgrechka Index
     var lastName: String
     var passwordHash: String
+    var sessionID: String
     var profilePhone: String
 //    @XEnumerated(XEnumType.STRING) var kind: UserKind,
 //    @XEnumerated(XEnumType.STRING) var state: UserState,

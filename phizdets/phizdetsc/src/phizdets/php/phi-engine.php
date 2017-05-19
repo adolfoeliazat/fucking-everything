@@ -1780,6 +1780,15 @@ class PhiBinaryOperation extends PhiExpression {
                 return new PhiNumber($lhsPhiValue->getValue() + $rhsPhiValue->getValue());
             }
 
+            else if (($lhsPhiValue instanceof PhiString) && ($rhsPhiValue instanceof PhiObject)) {
+                $rhsString = phiEvaluate(new PhiInvocation(new PhiDot($this->rhs, 'toString'), array()));
+                return new PhiString($lhsPhiValue->getValue() . $rhsString->getValue());
+            }
+            else if (($lhsPhiValue instanceof PhiObject) && ($rhsPhiValue instanceof PhiString)) {
+                $lhsString = phiEvaluate(new PhiInvocation(new PhiDot($this->lhs, 'toString'), array()));
+                return new PhiString($lhsString->getValue() . $rhsPhiValue->getValue());
+            }
+
             else {
                 throw new PhiIllegalStateException("d79e06d2-dcc0-4d51-a73a-0585c168e404");
             }
