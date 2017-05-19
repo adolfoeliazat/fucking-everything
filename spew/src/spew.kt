@@ -13,6 +13,8 @@ class SpewResults {
     val ddl = StringBuilder()
 }
 
+class SpewForInputFileOptions(val annotations: Boolean = false)
+
 fun spewForInputFiles(paths: List<String>): SpewResults {
     val analysisResult = try {
         clog("Working like a dog, analyzing your crappy sources...")
@@ -42,7 +44,33 @@ fun spewForInputFiles(paths: List<String>): SpewResults {
     return spewResults
 }
 
-class CodeShitter(val indent: Int = 0, val beforeReification: (CodeShitter) -> Unit = {}) {
+object GlobalSpewContext {
+    private var uid = 0L
+    var opts = SpewForInputFileOptions()
+    val uidToCapturedStack = mutableMapOf<Long, Exception>()
+
+    fun nextUID() = ++uid
+
+    fun maybeDebugInfo(): String {
+        if (!opts.annotations) return ""
+        return buildString {
+            ln(); ln(); ln()
+            ln("/*")
+            for ((uid, exception) in uidToCapturedStack) {
+                append(" *$uid <-- ")
+                for (stackTraceElement in exception.stackTrace.drop(1)) {
+                    append(stackTraceElement.fileName + ":" + stackTraceElement.lineNumber + "    ")
+                }
+                ln()
+            }
+            ln(" */")
+        }
+    }
+}
+
+class CodeShitter(val indent: Int = 0,
+                  val isOneForProducingDebugInfoInTheEnd: Boolean = false,
+                  val beforeReification: (CodeShitter) -> Unit = {}) {
     val buf = StringBuilder()
     val tag = "{{" + UUID.randomUUID().toString() + "}}"
     val subPlaces = mutableListOf<CodeShitter>()
@@ -64,6 +92,11 @@ class CodeShitter(val indent: Int = 0, val beforeReification: (CodeShitter) -> U
     }
 
     fun append(text: String) {
+        if (GlobalSpewContext.opts.annotations) {
+            val uid = GlobalSpewContext.nextUID()
+            GlobalSpewContext.uidToCapturedStack[uid] = Exception()
+            buf += "/*$uid*/"
+        }
         buf += text
     }
 
@@ -81,7 +114,6 @@ class CodeShitter(val indent: Int = 0, val beforeReification: (CodeShitter) -> U
         append(place)
         appendln(foldableSpacerMarker)
     }
-
 
     fun reify(): String {
         beforeReification(this)

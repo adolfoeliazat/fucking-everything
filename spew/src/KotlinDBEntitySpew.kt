@@ -27,8 +27,8 @@ class KotlinDBEntitySpew : Spew {
                         val entity = juanCtx.entity
 
                         return object : CommonDBEntitySpew.Juan {
-                            override fun spitDDLForSpecialColumns(ddlCtx: CommonDBEntitySpew.spitShitForEntity.generateDDLForEntity, out: CodeShitter?) {
-                                fun ln(s: String) = ddlCtx.append(out, s + "\n")
+                            override fun spitDDLForSpecialColumns(buf: StringBuilder) {
+                                fun ln(s: String) = buf.append(s + "\n")
 
                                 val idColumnDefinition = when (pedroCtx.databaseDialect) {
                                     GDBEntitySpewDatabaseDialect.SQLITE -> "id integer primary key autoincrement"

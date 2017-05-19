@@ -56,18 +56,18 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
     var pileObjectName: String? = null
     var databaseDialect by notNullOnce<GDBEntitySpewDatabaseDialect>()
     val tableDependsOnTable = mutableListOf<Pair<String, String>>()
-    val drops = mutableListOf<DDLGenerator>()
-    val creates = mutableListOf<DDLGenerator>()
+    val drops = mutableListOf<PieceOfDDL>()
+    val creates = mutableListOf<PieceOfDDL>()
     val pedro = makePedro(this)
 
-    class DDLGenerator(val table: String, val doAppend: (CodeShitter?) -> Unit)
+    class PieceOfDDL(val table: String, val ddl: String)
 
     interface Juan {
         fun spitEntityCtor()
         fun spitEntityClass()
         fun spitVariousShit()
         fun spitRepo()
-        fun spitDDLForSpecialColumns(ddlCtx: spitShitForEntity.generateDDLForEntity, out: CodeShitter?)
+        fun spitDDLForSpecialColumns(buf: StringBuilder)
     }
 
     interface Pedro {
@@ -128,12 +128,12 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
             spitShitForEntity(_entity)
         }
 
-        sortDDLStatementGeneratorsAndRunThem()
+        sortAndCombineDDLPieces()
         spitStuffClass()
         spitDDLComment()
 
         FilePile.backUp().ifExists().ignite(file)
-        file.writeText(out.reify())
+        file.writeText(out.reify() + GlobalSpewContext.maybeDebugInfo())
         clog("Written ${file.path}")
     }
 
@@ -159,7 +159,7 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
         out.append("*/")
     }
 
-    fun sortDDLStatementGeneratorsAndRunThem() {
+    fun sortAndCombineDDLPieces() {
         // https://github.com/jgrapht/jgrapht/wiki/DependencyDemo
 
         val g = DefaultDirectedGraph<String, DefaultEdge>(DefaultEdge::class.java)
@@ -183,9 +183,9 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
         }
 
         for (table in allTables)
-            drops.find {it.table == table}!!.doAppend(null)
+            spewResults.ddl.append(drops.find {it.table == table}!!.ddl)
         for (table in allTables.reversed())
-            creates.find {it.table == table}!!.doAppend(null)
+            spewResults.ddl.append(creates.find {it.table == table}!!.ddl)
     }
 
 
@@ -207,13 +207,13 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
             generateDDLForEntity()
         }
 
-        val timestampType = when (databaseDialect) {
+        val timestampType get() = when (databaseDialect) {
             SQLITE -> "text"
             POSTGRESQL -> "timestamp"
             MYSQL -> "datetime"
         }
 
-        val booleanType = when (databaseDialect) {
+        val booleanType get() = when (databaseDialect) {
             SQLITE -> "integer"
             POSTGRESQL -> "boolean"
             MYSQL -> "boolean"
@@ -224,12 +224,12 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
             val entity = this@spitShitForEntity.entity.copy()
 //            val end = end
 
-            fun append(out: CodeShitter?, x: String) {
-                if (out != null)
-                    out.append(x)
-                else
-                    spewResults.ddl.append(x)
-            }
+//            fun append(out: CodeShitter?, x: String) {
+//                if (out != null)
+//                    out.append(x)
+//                else
+//                    spewResults.ddl.append(x)
+//            }
 
             fun quote(s: String) = when (databaseDialect) {
                 SQLITE -> "`$s`"
@@ -246,21 +246,19 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
                     tableDependsOnTable += entity.tableName to oneEntity.tableName
                 }
 
-                drops += DDLGenerator(
+                drops += PieceOfDDL(
                     table = entity.tableName,
-                    doAppend = {out ->
-                        append(out, "drop table if exists $quotedTableName;\n")
-                    }
+                    ddl = "drop table if exists $quotedTableName;\n"
                 )
 
-                creates += DDLGenerator(
+                creates += PieceOfDDL(
                     table = entity.tableName,
-                    doAppend = {out ->
-                        append(out, "create table $quotedTableName (\n")
-                        juan.spitDDLForSpecialColumns(this, out)
+                    ddl = buildString {
+                        append("create table $quotedTableName (\n")
+                        juan.spitDDLForSpecialColumns(this)
                         val fields = entity.fields.filter {
                             it.kind !is FieldKind.Many
-                            && it.name !in setOf("id", "createdAt", "updatedAt", "deleted")
+                                && it.name !in setOf("id", "createdAt", "updatedAt", "deleted")
                         }
 
                         for ((index, field) in fields.withIndex()) {
@@ -316,9 +314,9 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
                                 is FieldKind.Many -> wtf("0f79f787-be13-49ba-ac1d-6855476605da")
                             }
 
-                            append(out, "    ${end}_${field.name}${(field.kind is FieldKind.One).thenElseEmpty{"__id"}} $sqlType")
+                            append("    ${end}_${field.name}${(field.kind is FieldKind.One).thenElseEmpty{"__id"}} $sqlType")
                             if (index < fields.lastIndex) {
-                                append(out, ",\n")
+                                append(",\n")
                             }
                         }
 
@@ -327,18 +325,18 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
                             "    foreign key (${end}_${field.name}__id) references ${oneEntity.tableName}(id)"
                         }
                         if (foreignKeyLines.isNotEmpty())
-                            append(out, ",\n")
-                        append(out, foreignKeyLines.joinToString(",\n"))
+                            append(",\n")
+                        append(foreignKeyLines.joinToString(",\n"))
 
-                        append(out, "\n) ${pedro.createTableSuffix()};\n")
+                        append("\n) ${pedro.createTableSuffix()};\n")
 
                         if (databaseDialect == POSTGRESQL) {
                             foreignKeyFields.forEach {field->
-                                append(out, "create index on $quotedTableName (${end}_${field.name}__id);\n")
+                                append("create index on $quotedTableName (${end}_${field.name}__id);\n")
                             }
                         }
 
-                        append(out, "\n")
+                        append("\n")
                     }
                 )
             }

@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Thu May 18 21:03:35 EEST 2017
+// Generated on Fri May 19 09:03:36 EEST 2017
 // Model: e:/fegh/alraune/alraune-back/src/alraune-entities.kt
 //
 
@@ -74,7 +74,7 @@ val alUserRepo: AlUserRepository by lazy {
                 ln("${propertyToColumnName(prop)} ${op.sql} ?")
                 params.add(arg)
             }
-            val rows = DBPile.query(sql, params, uuid = "216e9c45-55a0-4921-a3e9-162293885221")
+            val rows = DBPile.query(sql, params, uuid = "42d78104-a482-4ce1-bfa6-684d9632b3b2")
             println("findBy: Found ${rows.size} rows")
             val items = mutableListOf<AlUser>()
             for (row in rows) {
@@ -135,12 +135,12 @@ val alUserRepo: AlUserRepository by lazy {
                     x.banReason,
                     x.subscribedToAllCategories
                 ),
-                uuid = "03f7d7b9-0b78-42ed-893c-9cd4ed3e8145"
+                uuid = "e01c42db-20db-4a57-9579-c25427f5706d"
             )
 
             val res = DBPile.query(
                 sql = "select cast(last_insert_id() as char)",
-                uuid = "2d8b8185-0769-47c3-b7ec-f7560abe12cc"
+                uuid = "ed0c1c92-381b-4166-8abe-9f2de7723ad6"
             )
 
             x.id = res.first().first() as String
@@ -164,7 +164,7 @@ fun AlUserRepository.propertyToColumnName(prop: KMutableProperty1<AlUser, String
     if (prop.name == AlUser::profileRejectionReason.name) return "alUser_profileRejectionReason"
     if (prop.name == AlUser::banReason.name) return "alUser_banReason"
     if (prop.name == AlUser::subscribedToAllCategories.name) return "alUser_subscribedToAllCategories"
-    throw Exception("9f1c1817-4fb8-438c-86f1-d9f2dcdf9fea")
+    throw Exception("31d67557-0b33-4ee2-b601-265523caddec")
 
 }
 

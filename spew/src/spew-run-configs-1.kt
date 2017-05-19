@@ -13,6 +13,7 @@ object SpewForDBStuff {
 object SpewForAlrauneEntities {
     @JvmStatic
     fun main(args: Array<String>) {
+        GlobalSpewContext.opts = SpewForInputFileOptions(annotations = false)
         spewForInputFiles(listOf("%FE%/alraune/alraune-back/src/alraune-entities.kt"))
         clog("OK")
     }

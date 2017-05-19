@@ -30,8 +30,8 @@ class PHPDBEntitySpew : Spew {
                         fun ap(s: String) = out.append(s)
 
                         return object : CommonDBEntitySpew.Juan {
-                            override fun spitDDLForSpecialColumns(ddlCtx: CommonDBEntitySpew.spitShitForEntity.generateDDLForEntity, out: CodeShitter?) {
-                                fun ln(s: String) = ddlCtx.append(out, s + "\n")
+                            override fun spitDDLForSpecialColumns(buf: StringBuilder) {
+                                fun ln(s: String) = buf.append(s + "\n")
 
                                 val idColumnName = "${end}_id"
                                 val idColumnDefinition = when (pedroCtx.databaseDialect) {
@@ -62,13 +62,11 @@ class PHPDBEntitySpew : Spew {
                                 ln("}")
 
                                 ln("val ${en}Repository.createTableDDL get() = buildString {")
-                                out.append(CodeShitter(beforeReification = {out->
+                                out.append(CodeShitter(beforeReification = {
                                     val create = pedroCtx.creates.find {it.table == entity.tableName}!!
-                                    val ddlShitter = CodeShitter()
-                                    create.doAppend(ddlShitter)
-                                    for (line in ddlShitter.reify().lines()) {
+                                    for (line in create.ddl.lines()) {
                                         if (line.isNotBlank())
-                                            out.appendln("    ln(\"$line\")")
+                                            it.appendln("    ln(\"$line\")")
                                     }
                                 }))
                                 ln("}")

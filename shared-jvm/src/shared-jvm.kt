@@ -749,6 +749,10 @@ fun <T> T.repeatToList(count: Int): List<T> {
     return list
 }
 
+fun StringBuilder.ln(x: Any? = "") {
+    append(x)
+    append("\n")
+}
 
 
 
