@@ -12,6 +12,10 @@ object AlSharedPile {
         val landing = "landing"
         val order = "order"
     }
+
+    enum class GetParam {
+        page, testDataSeeder
+    }
 }
 
 class ShitPassedFromBackToFront(

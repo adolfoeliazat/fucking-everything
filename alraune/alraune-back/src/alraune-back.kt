@@ -19,22 +19,41 @@ fun main(args: Array<String>) {
         return
     }
 
+    DBPile.init()
+
+    val testDataSeederName = AlSharedPile.GetParam.testDataSeeder.get()
+    if (testDataSeederName != null) {
+        val seeder = TestDataSeeders.values().find {it.name == testDataSeederName} ?: wtf("bd7f0b1a-e78d-4f9d-8fd1-aa26c2f4141d")
+        seeder.ignite()
+    }
+
     val userToken = AlBackPile.cookies.get("userToken")
     if (userToken == null)
         println("no fucking token...")
     else
         println("userToken = $userToken")
 
-    val page = phiEval("return isset(\$_GET['page']) ? \$_GET['page'] : 'landing';") as String
+    val page = AlSharedPile.GetParam.page.get() ?: "landing"
     when (page) {
         "order" -> spitOrderPage()
         else -> spitLandingPage()
     }
 }
 
+enum class TestDataSeeders {
+    Dunduk1 {
+        override fun ignite() {
+            DBPile.execute(AlGeneratedDBPile.ddl.dropCreateAllScript)
+        }
+    };
+
+    abstract fun ignite()
+}
+
+fun AlSharedPile.GetParam.get() = PHPPile.getGetParam(this.name)
+
 fun phucking1() {
     DBPile.init()
-
     DBPile.execute(alUserRepo.dropTableDDL)
     DBPile.execute(alUserRepo.createTableDDL)
 
