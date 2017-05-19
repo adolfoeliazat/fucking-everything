@@ -63,10 +63,14 @@ object PHPPile {
     }
 
     fun peval_bitchIfFalse(code: String, bitchMsg: String): PHPInteropVar {
-        val resVar = PHPInteropVar(initCode = code)
+        val resVar = peval(code)
         if (resVar.isFalse())
             bitch(bitchMsg)
         return resVar
+    }
+
+    fun peval(code: String): PHPInteropVar {
+        return PHPInteropVar(initCode = code)
     }
 }
 

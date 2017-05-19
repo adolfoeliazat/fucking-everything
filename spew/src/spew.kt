@@ -100,6 +100,8 @@ class CodeShitter(val indent: Int = 0,
         buf += text
     }
 
+    fun ln(text: String = "") = appendln(text)
+
     fun appendln(text: String = "") {
         append(" ".repeat(indent) + text + "\n")
     }

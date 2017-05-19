@@ -43,8 +43,13 @@
       <w>iregion</w>
       <w>istm</w>
       <w>jqbody</w>
+      <w>kdiv</w>
+      <w>kspan</w>
+      <w>ktag</w>
+      <w>ktext</w>
       <w>lateinit</w>
       <w>ldtnow</w>
+      <w>microtime</w>
       <w>navigatable</w>
       <w>noln</w>
       <w>numpad</w>

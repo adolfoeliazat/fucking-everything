@@ -1,8 +1,10 @@
 package alraune.back
 
+import alraune.back.AlBackPile.button
 import alraune.shared.AlSharedPile
 import alraune.shared.ShitPassedFromBackToFront
 import vgrechka.*
+import vgrechka.PHPPile.peval
 import vgrechka.PHPPile.peval_bitchIfFalse
 
 external fun phiPrintln(x: String?)
@@ -22,10 +24,10 @@ fun main(args: Array<String>) {
 
     DBPile.init()
 
-    val fakeSetting = AlSharedPile.GetParam.fakeSetting.get()
-    if (fakeSetting != null) {
-        val seeder = FakeSetting.values().find {it.name == fakeSetting} ?: wtf("bd7f0b1a-e78d-4f9d-8fd1-aa26c2f4141d")
-        seeder.ignite()
+    val fakeSettingName = AlSharedPile.GetParam.fakeSetting.get()
+    if (fakeSettingName != null) {
+        val fakeSetting = FakeSetting.values().find {it.name == fakeSettingName} ?: wtf("bd7f0b1a-e78d-4f9d-8fd1-aa26c2f4141d")
+        fakeSetting.ignite()
     }
 
     val sessionID = AlSharedPile.Cookie.sessionID.get()
@@ -92,11 +94,6 @@ object DebugLog {
     }
 }
 
-object AlBackPile {
-    var cookies: BackCookiesShim = PHPBackCookies()
-    val config = AlBackConfig(debugLogFile = "c:/tmp/alraune-debug.log")
-}
-
 class AlBackConfig(
     val debugLogFile: String
 )
@@ -129,24 +126,138 @@ fun t(en: String, ru: String): String {
     return ru
 }
 
+interface Renderable {
+    fun render(): String
+}
+
+
+data class Attrs(
+    val id: String? = null,
+    val className: String? = null,
+    val style: Style? = null
+) {
+    fun render(): String {
+        return buildString {
+            if (id != null)
+                append(" id=\"$id\"")
+            if (className != null)
+                append(" class=\"$className\"")
+            if (style != null)
+                append(" style=\"${style.render()}\"")
+        }
+    }
+}
+
+class ktext(val content: String) : Renderable {
+    override fun render(): String {
+        return peval("htmlspecialchars(${PHPInteropVar(content)})").get() as String
+    }
+}
+
+fun kdiv(attrs: Attrs = Attrs(), text: String? = null, build: (ktag) -> Unit = {}) =
+    ktag("div", attrs, text, build)
+
+fun kspan(attrs: Attrs = Attrs(), text: String? = null, build: (ktag) -> Unit = {}) =
+    ktag("span", attrs, text, build)
+
+fun kform(attrs: Attrs = Attrs(), text: String? = null, build: (ktag) -> Unit = {}) =
+    ktag("form", attrs, text, build)
+
+fun kul(attrs: Attrs = Attrs(), text: String? = null, build: (ktag) -> Unit = {}) =
+    ktag("ul", attrs, text, build)
+
+fun kol(attrs: Attrs = Attrs(), text: String? = null, build: (ktag) -> Unit = {}) =
+    ktag("ol", attrs, text, build)
+
+fun kli(attrs: Attrs = Attrs(), text: String? = null, build: (ktag) -> Unit = {}) =
+    ktag("li", attrs, text, build)
+
+fun ki(attrs: Attrs = Attrs(), text: String? = null, build: (ktag) -> Unit = {}) =
+    ktag("i", attrs, text, build)
+
+fun kbutton(attrs: Attrs = Attrs(), text: String? = null, build: (ktag) -> Unit = {}) =
+    ktag("button", attrs, text, build)
+
+class ktag(val tag: String, val attrs: Attrs = Attrs(), text: String? = null, build: (ktag) -> Unit = {}) : Renderable {
+    val children = mutableListOf<Renderable>()
+
+    init {
+        add(text)
+        build(this)
+    }
+
+    override fun render(): String {
+        return buildString {
+            append("<$tag ${attrs.render()}>")
+            for (child in children) {
+                append(child.render())
+            }
+            append("</$tag>")
+        }
+    }
+
+    operator fun minus(x: String?) = add(x)
+
+    fun add(x: String?) {
+        if (x != null) {
+            children += ktext(x)
+        }
+    }
+
+    operator fun minus(x: Renderable?) = add(x)
+
+    fun add(x: Renderable?) {
+        if (x != null) {
+            children += x
+        }
+    }
+}
+
+enum class ButtonLevel(val string: String) {
+    DEFAULT("default"),
+    PRIMARY("primary"),
+    SUCCESS("success"),
+    INFO("info"),
+    WARNING("warning"),
+    DANGER("danger");
+
+    override fun toString(): String {
+        return string
+    }
+}
+
+
 fun spitOrderPage() {
     spitBasicTemplate(TemplateParams(
         pageID = AlSharedPile.pageID.order,
-        pageTitle = "Alraune",
-        body = buildString {
-            val id = AlSharedPile.dom.id
-            ln("<div class='container'>")
-            ln("<form>")
-            ln("    <div class='form-group'>")
-            ln("        <label>${t("Sign in via", "Войти через")}</label>")
-            ln("        <div>")
-            ln("            <button id='${id.googleSignInButton}' class='btn btn-default'>${t("Google", "Google")}</button>")
-            ln("            <button id='${id.facebookSignInButton}' class='btn btn-default'>${t("Facebook", "Facebook")}</button>")
-            ln("        </div>")
-            ln("    </div>")
-            ln("</form>")
-            ln("</div>")
-        }
+        body = kdiv(Attrs(className = "container")){o->
+            fun socialButton(title: String, icon: IconClass) =
+                button(title = title, icon = icon, attrs = Attrs(style = Style(width = "20rem")))
+
+            o- socialButton("Google", fa.google)
+            o- socialButton("Facebook", fa.facebook)
+        }.render()
+
+//            body = buildString {
+//            val id = AlSharedPile.dom.id
+//            ln("<div class='container'>")
+//            ln("<form>")
+//            ln("    <div class='form-group'>")
+//            ln("        <label>${t("Sign in via", "Войти через")}</label>")
+//            ln("        <div>")
+//            ln("            <button id='${id.googleSignInButton}' class='btn btn-default'>${t("Google", "Google")}</button>")
+//            ln("            <button id='${id.facebookSignInButton}' class='btn btn-default'>${t("Facebook", "Facebook")}</button>")
+//            ln("        </div>")
+//            ln("        <div>")
+//            ln("            <div>Fuck</div>")
+//            ln("            <div>Shit</div>")
+//            ln("            <div>Bitch</div>")
+//            ln("        </div>")
+//            ln("    </div>")
+//            ln("</form>")
+//
+//            ln("</div>")
+//        }
     ))
 }
 
@@ -188,7 +299,7 @@ fun spitLandingPage() {
 
 class TemplateParams(
     val pageID: String,
-    val pageTitle: String,
+    val pageTitle: String = "Alraune",
     val body: String
 )
 
@@ -210,10 +321,8 @@ private fun spitBasicTemplate(p: TemplateParams) {
         ln("        }")
         ln("    </script>")
         ln("")
-        ln("")
-        ln("")
-        ln("")
         ln("    <link href='node_modules/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet'>")
+        ln("    <link rel=\"stylesheet\" href=\"node_modules/font-awesome/css/font-awesome.min.css\">")
         ln("</head>")
         ln("<body>")
         ln("    ${p.body}")
@@ -230,4 +339,12 @@ private fun spitBasicTemplate(p: TemplateParams) {
         ln("</html>")
     })
 }
+
+class IconClass(val className: String) {
+    override fun toString() = className
+}
+
+
+
+
 

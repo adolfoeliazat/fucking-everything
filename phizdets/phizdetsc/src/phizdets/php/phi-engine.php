@@ -1,5 +1,7 @@
 <?php
 
+$phiEngineLoadingStartTime = microtime(true);
+
 class PhiDot extends PhiExpression {
     /**@var PhiExpression*/ private $qualifier;
     /**@var string*/ private $name;
@@ -3533,6 +3535,7 @@ Phi::initEnv();
 Phi::initStdlib();
 require_once 'phizdets-stdlib.php';
 
+
 if (defined('PHI_RUN_QUICK_STDLIB_TESTS')) {
     function phiQuickTest_getStringHashCode() {
         $getHashCodeExpr = function($expr) {
@@ -3578,6 +3581,8 @@ if (defined('PHI_RUN_QUICK_STDLIB_TESTS')) {
 
 
 
+$phiEngineLoadingTime = microtime(true) - $phiEngineLoadingStartTime;
+echo "phiEngineLoadingTime = $phiEngineLoadingTime";
 
 
 
