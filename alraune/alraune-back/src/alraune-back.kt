@@ -3,6 +3,7 @@ package alraune.back
 import alraune.shared.AlSharedPile
 import alraune.shared.ShitPassedFromBackToFront
 import vgrechka.*
+import vgrechka.PHPPile.peval_bitchIfFalse
 
 external fun phiPrintln(x: String?)
 external fun phiEval(code: String): dynamic
@@ -29,7 +30,7 @@ fun main(args: Array<String>) {
 
     val sessionID = AlSharedPile.Cookie.sessionID.get()
     if (sessionID != null) {
-        AlDebugLogger.info("sessionID = $sessionID")
+        DebugLog.info("sessionID = $sessionID")
     }
 
     val page = AlSharedPile.GetParam.page.get() ?: "landing"
@@ -66,18 +67,28 @@ class PHPInteropVar(initialValue: Any? = null, initCode: String? = null) {
     }
 }
 
-object AlDebugLogger {
-    fun info(msg: String) {
-        val fileNameVar = PHPInteropVar(AlBackPile.config.debugLogFile)
-        val resourceVar = PHPInteropVar(initCode = "fopen($fileNameVar, 'a')")
-        if (resourceVar.isFalse()) {
-            bitch("Cannot open debug log file: ${fileNameVar.get()}")
-        } else {
-            println("Fucking OK")
-        }
+class FileAppender(val fileName: String) {
+    val fileVar by lazy {
+        peval_bitchIfFalse("fopen(${PHPInteropVar(fileName)}, 'a')",
+                           "Cannot open file: $fileName    60227ad4-7ca7-4b1e-98d8-aa1c0c707e76")
+    }
 
-        val msgVar = PHPInteropVar(msg + "\n")
-        val fwriteResVar = PHPInteropVar(initCode = "fwrite($resourceVar, $msgVar)")
+    fun println(s: String) {
+        peval_bitchIfFalse("fwrite($fileVar, ${PHPInteropVar(s + "\n")})",
+                           "6a974bff-80f6-4633-8338-27b155d550cc")
+    }
+}
+
+object DebugLog {
+    val appender by lazy {
+        FileAppender(AlBackPile.config.debugLogFile)-{o->
+            val now = peval_bitchIfFalse("gmdate('Y-m-d H:i:s', time())", "77222e1a-64dd-4b76-9518-b160b94fbdb6")
+            o.println("\n\n********************** ${now.get()} UTC ************************\n\n")
+        }
+    }
+
+    fun info(msg: String) {
+        appender.println(msg)
     }
 }
 

@@ -1,5 +1,6 @@
 package vgrechka
 
+import alraune.back.PHPInteropVar
 import alraune.back.phiEval
 
 typealias XTimestamp = PHPTimestamp
@@ -59,6 +60,13 @@ object PHPPile {
     fun nextPUID(): String {
         // TODO:vgrechka Make it Long (when properly implemented) or check for overflow
         return "${nextPUID++}"
+    }
+
+    fun peval_bitchIfFalse(code: String, bitchMsg: String): PHPInteropVar {
+        val resVar = PHPInteropVar(initCode = code)
+        if (resVar.isFalse())
+            bitch(bitchMsg)
+        return resVar
     }
 }
 
