@@ -22,7 +22,7 @@ fun main(args: Array<String>) {
         return
     }
 
-    DBPile.init()
+//    DBPile.init()
 
     val fakeSettingName = AlSharedPile.GetParam.fakeSetting.get()
     if (fakeSettingName != null) {
@@ -234,7 +234,7 @@ fun spitOrderPage() {
             fun socialButton(title: String, icon: IconClass) =
                 button(title = title, icon = icon, attrs = Attrs(style = Style(width = "20rem")))
 
-            o- socialButton("Google", fa.google)
+            o- socialButton("Google 2", fa.google)
             o- socialButton("Facebook", fa.facebook)
         }.render()
 

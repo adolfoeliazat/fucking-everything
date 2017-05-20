@@ -37,6 +37,7 @@
       <w>iconified</w>
       <w>ideabackdoor</w>
       <w>intelli</w>
+      <w>interop</w>
       <w>interp</w>
       <w>iplay</w>
       <w>ipointer</w>
@@ -74,6 +75,7 @@
       <w>testref</w>
       <w>tfvc</w>
       <w>unparsable</w>
+      <w>unserialize</w>
       <w>vbox</w>
       <w>vova</w>
       <w>xbreakpoint</w>

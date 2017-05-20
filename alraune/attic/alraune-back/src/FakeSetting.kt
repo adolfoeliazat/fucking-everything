@@ -6,6 +6,7 @@ import vgrechka.*
 enum class FakeSetting {
     Dunduk1 {
         override fun ignite() {
+            return
             DBPile.execute(AlGeneratedDBPile.ddl.dropCreateAllScript)
             alUserRepo.insert(newAlUser(firstName = "Валентин",
                                         lastName = "Пёздолов",

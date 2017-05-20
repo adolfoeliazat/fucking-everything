@@ -1,7 +1,5 @@
 <?php
 
-$phiEngineLoadingStartTime = microtime(true);
-
 class PhiDot extends PhiExpression {
     /**@var PhiExpression*/ private $qualifier;
     /**@var string*/ private $name;
@@ -3581,8 +3579,6 @@ if (defined('PHI_RUN_QUICK_STDLIB_TESTS')) {
 
 
 
-$phiEngineLoadingTime = microtime(true) - $phiEngineLoadingStartTime;
-echo "phiEngineLoadingTime = $phiEngineLoadingTime";
 
 
 
