@@ -12,43 +12,14 @@ vmap r "_dP
 
 nmap <c-cr> 3j_
 vmap <c-cr> 3j_
-" nmap <c-a-cr> 5j_
-" vmap <c-a-cr> 5j_
 
-" nmap <c-minus> 3k_
-" vmap <c--> 3k_
-" nmap <c-a--> 5k_
-" vmap <c-a--> 5k_
+nmap <c-p> 3k_
+vmap <c-p> 3k_
+
+nnoremap gb :vsc Tools.InvokeAceJumpCommand<cr>
 
 
 
-
-" set surround
-
-" imap <c-e> <end>
-" imap <c-a> <home>
-" 
-" imap <c-f> <right>
-" imap <c-b> <left>
-" imap <c-n> <down>
-" imap <c-p> <up>
-" 
-" 
-" 
-" nmap <a-s-3> *
-" 
-" nnoremap [[ h[{
-" nnoremap ]] <cr>]}
-" 
-" 
-" nmap \v V% %
-" 
-" nmap \f :%s/^\(\s*\)o - /\1o- /g<cr>:%s/) {o ->$/){o->/g<cr>:%s/) - {o ->$/)-{o->/g<cr>:%s/) -{o->/)-{o->/g<cr>:%s/kdiv {o ->/kdiv{o->/g<cr>:%s/row {o ->/row{o->/g<cr>
-" " nmap \f :%s/^\(\s*\)o - /\1o- /g<cr>:%s/) {o ->$/){o->/g<cr>:%s/) - {o ->$/)-{o->/g<cr>:%s/) -{o->/)-{o->/g<cr>
-" 
-" nmap cc ct
-" 
-" imap <c-=> <c-right>
 
 
 
