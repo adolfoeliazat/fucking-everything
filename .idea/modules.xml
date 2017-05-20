@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/3rd-party-web-apis/3rd-party-web-apis.iml" filepath="$PROJECT_DIR$/3rd-party-web-apis/3rd-party-web-apis.iml" />
       <module fileurl="file://$PROJECT_DIR$/agnes/agnes.iml" filepath="$PROJECT_DIR$/agnes/agnes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/alraune/alraune-back/alraune-back.iml" filepath="$PROJECT_DIR$/alraune/alraune-back/alraune-back.iml" group="alraune" />
       <module fileurl="file://$PROJECT_DIR$/alraune/alraune-front/alraune-front.iml" filepath="$PROJECT_DIR$/alraune/alraune-front/alraune-front.iml" group="alraune" />
       <module fileurl="file://$PROJECT_DIR$/alraune/alraune-shared/alraune-shared.iml" filepath="$PROJECT_DIR$/alraune/alraune-shared/alraune-shared.iml" group="alraune" />
       <module fileurl="file://$PROJECT_DIR$/alraune/alraune-tools/alraune-tools.iml" filepath="$PROJECT_DIR$/alraune/alraune-tools/alraune-tools.iml" group="alraune" />
