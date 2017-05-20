@@ -77,6 +77,10 @@ dependencies {
     compile 'com.github.scribejava:scribejava-apis:4.1.0'
     compile 'com.github.scribejava:scribejava-apis:4.1.0:sources'
     compile 'com.github.scribejava:scribejava-core:4.1.0:sources'
+    compile 'io.undertow:undertow-core:1.4.14.Final'
+    compile 'io.undertow:undertow-core:1.4.14.Final:sources'
+    compile 'io.undertow:undertow-servlet:1.4.14.Final:sources'
+    compile 'io.undertow:undertow-websockets-jsr:1.4.14.Final:sources'
 }
 
 task importDeps(type: Copy) {
