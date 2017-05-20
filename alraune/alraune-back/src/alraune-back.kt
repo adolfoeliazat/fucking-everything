@@ -26,6 +26,7 @@ import javax.net.ssl.SSLContext
 
 object AlBack {
     val log = LoggerFactory.getLogger(AlBack::class.java)
+    val tmpDirPath = "c:/tmp"
 
     val secrets by lazy {
         // TODO:vgrechka Get file name from environment variable
@@ -60,14 +61,46 @@ object StartAlrauneBack {
             .addHttpsListener(port, "localhost", sslContext)
             .setHandler(object : HttpHandler {
                 override fun handleRequest(exchange: HttpServerExchange) {
-                    AlBack.log.info("Request: " + exchange.requestPath)
+                    log.debug("requestPath = " + exchange.requestPath)
+                    log.debug("queryParameters = " + exchange.queryParameters)
                     exchange.responseHeaders.put(Headers.CONTENT_TYPE, "text/html; charset=utf-8")
-                    exchange.responseSender.send("Пизда")
+                    exchange.responseSender.send(buildString {
+                        ln("<!DOCTYPE html>")
+                        ln("<html lang='en'>")
+                        ln("<head>")
+                        ln("    <meta charset='utf-8'>")
+                        ln("    <meta http-equiv='X-UA-Compatible' content='IE=edge'>")
+                        ln("    <meta name='viewport' content='width=device-width, initial-scale=1'>")
+                        ln("    <meta name='google-signin-client_id' content='1064147176813-n6l5pddt9qggcp9n4losnknb2dm5hl9t.apps.googleusercontent.com'>")
+                        ln("    <title>Alraune</title>")
+//                        ln("    <script>")
+//                        ln("        window.${ShitPassedFromBackToFront::class.simpleName} = {")
+//                        ln("            ${ShitPassedFromBackToFront::pageID.name}: '${p.pageID}'")
+//                        ln("        }")
+//                        ln("    </script>")
+                        ln("")
+//                        ln("    <link href='node_modules/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet'>")
+//                        ln("    <link rel=\"stylesheet\" href=\"node_modules/font-awesome/css/font-awesome.min.css\">")
+                        ln("</head>")
+                        ln("<body>")
+                        ln("    Пиздариус 2")
+                        ln("")
+//                        ln("    <script src='node_modules/jquery/dist/jquery.min.js'></script>")
+//                        ln("    <script src='node_modules/bootstrap/dist/js/bootstrap.min.js'></script>")
+//                        ln("    <script src='https://apis.google.com/js/api:client.js'></script>")
+//                        ln("    <script src='out-front/lib/kotlin.js'></script>")
+//                        ln("    <script src='symlinks/out/shared-x/shared-x.js$scriptSuffix'></script>")
+//                        ln("    <script src='symlinks/out/shared-kjs/shared-kjs.js$scriptSuffix'></script>")
+//                        ln("    <script src='symlinks/out/alraune-shared/alraune-shared.js$scriptSuffix'></script>")
+//                        ln("    <script src='out-front/alraune-front.js$scriptSuffix'></script>")
+                        ln("</body>")
+                        ln("</html>")
+                    })
                 }
             }).build()
         server.start()
-        log.debug("pipiska")
         log.info("Shit is spinning on port $port")
+        File(AlBack.tmpDirPath + "/alraune-back-started").writeText("Fuck, yeah...")
     }
 
 

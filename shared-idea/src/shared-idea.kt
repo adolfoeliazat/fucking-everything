@@ -29,6 +29,8 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
+import com.intellij.openapi.wm.WindowManager
+import com.intellij.openapi.wm.ex.StatusBarEx
 import com.intellij.unscramble.AnnotateStackTraceAction
 import com.intellij.util.ui.UIUtil
 import java.awt.BorderLayout
@@ -39,6 +41,7 @@ import java.io.StringWriter
 import java.util.*
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
 //val Project.bullshitter by AttachedComputedShit(::Bullshitter)
 
@@ -243,12 +246,10 @@ object IDEAPile {
         ApplicationManager.getApplication().invokeLater(block)
     }
 
-    /**
-     * Don't call this on UI thread
-     * @throws something if failed
-     */
-    fun waitForConfigurationToRunAndThenTerminate(project: Project, configurationName: String, debug: Boolean, runTimeout: Int, terminationTimeout: Int) {
+    class WaitRunConfigurationStatus(val project: Project, val configurationName: String, val debug: Boolean) {
         val pollInterval = 100L
+
+        class Sick(msg: String) : Exception(msg)
 
         fun loopUntilTrueOrTimeout(timeout: Int, test: () -> Boolean): Boolean {
             // We don't want accidental infinite loop due to some bug in return logic, as that will render whole IDE hosed.
@@ -263,7 +264,7 @@ object IDEAPile {
             return false
         }
 
-        fun fuck(timeout: Int, errorMessage: String, condition: (List<RunContentDescriptor>) -> Boolean) {
+        fun wait(timeout: Int, errorMessage: String, condition: (List<RunContentDescriptor>) -> Boolean) {
             val ok = loopUntilTrueOrTimeout(timeout) {
                 val descriptors = (getRunningContentDescriptorsFromNonUIThread(project, configurationName, debug)
                     as? GetRunningDescriptorsResult.Candy
@@ -272,12 +273,59 @@ object IDEAPile {
                 condition(descriptors)
             }
             if (!ok)
-                throw Exception(errorMessage)
+                throw Sick(errorMessage)
         }
-
-        fuck(runTimeout, "Sick of waiting for this shit to run: $configurationName") {it.isNotEmpty()}
-        fuck(terminationTimeout, "Sick of waiting for this shit to terminate: $configurationName") {it.isEmpty()}
     }
+
+    /**
+     * Don't call this on UI thread
+     * @throws something if failed
+     */
+    fun waitForConfigurationToRunAndThenTerminate(project: Project, configurationName: String, debug: Boolean, runTimeout: Int, terminationTimeout: Int) {
+        val wrcs = WaitRunConfigurationStatus(project, configurationName, debug)
+        wrcs.wait(runTimeout, "Sick of waiting for this shit to run: $configurationName") {it.isNotEmpty()}
+        wrcs.wait(terminationTimeout, "Sick of waiting for this shit to terminate: $configurationName") {it.isEmpty()}
+    }
+
+    /**
+     * Don't call this on UI thread
+     * @throws something if failed
+     */
+    fun waitForConfigurationToTerminateAndThenRun(project: Project, configurationName: String, debug: Boolean, runTimeout: Int, terminationTimeout: Int) {
+        val wrcs = WaitRunConfigurationStatus(project, configurationName, debug)
+        wrcs.wait(terminationTimeout, "Sick of waiting for this shit to terminate: $configurationName") {it.isEmpty()}
+        wrcs.wait(runTimeout, "Sick of waiting for this shit to run: $configurationName") {it.isNotEmpty()}
+    }
+
+    fun showProgressBalloon(project: Project?, messageType: MessageType, message: String) {
+        IDEAPile.later {
+            val ideFrame = WindowManager.getInstance().getIdeFrame(project)
+            if (ideFrame != null) {
+                val statusBar = ideFrame.statusBar as StatusBarEx
+                statusBar.notifyProgressByBalloon(messageType, message, null, null)
+            }
+        }
+    }
+
+    fun revealingException(showInBalloon: ((Throwable) -> Boolean)? = null, block: () -> Unit) {
+        val theShowInBalloon = showInBalloon ?: {false}
+
+        try {
+            block()
+        } catch(e: Throwable) {
+            if (theShowInBalloon(e))
+                showProgressBalloon(null, MessageType.ERROR, e.message ?: "No fucking message")
+            else
+                IDEAPile.later {IDEAPile.errorDialog(e)}
+        }
+    }
+
+    fun threadRevealingException(showInBalloon: ((Throwable) -> Boolean)? = null, block: () -> Unit) {
+        thread {
+            revealingException(showInBalloon, block)
+        }
+    }
+
 }
 
 

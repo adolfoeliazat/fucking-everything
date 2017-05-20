@@ -25,7 +25,6 @@ import vgrechka.idea.hripos.*
 import java.awt.MouseInfo
 import java.awt.Robot
 import java.awt.Toolkit
-import java.awt.datatransfer.Clipboard
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
@@ -186,8 +185,8 @@ object SendSomeShitToBackdoor {
 class CustomBuildHandler {
     fun onCustomBuild(e: AnActionEvent, key: Char) {
         when (key) {
-            'b' -> CustomBuilds.buildAlrauneAndShowInBrowser(e)
-            'n' -> CustomBuilds.buildAlrauneAndRunPhucking1(e)
+            'b' -> CustomBuilds.rerunAlrauneAndShowInBrowser(e)
+//            'n' -> CustomBuilds.buildAlrauneAndRunPhucking1(e)
             else -> IDEAPile.infoDialog("I have no idea how to custom build '$key'")
         }
 
@@ -233,92 +232,161 @@ private fun loadHotClass(className: String): Class<*> {
 }
 
 object CustomBuilds {
-    fun buildAlrauneAndShowInBrowser(e: AnActionEvent) {
-        buildAlrauneAndThen(e) {
-            val hwnd =
-                User32.INSTANCE.FindWindow(null, "Alraune - Google Chrome")
-                    // ?: User32.INSTANCE.FindWindow(null, "Writer UA - Google Chrome")
-                    ?: bitch("No necessary Chrome window")
-            User32.INSTANCE.SetForegroundWindow(hwnd) || bitch("Cannot bring Chrome to foreground")
-            val origLocation = MouseInfo.getPointerInfo().location
-            val robot = Robot()
-            robot.mouseMove(600, 190) // Somewhere in page (or modal, so it won't be closed!) title
-            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
-            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
-            robot.mouseMove(origLocation.x, origLocation.y)
 
-            robot.keyPress(KeyEvent.VK_CONTROL)
-            robot.keyPress('R'.toInt())
-            robot.keyRelease('R'.toInt())
-            robot.keyRelease(KeyEvent.VK_CONTROL)
+    fun rerunAlrauneAndShowInBrowser(e: AnActionEvent) {
+        val configurationName = "alraune.back.StartAlrauneBack"
+        val debug = false
+        val runTimeout = 5000
+        val terminationTimeout = 5000
+        val flagFile = File("c:/tmp/alraune-back-started")
+        val flagFilePollTimes = 10
+        val flagFilePollInterval = 500L
+
+        ProjectTaskManager.getInstance(e.project).buildAllModules {
+            if (it.errors == 0) {
+                IDEAPile.revealingException {
+                    if (flagFile.exists())
+                        check(flagFile.delete()) {"443a0f3f-530f-4a59-9ef0-4a48a3536ecb"}
+
+                    IDEAPile.threadRevealingException(showInBalloon = {true}) thread@{
+                        IDEAPile.waitForConfigurationToTerminateAndThenRun(e.project!!, configurationName, debug, runTimeout, terminationTimeout)
+                        // IDEAPile.showProgressBalloon(e.project!!, MessageType.INFO, "OK, shit started...")
+
+                        for (i in 1..flagFilePollTimes) {
+                            if (flagFile.exists())
+                                break
+                            Thread.sleep(flagFilePollInterval)
+                        }
+
+                        if (!flagFile.exists()) {
+                            IDEAPile.showProgressBalloon(e.project!!, MessageType.WARNING, "Sick of waiting for the flag file")
+                        } else {
+                            // IDEAPile.showProgressBalloon(e.project!!, MessageType.INFO, "Switching to browser...")
+                            val hwnd =
+                                User32.INSTANCE.FindWindow(null, "Alraune - Google Chrome")
+                                    ?: bitch("No necessary Chrome window")
+                            User32.INSTANCE.SetForegroundWindow(hwnd) || bitch("Cannot bring Chrome to foreground")
+                            val origLocation = MouseInfo.getPointerInfo().location
+                            val robot = Robot()
+                            robot.mouseMove(600, 190) // Somewhere in page (or modal, so it won't be closed!) title
+                            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+                            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+                            robot.mouseMove(origLocation.x, origLocation.y)
+
+                            robot.keyPress(KeyEvent.VK_CONTROL)
+                            robot.keyPress('R'.toInt())
+                            robot.keyRelease('R'.toInt())
+                            robot.keyRelease(KeyEvent.VK_CONTROL)
+                        }
+                    }
+
+                    IDEAPile.runConfiguration(e.project!!, configurationName)
+                }
+            }
         }
-    }
 
-    fun buildAlrauneAndRunPhucking1(e: AnActionEvent) {
-        buildAlrauneAndThen(e) {
-            val windowTitle = "phucking1"
-            val hwnd =
-                User32.INSTANCE.FindWindow(null, windowTitle)
-                    ?: bitch("I want a cmd.exe window titled `$windowTitle`")
-            User32.INSTANCE.SetForegroundWindow(hwnd) || bitch("Cannot bring window to foreground")
 
-            val robot = Robot()
-
+//        buildAlrauneAndThen(e) {
+//            val hwnd =
+//                User32.INSTANCE.FindWindow(null, "Alraune - Google Chrome")
+//                    // ?: User32.INSTANCE.FindWindow(null, "Writer UA - Google Chrome")
+//                    ?: bitch("No necessary Chrome window")
+//            User32.INSTANCE.SetForegroundWindow(hwnd) || bitch("Cannot bring Chrome to foreground")
 //            val origLocation = MouseInfo.getPointerInfo().location
+//            val robot = Robot()
 //            robot.mouseMove(600, 190) // Somewhere in page (or modal, so it won't be closed!) title
 //            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
 //            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
 //            robot.mouseMove(origLocation.x, origLocation.y)
-
-            RobotPile.typeTextCR("cls & php index.php phucking1")
-        }
+//
+//            robot.keyPress(KeyEvent.VK_CONTROL)
+//            robot.keyPress('R'.toInt())
+//            robot.keyRelease('R'.toInt())
+//            robot.keyRelease(KeyEvent.VK_CONTROL)
+//        }
     }
 
-    private fun buildAlrauneAndThen(e: AnActionEvent, block: () -> Unit) {
-        ProjectTaskManager.getInstance(e.project).buildAllModules {
-            if (it.errors == 0) {
-                thread {
-                    try {
-                        Thread.sleep(50)
-                        val res = BigPile.runProcessAndWait(inheritIO = false, cmdPieces = listOf(
-                            "java", "-cp",
-                            listOf("C:/opt/jdk1.8.0_121/jre/lib/ext/nashorn.jar",
-                                   "C:/opt/jdk1.8.0_121/jre/lib/rt.jar",
-                                   "E:/fegh/out/production/shared-jvm",
-                                   "E:/fegh/out/production/phizdetsc",
-                                   "E:/fegh/lib/kotlin-runtime.jar",
-                                   "E:/fegh/lib/kotlin-reflect.jar",
-                                   "E:/fegh/lib-gradle/guava-21.0.jar",
-                                   "E:/fegh/lib-gradle/kotlin-compiler-1.1.0.jar",
-                                   "E:/fegh/lib-gradle/closure-compiler-v20170218.jar")
-                                .joinToString(File.pathSeparator),
-                            "phizdets.compiler.JS2Phizdets",
-                            "--outdir=E:/fegh/alraune/alraune-back/out-back",
-                            "E:/fegh/alraune/alraune-back/out-back/alraune-back.js",
-                            "E:/fegh/out/production/shared-x/shared-x.js",
-                            "E:/fegh/out/production/alraune-shared/alraune-shared.js"
-                        ))
-                        if (res.exitValue != 0) {
-                            IDEAPile.errorDialog(res.stdout + "\n" + res.stderr)
-                            return@thread
-                        }
+//    fun killme_buildAlrauneAndShowInBrowser(e: AnActionEvent) {
+//        buildAlrauneAndThen(e) {
+//            val hwnd =
+//                User32.INSTANCE.FindWindow(null, "Alraune - Google Chrome")
+//                    // ?: User32.INSTANCE.FindWindow(null, "Writer UA - Google Chrome")
+//                    ?: bitch("No necessary Chrome window")
+//            User32.INSTANCE.SetForegroundWindow(hwnd) || bitch("Cannot bring Chrome to foreground")
+//            val origLocation = MouseInfo.getPointerInfo().location
+//            val robot = Robot()
+//            robot.mouseMove(600, 190) // Somewhere in page (or modal, so it won't be closed!) title
+//            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+//            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+//            robot.mouseMove(origLocation.x, origLocation.y)
+//
+//            robot.keyPress(KeyEvent.VK_CONTROL)
+//            robot.keyPress('R'.toInt())
+//            robot.keyRelease('R'.toInt())
+//            robot.keyRelease(KeyEvent.VK_CONTROL)
+//        }
+//    }
 
-                        IDEAPile.later {
-                            val ideFrame = WindowManager.getInstance().getIdeFrame(e.project!!)
-                            if (ideFrame != null) {
-                                val statusBar = ideFrame.statusBar as StatusBarEx
-                                statusBar.notifyProgressByBalloon(MessageType.INFO, "Phizdets compiled shit OK", null, null)
-                            }
-                        }
+//    fun killme_buildAlrauneAndRunPhucking1(e: AnActionEvent) {
+//        buildAlrauneAndThen(e) {
+//            val windowTitle = "phucking1"
+//            val hwnd =
+//                User32.INSTANCE.FindWindow(null, windowTitle)
+//                    ?: bitch("I want a cmd.exe window titled `$windowTitle`")
+//            User32.INSTANCE.SetForegroundWindow(hwnd) || bitch("Cannot bring window to foreground")
+//
+//            val robot = Robot()
+//
+////            val origLocation = MouseInfo.getPointerInfo().location
+////            robot.mouseMove(600, 190) // Somewhere in page (or modal, so it won't be closed!) title
+////            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+////            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+////            robot.mouseMove(origLocation.x, origLocation.y)
+//
+//            RobotPile.typeTextCR("cls & php index.php phucking1")
+//        }
+//    }
 
-                        block()
-                    } catch(e: Throwable) {
-                        IDEAPile.later {IDEAPile.errorDialog(e)}
-                    }
-                }
-            }
-        }
-    }
+//    private fun killme_buildAlrauneAndThen(e: AnActionEvent, block: () -> Unit) {
+//        ProjectTaskManager.getInstance(e.project).buildAllModules {
+//            if (it.errors == 0) {
+//                thread {
+//                    try {
+//                        Thread.sleep(50)
+//                        val res = BigPile.runProcessAndWait(inheritIO = false, cmdPieces = listOf(
+//                            "java", "-cp",
+//                            listOf("C:/opt/jdk1.8.0_121/jre/lib/ext/nashorn.jar",
+//                                   "C:/opt/jdk1.8.0_121/jre/lib/rt.jar",
+//                                   "E:/fegh/out/production/shared-jvm",
+//                                   "E:/fegh/out/production/phizdetsc",
+//                                   "E:/fegh/lib/kotlin-runtime.jar",
+//                                   "E:/fegh/lib/kotlin-reflect.jar",
+//                                   "E:/fegh/lib-gradle/guava-21.0.jar",
+//                                   "E:/fegh/lib-gradle/kotlin-compiler-1.1.0.jar",
+//                                   "E:/fegh/lib-gradle/closure-compiler-v20170218.jar")
+//                                .joinToString(File.pathSeparator),
+//                            "phizdets.compiler.JS2Phizdets",
+//                            "--outdir=E:/fegh/alraune/alraune-back/out-back",
+//                            "E:/fegh/alraune/alraune-back/out-back/alraune-back.js",
+//                            "E:/fegh/out/production/shared-x/shared-x.js",
+//                            "E:/fegh/out/production/alraune-shared/alraune-shared.js"
+//                        ))
+//                        if (res.exitValue != 0) {
+//                            IDEAPile.errorDialog(res.stdout + "\n" + res.stderr)
+//                            return@thread
+//                        }
+//
+//                        IDEAPile.showProgressBalloon(e.project!!, MessageType.INFO, "Phizdets compiled shit OK")
+//
+//                        block()
+//                    } catch(e: Throwable) {
+//                        IDEAPile.later {IDEAPile.errorDialog(e)}
+//                    }
+//                }
+//            }
+//        }
+//    }
+
 }
 
 class BackdoorToolsGroup : DefaultActionGroup() {
