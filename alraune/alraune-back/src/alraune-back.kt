@@ -79,6 +79,18 @@ object StartAlrauneBack {
                         ln("</head>")
                         ln("<body>")
                         ln("    Пиздариус 2")
+                        ln(kdiv{o->
+                            o- kdiv("fuck")
+                            o- kdiv(Attrs(style = Style(border = "2px solid blue"))){o->
+                                o- kdiv("pussy")
+                                o- kdiv(Attrs(id = "qwe", className = "fuckingstyle", style = Style(border = "1px solid pink"))){o->
+                                    o- kdiv("boobs")
+                                    o- kdiv("tits")
+                                }
+                            }
+                            o- kdiv("shit")
+                            o- kdiv("bitch")
+                        }.render())
                         ln("")
 //                        ln("    <script src='node_modules/jquery/dist/jquery.min.js'></script>")
 //                        ln("    <script src='node_modules/bootstrap/dist/js/bootstrap.min.js'></script>")
