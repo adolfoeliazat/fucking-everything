@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "module": "none",
+        "sourceMap": true,
+        "preserveConstEnums": true,
+        "outFile": "static/shit.js"
+    },
+
+    "include": [
+        "ts/**/*"
+    ]
+}

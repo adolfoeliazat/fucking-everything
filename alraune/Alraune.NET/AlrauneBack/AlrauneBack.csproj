@@ -4,14 +4,49 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics">
+      <Version>1.1.2</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel">
       <Version>1.1.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles">
       <Version>1.1.2</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Console">
+      <Version>1.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug">
+      <Version>1.1.2</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="node_modules\bootstrap\dist\css" />
+    <Folder Include="node_modules\bootstrap\dist\fonts" />
+    <Folder Include="node_modules\bootstrap\dist\js" />
+    <Folder Include="node_modules\bootstrap\fonts" />
+    <Folder Include="node_modules\bootstrap\grunt" />
+    <Folder Include="node_modules\bootstrap\js" />
+    <Folder Include="node_modules\bootstrap\less\mixins" />
+    <Folder Include="node_modules\jquery\dist" />
+    <Folder Include="node_modules\jquery\external\sizzle\dist" />
+    <Folder Include="node_modules\jquery\src\ajax\var" />
+    <Folder Include="node_modules\jquery\src\attributes" />
+    <Folder Include="node_modules\jquery\src\core\var" />
+    <Folder Include="node_modules\jquery\src\css\var" />
+    <Folder Include="node_modules\jquery\src\data\var" />
+    <Folder Include="node_modules\jquery\src\deferred" />
+    <Folder Include="node_modules\jquery\src\effects" />
+    <Folder Include="node_modules\jquery\src\event" />
+    <Folder Include="node_modules\jquery\src\exports" />
+    <Folder Include="node_modules\jquery\src\manipulation\var" />
+    <Folder Include="node_modules\jquery\src\queue" />
+    <Folder Include="node_modules\jquery\src\traversing\var" />
+    <Folder Include="node_modules\jquery\src\var" />
+    <Folder Include="node_modules\typescript\bin" />
+    <Folder Include="node_modules\typescript\lib" />
   </ItemGroup>
 </Project>

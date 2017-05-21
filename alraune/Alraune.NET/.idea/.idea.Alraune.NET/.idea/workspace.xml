@@ -9,53 +9,105 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_TABLE_DETAILS" value="true" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="Alraune.NET" />
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="Program.cs" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Program.cs" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/AlrauneBack/Program.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="189">
-              <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+            <state relative-caret-position="1232">
+              <caret line="56" column="37" lean-forward="false" selection-start-line="56" selection-start-column="37" selection-end-line="56" selection-end-column="37" />
               <folding>
-                <marker date="1495307701360" expanded="true" signature="6:186" ph="..." />
-                <marker date="1495307701360" expanded="true" signature="209:1002" ph="{...}" />
-                <marker date="1495307701360" expanded="true" signature="236:765" ph="{...}" />
-                <marker date="1495307701360" expanded="true" signature="289:759" ph="{...}" />
-                <marker date="1495307701360" expanded="true" signature="791:1000" ph="{...}" />
-                <marker date="1495307701360" expanded="true" signature="864:884" ph="{...}" />
-                <marker date="1495307701360" expanded="true" signature="940:994" ph="{...}" />
+                <marker date="1495368367295" expanded="true" signature="6:399" ph="..." />
+                <marker date="1495368367295" expanded="true" signature="423:3519" ph="{...}" />
+                <marker date="1495368367295" expanded="true" signature="450:919" ph="{...}" />
+                <marker date="1495368367295" expanded="true" signature="499:913" ph="{...}" />
+                <marker date="1495368367295" expanded="true" signature="946:3517" ph="{...}" />
+                <marker date="1495368367295" expanded="true" signature="1015:1026" ph="{...}" />
+                <marker date="1495368367295" expanded="true" signature="1113:1939" ph="{...}" />
+                <marker date="1495368367295" expanded="true" signature="1226:1927" ph="{...}" />
+                <marker date="1495368367295" expanded="true" signature="2112:2152" ph="{...}" />
+                <marker date="1495368367295" expanded="true" signature="2154:2483" ph="/* public class Text(string s) : IRenderable { ... */" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/AlrauneBack/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="54">
-              <caret line="2" column="0" lean-forward="true" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AlrauneBack/static/index.html">
+      <file leaf-file-name="1.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AlrauneBack/doc/1.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
-              <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="StaticFileExtensions.cs" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/D8F81E7A-582F-428A-9574-2F9C51CC9B55/ff/0f614a4b/StaticFileExtensions.cs">
+      <file leaf-file-name="StringBuilder.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/F518798F-3AEF-4BFA-AE77-35E6D8D6BCAB/eb/429fa844/StringBuilder.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="351">
-              <caret line="20" column="4" lean-forward="false" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="4" />
+            <state relative-caret-position="293">
+              <caret line="517" column="25" lean-forward="false" selection-start-line="517" selection-start-column="25" selection-end-line="517" selection-end-column="25" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TypeExtensions.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/818F68A9-80A5-48BD-99FC-9415092D283F/ea/4186b02b/TypeExtensions.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="132">
+              <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WebHostBuilderExtensions.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/C64AB166-5D69-45A8-BEBF-1661273DBB3D/d9/446ca3ca/WebHostBuilderExtensions.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1166">
+              <caret line="53" column="45" lean-forward="false" selection-start-line="53" selection-start-column="45" selection-end-line="53" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tsconfig.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AlrauneBack/tsconfig.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="242">
+              <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pile.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AlrauneBack/pile.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="352">
+              <caret line="16" column="39" lean-forward="false" selection-start-line="16" selection-start-column="39" selection-end-line="16" selection-end-column="39" />
+              <folding>
+                <marker date="1495366625743" expanded="true" signature="6:68" ph="..." />
+                <marker date="1495366625743" expanded="true" signature="92:595" ph="{...}" />
+                <marker date="1495366625743" expanded="true" signature="135:292" ph="{...}" />
+                <marker date="1495366625743" expanded="true" signature="192:286" ph="{...}" />
+                <marker date="1495366625743" expanded="true" signature="342:450" ph="{...}" />
+                <marker date="1495366625743" expanded="true" signature="481:593" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -63,7 +115,7 @@
       <file leaf-file-name="String.cs" pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/F518798F-3AEF-4BFA-AE77-35E6D8D6BCAB/e0/4d97521c/String.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="81">
+            <state relative-caret-position="462">
               <caret line="21" column="22" lean-forward="false" selection-start-line="21" selection-start-column="22" selection-end-line="21" selection-end-column="22" />
               <folding />
             </state>
@@ -72,14 +124,31 @@
       </file>
     </leaf>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/F518798F-3AEF-4BFA-AE77-35E6D8D6BCAB/e0/4d97521c/String.cs" />
-        <option value="$PROJECT_DIR$/AlrauneBack/static/index.html" />
-        <option value="$PROJECT_DIR$/AlrauneBack/Program.cs" />
         <option value="$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/D8F81E7A-582F-428A-9574-2F9C51CC9B55/ff/0f614a4b/StaticFileExtensions.cs" />
+        <option value="$PROJECT_DIR$/AlrauneBack/static/fuck.ts" />
+        <option value="$PROJECT_DIR$/AlrauneBack/tsconfig.json" />
+        <option value="$PROJECT_DIR$/AlrauneBack/static/index.html" />
         <option value="$PROJECT_DIR$/AlrauneBack/.gitignore" />
+        <option value="$PROJECT_DIR$/AlrauneBack/ts/fuck.ts" />
+        <option value="$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/C64AB166-5D69-45A8-BEBF-1661273DBB3D/d9/446ca3ca/WebHostBuilderExtensions.cs" />
+        <option value="$PROJECT_DIR$/AlrauneBack/pile.kt" />
+        <option value="$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/818F68A9-80A5-48BD-99FC-9415092D283F/ea/4186b02b/TypeExtensions.cs" />
+        <option value="$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/F518798F-3AEF-4BFA-AE77-35E6D8D6BCAB/eb/429fa844/StringBuilder.cs" />
+        <option value="$PROJECT_DIR$/AlrauneBack/doc/1.txt" />
+        <option value="$PROJECT_DIR$/AlrauneBack/pile.cs" />
+        <option value="$PROJECT_DIR$/AlrauneBack/Program.cs" />
+        <option value="$PROJECT_DIR$/AlrauneFS/Program.fs" />
       </list>
     </option>
   </component>
@@ -88,6 +157,9 @@
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodeModulesDirectoryManager">
+    <handled-path value="$PROJECT_DIR$/AlrauneBack/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-9" />
@@ -110,7 +182,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="SolutionExplorer">
         <subPane>
           <PATH>
@@ -127,33 +198,17 @@
               <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" />
-              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Alraune.NET (1 project)" />
-              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AlrauneBack" />
-              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
         <option name="show-file-system" value="false" />
         <option name="show-all-items" value="false" />
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Font" />
+    <property name="settings.editor.selected.configurable" value="editing.templates" />
+    <property name="nodejs_interpreter_path" value="C:/opt/nodejs/node" />
   </component>
   <component name="PsiViewer.ProjectComponent">
     <option name="HIGHLIGHT" value="false" />
@@ -238,6 +293,12 @@
       <method />
     </configuration>
     <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <envs />
       <method />
     </configuration>
     <configuration default="true" type="js.build_tools.npm" factoryName="npm">
@@ -325,12 +386,14 @@
       <updated>1495305667008</updated>
       <workItem from="1495305669159" duration="102000" />
       <workItem from="1495305786779" duration="38000" />
-      <workItem from="1495305837129" duration="1983000" />
+      <workItem from="1495305837129" duration="2186000" />
+      <workItem from="1495308048060" duration="14339000" />
+      <workItem from="1495357981052" duration="9416000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2123000" />
+    <option name="totallyTimeSpent" value="26081000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -346,17 +409,18 @@
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Errors In Solution" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Errors In Solution" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32975295" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32896176" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Unit Tests" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="PsiViewer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32975295" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25886145" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30612245" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="NuGet" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4819672" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Change Signature" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
+      <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32822758" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1820623" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Build" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26775956" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Build" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26586434" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24973147" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -366,14 +430,18 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" x="93" y="91" width="1738" height="848" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="processedProjectFiles" value="true" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.gitignore" />
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -390,16 +458,90 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/AlrauneBack/Program.cs">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding>
+            <marker date="1495368367295" expanded="true" signature="6:399" ph="..." />
+            <marker date="1495368367295" expanded="true" signature="423:3519" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="450:919" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="499:913" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="946:3517" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="1015:1026" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="1113:1939" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="1226:1927" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="2112:2152" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="2154:2483" ph="/* public class Text(string s) : IRenderable { ... */" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/C64AB166-5D69-45A8-BEBF-1661273DBB3D/d9/446ca3ca/WebHostBuilderExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1188">
+          <caret line="54" column="4" lean-forward="false" selection-start-line="54" selection-start-column="4" selection-end-line="54" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AlrauneBack/tsconfig.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AlrauneBack/ts/fuck.ts">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AlrauneBack/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AlrauneBack/static/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="4" lean-forward="false" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/D8F81E7A-582F-428A-9574-2F9C51CC9B55/ff/0f614a4b/StaticFileExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="19" column="13" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/F518798F-3AEF-4BFA-AE77-35E6D8D6BCAB/e0/4d97521c/String.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="462">
+          <caret line="21" column="22" lean-forward="false" selection-start-line="21" selection-start-column="22" selection-end-line="21" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AlrauneBack/pile.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" column="8" lean-forward="false" selection-start-line="4" selection-start-column="8" selection-end-line="4" selection-end-column="8" />
           <folding>
-            <marker date="1495307701360" expanded="true" signature="6:186" ph="..." />
-            <marker date="1495307701360" expanded="true" signature="209:1002" ph="{...}" />
-            <marker date="1495307701360" expanded="true" signature="236:765" ph="{...}" />
-            <marker date="1495307701360" expanded="true" signature="289:759" ph="{...}" />
-            <marker date="1495307701360" expanded="true" signature="791:1000" ph="{...}" />
-            <marker date="1495307701360" expanded="true" signature="864:884" ph="{...}" />
-            <marker date="1495307701360" expanded="true" signature="940:994" ph="{...}" />
+            <marker date="1495366625743" expanded="true" signature="6:68" ph="..." />
+            <marker date="1495366625743" expanded="true" signature="92:595" ph="{...}" />
+            <marker date="1495366625743" expanded="true" signature="135:292" ph="{...}" />
+            <marker date="1495366625743" expanded="true" signature="192:286" ph="{...}" />
+            <marker date="1495366625743" expanded="true" signature="342:450" ph="{...}" />
+            <marker date="1495366625743" expanded="true" signature="481:593" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -409,21 +551,24 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1495307701360" expanded="true" signature="6:186" ph="..." />
-            <marker date="1495307701360" expanded="true" signature="209:1002" ph="{...}" />
-            <marker date="1495307701360" expanded="true" signature="236:765" ph="{...}" />
-            <marker date="1495307701360" expanded="true" signature="289:759" ph="{...}" />
-            <marker date="1495307701360" expanded="true" signature="791:1000" ph="{...}" />
-            <marker date="1495307701360" expanded="true" signature="864:884" ph="{...}" />
-            <marker date="1495307701360" expanded="true" signature="940:994" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="6:399" ph="..." />
+            <marker date="1495368367295" expanded="true" signature="423:3519" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="450:919" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="499:913" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="946:3517" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="1015:1026" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="1113:1939" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="1226:1927" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="2112:2152" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="2154:2483" ph="/* public class Text(string s) : IRenderable { ... */" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/F518798F-3AEF-4BFA-AE77-35E6D8D6BCAB/e0/4d97521c/String.cs">
+    <entry file="file://$PROJECT_DIR$/AlrauneBack/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="81">
-          <caret line="21" column="22" lean-forward="false" selection-start-line="21" selection-start-column="22" selection-end-line="21" selection-end-column="22" />
+        <state relative-caret-position="22">
+          <caret line="1" column="4" lean-forward="false" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="4" />
           <folding />
         </state>
       </provider>
@@ -438,33 +583,193 @@
     </entry>
     <entry file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/D8F81E7A-582F-428A-9574-2F9C51CC9B55/ff/0f614a4b/StaticFileExtensions.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="351">
+        <state relative-caret-position="440">
           <caret line="20" column="4" lean-forward="false" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/F518798F-3AEF-4BFA-AE77-35E6D8D6BCAB/e0/4d97521c/String.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="462">
+          <caret line="21" column="22" lean-forward="false" selection-start-line="21" selection-start-column="22" selection-end-line="21" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AlrauneBack/Program.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1495307701360" expanded="true" signature="6:186" ph="..." />
-            <marker date="1495307701360" expanded="true" signature="209:1002" ph="{...}" />
-            <marker date="1495307701360" expanded="true" signature="236:765" ph="{...}" />
-            <marker date="1495307701360" expanded="true" signature="289:759" ph="{...}" />
-            <marker date="1495307701360" expanded="true" signature="791:1000" ph="{...}" />
-            <marker date="1495307701360" expanded="true" signature="864:884" ph="{...}" />
-            <marker date="1495307701360" expanded="true" signature="940:994" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="6:399" ph="..." />
+            <marker date="1495368367295" expanded="true" signature="423:3519" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="450:919" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="499:913" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="946:3517" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="1015:1026" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="1113:1939" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="1226:1927" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="2112:2152" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="2154:2483" ph="/* public class Text(string s) : IRenderable { ... */" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AlrauneBack/Program.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1495368367295" expanded="true" signature="6:399" ph="..." />
+            <marker date="1495368367295" expanded="true" signature="423:3519" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="450:919" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="499:913" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="946:3517" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="1015:1026" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="1113:1939" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="1226:1927" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="2112:2152" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="2154:2483" ph="/* public class Text(string s) : IRenderable { ... */" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/D8F81E7A-582F-428A-9574-2F9C51CC9B55/ff/0f614a4b/StaticFileExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="19" column="13" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AlrauneBack/static/shit.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="1" column="31" lean-forward="false" selection-start-line="1" selection-start-column="31" selection-end-line="1" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AlrauneBack/static/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="4" lean-forward="false" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="4" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AlrauneBack/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="2" column="0" lean-forward="true" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+        <state relative-caret-position="44">
+          <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AlrauneBack/ts/fuck.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/C64AB166-5D69-45A8-BEBF-1661273DBB3D/d9/446ca3ca/WebHostBuilderExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1166">
+          <caret line="53" column="45" lean-forward="false" selection-start-line="53" selection-start-column="45" selection-end-line="53" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AlrauneBack/tsconfig.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/F518798F-3AEF-4BFA-AE77-35E6D8D6BCAB/e0/4d97521c/String.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="462">
+          <caret line="21" column="22" lean-forward="false" selection-start-line="21" selection-start-column="22" selection-end-line="21" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/818F68A9-80A5-48BD-99FC-9415092D283F/ea/4186b02b/TypeExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/v08/DecompilerCache/decompiler/F518798F-3AEF-4BFA-AE77-35E6D8D6BCAB/eb/429fa844/StringBuilder.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="293">
+          <caret line="517" column="25" lean-forward="false" selection-start-line="517" selection-start-column="25" selection-end-line="517" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AlrauneBack/doc/1.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AlrauneBack/pile.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="16" column="39" lean-forward="false" selection-start-line="16" selection-start-column="39" selection-end-line="16" selection-end-column="39" />
+          <folding>
+            <marker date="1495366625743" expanded="true" signature="6:68" ph="..." />
+            <marker date="1495366625743" expanded="true" signature="92:595" ph="{...}" />
+            <marker date="1495366625743" expanded="true" signature="135:292" ph="{...}" />
+            <marker date="1495366625743" expanded="true" signature="192:286" ph="{...}" />
+            <marker date="1495366625743" expanded="true" signature="342:450" ph="{...}" />
+            <marker date="1495366625743" expanded="true" signature="481:593" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AlrauneFS/App.config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AlrauneFS/Program.fs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="7" column="3" lean-forward="false" selection-start-line="7" selection-start-column="3" selection-end-line="7" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AlrauneBack/Program.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1232">
+          <caret line="56" column="37" lean-forward="false" selection-start-line="56" selection-start-column="37" selection-end-line="56" selection-end-column="37" />
+          <folding>
+            <marker date="1495368367295" expanded="true" signature="6:399" ph="..." />
+            <marker date="1495368367295" expanded="true" signature="423:3519" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="450:919" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="499:913" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="946:3517" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="1015:1026" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="1113:1939" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="1226:1927" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="2112:2152" ph="{...}" />
+            <marker date="1495368367295" expanded="true" signature="2154:2483" ph="/* public class Text(string s) : IRenderable { ... */" />
+          </folding>
         </state>
       </provider>
     </entry>
