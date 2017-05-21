@@ -1,6 +1,6 @@
 package alraune.back
 
-import alraune.back.AlBack.log
+import alraune.back.AlBackPile.log
 import alraune.back.AlBackPile.pageTitle
 import alraune.back.AlBackPile.t
 import ch.qos.logback.classic.Logger
@@ -12,7 +12,6 @@ import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder
 import ch.qos.logback.core.spi.ContextAwareBase
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.undertow.Handlers
 import vgrechka.*
 import java.io.File
@@ -21,23 +20,12 @@ import io.undertow.Undertow
 import io.undertow.server.HttpHandler
 import io.undertow.server.handlers.resource.PathResourceManager
 import io.undertow.util.Headers
-import org.slf4j.LoggerFactory
 import java.io.FileInputStream
 import java.nio.file.Paths
 import java.security.KeyStore
 import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 
-
-object AlBack {
-    val log = LoggerFactory.getLogger(AlBack::class.java)
-    val tmpDirPath = "c:/tmp"
-
-    val secrets by lazy {
-        // TODO:vgrechka Get file name from environment variable
-        ObjectMapper().readValue(File("e:/fpebb/alraune/alraune-secrets.json"), JSON_AlrauneSecrets::class.java)!!
-    }
-}
 
 
 @Ser class JSON_AlrauneSecrets(
@@ -57,11 +45,13 @@ object StartAlrauneBack {
         val kmf = KeyManagerFactory.getInstance("SunX509")
         val ks = KeyStore.getInstance("JKS")
 
-        ks.load(FileInputStream(AlBack.secrets.keyStore), AlBack.secrets.keyStorePassword.toCharArray())
-        kmf.init(ks, AlBack.secrets.keyManagerPassword.toCharArray())
+        ks.load(FileInputStream(AlBackPile.secrets.keyStore), AlBackPile.secrets.keyStorePassword.toCharArray())
+        kmf.init(ks, AlBackPile.secrets.keyManagerPassword.toCharArray())
         sslContext.init(kmf.keyManagers, null, null)
 
-        val resourceHandler = Handlers.resource(PathResourceManager(Paths.get(AlBackPile.rootDir)))
+        val backResourceHandler = Handlers.resource(PathResourceManager(Paths.get(AlBackPile.backResourceRootDir)))
+        val frontResourceHandler = Handlers.resource(PathResourceManager(Paths.get(AlBackPile.frontOutDir)))
+        val sharedKJSResourceHandler = Handlers.resource(PathResourceManager(Paths.get(AlBackPile.sharedKJSOutDir)))
 
         val port = 443
         val server = Undertow.builder()
@@ -72,10 +62,61 @@ object StartAlrauneBack {
                     log.debug("path = " + path)
                     log.debug("queryParameters = " + exchange.queryParameters)
 
-                    if (path.startsWith("/node_modules/")) {
-                        return resourceHandler.handleRequest(exchange)
-                    }
+                    val frontPathPrefix = "/alraune-front/"
+                    val sharedKJSPathPrefix = "/shared-kjs/"
 
+                    when {
+                        path.startsWith("/node_modules/") -> backResourceHandler.handleRequest(exchange)
+                        path.startsWith(frontPathPrefix) -> {
+                            exchange.relativePath = "/" + exchange.requestPath.substring(frontPathPrefix.length)
+                            frontResourceHandler.handleRequest(exchange)
+                        }
+                        path.startsWith(sharedKJSPathPrefix) -> {
+                            exchange.relativePath = "/" + exchange.requestPath.substring(sharedKJSPathPrefix.length)
+                            sharedKJSResourceHandler.handleRequest(exchange)
+                        }
+                        else -> when (path) {
+                            "/order" -> spitOrderFormPage(exchange, post = exchange.queryParameters["post"]?.firstOrNull() == "true")
+                            else -> spitLandingPage(exchange)
+                        }
+                    }
+                }
+
+                private fun spitLandingPage(exchange: HttpServerExchange) {
+                    spitUsualPage(exchange) {o->
+                        o- pageTitle("Fuck You")
+                    }
+                }
+
+                private fun spitOrderFormPage(exchange: HttpServerExchange, post: Boolean) {
+                    spitUsualPage(exchange) {o->
+                        o- pageTitle(t("TOTE", "Заказ"))
+                        o- kform{o->
+                            fun addTextField(name: String, title: String, value: String, type: FieldType = FieldType.TEXT) {
+                                o- kdiv.className("form-group"){o->
+                                    o- klabel(title)
+                                    o- when (type) {
+                                        FieldType.TEXT -> kinput(Attrs(type = "text", name = name, value = value, className = "form-control")) {}
+                                        FieldType.TEXTAREA -> ktextarea(Attrs(name = name, rows = 5, className = "form-control"), value)
+                                    }
+                                }
+                            }
+
+                            if (post) {
+                                o- kdiv("Wat???")
+                            }
+
+                            addTextField("email", t("TOTE", "Почта"), "iperdonde@mail.com")
+                            addTextField("name", t("TOTE", "Имя"), "Иммануил Пердондэ")
+                            addTextField("phone", t("TOTE", "Телефон"), "+38 (068) 4542823")
+                            addTextField("paperTitle", t("TOTE", "Тема работы (задание)"), "Как я пинал хуи на практике")
+                            addTextField("paperDetails", t("TOTE", "Детали"), "Детали? Я ебу, какие там детали...", FieldType.TEXTAREA)
+                            o- kbutton(Attrs(className = "btn btn-primary"), t("TOTE", "Вперед"))
+                        }
+                    }
+                }
+
+                private fun spitUsualPage(exchange: HttpServerExchange, build: (Tag) -> Unit) {
                     exchange.responseHeaders.put(Headers.CONTENT_TYPE, "text/html; charset=utf-8")
                     exchange.responseSender.send(buildString {
                         ln("<!DOCTYPE html>")
@@ -91,32 +132,14 @@ object StartAlrauneBack {
                         ln("</head>")
                         ln("<body>")
                         ln(kdiv{o->
-                            o- kdiv.className("container"){o->
-                                o- pageTitle(t("TOTE", "Заказ"))
-                                o- kform{o->
-                                    fun addTextField(name: String, title: String, value: String, type: FieldType = FieldType.TEXT) {
-                                        o- kdiv.className("form-group"){o->
-                                            o- klabel(title)
-                                            o- when (type) {
-                                                FieldType.TEXT -> kinput(Attrs(type = "text", name = name, value = value, className = "form-control")) {}
-                                                FieldType.TEXTAREA -> ktextarea(Attrs(name = name, rows = 5, className = "form-control"), value)
-                                            }
-                                        }
-                                    }
-
-                                    addTextField("email", t("TOTE", "Почта"), "iperdonde@mail.com")
-                                    addTextField("name", t("TOTE", "Имя"), "Иммануил Пердондэ")
-                                    addTextField("phone", t("TOTE", "Телефон"), "+38 (068) 4542823")
-                                    addTextField("paperTitle", t("TOTE", "Тема работы (задание)"), "Как я пинал хуи на практике")
-                                    addTextField("paperDetails", t("TOTE", "Детали"), "Детали? Я ебу, какие там детали...", FieldType.TEXTAREA)
-                                    o- kbutton(Attrs(className = "btn btn-primary"), t("TOTE", "Вперед"))
-                                }
-                            }
+                            o- kdiv.className("container", build)
                         }.render())
                         ln("")
                         ln("    <script src='/node_modules/jquery/dist/jquery.min.js'></script>")
                         ln("    <script src='/node_modules/bootstrap/dist/js/bootstrap.min.js'></script>")
-//                        ln("    <script src='out-front/lib/kotlin.js'></script>")
+                        ln("    <script src='/alraune-front/lib/kotlin.js'></script>")
+                        ln("    <script src='/shared-kjs/shared-kjs.js'></script>")
+                        ln("    <script src='/alraune-front/alraune-front.js'></script>")
                         ln("</body>")
                         ln("</html>")
                     })
@@ -124,7 +147,7 @@ object StartAlrauneBack {
             }).build()
         server.start()
         log.info("Shit is spinning on port $port")
-        File(AlBack.tmpDirPath + "/alraune-back-started").writeText("Fuck, yeah...")
+        File(AlBackPile.tmpDirPath + "/alraune-back-started").writeText("Fuck, yeah...")
     }
 
 

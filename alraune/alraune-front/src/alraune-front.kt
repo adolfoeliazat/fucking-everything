@@ -14,19 +14,19 @@ fun main(args: Array<String>) {
     @Suppress("UnsafeCastFromDynamic")
     AlFrontPile.shitFromBack = window.asDynamic()[ShitPassedFromBackToFront::class.simpleName]
 
-    jq {
-        initGoogleAuth()
+    jqDocumentReady {
+//        initGoogleAuth()
         async {initPage()}
     }
 }
 
 private suspend fun initPage() {
-    val pageID = AlFrontPile.shitFromBack.pageID
-    when (pageID) {
-        AlSharedPile.pageID.order -> initOrderPage()
-        AlSharedPile.pageID.landing -> initLandingPage()
-        else -> initLandingPage()
-    }
+//    val pageID = AlFrontPile.shitFromBack.pageID
+//    when (pageID) {
+//        AlSharedPile.pageID.order -> initOrderPage()
+//        AlSharedPile.pageID.landing -> initLandingPage()
+//        else -> initLandingPage()
+//    }
 }
 
 suspend fun initLandingPage() {

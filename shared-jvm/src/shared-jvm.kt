@@ -74,27 +74,6 @@ fun <T> Boolean.thenElseNull(block: () -> T): T? = when {
 
 //private class NotNullOnceVar<T: Any> : ReadWriteProperty<Any?, T> {
 
-// e0841d01-e09d-49e0-8d60-7f4f77f42ca8
-class notNullOnce<T: Any> : ReadWriteProperty<Any?, T> {
-    private var value: T? = null
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): T {
-        return value ?: throw IllegalStateException("Property `${property.name}` should be initialized before get.")
-    }
-
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-        check(this.value == null) {"Property `${property.name}` should be assigned only once"}
-        this.value = value
-    }
-
-    companion object {
-        fun debugReset(prop: KMutableProperty0<*>) {
-            prop.isAccessible = true
-            val delegate = prop.getDelegate() as notNullOnce<*>
-            delegate.value = null
-        }
-    }
-}
 
 
 class AttachedComputedShit<in Host : Any, out Shit>(val weak: Boolean = false,
@@ -754,6 +733,13 @@ fun StringBuilder.ln(x: Any? = "") {
     append("\n")
 }
 
+object NotNullOnce_JVM {
+    fun debugReset(prop: KMutableProperty0<*>) {
+        prop.isAccessible = true
+        val delegate = prop.getDelegate() as notNullOnce<*>
+        delegate._value = null
+    }
+}
 
 
 

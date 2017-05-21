@@ -5,6 +5,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/symlink--shared-symlinked-src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -167,6 +168,7 @@
           <root url="jar://$MODULE_DIR$/../lib-gradle/sqlite-jdbc-3.16.1-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/args4j-2.33.jar!/OSGI-OPT/src" />
           <root url="jar://$MODULE_DIR$/../lib-gradle/closure-compiler-v20170218.jar!/OSGI-OPT/src" />
+          <root url="jar://$USER_HOME$/.ideaLibSources/logback-core-1.2.3-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

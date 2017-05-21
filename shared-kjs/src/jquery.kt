@@ -61,7 +61,7 @@ external fun jq(selector: String): JQuery
 @JsName("$")
 external fun jq(selector: String, context: Element): JQuery
 @JsName("$")
-external fun jq(callback: () -> Unit): JQuery
+external fun jqDocumentReady(callback: () -> Unit): JQuery
 @JsName("$")
 external fun jq(obj: JQuery): JQuery
 @JsName("$")

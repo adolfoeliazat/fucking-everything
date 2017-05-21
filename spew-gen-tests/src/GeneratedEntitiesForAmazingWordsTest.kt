@@ -21,7 +21,7 @@ class GeneratedEntitiesForAmazingWordsTest {
         }
 
         @AfterClass @JvmStatic fun afterClass() {
-            notNullOnce.debugReset(JVMBackPlatform::springctx)
+            NotNullOnce_JVM.debugReset(JVMBackPlatform::springctx)
         }
     }
 

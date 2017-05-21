@@ -6,7 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/agnes/agnes.iml" filepath="$PROJECT_DIR$/agnes/agnes.iml" />
       <module fileurl="file://$PROJECT_DIR$/alraune/alraune-back/alraune-back.iml" filepath="$PROJECT_DIR$/alraune/alraune-back/alraune-back.iml" group="alraune" />
       <module fileurl="file://$PROJECT_DIR$/alraune/alraune-front/alraune-front.iml" filepath="$PROJECT_DIR$/alraune/alraune-front/alraune-front.iml" group="alraune" />
-      <module fileurl="file://$PROJECT_DIR$/alraune/alraune-shared/alraune-shared.iml" filepath="$PROJECT_DIR$/alraune/alraune-shared/alraune-shared.iml" group="alraune" />
+      <module fileurl="file://$PROJECT_DIR$/alraune/alraune-symlinked/alraune-symlinked.iml" filepath="$PROJECT_DIR$/alraune/alraune-symlinked/alraune-symlinked.iml" group="alraune" />
       <module fileurl="file://$PROJECT_DIR$/alraune/alraune-tools/alraune-tools.iml" filepath="$PROJECT_DIR$/alraune/alraune-tools/alraune-tools.iml" group="alraune" />
       <module fileurl="file://$PROJECT_DIR$/aps/back-php/aps-back-php.iml" filepath="$PROJECT_DIR$/aps/back-php/aps-back-php.iml" group="aps" />
       <module fileurl="file://$PROJECT_DIR$/aps/roots/aps-roots.iml" filepath="$PROJECT_DIR$/aps/roots/aps-roots.iml" group="aps" />
@@ -29,6 +29,7 @@
       <module fileurl="file://$PROJECT_DIR$/shared-jvm/shared-jvm.iml" filepath="$PROJECT_DIR$/shared-jvm/shared-jvm.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared-jvm-2/shared-jvm-2.iml" filepath="$PROJECT_DIR$/shared-jvm-2/shared-jvm-2.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared-kjs/shared-kjs.iml" filepath="$PROJECT_DIR$/shared-kjs/shared-kjs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shared-symlinked/shared-symlinked.iml" filepath="$PROJECT_DIR$/shared-symlinked/shared-symlinked.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared-x/shared-x.iml" filepath="$PROJECT_DIR$/shared-x/shared-x.iml" />
       <module fileurl="file://$PROJECT_DIR$/shit-for-tests/shit-for-tests.iml" filepath="$PROJECT_DIR$/shit-for-tests/shit-for-tests.iml" />
       <module fileurl="file://$PROJECT_DIR$/spew/spew.iml" filepath="$PROJECT_DIR$/spew/spew.iml" />
