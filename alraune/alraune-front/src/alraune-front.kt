@@ -2,12 +2,14 @@ package alraune.front
 
 import alraune.shared.AlSharedPile
 import alraune.shared.ShitPassedFromBackToFront
+import org.w3c.dom.events.MouseEvent
 import vgrechka.*
 import vgrechka.kjs.*
 import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.js.Promise
 import kotlin.js.json
+import kotlin.reflect.KFunction0
 
 fun main(args: Array<String>) {
     clog("I am alraune-front 4")
@@ -18,29 +20,23 @@ fun main(args: Array<String>) {
     clog("shitFromBack", AlFrontPile.shitFromBack)
 
     jqDocumentReady {
-//        initGoogleAuth()
-        async {initPage()}
-    }
-}
+        if (AlFrontPile.shitFromBack.pageID == AlSharedPile.pageID.orderCreation) {
+            val button = byid(AlSharedPile.domID.createOrderForm_submitButton)
+            // TODO:vgrechka Remove event handlers
+            fun handler() {
+                clog("i am the fucking handler")
+            }
+            AlDebug.messAround2 = ::handler
+            button.on("click") {
+                it.preventAndStop()
+                handler()
+            }
+        }
 
-private suspend fun initPage() {
-//    val pageID = AlFrontPile.shitFromBack.pageID
-//    when (pageID) {
-//        AlSharedPile.pageID.order -> initOrderPage()
-//        AlSharedPile.pageID.landing -> initLandingPage()
-//        else -> initLandingPage()
-//    }
-}
-
-suspend fun initLandingPage() {
-    clog("initLandingPage")
-}
-
-suspend fun initOrderPage() {
-    clog("initOrderPage")
-    if (AlFrontPile.security.isSignedIn()) {
-    }
-    else {
+        @Suppress("UnsafeCastFromDynamic")
+        KJSPile.getURLParam("messAround")?.let {
+            AlDebug.asDynamic()[it]()
+        }
     }
 }
 
@@ -65,6 +61,13 @@ object AlDebug {
 //                        q.documentDetails to "Детали? Я ебу, какие там детали...")
 //        window.location.href = "https://alraune.local/order?post=true&data=" + encodeURIComponent(JSON.stringify(data))
     }
+
+    fun messAround1() {
+        val button = byid(AlSharedPile.domID.createOrderForm_submitButton)
+        button.off()
+    }
+
+    var messAround2: KFunction0<Unit>? = null
 }
 
 object AlFrontPile {

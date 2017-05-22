@@ -3,6 +3,7 @@
 package vgrechka.kjs
 
 import org.w3c.dom.*
+import org.w3c.dom.events.Event
 import kotlin.browser.*
 
 external class JQuery() {
@@ -43,6 +44,9 @@ external class JQuery() {
     fun next(): JQuery
     fun parent(): JQuery
     fun `val`(): String?
+
+    fun on(event: String, handler: (Event) -> Unit)
+    fun off(event: String = definedExternally)
 }
 
 //open external class MouseEvent() {
