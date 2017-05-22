@@ -236,7 +236,7 @@ object CustomBuilds {
     fun rerunAlrauneAndShowInBrowser(e: AnActionEvent) {
         val configurationName = "alraune.back.StartAlrauneBack"
         val debug = false
-        val runTimeout = 5000
+        val runTimeout = 10000
         val terminationTimeout = 5000
         val flagFile = File("c:/tmp/alraune-back-started")
         val flagFilePollTimes = 10

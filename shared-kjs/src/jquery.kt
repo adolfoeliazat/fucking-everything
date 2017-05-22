@@ -4,6 +4,7 @@ package vgrechka.kjs
 
 import org.w3c.dom.*
 import org.w3c.dom.events.Event
+import vgrechka.*
 import kotlin.browser.*
 
 external class JQuery() {
@@ -43,7 +44,12 @@ external class JQuery() {
 //    fun hover(handlerIn: Element.() -> Unit, handlerOut: Element.() -> Unit): JQuery
     fun next(): JQuery
     fun parent(): JQuery
-    fun `val`(): String?
+
+    @JsName("val")
+    fun getVal(): String?
+
+    @JsName("val")
+    fun setVal(x: String)
 
     fun on(event: String, handler: (Event) -> Unit)
     fun off(event: String = definedExternally)
@@ -96,22 +102,33 @@ fun JQuery.each(block: (index: Int, element: HTMLElement) -> Unit): Unit = this.
 fun JQuery.hide(): String = this.asDynamic().hide()
 fun JQuery.show(): String = this.asDynamic().show()
 
-val jqbody: JQuery get() = jq(document.body!!)
-val jqwindow: JQuery get() = js("$(window)")
+object JQueryPile {
+    fun byidSingle(id: String): JQuery {
+        val j = byid(id)
+        if (j.length != 1)
+            bitch("I want one element with ID `$id`, got ${j.length}")
+        return j
+    }
 
-fun byid(id: String): JQuery {
-    val selector = "#$id".replace(Regex("\\."), "\\.")
-    return jq(selector)
+
+    val jqbody: JQuery get() = jq(document.body!!)
+    val jqwindow: JQuery get() = js("$(window)")
+
+    fun byid(id: String): JQuery {
+        val selector = "#$id".replace(Regex("\\."), "\\.")
+        return jq(selector)
+    }
+
+    fun byid0(id: String): HTMLElement? {
+        val selector = "#$id".replace(Regex("\\."), "\\.")
+        return jq(selector)[0]
+    }
+
+    fun byid0ForSure(id: String): HTMLElement {
+        return requireNotNull(byid0(id)) {"I want fucking element #$id"}
+    }
 }
 
-fun byid0(id: String): HTMLElement? {
-    val selector = "#$id".replace(Regex("\\."), "\\.")
-    return jq(selector)[0]
-}
-
-fun byid0ForSure(id: String): HTMLElement {
-    return requireNotNull(byid0(id)) {"I want fucking element #$id"}
-}
 
 fun JQuery.not(selector: String): JQuery = this.asDynamic().not(selector)
 

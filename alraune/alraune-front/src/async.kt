@@ -1,8 +1,7 @@
 package alraune.front
 
-import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.EmptyCoroutineContext
-import kotlin.coroutines.experimental.startCoroutine
+import kotlin.coroutines.experimental.intrinsics.*
+import kotlin.coroutines.experimental.*
 import kotlin.js.Promise
 
 fun <T> async(block: suspend () -> T) = Promise<T> {resolve, reject ->
@@ -19,6 +18,20 @@ fun <T> async(block: suspend () -> T) = Promise<T> {resolve, reject ->
     })
 }
 
+suspend fun <T> await(p: Promise<T>): T {
+//    if (TestGlobal.killAwait) die()
+    return suspendCoroutineOrReturn {c: Continuation<T> ->
+        p.then<Any?>(
+            onFulfilled = {
+                c.resume(it)
+            },
+            onRejected = {
+                c.resumeWithException(it)
+            }
+        )
+        COROUTINE_SUSPENDED
+    }
+}
 
 
 

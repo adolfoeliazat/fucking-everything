@@ -3,8 +3,6 @@ package alraune.back
 import alraune.back.AlBackPile.log
 import alraune.back.AlBackPile.pageTitle
 import alraune.back.AlBackPile.t
-import alraune.shared.AlSharedPile.domID
-import alraune.shared.AlSharedPile.pageID
 import alraune.shared.OrderCreationForm
 import alraune.shared.ShitPassedFromBackToFront
 import ch.qos.logback.classic.Logger
@@ -32,6 +30,9 @@ import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.*
+import alraune.shared.*
+import io.undertow.io.Receiver
+import io.undertow.util.Methods
 
 
 @Ser class JSON_AlrauneSecrets(
@@ -74,6 +75,10 @@ object StartAlrauneBack {
                     val sharedKJSPathPrefix = "/shared-kjs/"
 
                     when {
+                        path == "/alraune.css" -> {
+                            exchange.responseHeaders.put(Headers.CONTENT_TYPE, "text/css; charset=utf-8")
+                            exchange.responseSender.send(AlCSS.sheet)
+                        }
                         path.startsWith("/node_modules/") -> backResourceHandler.handleRequest(exchange)
                         path.startsWith(frontPathPrefix) -> {
                             exchange.relativePath = "/" + exchange.requestPath.substring(frontPathPrefix.length)
@@ -84,62 +89,80 @@ object StartAlrauneBack {
                             sharedKJSResourceHandler.handleRequest(exchange)
                         }
                         else -> when (path) {
-                            "/order" -> spitOrderFormPage(exchange, post = exchange.queryParameters["post"]?.firstOrNull() == "true")
+                            "/order" -> spitOrderFormPage(exchange)
                             else -> spitLandingPage(exchange)
                         }
                     }
                 }
 
                 private fun spitLandingPage(exchange: HttpServerExchange) {
-                    spitUsualPage(pageID.landing, exchange) {o->
+                    spitUsualPage(AlPageID.landing, exchange) {o->
                         o- pageTitle("Fuck You")
                     }
                 }
 
-                private fun spitOrderFormPage(exchange: HttpServerExchange, post: Boolean) {
-                    spitUsualPage(pageID.orderCreation, exchange) {o->
-                        o- pageTitle(t("TOTE", "Заказ"))
-                        o- kform{o->
-                            fun addTextField(id: String, title: String, value: String, type: FieldType = FieldType.TEXT) {
-                                o- kdiv.className("form-group"){o->
-                                    o- klabel(title)
-                                    o- when (type) {
-                                        FieldType.TEXT -> kinput(Attrs(type = "text", id = id, value = value, className = "form-control")) {}
-                                        FieldType.TEXTAREA -> ktextarea(Attrs(id = id, rows = 5, className = "form-control"), value)
+                private fun spitOrderFormPage(exchange: HttpServerExchange) {
+                    val isPost = exchange.requestMethod == Methods.POST
+
+                    fun onDataAvailable(data: OrderCreationForm) {
+                        spitUsualPage(AlPageID.orderCreation, exchange) {o->
+                            o- pageTitle(t("TOTE", "Заказ"))
+                            o- kform{o->
+                                fun addTextField(id: String, title: String, value: String, type: FieldType = FieldType.TEXT) {
+                                    o- kdiv.className("form-group"){o->
+                                        o- klabel(title)
+                                        o- when (type) {
+                                            FieldType.TEXT -> kinput(Attrs(type = "text", id = id, value = value, className = "form-control")) {}
+                                            FieldType.TEXTAREA -> ktextarea(Attrs(id = id, rows = 5, className = "form-control"), value)
+                                        }
                                     }
                                 }
-                            }
 
-                            fun addTextField(prop: KProperty0<String>, title: String, type: FieldType = FieldType.TEXT) {
-                                addTextField("field-" + prop.name, title, prop.get(), type)
-                            }
-
-                            if (post) {
-                                o- kdiv("Wat???")
-                            }
-
-                            val data = when {
-                                AlBackDebug.messAroundBack201.should -> {
-                                    OrderCreationForm(email = "fuck",
-                                                      name = "shit",
-                                                      phone = "bitch",
-                                                      documentTitle = "boobs",
-                                                      documentDetails = "vagina")
+                                fun addTextField(prop: KProperty0<String>, title: String, type: FieldType = FieldType.TEXT) {
+                                    addTextField(AlSharedPile.fieldDOMID(prop), title, prop.get(), type)
                                 }
-                                post -> {
-                                    val dataString: String = exchange.queryParameters["data"]!!.first()
-                                    ObjectMapper().readValue(dataString, OrderCreationForm::class.java)
-                                }
-                                else -> OrderCreationForm("", "", "", "", "")
-                            }
 
-                            addTextField(data::email, t("TOTE", "Почта"))
-                            addTextField(data::name, t("TOTE", "Имя"))
-                            addTextField(data::phone, t("TOTE", "Телефон"))
-                            addTextField(data::documentTitle, t("TOTE", "Тема работы (задание)"))
-                            addTextField(data::documentDetails, t("TOTE", "Детали"), FieldType.TEXTAREA)
-                            o- kbutton(Attrs(id = domID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Вперед"))
+                                if (isPost) {
+                                    o- kdiv("Wat???")
+                                }
+
+
+                                addTextField(data::email, t("TOTE", "Почта"))
+                                addTextField(data::name, t("TOTE", "Имя"))
+                                addTextField(data::phone, t("TOTE", "Телефон"))
+                                addTextField(data::documentTitle, t("TOTE", "Тема работы (задание)"))
+                                addTextField(data::documentDetails, t("TOTE", "Детали"), FieldType.TEXTAREA)
+                                o- kdiv{o->
+                                    o- kbutton(Attrs(id = AlDomID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Вперед"))
+                                    o- kdiv.id(AlDomID.ticker){}
+                                }
+                            }
                         }
+                    }
+
+                    if (isPost) {
+                        val onSuccess = Receiver.FullStringCallback {exchange, dataString ->
+                            log.debug("dataString = $dataString")
+                            onDataAvailable(ObjectMapper().readValue(dataString, OrderCreationForm::class.java))
+                        }
+                        val onError = Receiver.ErrorCallback {exchange, e ->
+                            log.error(e.message, e)
+                            exchange.responseHeaders.put(Headers.CONTENT_TYPE, "text/html; charset=utf-8")
+                            exchange.responseSender.send("Pizdets")
+                        }
+                        exchange.requestReceiver.receiveFullString(onSuccess, onError, Charsets.UTF_8)
+                    } else {
+                        val data = when {
+                            AlBackDebug.messAroundBack201.should -> {
+                                OrderCreationForm(email = "fuck",
+                                                  name = "shit",
+                                                  phone = "bitch",
+                                                  documentTitle = "boobs",
+                                                  documentDetails = "vagina")
+                            }
+                            else -> OrderCreationForm("", "", "", "", "")
+                        }
+                        onDataAvailable(data)
                     }
                 }
 
@@ -158,14 +181,17 @@ object StartAlrauneBack {
                         ln("")
                         ln("    <link href='/node_modules/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet'>")
                         ln("    <link rel='stylesheet' href='/node_modules/font-awesome/css/font-awesome.min.css'>")
+                        ln("    <link rel='stylesheet' href='alraune.css'>")
                         ln("    <script>")
                         ln("        window['${shit::class.simpleName}'] = '${ObjectMapper().writeValueAsString(shit)}'")
                         ln("    </script>")
                         ln("</head>")
                         ln("<body>")
-                        ln(kdiv{o->
+                        ln(AlSharedPile.beginContentMarker)
+                        ln(kdiv.id(AlDomID.replaceableContent){o->
                             o- kdiv.className("container", build)
                         }.render())
+                        ln(AlSharedPile.endContentMarker)
                         ln("")
                         ln("    <script src='/node_modules/jquery/dist/jquery.min.js'></script>")
                         ln("    <script src='/node_modules/bootstrap/dist/js/bootstrap.min.js'></script>")
@@ -301,7 +327,6 @@ object AlBackDebug {
         }
     }
 }
-
 
 
 

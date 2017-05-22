@@ -94,6 +94,10 @@ class TagCtor(val tag: String) {
         return this(Attrs(className = className), block)
     }
 
+    fun id(id: String, block: (Tag) -> Unit): Tag {
+        return this(Attrs(id = id), block)
+    }
+
     operator fun invoke(text: String): Tag {
         return this {it-Text(text)}
     }

@@ -637,27 +637,6 @@ fun String.substituteMyVars(): String {
     return this.replace("%FE%", BigPile.fuckingEverythingSmallRoot)
 }
 
-fun String.indexOfOrNull(needle: String, startIndex: Int = 0, ignoreCase: Boolean = false): Int? {
-    val index = indexOf(needle, startIndex, ignoreCase)
-    return if (index >= 0) index else null
-}
-
-inline fun <T> List<T>.indexOfFirstOrNull(predicate: (T) -> Boolean): Int? {
-    val index = this.indexOfFirst(predicate)
-    return when (index) {
-        -1 -> null
-        else -> index
-    }
-}
-
-fun <T> List<T>.indexOfOrNull(element: T): Int? {
-    val index = this.indexOf(element)
-    return when (index) {
-        -1 -> null
-        else -> index
-    }
-}
-
 interface CollectBlockReceiver<in T> {
     fun yield(x: T)
 }
@@ -715,11 +694,6 @@ fun <T> T.repeatToList(count: Int): List<T> {
         list += this
     }
     return list
-}
-
-fun StringBuilder.ln(x: Any? = "") {
-    append(x)
-    append("\n")
 }
 
 object NotNullOnce_JVM {

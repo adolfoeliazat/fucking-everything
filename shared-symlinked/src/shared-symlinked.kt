@@ -47,3 +47,29 @@ fun <T> bang(x: T?): T {
     return x
 }
 
+fun StringBuilder.ln(x: Any? = "") {
+    append(x)
+    append("\n")
+}
+
+fun String.indexOfOrNull(needle: String, startIndex: Int = 0, ignoreCase: Boolean = false): Int? {
+    val index = indexOf(needle, startIndex, ignoreCase)
+    return if (index >= 0) index else null
+}
+
+inline fun <T> List<T>.indexOfFirstOrNull(predicate: (T) -> Boolean): Int? {
+    val index = this.indexOfFirst(predicate)
+    return when (index) {
+        -1 -> null
+        else -> index
+    }
+}
+
+fun <T> List<T>.indexOfOrNull(element: T): Int? {
+    val index = this.indexOf(element)
+    return when (index) {
+        -1 -> null
+        else -> index
+    }
+}
+
