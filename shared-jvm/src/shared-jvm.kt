@@ -30,14 +30,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.*
 import kotlin.reflect.jvm.isAccessible
 
-
-var exhaustive: Any? = null
-
 fun clog(vararg xs: Any?): Unit = println(xs.joinToString(" "))
-fun wtf(msg: String = "...WTF didn't you describe this WTF?"): Nothing = throw Exception("WTF: $msg")
-fun die(msg: String = "You've just killed me, motherfucker!"): Nothing = throw Exception("Aarrgghh... $msg")
-fun imf(what: String = "me"): Nothing = throw Exception("Implement $what, please, fuck you")
-fun bitch(msg: String = "Just bitching..."): Nothing = throw Exception(msg)
 
 fun clogSection(vararg xs: Any?): Unit = println("\n------------- " + xs.joinToString(" ") + " -------------\n")
 
@@ -47,15 +40,11 @@ data class RunProcessResult(
     val stderr: String
 )
 
-
 /**
  * Fuck thisy builders
  */
 fun stringBuild(block: (StringBuilder) -> Unit) =
     StringBuilder().also(block).toString()
-
-annotation class Ser
-annotation class AllOpen
 
 // d405bf42-54e2-481e-8b31-457d53eb3293
 inline operator fun <T, FRet> T.minus(f: (T) -> FRet): T { f(this); return this }

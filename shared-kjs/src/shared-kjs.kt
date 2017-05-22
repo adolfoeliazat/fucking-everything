@@ -8,3 +8,7 @@ fun clog(vararg xs: Any?) {
     console.log(*xs)
 }
 
+external fun encodeURIComponent(s: String): String
+
+
+

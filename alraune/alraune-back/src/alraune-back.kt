@@ -3,6 +3,11 @@ package alraune.back
 import alraune.back.AlBackPile.log
 import alraune.back.AlBackPile.pageTitle
 import alraune.back.AlBackPile.t
+import alraune.shared.AlSharedPile
+import alraune.shared.AlSharedPile.domID
+import alraune.shared.AlSharedPile.pageID
+import alraune.shared.OrderCreationForm
+import alraune.shared.ShitPassedFromBackToFront
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.PatternLayout
@@ -12,6 +17,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder
 import ch.qos.logback.core.spi.ContextAwareBase
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.undertow.Handlers
 import vgrechka.*
 import java.io.File
@@ -25,7 +31,8 @@ import java.nio.file.Paths
 import java.security.KeyStore
 import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
-
+import kotlin.reflect.KProperty
+import kotlin.reflect.KProperty0
 
 
 @Ser class JSON_AlrauneSecrets(
@@ -83,40 +90,54 @@ object StartAlrauneBack {
                 }
 
                 private fun spitLandingPage(exchange: HttpServerExchange) {
-                    spitUsualPage(exchange) {o->
+                    spitUsualPage(pageID.landing, exchange) {o->
                         o- pageTitle("Fuck You")
                     }
                 }
 
                 private fun spitOrderFormPage(exchange: HttpServerExchange, post: Boolean) {
-                    spitUsualPage(exchange) {o->
+                    spitUsualPage(pageID.orderCreation, exchange) {o->
                         o- pageTitle(t("TOTE", "Заказ"))
                         o- kform{o->
-                            fun addTextField(name: String, title: String, value: String, type: FieldType = FieldType.TEXT) {
+                            fun addTextField(id: String, title: String, value: String, type: FieldType = FieldType.TEXT) {
                                 o- kdiv.className("form-group"){o->
                                     o- klabel(title)
                                     o- when (type) {
-                                        FieldType.TEXT -> kinput(Attrs(type = "text", name = name, value = value, className = "form-control")) {}
-                                        FieldType.TEXTAREA -> ktextarea(Attrs(name = name, rows = 5, className = "form-control"), value)
+                                        FieldType.TEXT -> kinput(Attrs(type = "text", id = id, value = value, className = "form-control")) {}
+                                        FieldType.TEXTAREA -> ktextarea(Attrs(id = id, rows = 5, className = "form-control"), value)
                                     }
                                 }
+                            }
+
+                            fun addTextField(prop: KProperty0<String>, title: String, type: FieldType = FieldType.TEXT) {
+                                addTextField("field-" + prop.name, title, prop.get(), type)
                             }
 
                             if (post) {
                                 o- kdiv("Wat???")
                             }
 
-                            addTextField("email", t("TOTE", "Почта"), "iperdonde@mail.com")
-                            addTextField("name", t("TOTE", "Имя"), "Иммануил Пердондэ")
-                            addTextField("phone", t("TOTE", "Телефон"), "+38 (068) 4542823")
-                            addTextField("paperTitle", t("TOTE", "Тема работы (задание)"), "Как я пинал хуи на практике")
-                            addTextField("paperDetails", t("TOTE", "Детали"), "Детали? Я ебу, какие там детали...", FieldType.TEXTAREA)
-                            o- kbutton(Attrs(className = "btn btn-primary"), t("TOTE", "Вперед"))
+                            val data = when {
+                                post -> {
+                                    val dataString: String = exchange.queryParameters["data"]!!.first()
+                                    ObjectMapper().readValue(dataString, OrderCreationForm::class.java)
+                                }
+                                else -> OrderCreationForm("", "", "", "", "")
+                            }
+
+                            addTextField(data::email, t("TOTE", "Почта"))
+                            addTextField(data::name, t("TOTE", "Имя"))
+                            addTextField(data::phone, t("TOTE", "Телефон"))
+                            addTextField(data::documentTitle, t("TOTE", "Тема работы (задание)"))
+                            addTextField(data::documentDetails, t("TOTE", "Детали"), FieldType.TEXTAREA)
+                            o- kbutton(Attrs(id = domID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Вперед"))
                         }
                     }
                 }
 
-                private fun spitUsualPage(exchange: HttpServerExchange, build: (Tag) -> Unit) {
+                private fun spitUsualPage(pageID: String, exchange: HttpServerExchange, build: (Tag) -> Unit) {
+                    val shit = ShitPassedFromBackToFront(pageID)
+
                     exchange.responseHeaders.put(Headers.CONTENT_TYPE, "text/html; charset=utf-8")
                     exchange.responseSender.send(buildString {
                         ln("<!DOCTYPE html>")
@@ -129,6 +150,9 @@ object StartAlrauneBack {
                         ln("")
                         ln("    <link href='/node_modules/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet'>")
                         ln("    <link rel='stylesheet' href='/node_modules/font-awesome/css/font-awesome.min.css'>")
+                        ln("    <script>")
+                        ln("        window['${shit::class.simpleName}'] = '${ObjectMapper().writeValueAsString(shit)}'")
+                        ln("    </script>")
                         ln("</head>")
                         ln("<body>")
                         ln(kdiv{o->
@@ -138,8 +162,8 @@ object StartAlrauneBack {
                         ln("    <script src='/node_modules/jquery/dist/jquery.min.js'></script>")
                         ln("    <script src='/node_modules/bootstrap/dist/js/bootstrap.min.js'></script>")
                         ln("    <script src='/alraune-front/lib/kotlin.js'></script>")
-                        ln("    <script src='/shared-kjs/shared-kjs.js'></script>")
-                        ln("    <script src='/alraune-front/alraune-front.js'></script>")
+                        ln("    <script src='/shared-kjs/shared-kjs.js?${System.currentTimeMillis()}'></script>")
+                        ln("    <script src='/alraune-front/alraune-front.js?${System.currentTimeMillis()}'></script>")
                         ln("</body>")
                         ln("</html>")
                     })

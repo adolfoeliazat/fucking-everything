@@ -14,7 +14,6 @@ import java.lang.reflect.Method;
 
 import static vgrechka.Jvm_back_platformKt.getBackPlatform;
 import static vgrechka.Shared_jvmKt.clog;
-import static vgrechka.Shared_jvmKt.wtf;
 
 @SuppressWarnings("unused")
 public class AgnesFuckingAround {

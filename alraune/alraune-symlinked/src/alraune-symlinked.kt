@@ -1,16 +1,17 @@
 package alraune.shared
 
+import vgrechka.*
+
 object AlSharedPile {
-    object dom {
-        object id {
-            val googleSignInButton = "googleSignInButton"
-            val facebookSignInButton = "facebookSignInButton"
-        }
+    object domID {
+        val googleSignInButton by myName()
+        val facebookSignInButton by myName()
+        val createOrderForm_submitButton by myName()
     }
 
     object pageID {
-        val landing = "landing"
-        val order = "order"
+        val landing by myName()
+        val orderCreation by myName()
     }
 
     enum class GetParam {
@@ -22,8 +23,33 @@ object AlSharedPile {
     }
 }
 
+@Ser data class OrderCreationForm(
+    val email: String,
+    val name: String,
+    val phone: String,
+    val documentTitle: String,
+    val documentDetails: String
+)
+
 class ShitPassedFromBackToFront(
     val pageID: String
 )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -4,15 +4,18 @@ import alraune.shared.AlSharedPile
 import alraune.shared.ShitPassedFromBackToFront
 import vgrechka.*
 import vgrechka.kjs.*
+import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.js.Promise
+import kotlin.js.json
 
 fun main(args: Array<String>) {
-    clog("I am alraune-front")
+    clog("I am alraune-front 4")
     window.asDynamic()[AlDebug::class.simpleName] = AlDebug
 
     @Suppress("UnsafeCastFromDynamic")
-    AlFrontPile.shitFromBack = window.asDynamic()[ShitPassedFromBackToFront::class.simpleName]
+    AlFrontPile.shitFromBack = JSON.parse(window.asDynamic()[ShitPassedFromBackToFront::class.simpleName])
+    clog("shitFromBack", AlFrontPile.shitFromBack)
 
     jqDocumentReady {
 //        initGoogleAuth()
@@ -51,6 +54,17 @@ object AlDebug {
     // Ex: AlDebug.AlFrontPile.google.auth2
 
     val AlFrontPile = alraune.front.AlFrontPile
+
+    fun postShit1() {
+        imf("66ea9a6b-4fc2-4bdb-86a3-5d039f0ac5e7")
+//        val q = AlSharedPile.domID.orderCreationForm
+//        val data = json(q.email to "iperdonde@mail.com",
+//                        q.name to "Иммануил Пердондэ",
+//                        q.phone to "+38 (068) 4542823",
+//                        q.documentTitle to "Как я пинал хуи на практике",
+//                        q.documentDetails to "Детали? Я ебу, какие там детали...")
+//        window.location.href = "https://alraune.local/order?post=true&data=" + encodeURIComponent(JSON.stringify(data))
+    }
 }
 
 object AlFrontPile {

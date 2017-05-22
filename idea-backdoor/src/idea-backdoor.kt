@@ -242,48 +242,50 @@ object CustomBuilds {
         val flagFilePollTimes = 10
         val flagFilePollInterval = 500L
 
-        ProjectTaskManager.getInstance(e.project).buildAllModules {
-            if (it.errors == 0) {
-                IDEAPile.revealingException {
+        IDEAPile.revealingException {
+            if (flagFile.exists())
+                check(flagFile.delete()) {"443a0f3f-530f-4a59-9ef0-4a48a3536ecb"}
+
+            IDEAPile.threadRevealingException(showInBalloon = {true}) thread@{
+                IDEAPile.waitForConfigurationToTerminateAndThenRun(e.project!!, configurationName, debug, runTimeout, terminationTimeout)
+                // IDEAPile.showProgressBalloon(e.project!!, MessageType.INFO, "OK, shit started...")
+
+                for (i in 1..flagFilePollTimes) {
                     if (flagFile.exists())
-                        check(flagFile.delete()) {"443a0f3f-530f-4a59-9ef0-4a48a3536ecb"}
+                        break
+                    Thread.sleep(flagFilePollInterval)
+                }
 
-                    IDEAPile.threadRevealingException(showInBalloon = {true}) thread@{
-                        IDEAPile.waitForConfigurationToTerminateAndThenRun(e.project!!, configurationName, debug, runTimeout, terminationTimeout)
-                        // IDEAPile.showProgressBalloon(e.project!!, MessageType.INFO, "OK, shit started...")
+                if (!flagFile.exists()) {
+                    IDEAPile.showProgressBalloon(e.project!!, MessageType.WARNING, "Sick of waiting for the flag file")
+                } else {
+                    // IDEAPile.showProgressBalloon(e.project!!, MessageType.INFO, "Switching to browser...")
+                    val hwnd =
+                        User32.INSTANCE.FindWindow(null, "Alraune - Google Chrome")
+                            ?: bitch("No necessary Chrome window")
+                    User32.INSTANCE.SetForegroundWindow(hwnd) || bitch("Cannot bring Chrome to foreground")
+                    val origLocation = MouseInfo.getPointerInfo().location
+                    val robot = Robot()
+                    robot.mouseMove(600, 190) // Somewhere in page (or modal, so it won't be closed!) title
+                    robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+                    robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+                    robot.mouseMove(origLocation.x, origLocation.y)
 
-                        for (i in 1..flagFilePollTimes) {
-                            if (flagFile.exists())
-                                break
-                            Thread.sleep(flagFilePollInterval)
-                        }
-
-                        if (!flagFile.exists()) {
-                            IDEAPile.showProgressBalloon(e.project!!, MessageType.WARNING, "Sick of waiting for the flag file")
-                        } else {
-                            // IDEAPile.showProgressBalloon(e.project!!, MessageType.INFO, "Switching to browser...")
-                            val hwnd =
-                                User32.INSTANCE.FindWindow(null, "Alraune - Google Chrome")
-                                    ?: bitch("No necessary Chrome window")
-                            User32.INSTANCE.SetForegroundWindow(hwnd) || bitch("Cannot bring Chrome to foreground")
-                            val origLocation = MouseInfo.getPointerInfo().location
-                            val robot = Robot()
-                            robot.mouseMove(600, 190) // Somewhere in page (or modal, so it won't be closed!) title
-                            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
-                            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
-                            robot.mouseMove(origLocation.x, origLocation.y)
-
-                            robot.keyPress(KeyEvent.VK_CONTROL)
-                            robot.keyPress('R'.toInt())
-                            robot.keyRelease('R'.toInt())
-                            robot.keyRelease(KeyEvent.VK_CONTROL)
-                        }
-                    }
-
-                    IDEAPile.runConfiguration(e.project!!, configurationName)
+                    robot.keyPress(KeyEvent.VK_CONTROL)
+                    robot.keyPress('R'.toInt())
+                    robot.keyRelease('R'.toInt())
+                    robot.keyRelease(KeyEvent.VK_CONTROL)
                 }
             }
+
+            IDEAPile.runConfiguration(e.project!!, configurationName)
         }
+
+//        ProjectTaskManager.getInstance(e.project).buildAllModules {
+//            if (it.errors == 0) {
+//
+//            }
+//        }
 
 
 //        buildAlrauneAndThen(e) {

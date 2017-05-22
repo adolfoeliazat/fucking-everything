@@ -59,11 +59,11 @@ class Tag(val tag: String, val attrs: Attrs) : Renderable {
             attrs.name?.let {append(" name='$it'")}
             attrs.value?.let {append(" value='${escapeHTML(it)}'")}
             attrs.rows?.let {append(" rows='$it'")}
-            appendln(">")
+            append(">")
             for (child in children) {
-                appendln(child.render())
+                append(child.render())
             }
-            appendln("</$tag>")
+            append("</$tag>")
         }
     }
 

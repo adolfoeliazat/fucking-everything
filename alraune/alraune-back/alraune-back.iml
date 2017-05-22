@@ -162,5 +162,6 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="alraune-front" scope="PROVIDED" />
   </component>
 </module>
