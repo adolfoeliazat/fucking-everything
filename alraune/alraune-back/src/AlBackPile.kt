@@ -7,7 +7,6 @@ import io.undertow.server.HttpServerExchange
 import org.slf4j.LoggerFactory
 import vgrechka.*
 import java.io.File
-import kotlin.properties.Delegates.notNull
 
 object AlBackPile {
     val backResourceRootDir = "E:/fegh/alraune/alraune-back"
@@ -73,13 +72,20 @@ class Tag(val tag: String, val attrs: Attrs) : Renderable {
         }
     }
 
-    fun add(re: Renderable?) {
-        if (re != null) {
-            children += re
+    fun add(x: Renderable?) {
+        if (x != null) {
+            children += x
         }
     }
 
-    operator fun minus(re: Renderable?) = add(re)
+    fun add(x: String?) {
+        if (x != null) {
+            children += Text(x)
+        }
+    }
+
+    operator fun minus(x: Renderable?) = add(x)
+    operator fun minus(x: String?) = add(x)
 
     fun text(x: String): Tag {
         add(Text(x))
@@ -96,6 +102,10 @@ class TagCtor(val tag: String) {
         val tag = Tag(tag, attrs)
         block(tag)
         return tag
+    }
+
+    operator fun invoke(style: Style, block: (Tag) -> Unit = {}): Tag {
+        return this(Attrs(style = style), block)
     }
 
     fun className(className: String, block: (Tag) -> Unit = {}): Tag {

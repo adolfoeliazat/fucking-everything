@@ -8,6 +8,7 @@ import kotlin.reflect.KProperty0
 object AlSharedPile {
     val beginContentMarker = "<!--4e2bb1ac-ec20-494c-8731-36d7c31e62ce-->"
     val endContentMarker = "<!--53693d6d-acc5-4a87-9dc4-b043e6370c10-->"
+    val scrollbarWidth = 17
 
     enum class GetParam {
         page, fakeSetting

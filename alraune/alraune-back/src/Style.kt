@@ -162,7 +162,8 @@ class Style(
     val wordWrap: String? = null,
     val writingMode: String? = null,
     val zIndex: String? = null,
-    val zoom: String? = null
+    val zoom: String? = null,
+    val borderRadius: String? = null
 ) {
     fun render(): String {
         return buildString {
@@ -328,6 +329,7 @@ class Style(
             writingMode?.let {append("writing-mode: $it;")}
             zIndex?.let {append("z-index: $it;")}
             zoom?.let {append("zoom: $it;")}
+            borderRadius?.let {append("border-radius: $it;")}
         }
     }
 }
