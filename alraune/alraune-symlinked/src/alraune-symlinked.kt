@@ -1,6 +1,8 @@
 package alraune.shared
 
 import vgrechka.*
+import kotlin.properties.Delegates.notNull
+import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 
 object AlSharedPile {
@@ -33,9 +35,15 @@ object AlPageID {
 }
 
 object AlCSS {
-    val sheet by lazy {
-        val buf = StringBuilder()
+    val errorBanner by Pack("""
+        background-color: ${Color.RED_50};
+        border-left: 3px solid ${Color.RED_300};
+        margin-bottom: 1.5rem;
+        padding-left: 1rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;""")
 
+    fun addShit(buf: StringBuilder) {
         fun forID(id: String, pack: Pack) {
             pack.default?.let {buf.ln("#$id {$it}")}
             pack.link?.let {buf.ln("#$id:link {$it}")}
@@ -49,16 +57,13 @@ object AlCSS {
             pack.notFirstChild?.let {buf.ln("#$id:nth-child(1n+2) {$it}")}
         }
 
-        forID(AlDomID.ticker, Pack("""
-            width: 14px;
-            background-color: ${Color.BLUE_GRAY_600};
-            height: 34px;
-            float: right;
-            display: none;
-        """))
-
         buf.ln("""
             #${AlDomID.ticker} {
+                display: none;
+                width: 14px;
+                background-color: ${Color.BLUE_GRAY_600};
+                height: 34px;
+                float: right;
                 animation-name: ${AlDomID.ticker};
                 animation-duration: 500ms;
                 animation-iteration-count: infinite;
@@ -74,11 +79,9 @@ object AlCSS {
                 }
             }
         """)
-
-        buf.toString()
     }
 
-    class Pack(
+    data class Pack(
         val default: String? = null,
         val link: String? = null,
         val visited: String? = null,
@@ -88,8 +91,17 @@ object AlCSS {
         val hoverActive: String? = null,
         val hoverFocus: String? = null,
         val firstChild: String? = null,
-        val notFirstChild: String? = null
-    )
+        val notFirstChild: String? = null,
+        val className: String = "boobs"
+    ) {
+        var propertyName by notNull<String>()
+        val value by lazy {this.copy(className = propertyName)}
+
+        operator fun getValue(thisRef: Any?, property: KProperty<*>): Pack {
+            propertyName = property.name
+            return value
+        }
+    }
 }
 
 
@@ -102,7 +114,8 @@ object AlCSS {
 )
 
 class ShitPassedFromBackToFront(
-    val pageID: String
+    val pageID: String,
+    val postURL: String
 )
 
 

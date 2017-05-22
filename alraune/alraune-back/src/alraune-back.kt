@@ -29,10 +29,13 @@ import java.security.KeyStore
 import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.*
 import alraune.shared.*
+import alraune.shared.AlCSS.Pack
 import io.undertow.io.Receiver
 import io.undertow.util.Methods
+import kotlin.reflect.KProperty
+import kotlin.reflect.KProperty0
+import kotlin.reflect.full.memberProperties
 
 
 @Ser class JSON_AlrauneSecrets(
@@ -77,7 +80,7 @@ object StartAlrauneBack {
                     when {
                         path == "/alraune.css" -> {
                             exchange.responseHeaders.put(Headers.CONTENT_TYPE, "text/css; charset=utf-8")
-                            exchange.responseSender.send(AlCSS.sheet)
+                            exchange.responseSender.send(AlCSS_Back.sheet)
                         }
                         path.startsWith("/node_modules/") -> backResourceHandler.handleRequest(exchange)
                         path.startsWith(frontPathPrefix) -> {
@@ -89,7 +92,7 @@ object StartAlrauneBack {
                             sharedKJSResourceHandler.handleRequest(exchange)
                         }
                         else -> when (path) {
-                            "/order" -> spitOrderFormPage(exchange)
+                            AlBackPile.orderCreationPagePath -> spitOrderFormPage(exchange)
                             else -> spitLandingPage(exchange)
                         }
                     }
@@ -109,7 +112,7 @@ object StartAlrauneBack {
                             o- pageTitle(t("TOTE", "Заказ"))
                             o- kform{o->
                                 fun addTextField(id: String, title: String, value: String, type: FieldType = FieldType.TEXT) {
-                                    o- kdiv.className("form-group"){o->
+                                    o- kdiv.className("form-group") {o->
                                         o- klabel(title)
                                         o- when (type) {
                                             FieldType.TEXT -> kinput(Attrs(type = "text", id = id, value = value, className = "form-control")) {}
@@ -123,7 +126,10 @@ object StartAlrauneBack {
                                 }
 
                                 if (isPost) {
-                                    o- kdiv("Wat???")
+                                    val hasErrors = true
+                                    if (hasErrors) {
+                                        o- kdiv.className(AlCSS.errorBanner).text(t("TOTE", "Кое-что нужно исправить..."))
+                                    }
                                 }
 
 
@@ -167,7 +173,9 @@ object StartAlrauneBack {
                 }
 
                 private fun spitUsualPage(pageID: String, exchange: HttpServerExchange, build: (Tag) -> Unit) {
-                    val shit = ShitPassedFromBackToFront(pageID)
+                    val shit = ShitPassedFromBackToFront(
+                        pageID = pageID,
+                        postURL = "${AlBackPile.baseURL}${AlBackPile.orderCreationPagePath}")
 
                     exchange.responseHeaders.put(Headers.CONTENT_TYPE, "text/html; charset=utf-8")
                     exchange.responseSender.send(buildString {
@@ -328,6 +336,31 @@ object AlBackDebug {
     }
 }
 
+object AlCSS_Back {
+    val sheet by lazy {
+        val buf = StringBuilder()
+        AlCSS.addShit(buf)
+
+        for (prop in AlCSS::class.memberProperties) {
+            if (prop.returnType.classifier == AlCSS.Pack::class) {
+                val pack = prop.get(AlCSS) as AlCSS.Pack
+                val selector = ".${prop.name}"
+                pack.default?.let {buf.ln("$selector {$it}")}
+                pack.link?.let {buf.ln("$selector:link {$it}")}
+                pack.visited?.let {buf.ln("$selector:visited {$it}")}
+                pack.hover?.let {buf.ln("$selector:hover {$it}")}
+                pack.active?.let {buf.ln("$selector:active {$it}")}
+                pack.focus?.let {buf.ln("$selector:focus {$it}")}
+                pack.hoverActive?.let {buf.ln("$selector:hover:active {$it}")}
+                pack.hoverFocus?.let {buf.ln("$selector:hover:focus {$it}")}
+                pack.firstChild?.let {buf.ln("$selector:first-child {$it}")}
+                pack.notFirstChild?.let {buf.ln("$selector:nth-child(1n+2) {$it}")}
+            }
+        }
+
+        buf.toString()
+    }
+}
 
 
 

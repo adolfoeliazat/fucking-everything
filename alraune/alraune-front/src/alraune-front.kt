@@ -19,54 +19,7 @@ fun main(args: Array<String>) {
     clog("shitFromBack", AlFrontPile.shitFromBack)
 
     jqDocumentReady {
-        if (AlFrontPile.shitFromBack.pageID == AlPageID.orderCreation) {
-            val button = byid(AlDomID.createOrderForm_submitButton)
-            // TODO:vgrechka Remove event handlers
-            fun handler() {
-                clog("i am the fucking handler")
-                AlFrontPile.showTicker()
-
-                @Suppress("UNUSED_VARIABLE")
-                val clazz = window.asDynamic()["alraune-front"].alraune.shared[OrderCreationForm::class.simpleName]
-                val inst = js("new clazz()")
-                val propNames = JSObject.getOwnPropertyNames(inst)
-                for (propName in propNames) {
-                    clog("propName", propName)
-                    inst[propName] = JQueryPile.byidSingle(AlSharedPile.fieldDOMID(propName)).getVal()
-                }
-                val data = JSON.stringify(inst)
-                // clog("data", data)
-                async {
-                    val html = AlFrontPile.post("https://alraune.local/order?post=true", data)
-                    // clog("html", html)
-                    val i1 = html.indexOfOrNull(AlSharedPile.beginContentMarker) ?: wtf("c7ef8f87-c3ea-4d02-b31a-717dc1a8a01f")
-                    val i2 = html.indexOfOrNull(AlSharedPile.endContentMarker) ?: wtf("91747d64-af48-43a6-85ec-59a69994fd11")
-                    val content = html.substring(i1 + AlSharedPile.beginContentMarker.length, i2)
-                    JQueryPile.byidSingle(AlDomID.replaceableContent)[0]!!.outerHTML = content
-                }
-            }
-
-            AlFrontDebug.messAroundFront201 = {
-                val data = OrderCreationForm(email = "iperdonde@mail.com",
-                                             name = "Иммануил Пердондэ",
-                                             phone = "+38 (068) 4542823",
-                                             documentTitle = "Как я пинал хуи на практике",
-                                             documentDetails = "Детали? Я ебу, какие там детали...")
-                val o = AlFrontPile::populateTextField
-                o(data::email)
-                o(data::name)
-                o(data::phone)
-                o(data::documentTitle)
-                o(data::documentDetails)
-
-                handler()
-            }
-
-            button.on("click") {
-                it.preventAndStop()
-                handler()
-            }
-        }
+        AlFrontPile.initShit()
 
         @Suppress("UnsafeCastFromDynamic")
         KJSPile.getURLParam("frontMessAround")?.let {
@@ -75,6 +28,7 @@ fun main(args: Array<String>) {
         }
     }
 }
+
 
 class AlFrontSecurity {
     fun isSignedIn(): Boolean {
@@ -104,9 +58,11 @@ object AlFrontDebug {
     }
 
     var messAroundFront201: (() -> Unit)? = null
+    var messAroundFront202: (() -> Unit)? = null
 }
 
 object AlFrontPile {
+    val debug_sleepBeforePost = 1000
     var shitFromBack by notNullOnce<ShitPassedFromBackToFront>()
 
 //    object google {
@@ -137,7 +93,7 @@ object AlFrontPile {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
                         val response: String = xhr.responseText
-                        clog("response", response)
+                        // clog("response", response)
                         resolve(response)
                     } else {
                         reject(Exception("Got shitty backend response from $url: status = ${xhr.status}"))
@@ -147,6 +103,76 @@ object AlFrontPile {
 
             xhr.send(data)
         }
+    }
+
+    fun initShit() {
+        if (AlFrontPile.shitFromBack.pageID == AlPageID.orderCreation) {
+            val button = byid(AlDomID.createOrderForm_submitButton)
+            // TODO:vgrechka Remove event handlers
+            fun handler() {
+                clog("i am the fucking handler")
+                AlFrontPile.showTicker()
+
+                @Suppress("UNUSED_VARIABLE")
+                val clazz = window.asDynamic()["alraune-front"].alraune.shared[OrderCreationForm::class.simpleName]
+                val inst = js("new clazz()")
+                val propNames = JSObject.getOwnPropertyNames(inst)
+                for (propName in propNames) {
+                    clog("propName", propName)
+                    inst[propName] = byidSingle(AlSharedPile.fieldDOMID(propName)).getVal()
+                }
+                val data = JSON.stringify(inst)
+                // clog("data", data)
+                async {
+                    AlFrontPile.sleep(AlFrontPile.debug_sleepBeforePost)
+
+                    val html = AlFrontPile.post(AlFrontPile.shitFromBack.postURL, data)
+                    // clog("html", html)
+                    val i1 = html.indexOfOrNull(AlSharedPile.beginContentMarker) ?: wtf("c7ef8f87-c3ea-4d02-b31a-717dc1a8a01f")
+                    val i2 = html.indexOfOrNull(AlSharedPile.endContentMarker) ?: wtf("91747d64-af48-43a6-85ec-59a69994fd11")
+                    val content = html.substring(i1 + AlSharedPile.beginContentMarker.length, i2)
+                    byidSingle(AlDomID.replaceableContent)[0]!!.outerHTML = content
+
+                    AlFrontPile.initShit()
+                }
+            }
+
+            fun make2xx(tamperWith: (OrderCreationForm) -> OrderCreationForm): () -> Unit {
+                return {
+                    val data = tamperWith(OrderCreationForm(
+                        email = "iperdonde@mail.com",
+                        name = "Иммануил Пердондэ",
+                        phone = "+38 (068) 4542823",
+                        documentTitle = "Как я пинал хуи на практике",
+                        documentDetails = "Детали? Я ебу, какие там детали..."))
+                    val o = AlFrontPile::populateTextField
+                    o(data::email)
+                    o(data::name)
+                    o(data::phone)
+                    o(data::documentTitle)
+                    o(data::documentDetails)
+
+                    handler()
+                }
+            }
+
+            // https://alraune.local/order?backMessAround=messAroundBack201&frontMessAround=messAroundFront202
+            AlFrontDebug.messAroundFront201 = make2xx {it}
+            AlFrontDebug.messAroundFront202 = make2xx {it.copy(email = "", phone = "", documentDetails = "")}
+
+            button.on("click") {
+                it.preventAndStop()
+                handler()
+            }
+        }
+    }
+
+    suspend fun sleep(ms: Int) {
+        await(delay(ms))
+    }
+
+    fun delay(ms: Int): Promise<Unit> = Promise {resolve, _ ->
+        window.setTimeout({resolve(Unit)}, ms)
     }
 }
 

@@ -1,6 +1,7 @@
 package alraune.back
 
 import alraune.back.AlBackPile.escapeHTML
+import alraune.shared.AlCSS
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.undertow.server.HttpServerExchange
 import org.slf4j.LoggerFactory
@@ -15,6 +16,8 @@ object AlBackPile {
     val tmpDirPath = "c:/tmp"
     val log = LoggerFactory.getLogger(this.javaClass)
     var httpServerExchange by volatileNotNull<HttpServerExchange>()
+    val orderCreationPagePath = "/order"
+    val baseURL = "https://alraune.local"
 
     val secrets by lazy {
         // TODO:vgrechka Get file name from environment variable
@@ -77,6 +80,11 @@ class Tag(val tag: String, val attrs: Attrs) : Renderable {
     }
 
     operator fun minus(re: Renderable?) = add(re)
+
+    fun text(x: String): Tag {
+        add(Text(x))
+        return this
+    }
 }
 
 enum class FieldType {
@@ -84,14 +92,18 @@ enum class FieldType {
 }
 
 class TagCtor(val tag: String) {
-    operator fun invoke(attrs: Attrs = Attrs(), block: (Tag) -> Unit): Tag {
+    operator fun invoke(attrs: Attrs = Attrs(), block: (Tag) -> Unit = {}): Tag {
         val tag = Tag(tag, attrs)
         block(tag)
         return tag
     }
 
-    fun className(className: String, block: (Tag) -> Unit): Tag {
+    fun className(className: String, block: (Tag) -> Unit = {}): Tag {
         return this(Attrs(className = className), block)
+    }
+
+    fun className(pack: AlCSS.Pack, block: (Tag) -> Unit = {}): Tag {
+        return this(Attrs(className = pack.className), block)
     }
 
     fun id(id: String, block: (Tag) -> Unit): Tag {
