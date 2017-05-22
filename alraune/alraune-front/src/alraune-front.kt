@@ -1,19 +1,17 @@
 package alraune.front
 
 import alraune.shared.AlSharedPile
+import alraune.shared.OrderCreationForm
 import alraune.shared.ShitPassedFromBackToFront
-import org.w3c.dom.events.MouseEvent
 import vgrechka.*
 import vgrechka.kjs.*
-import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.js.Promise
-import kotlin.js.json
 import kotlin.reflect.KFunction0
 
 fun main(args: Array<String>) {
     clog("I am alraune-front 4")
-    window.asDynamic()[AlDebug::class.simpleName] = AlDebug
+    window.asDynamic()[AlFrontDebug::class.simpleName] = AlFrontDebug
 
     @Suppress("UnsafeCastFromDynamic")
     AlFrontPile.shitFromBack = JSON.parse(window.asDynamic()[ShitPassedFromBackToFront::class.simpleName])
@@ -25,8 +23,14 @@ fun main(args: Array<String>) {
             // TODO:vgrechka Remove event handlers
             fun handler() {
                 clog("i am the fucking handler")
+                val clazz = window.asDynamic()["alraune-front"].alraune.shared[OrderCreationForm::class.simpleName]
+                val inst = js("new clazz()")
+                val props = JSObject.getOwnPropertyNames(inst)
+                for (prop in props) {
+                    clog("prop", prop)
+                }
             }
-            AlDebug.messAround2 = ::handler
+            AlFrontDebug.messAroundFront201 = ::handler
             button.on("click") {
                 it.preventAndStop()
                 handler()
@@ -34,8 +38,9 @@ fun main(args: Array<String>) {
         }
 
         @Suppress("UnsafeCastFromDynamic")
-        KJSPile.getURLParam("messAround")?.let {
-            AlDebug.asDynamic()[it]()
+        KJSPile.getURLParam("frontMessAround")?.let {
+            val f = AlFrontDebug.asDynamic()[it] as? KFunction0<*> ?: bitch("$it is not a function")
+            f()
         }
     }
 }
@@ -46,7 +51,7 @@ class AlFrontSecurity {
     }
 }
 
-object AlDebug {
+object AlFrontDebug {
     // Ex: AlDebug.AlFrontPile.google.auth2
 
     val AlFrontPile = alraune.front.AlFrontPile
@@ -67,7 +72,7 @@ object AlDebug {
         button.off()
     }
 
-    var messAround2: KFunction0<Unit>? = null
+    var messAroundFront201: KFunction0<Unit>? = null
 }
 
 object AlFrontPile {

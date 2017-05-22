@@ -31,3 +31,22 @@ fun Event.preventAndStop() {
     this.stopPropagation()
 }
 
+external @JsName("Object")
+object JSObject {
+    fun keys(x: Any): Array<String>
+    fun getOwnPropertyNames(x: Any): Array<String>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

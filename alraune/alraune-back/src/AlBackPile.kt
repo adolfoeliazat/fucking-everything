@@ -2,8 +2,11 @@ package alraune.back
 
 import alraune.back.AlBackPile.escapeHTML
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.undertow.server.HttpServerExchange
 import org.slf4j.LoggerFactory
+import vgrechka.*
 import java.io.File
+import kotlin.properties.Delegates.notNull
 
 object AlBackPile {
     val backResourceRootDir = "E:/fegh/alraune/alraune-back"
@@ -11,12 +14,12 @@ object AlBackPile {
     val sharedKJSOutDir = "E:/fegh/out/production/shared-kjs"
     val tmpDirPath = "c:/tmp"
     val log = LoggerFactory.getLogger(this.javaClass)
+    var httpServerExchange by volatileNotNull<HttpServerExchange>()
 
     val secrets by lazy {
         // TODO:vgrechka Get file name from environment variable
         ObjectMapper().readValue(File("e:/fpebb/alraune/alraune-secrets.json"), JSON_AlrauneSecrets::class.java)!!
     }
-
 
     fun t(en: String, ru: String) = ru
 

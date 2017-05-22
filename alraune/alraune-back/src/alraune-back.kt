@@ -3,7 +3,6 @@ package alraune.back
 import alraune.back.AlBackPile.log
 import alraune.back.AlBackPile.pageTitle
 import alraune.back.AlBackPile.t
-import alraune.shared.AlSharedPile
 import alraune.shared.AlSharedPile.domID
 import alraune.shared.AlSharedPile.pageID
 import alraune.shared.OrderCreationForm
@@ -31,8 +30,8 @@ import java.nio.file.Paths
 import java.security.KeyStore
 import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
-import kotlin.reflect.KProperty
-import kotlin.reflect.KProperty0
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.*
 
 
 @Ser class JSON_AlrauneSecrets(
@@ -65,6 +64,8 @@ object StartAlrauneBack {
             .addHttpsListener(port, "localhost", sslContext)
             .setHandler(object : HttpHandler {
                 override fun handleRequest(exchange: HttpServerExchange) {
+                    AlBackPile.httpServerExchange = exchange
+
                     val path = exchange.requestPath
                     log.debug("path = " + path)
                     log.debug("queryParameters = " + exchange.queryParameters)
@@ -118,6 +119,13 @@ object StartAlrauneBack {
                             }
 
                             val data = when {
+                                AlBackDebug.messAroundBack201.should -> {
+                                    OrderCreationForm(email = "fuck",
+                                                      name = "shit",
+                                                      phone = "bitch",
+                                                      documentTitle = "boobs",
+                                                      documentDetails = "vagina")
+                                }
                                 post -> {
                                     val dataString: String = exchange.queryParameters["data"]!!.first()
                                     ObjectMapper().readValue(dataString, OrderCreationForm::class.java)
@@ -275,6 +283,44 @@ class AlrauneLogConfigurator : ContextAwareBase(), Configurator {
         }
     }
 }
+
+object AlBackDebug {
+    val messAroundBack201 by fuck()
+
+    interface Fuck {
+        val should: Boolean
+    }
+
+    fun fuck() = object : ReadOnlyProperty<Any?, Fuck> {
+        override fun getValue(thisRef: Any?, property: KProperty<*>): Fuck {
+            return object : Fuck {
+                override val should: Boolean
+                    get() = AlBackPile.httpServerExchange
+                        .queryParameters["backMessAround"]?.contains(property.name) == true
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
