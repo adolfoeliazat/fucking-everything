@@ -163,5 +163,16 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="alraune-front" scope="PROVIDED" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../lib-gradle/commons-validator-1.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../lib-gradle/commons-validator-1.6-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>

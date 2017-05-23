@@ -4,6 +4,7 @@ import alraune.back.AlBackPile.escapeHTML
 import alraune.shared.AlCSS
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.undertow.server.HttpServerExchange
+import org.apache.commons.validator.routines.EmailValidator
 import org.slf4j.LoggerFactory
 import vgrechka.*
 import java.io.File
@@ -33,6 +34,47 @@ object AlBackPile {
             .replace("<", "&lt;")
             .replace(">", "&gt;")
     }
+
+    fun fuckValidate1(x: String?, minLen: Int, maxLen: Int, boobs: (String) -> String?): ValidationResult {
+        val sane = (x ?: "").trim()
+        var error = when {
+            sane.isBlank() -> t("TOTE", "Поле обязательно")
+            sane.length < minLen -> t("TOTE", "Не менее $minLen символов")
+            sane.length > maxLen -> t("TOTE", "Не более $maxLen символов")
+            else -> null
+        }
+        if (error == null) {
+            error = boobs(sane)
+        }
+        return ValidationResult(sane, error)
+    }
+
+    fun validateEmail(x: String?) = fuckValidate1(x, minLen = 3, maxLen = 50) {
+        when {
+            EmailValidator.getInstance().isValid(it) -> null
+            else -> t("TOTE", "Странная почта какая-то")
+        }
+    }
+
+    fun validateName(x: String?) = fuckValidate1(x, minLen = 3, maxLen = 50) {null}
+
+    fun validatePhone(x: String?) = fuckValidate1(x, minLen = 3, maxLen = 50) {
+        // TODO:vgrechka Revisit
+        val minDigits = 6
+        var digitCount = 0
+        for (c in it.toCharArray()) {
+            if (!Regex("(\\d| |-|\\+|\\(|\\))+").matches("$c")) return@fuckValidate1 t("TOTE", "Странный телефон какой-то")
+            if (Regex("\\d").matches("$c")) ++digitCount
+        }
+        when {
+            digitCount < minDigits -> t("TOTE", "Не менее $minDigits цифр")
+            else -> null
+        }
+    }
+
+    fun validateDocumentTitle(x: String?) = fuckValidate1(x, minLen = 5, maxLen = 250) {null}
+
+    fun validateDocumentDetails(x: String?) = fuckValidate1(x, minLen = 5, maxLen = 1000) {null}
 }
 
 val kdiv = TagCtor("div")
@@ -149,6 +191,7 @@ class Attrs(
     val rows: Int? = null
 )
 
+class ValidationResult(val sanitizedString: String, val error: String?)
 
 
 

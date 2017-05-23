@@ -81,6 +81,8 @@ dependencies {
     compile 'io.undertow:undertow-core:1.4.14.Final:sources'
     compile 'io.undertow:undertow-servlet:1.4.14.Final:sources'
     compile 'io.undertow:undertow-websockets-jsr:1.4.14.Final:sources'
+    compile 'commons-validator:commons-validator:1.6'
+    compile 'commons-validator:commons-validator:1.6:sources'
 }
 
 task importDeps(type: Copy) {
