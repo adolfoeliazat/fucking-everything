@@ -6,6 +6,7 @@ import vgrechka.*
 import java.io.File
 
 object AlBackPile0 {
+    val locale = AlLocale.UA
     val backResourceRootDir = "E:/fegh/alraune/alraune-back"
     val frontOutDir = "E:/fegh/out/production/alraune-front"
     val sharedKJSOutDir = "E:/fegh/out/production/shared-kjs"
@@ -18,6 +19,10 @@ object AlBackPile0 {
         // TODO:vgrechka Get file name from environment variable
         ObjectMapper().readValue(File("e:/fpebb/alraune/alraune-secrets.json"), JSON_AlrauneSecrets::class.java)!!
     }
+}
+
+enum class AlLocale {
+    UA, EN
 }
 
 @Ser class JSON_AlrauneSecrets(

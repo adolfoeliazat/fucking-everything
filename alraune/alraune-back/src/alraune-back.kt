@@ -1,8 +1,9 @@
 package alraune.back
 
 import alraune.back.AlBackPile0.log
-import alraune.back.AlBackPile.pageTitle
-import alraune.back.AlBackPile.t
+import alraune.back.AlRenderPile.pageTitle
+import alraune.back.AlRenderPile.renderOrderTitle
+import alraune.back.AlRenderPile.t
 import alraune.shared.OrderCreationForm
 import alraune.shared.ShitPassedFromBackToFront
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -27,7 +28,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 import kotlin.reflect.full.memberProperties
-
 
 object StartAlrauneBack {
     @JvmStatic
@@ -96,56 +96,57 @@ object StartAlrauneBack {
 
                     fun onDataAvailable(data: OrderCreationForm) {
                         spitUsualPage(AlPageID.orderCreation, exchange) {o->
-                            o- pageTitle(t("TOTE", "Заказ"))
-                            o- kform{o->
-                                val q = AlBackPile
-                                var hasErrors = false
-                                val fieldRenderers = mutableListOf<() -> Unit>()
+                            val q = AlBackPile
+                            var hasErrors = false
+                            val fieldRenderers = mutableListOf<() -> Unit>()
 
-                                fun declareField(prop: KProperty0<String>,
-                                                 title: String, validator: (String?) -> ValidationResult,
-                                                 fieldType: FieldType = FieldType.TEXT): String {
-                                    val vr = validator(prop.get())
-                                    val theError = when {
-                                        isPost -> vr.error
-                                        else -> null
-                                    }
-                                    if (theError != null)
-                                        hasErrors = true
+                            fun declareField(prop: KProperty0<String>,
+                                             title: String, validator: (String?) -> ValidationResult,
+                                             fieldType: FieldType = FieldType.TEXT): String {
+                                val vr = validator(prop.get())
+                                val theError = when {
+                                    isPost -> vr.error
+                                    else -> null
+                                }
+                                if (theError != null)
+                                    hasErrors = true
 
-                                    fieldRenderers += {
-                                        val id = AlSharedPile.fieldDOMID(name = prop.name)
-                                        o- kdiv.className("form-group") {o->
-                                            if (theError != null)
-                                                o.amend(Style(marginBottom = "0"))
-                                            o- klabel(text = title)
-                                            val control = when (fieldType) {
-                                                FieldType.TEXT -> kinput(Attrs(type = "text", id = id, value = vr.sanitizedString, className = "form-control")) {}
-                                                FieldType.TEXTAREA -> ktextarea(Attrs(id = id, rows = 5, className = "form-control"), text = vr.sanitizedString)
-                                            }
-                                            o- kdiv(Style(position = "relative")){o->
-                                                o- control
-                                                if (theError != null) {
-                                                    o- kdiv(Style(marginTop = "5px", marginRight = "9px", textAlign = "right", color = "${Color.RED_700}"))
-                                                        .text(theError)
-                                                    // TODO:vgrechka Shift red circle if control has scrollbar
-                                                    o- kdiv(Style(width = "15px", height = "15px", backgroundColor = "${Color.RED_300}",
-                                                                  borderRadius = "10px", position = "absolute", top = "10px", right = "8px"))
-                                                }
+                                fieldRenderers += {
+                                    val id = AlSharedPile.fieldDOMID(name = prop.name)
+                                    o- kdiv.className("form-group") {o->
+                                        if (theError != null)
+                                            o.amend(Style(marginBottom = "0"))
+                                        o- klabel(text = title)
+                                        val control = when (fieldType) {
+                                            FieldType.TEXT -> kinput(Attrs(type = "text", id = id, value = vr.sanitizedString, className = "form-control")) {}
+                                            FieldType.TEXTAREA -> ktextarea(Attrs(id = id, rows = 5, className = "form-control"), text = vr.sanitizedString)
+                                        }
+                                        o- kdiv(Style(position = "relative")){o->
+                                            o- control
+                                            if (theError != null) {
+                                                o- kdiv(Style(marginTop = "5px", marginRight = "9px", textAlign = "right", color = "${Color.RED_700}"))
+                                                    .text(theError)
+                                                // TODO:vgrechka Shift red circle if control has scrollbar
+                                                o- kdiv(Style(width = "15px", height = "15px", backgroundColor = "${Color.RED_300}",
+                                                              borderRadius = "10px", position = "absolute", top = "10px", right = "8px"))
                                             }
                                         }
                                     }
-
-                                    return vr.sanitizedString
                                 }
 
-                                val email = declareField(data::email, t("TOTE", "Почта"), q::validateEmail)
-                                val contactName = declareField(data::name, t("TOTE", "Имя"), q::validateName)
-                                val phone = declareField(data::phone, t("TOTE", "Телефон"), q::validatePhone)
-                                val documentTitle = declareField(data::documentTitle, t("TOTE", "Тема работы (задание)"), q::validateDocumentTitle)
-                                val documentDetails = declareField(data::documentDetails, t("TOTE", "Детали"), q::validateDocumentDetails, FieldType.TEXTAREA)
+                                return vr.sanitizedString
+                            }
 
-                                if (!isPost || hasErrors) {
+                            val f = AlFields.order
+                            val email = declareField(data::email, f.email.title, q::validateEmail)
+                            val contactName = declareField(data::name, f.contactName.title, q::validateName)
+                            val phone = declareField(data::phone, f.phone.title, q::validatePhone)
+                            val documentTitle = declareField(data::documentTitle, f.documentTitle.title, q::validateDocumentTitle)
+                            val documentDetails = declareField(data::documentDetails, f.documentDetails.title, q::validateDocumentDetails, FieldType.TEXTAREA)
+
+                            if (!isPost || hasErrors) {
+                                o- pageTitle(t("TOTE", "Заказ"))
+                                o- kform{o->
                                     if (hasErrors)
                                         o- kdiv.className(AlCSS.errorBanner).text(t("TOTE", "Кое-что нужно исправить..."))
                                     for (renderField in fieldRenderers)
@@ -154,14 +155,15 @@ object StartAlrauneBack {
                                         o- kbutton(Attrs(id = AlDomID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Вперед"))
                                         o- kdiv.id(AlDomID.ticker){}
                                     }
-                                } else {
-                                    // TODO:vgrechka Think about making DB calls non-blocking
-                                    val order = alOrderRepo.save(newAlOrder(
-                                        email = email, contactName = contactName, phone = phone,
-                                        documentTitle = documentTitle, documentDetails = documentDetails))
-                                    o- q.renderOrderTitle(order)
-                                    o- t("TOTE", "Все круто. Мы с тобой скоро свяжемся")
                                 }
+                            } else {
+                                // TODO:vgrechka Think about making DB calls non-blocking
+                                val order = alOrderRepo.save(newAlOrder(
+                                    email = email, contactName = contactName, phone = phone,
+                                    documentTitle = documentTitle, documentDetails = documentDetails))
+                                o- renderOrderTitle(order)
+                                o- kdiv.className(AlCSS.successBanner).text(t("TOTE", "Все круто. Мы с тобой скоро свяжемся"))
+                                o- AlRenderPile.renderOrderParams(order)
                             }
                         }
                     }

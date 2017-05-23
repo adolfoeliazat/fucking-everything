@@ -1,27 +1,14 @@
 package alraune.back
 
-import alraune.back.AlBackPile.escapeHTML
+import alraune.back.AlRenderPile.escapeHTML
+import alraune.back.AlRenderPile.t
 import alraune.shared.AlCSS
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.undertow.server.HttpServerExchange
 import org.apache.commons.validator.routines.EmailValidator
-import org.slf4j.LoggerFactory
 import vgrechka.*
-import java.io.File
 
 object AlBackPile {
     var httpServerExchange by volatileNotNull<HttpServerExchange>()
-
-    fun t(en: String, ru: String) = ru
-
-    fun pageTitle(text: String) = kh3(text)
-
-    fun escapeHTML(s: String): String {
-        return s
-            .replace("&", "&amp;")
-            .replace("<", "&lt;")
-            .replace(">", "&gt;")
-    }
 
     fun fuckValidate1(x: String?, minLen: Int, maxLen: Int, boobs: (String) -> String?): ValidationResult {
         val sane = (x ?: "").trim()
@@ -64,15 +51,11 @@ object AlBackPile {
 
     fun validateDocumentDetails(x: String?) = fuckValidate1(x, minLen = 5, maxLen = 1000) {null}
 
-    fun renderOrderTitle(order: AlOrder): Renderable {
-        return kdiv{o->
-            o- pageTitle(t("Order #", "Заказ №") + order.id)
-        }
-    }
 }
 
 val kdiv = TagCtor("div")
 val kspan = TagCtor("span")
+val kp = TagCtor("p")
 val kbutton = TagCtor("button")
 val kform = TagCtor("form")
 val kul = TagCtor("ul")

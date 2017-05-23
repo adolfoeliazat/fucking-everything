@@ -44,6 +44,14 @@ object AlCSS {
         padding-top: 1rem;
         padding-bottom: 1rem;""")
 
+    val successBanner by Pack("""
+        background-color: ${Color.GREEN_50};
+        border-left: 3px solid ${Color.GREEN_300};
+        margin-bottom: 1.5rem;
+        padding-left: 1rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;""")
+
     fun addShit(buf: StringBuilder) {
         fun forID(id: String, pack: Pack) {
             pack.default?.let {buf.ln("#$id {$it}")}
