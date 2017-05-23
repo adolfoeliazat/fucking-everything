@@ -40,15 +40,8 @@ class DocumentCategoryPicker {
             }
         })
 
-        val selectJQ = byIDSingle(selectID)
-        selectJQ.on("change") {
-            val categoryID = selectJQ.getVal() ?: wtf("975e6a00-5798-44dd-a704-5e9f47e1e678")
-            // clog("categoryID", categoryID)
-            val item = currentPath.last().children.find {it.id == categoryID} ?: wtf("5162f6ed-31bc-4e89-8088-5528b9ea43d5")
-            if (item.children.isNotEmpty()) {
-                currentPath += item
-                update()
-            }
+        byIDSingle(selectID).on("change") {
+            handleSelectChange()
         }
 
         byIDNoneOrSingle(backButtonID)?.let {
@@ -58,7 +51,31 @@ class DocumentCategoryPicker {
             }
         }
     }
+
+    private fun handleSelectChange() {
+        val categoryID = byIDSingle(selectID).getVal() ?: wtf("975e6a00-5798-44dd-a704-5e9f47e1e678")
+        val item = currentPath.last().children.find {it.id == categoryID} ?: wtf("5162f6ed-31bc-4e89-8088-5528b9ea43d5")
+        if (item.children.isNotEmpty()) {
+            currentPath += item
+            update()
+        }
+    }
+
+    fun debug_setSelectValue(categoryID: String) {
+        byIDSingle(selectID).setVal(categoryID)
+        handleSelectChange()
+    }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -107,19 +107,19 @@ object AlFrontPile {
 
     fun initShit() {
         if (AlFrontPile.shitFromBack.pageID == AlPageID.orderCreation) {
-            DocumentCategoryPicker()
+            val documentCategoryPicker = DocumentCategoryPicker()
 
             val button = byID(AlDomID.createOrderForm_submitButton)
             // TODO:vgrechka Remove event handlers
-            fun handler() {
-                clog("i am the fucking handler")
+            fun submitButtonHandler() {
+                clog("i am the fucking submitButtonHandler")
                 AlFrontPile.showTicker()
 
                 @Suppress("UNUSED_VARIABLE")
                 val clazz = window.asDynamic()["alraune-front"].alraune.shared[OrderCreationForm::class.simpleName]
                 val inst = js("new clazz()")
                 val propNames = JSObject.getOwnPropertyNames(inst)
-                for (propName in propNames) {
+                for (propName in propNames.toList() - OrderCreationForm::documentCategoryID.name) {
                     clog("propName", propName)
                     inst[propName] = byIDSingle(AlSharedPile.fieldDOMID(propName)).getVal()
                 }
@@ -127,7 +127,7 @@ object AlFrontPile {
                 // clog("data", data)
                 async {
                     AlFrontPile.sleep(AlFrontPile.debug_sleepBeforePost)
-                    AlFrontPile.sleepTillEndOfTime()
+                    // AlFrontPile.sleepTillEndOfTime()
 
                     val html = AlFrontPile.post(AlFrontPile.shitFromBack.postURL, data)
                     // clog("html", html)
@@ -147,7 +147,8 @@ object AlFrontPile {
                         name = "Иммануил Пердондэ",
                         phone = "+38 (068) 4542823",
                         documentTitle = "Как я пинал хуи на практике",
-                        documentDetails = "Детали? Я ебу, какие там детали..."))
+                        documentDetails = "Детали? Я ебу, какие там детали...",
+                        documentCategoryID = "boobs"))
                     val o = AlFrontPile::populateTextField
                     o(data::email)
                     o(data::name)
@@ -155,17 +156,19 @@ object AlFrontPile {
                     o(data::documentTitle)
                     o(data::documentDetails)
 
-                    handler()
+                    documentCategoryPicker.debug_setSelectValue(AlDocumentCategories.humanitiesID)
+                    documentCategoryPicker.debug_setSelectValue(AlDocumentCategories.linguisticsID)
+                    submitButtonHandler()
                 }
             }
 
             // https://alraune.local/order?frontMessAround=messAroundFront201
             AlFrontDebug.messAroundFront201 = make2xx {it}
-            AlFrontDebug.messAroundFront202 = make2xx {it.copy(email = "", phone = "", documentDetails = "")}
+            AlFrontDebug.messAroundFront202 = make2xx {it.copy(email = "", phone = "bullshit", documentDetails = "")}
 
             button.on("click") {
                 it.preventAndStop()
-                handler()
+                submitButtonHandler()
             }
         }
     }

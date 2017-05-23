@@ -1,9 +1,13 @@
 package alraune.shared
 
 object AlDocumentCategories {
+    val miscID = "102"
+    val humanitiesID = "226"
+    val linguisticsID = "238"
+
     val t = AlXPile::t
     val root = Category("ROOT", "101", listOf(
-        Category(t("TOTE", "Разное"), "102"),
+        Category(t("TOTE", "Разное"), miscID),
         Category(t("TOTE", "Экономические"), "103", listOf(
             Category(t("TOTE", "Аудит"), "104"),
             Category(t("TOTE", "Банковское дело"), "105"),
@@ -135,7 +139,7 @@ object AlDocumentCategories {
             Category(t("TOTE", "Гражданское право"), "225")
         )),
 
-        Category(t("TOTE", "Гуманитарные"), "226", listOf(
+        Category(t("TOTE", "Гуманитарные"), humanitiesID, listOf(
             Category(t("TOTE", "Анализ банковской деятельности"), "227"),
             Category(t("TOTE", "Английский язык"), "228"),
             Category(t("TOTE", "Безопасность жизнедеятельности (БЖД)"), "229"),
@@ -147,7 +151,7 @@ object AlDocumentCategories {
             Category(t("TOTE", "История"), "235"),
             Category(t("TOTE", "Краеведение"), "236"),
             Category(t("TOTE", "Культурология"), "237"),
-            Category(t("TOTE", "Лингвистика"), "238"),
+            Category(t("TOTE", "Лингвистика"), linguisticsID),
             Category(t("TOTE", "Литература зарубежная"), "239"),
             Category(t("TOTE", "Литература русский"), "240"),
             Category(t("TOTE", "Литература украинский"), "241"),

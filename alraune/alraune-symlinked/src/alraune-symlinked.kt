@@ -120,7 +120,8 @@ object AlCSS {
     val name: String,
     val phone: String,
     val documentTitle: String,
-    val documentDetails: String
+    val documentDetails: String,
+    val documentCategoryID: String
 )
 
 class ShitPassedFromBackToFront {

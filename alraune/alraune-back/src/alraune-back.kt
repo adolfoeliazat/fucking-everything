@@ -99,7 +99,7 @@ object StartAlrauneBack {
                         spitUsualPage(AlPageID.orderCreation, ctx) {o->
                             val q = AlBackPile
                             var hasErrors = false
-                            val fieldRenderers = mutableListOf<() -> Unit>()
+                            val fieldRenderers = mutableListOf<() -> Renderable>()
 
                             fun declareField(prop: KProperty0<String>,
                                              title: String, validator: (String?) -> ValidationResult,
@@ -114,7 +114,7 @@ object StartAlrauneBack {
 
                                 fieldRenderers += {
                                     val id = AlSharedPile.fieldDOMID(name = prop.name)
-                                    o- kdiv.className("form-group") {o->
+                                    kdiv.className("form-group") {o->
                                         if (theError != null)
                                             o.amend(Style(marginBottom = "0"))
                                         o- klabel(text = title)
@@ -151,12 +151,14 @@ object StartAlrauneBack {
                                 o- kform{o->
                                     if (hasErrors)
                                         o- kdiv.className(AlCSS.errorBanner).text(t("TOTE", "Кое-что нужно исправить..."))
+                                    fieldRenderers.add(3, {
+                                        kdiv.className("form-group"){o->
+                                            o- klabel(text = f.documentCategory.title)
+                                            o- kdiv(Attrs(id = AlDomID.documentCategoryPickerContainer))
+                                        }
+                                    })
                                     for (renderField in fieldRenderers)
-                                        renderField()
-                                    o- kdiv.className("form-group"){o->
-                                        o- klabel(text = f.documentCategory.title)
-                                        o- kdiv(Attrs(id = AlDomID.documentCategoryPickerContainer))
-                                    }
+                                        o- renderField()
                                     o- kdiv{o->
                                         o- kbutton(Attrs(id = AlDomID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Вперед"))
                                         o- kdiv.id(AlDomID.ticker){}
@@ -188,13 +190,14 @@ object StartAlrauneBack {
                     } else {
                         val data = when {
                             ctx.debug.messAroundBack201.should -> {
-                                OrderCreationForm(email = "fuck",
-                                                  name = "shit",
-                                                  phone = "bitch",
-                                                  documentTitle = "boobs",
-                                                  documentDetails = "vagina")
+                                imf("79569177-b1c4-4692-9230-0ad7f3e75ae9")
+//                                OrderCreationForm(email = "fuck",
+//                                                  name = "shit",
+//                                                  phone = "bitch",
+//                                                  documentTitle = "boobs",
+//                                                  documentDetails = "vagina")
                             }
-                            else -> OrderCreationForm("", "", "", "", "")
+                            else -> OrderCreationForm("", "", "", "", "", AlDocumentCategories.miscID)
                         }
                         onDataAvailable(data)
                     }
