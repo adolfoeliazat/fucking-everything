@@ -1,0 +1,41 @@
+PostgreSQL
+==========
+
+    Stuff
+
+        imdisk -a -t vm -s 300M -m r:
+        Click "Format"
+
+        cd /d E:\fegh\alraune\alraune-back\bin\dev\win
+        title pg-test & pg-test-start.cmd
+            | It will output following shit, which is OK: FATAL:  role "Vladimir" does not exist
+            | In the end, however, it should say: "server started"
+
+    Create test database
+        cd /d E:\fegh\alraune\alraune-back\bin\dev\win
+        pg-test-psql-postgres.cmd
+        create database alraune encoding 'UTF8';
+        \l
+        \q
+
+    Drop all shit
+        pg-test-psql-alraune.cmd
+        drop schema public cascade;
+
+    PSQL stuff
+        \x auto                         Automatic output format (rows/columns) depending on whether data fits on screen
+        \pset pager
+
+
+
+
+
+
+
+
+
+
+
+
+
+
