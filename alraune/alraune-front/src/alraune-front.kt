@@ -3,8 +3,8 @@ package alraune.front
 import alraune.shared.*
 import vgrechka.*
 import vgrechka.kjs.*
-import vgrechka.kjs.JQueryPile.byid
-import vgrechka.kjs.JQueryPile.byidSingle
+import vgrechka.kjs.JQueryPile.byID
+import vgrechka.kjs.JQueryPile.byIDSingle
 import kotlin.browser.window
 import kotlin.js.Promise
 import kotlin.reflect.KFunction0
@@ -53,7 +53,7 @@ object AlFrontDebug {
     }
 
     fun messAround1() {
-        val button = byid(AlDomID.createOrderForm_submitButton)
+        val button = byID(AlDomID.createOrderForm_submitButton)
         button.off()
     }
 
@@ -73,11 +73,11 @@ object AlFrontPile {
     val security = AlFrontSecurity()
 
     fun showTicker() {
-        byidSingle(AlDomID.ticker).css("display", "block")
+        byIDSingle(AlDomID.ticker).css("display", "block")
     }
 
     fun populateTextField(prop: KProperty0<String>) {
-        byidSingle(AlSharedPile.fieldDOMID(prop)).setVal(prop.get())
+        byIDSingle(AlSharedPile.fieldDOMID(prop)).setVal(prop.get())
     }
 
     suspend fun post(url: String, data: Any?) = await(postPromise(url, data))
@@ -107,7 +107,9 @@ object AlFrontPile {
 
     fun initShit() {
         if (AlFrontPile.shitFromBack.pageID == AlPageID.orderCreation) {
-            val button = byid(AlDomID.createOrderForm_submitButton)
+            DocumentCategoryPicker()
+
+            val button = byID(AlDomID.createOrderForm_submitButton)
             // TODO:vgrechka Remove event handlers
             fun handler() {
                 clog("i am the fucking handler")
@@ -119,7 +121,7 @@ object AlFrontPile {
                 val propNames = JSObject.getOwnPropertyNames(inst)
                 for (propName in propNames) {
                     clog("propName", propName)
-                    inst[propName] = byidSingle(AlSharedPile.fieldDOMID(propName)).getVal()
+                    inst[propName] = byIDSingle(AlSharedPile.fieldDOMID(propName)).getVal()
                 }
                 val data = JSON.stringify(inst)
                 // clog("data", data)
@@ -132,7 +134,7 @@ object AlFrontPile {
                     val i1 = html.indexOfOrNull(AlSharedPile.beginContentMarker) ?: wtf("c7ef8f87-c3ea-4d02-b31a-717dc1a8a01f")
                     val i2 = html.indexOfOrNull(AlSharedPile.endContentMarker) ?: wtf("91747d64-af48-43a6-85ec-59a69994fd11")
                     val content = html.substring(i1 + AlSharedPile.beginContentMarker.length, i2)
-                    byidSingle(AlDomID.replaceableContent)[0]!!.outerHTML = content
+                    byIDSingle(AlDomID.replaceableContent)[0]!!.outerHTML = content
 
                     AlFrontPile.initShit()
                 }
@@ -181,6 +183,28 @@ object AlFrontPile {
         window.setTimeout({resolve(Unit)}, ms)
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //fun initGoogleAuth() {

@@ -11,9 +11,6 @@ import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
 import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.ui.popup.JBPopupFactory
-import com.intellij.openapi.wm.WindowManager
-import com.intellij.openapi.wm.ex.StatusBarEx
-import com.intellij.task.ProjectTaskManager
 import com.intellij.util.lang.UrlClassLoader
 import com.sun.jna.platform.win32.User32
 import org.eclipse.jetty.server.Server
@@ -393,18 +390,34 @@ object CustomBuilds {
 
 class BackdoorToolsGroup : DefaultActionGroup() {
     init {
-        add(object : AnAction("lns") {
-            override fun actionPerformed(e: AnActionEvent) {
-                val clipboard = Toolkit.getDefaultToolkit().systemClipboard
-                val transferable = clipboard.getContents(null)
-                val shit = transferable.getTransferData(DataFlavor.stringFlavor) as String? ?: ""
-                val p = HriposDebugOutput(e.project!!)
-                for (line in shit.lines()) {
-                    p.println("ln(\"" + line.replace("\"", "\\\"").replace("$", "\\$") + "\")")
-                }
-                p.showDialog(title = "lns")
+        addClipboardInSomethingOutAction("lns") {p, shit ->
+            for (line in shit.lines()) {
+                p.println("ln(\"" + line.replace("\"", "\\\"").replace("$", "\\$") + "\")")
             }
-        })
+        }
+
+        addClipboardInSomethingOutAction("Generate Alraune group IDs") {p, shit ->
+            val buf = StringBuilder()
+            val re = Regex("ids\\.\\w+")
+            var nextID = 102
+            var searchStart = 0
+            var ok = false
+            for (i in 1..1000) { // Prevent infinite loop by mistake
+                val m = re.find(shit, searchStart)
+                if (m == null) {
+                    ok = true
+                    break
+                }
+                buf.append(shit.substring(searchStart, m.range.start))
+                buf.append("\"${nextID++}\"")
+                searchStart = m.range.endInclusive + 1
+            }
+            if (!ok)
+                bitch("It was too much    507e043f-19d8-4195-aa07-c6adbcf091c8")
+            buf.append(shit.substring(searchStart))
+            p.println(buf.toString())
+        }
+
 
 //        add(object : AnAction("Build Alraune and show in browser") {
 //            override fun actionPerformed(e: AnActionEvent) {
@@ -423,6 +436,22 @@ class BackdoorToolsGroup : DefaultActionGroup() {
             }
         })
     }
+
+    private fun addClipboardInSomethingOutAction(title: String, pedro: (HriposDebugOutput, String) -> Unit) {
+        add(object : AnAction(title) {
+            override fun actionPerformed(e: AnActionEvent) {
+                IDEAPile.revealingException {
+                    val clipboard = Toolkit.getDefaultToolkit().systemClipboard
+                    val transferable = clipboard.getContents(null)
+                    val shit = transferable.getTransferData(DataFlavor.stringFlavor) as String? ?: ""
+                    val p = HriposDebugOutput(e.project!!)
+                    pedro(p, shit)
+                    p.showDialog(title = title)
+                }
+            }
+        })
+    }
+
 }
 
 

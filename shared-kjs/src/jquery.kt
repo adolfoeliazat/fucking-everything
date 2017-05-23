@@ -103,29 +103,38 @@ fun JQuery.hide(): String = this.asDynamic().hide()
 fun JQuery.show(): String = this.asDynamic().show()
 
 object JQueryPile {
-    fun byidSingle(id: String): JQuery {
-        val j = byid(id)
+    fun byIDSingle(id: String): JQuery {
+        val j = byID(id)
         if (j.length != 1)
             bitch("I want one element with ID `$id`, got ${j.length}")
         return j
+    }
+
+    fun byIDNoneOrSingle(id: String): JQuery? {
+        val j = byID(id)
+        return when(j.length) {
+            0 -> null
+            1 -> j
+            else -> bitch("I want either none or single element with ID `$id`, got ${j.length}")
+        }
     }
 
 
     val jqbody: JQuery get() = jq(document.body!!)
     val jqwindow: JQuery get() = js("$(window)")
 
-    fun byid(id: String): JQuery {
+    fun byID(id: String): JQuery {
         val selector = "#$id".replace(Regex("\\."), "\\.")
         return jq(selector)
     }
 
-    fun byid0(id: String): HTMLElement? {
+    fun byID0(id: String): HTMLElement? {
         val selector = "#$id".replace(Regex("\\."), "\\.")
         return jq(selector)[0]
     }
 
-    fun byid0ForSure(id: String): HTMLElement {
-        return requireNotNull(byid0(id)) {"I want fucking element #$id"}
+    fun byID0ForSure(id: String): HTMLElement {
+        return requireNotNull(byID0(id)) {"I want fucking element #$id"}
     }
 }
 

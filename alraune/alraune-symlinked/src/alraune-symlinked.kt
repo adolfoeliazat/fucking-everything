@@ -75,7 +75,7 @@ object AlCSS {
                 height: 34px;
                 float: right;
                 animation-name: ${AlDomID.ticker};
-                animation-duration: 500ms;
+                animation-duration: 5000ms;
                 animation-iteration-count: infinite;
             }
 
