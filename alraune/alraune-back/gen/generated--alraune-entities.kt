@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Tue May 23 12:52:51 EEST 2017
+// Generated on Tue May 23 13:27:38 EEST 2017
 // Model: e:/fegh/alraune/alraune-back/src/alraune-entities.kt
 //
 
@@ -14,6 +14,7 @@ package alraune.back
 import kotlin.reflect.KClass
 import vgrechka.*
 import vgrechka.spew.*
+import vgrechka.db.*
 
 // ------------------------------------------------------------------
 // AlOrder
@@ -76,13 +77,13 @@ interface Generated_AlOrderBackingProvider : DBCodeGenUtils.GeneratedBackingEnti
 
 @XEntity @XTable(name = "alraune_orders")
 class Generated_AlOrder // Generated at 8-079453c-f675-490e-8367-7891d1a8b01a
-    : DBCodeGenUtils.GeneratedEntity<AlOrder>
+    : DBCodeGenUtils.GeneratedEntity<AlOrder>, VaginalEntity
 {
     @XId
-    @XGeneratedValue(strategy = XGenerationType.IDENTITY, generator = "IdentityIfNotSetGenerator")
-    @XGenericGenerator(name = "IdentityIfNotSetGenerator", strategy = "vgrechka.db.IdentityIfNotSetGenerator")
-    @XColumn(name = "orders_id") var id: Long? = null
-    @XTransient var imposedIDToGenerate: Long? = null
+    @XGeneratedValue(strategy = XGenerationType.IDENTITY, generator = "IdentityIfNotSetGenerator2")
+    @XGenericGenerator(name = "IdentityIfNotSetGenerator2", strategy = "vgrechka.db.IdentityIfNotSetGenerator2")
+    @XColumn(name = "orders_id") override var id: Long? = null
+    @XTransient override var imposedIDToGenerate: Long? = null
 
     @XColumn(name = "orders_createdAt") var createdAt: XTimestamp = DBCodeGenUtils.currentTimestampForEntity()
     @XColumn(name = "orders_updatedAt") var updatedAt: XTimestamp = createdAt

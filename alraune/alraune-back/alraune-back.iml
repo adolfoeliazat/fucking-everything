@@ -177,5 +177,6 @@
     </orderEntry>
     <orderEntry type="module" module-name="spew-jvm-0" />
     <orderEntry type="module" module-name="alraune-back-0" />
+    <orderEntry type="module" module-name="db-stuff" />
   </component>
 </module>

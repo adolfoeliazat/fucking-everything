@@ -23,6 +23,7 @@ import kotlin.properties.ReadOnlyProperty
 import alraune.shared.*
 import io.undertow.io.Receiver
 import io.undertow.util.Methods
+import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 import kotlin.reflect.full.memberProperties
@@ -31,6 +32,7 @@ import kotlin.reflect.full.memberProperties
 object StartAlrauneBack {
     @JvmStatic
     fun main(args: Array<String>) {
+        backPlatform.springctx = AnnotationConfigApplicationContext(AlrauneTestAppConfig::class.java)
         runUndertow()
     }
 

@@ -11,6 +11,12 @@ PostgreSQL
             | It will output following shit, which is OK: FATAL:  role "Vladimir" does not exist
             | In the end, however, it should say: "server started"
 
+    WSL
+        cd /mnt/e/fegh/alraune/alraune-back/bin/dev/linux
+        ./pg-test-psql-alraune.sh
+        \x auto
+        \pset pager
+
     Create test database
         cd /d E:\fegh\alraune\alraune-back\bin\dev\win
         pg-test-psql-postgres.cmd

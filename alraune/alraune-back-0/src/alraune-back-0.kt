@@ -67,7 +67,6 @@ class AlrauneLogConfigurator : ContextAwareBase(), Configurator {
             val encoder = LayoutWrappingEncoder<ILoggingEvent>()
             encoder.context = lc
 
-
             val layout = PatternLayout()
             layout.setPattern("%msg%n")
             layout.context = lc

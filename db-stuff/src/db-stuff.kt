@@ -98,6 +98,11 @@ class NiceHibernateNamingStrategy : ImplicitNamingStrategyJpaCompliantImpl() {
     }
 }
 
+interface VaginalEntity {
+    val id: Long?
+    var imposedIDToGenerate: Long?
+}
+
 @XMappedSuperclass
 abstract class ClitoralEntity0 {
     @XId
@@ -131,6 +136,19 @@ class IdentityIfNotSetGenerator : IdentityGenerator() {
     }
 }
 
+@Suppress("Unused")
+class IdentityIfNotSetGenerator2 : IdentityGenerator() {
+    private val logic = IdentityIfNotSetGeneratorLogic2()
+
+    override fun generate(s: SharedSessionContractImplementor?, obj: Any?): XSerializable {
+        val id = logic.generate(obj)
+        return when {
+            id != null -> id
+            else -> super.generate(s, obj)
+        }
+    }
+}
+
 // TODO:vgrechka Why the fuck did I need this to be in a separate class?
 class IdentityIfNotSetGeneratorLogic {
     /**
@@ -138,6 +156,22 @@ class IdentityIfNotSetGeneratorLogic {
      */
     fun generate(obj: Any?): Long? {
         val entity = obj as ClitoralEntity0
+        val id = entity.id
+        val imposedIDToGenerate = entity.imposedIDToGenerate
+        return when {
+            id != null -> id
+            imposedIDToGenerate != null -> imposedIDToGenerate
+            else -> null
+        }
+    }
+}
+
+class IdentityIfNotSetGeneratorLogic2 {
+    /**
+     * @return null if default identity generator should be used
+     */
+    fun generate(obj: Any?): Long? {
+        val entity = obj as VaginalEntity
         val id = entity.id
         val imposedIDToGenerate = entity.imposedIDToGenerate
         return when {

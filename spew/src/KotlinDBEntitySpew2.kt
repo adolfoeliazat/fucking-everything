@@ -18,6 +18,7 @@ class KotlinDBEntitySpew2 : Spew {
                     }
 
                     override fun spitImports() {
+                        ln("import vgrechka.db.*")
                     }
 
                     override fun makeJuan(juanCtx: CommonDBEntitySpew.spitShitForEntity): CommonDBEntitySpew.Juan {
@@ -146,14 +147,14 @@ class KotlinDBEntitySpew2 : Spew {
                             override fun spitEntityClass() {
                                 out.append("@XEntity @XTable(name = \"${entity.tableName}\")\n")
                                 out.append("class Generated_$en // Generated at ${mangleUUID("8079453c-f675-490e-8367-7891d1a8b01a")}\n")
-                                out.append("    : DBCodeGenUtils.GeneratedEntity<$en>\n")
+                                out.append("    : DBCodeGenUtils.GeneratedEntity<$en>, VaginalEntity\n")
                                 out.append("{\n")
 
                                 ln("    @XId")
-                                ln("    @XGeneratedValue(strategy = XGenerationType.IDENTITY, generator = \"IdentityIfNotSetGenerator\")")
-                                ln("    @XGenericGenerator(name = \"IdentityIfNotSetGenerator\", strategy = \"vgrechka.db.IdentityIfNotSetGenerator\")")
-                                ln("    @XColumn(name = \"${colPrefix}id\") var id: Long? = null")
-                                ln("    @XTransient var imposedIDToGenerate: Long? = null")
+                                ln("    @XGeneratedValue(strategy = XGenerationType.IDENTITY, generator = \"IdentityIfNotSetGenerator2\")")
+                                ln("    @XGenericGenerator(name = \"IdentityIfNotSetGenerator2\", strategy = \"vgrechka.db.IdentityIfNotSetGenerator2\")")
+                                ln("    @XColumn(name = \"${colPrefix}id\") override var id: Long? = null")
+                                ln("    @XTransient override var imposedIDToGenerate: Long? = null")
                                 ln("")
                                 ln("    @XColumn(name = \"${colPrefix}createdAt\") var createdAt: XTimestamp = DBCodeGenUtils.currentTimestampForEntity()")
                                 ln("    @XColumn(name = \"${colPrefix}updatedAt\") var updatedAt: XTimestamp = createdAt")
