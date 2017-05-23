@@ -55,6 +55,21 @@ object SpewBotinokEntitiesAndRecreateProdDatabaseSchema {
 
 
 
+object SpewAlrauneEntities {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val res = spewForInputFiles(listOf("%FE%/alraune/alraune-back/src/alraune-entities.kt"))
+        clog(res.ddl)
+        clog("OK")
+    }
+}
+
+
+
+
+
+
+
 
 
 

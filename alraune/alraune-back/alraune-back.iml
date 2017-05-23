@@ -5,8 +5,9 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/symlink--alraune-symlinked" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/symlink--alraune-symlinked-src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/symlink--spew-symlinked-src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -174,5 +175,6 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="spew-jvm-0" />
   </component>
 </module>

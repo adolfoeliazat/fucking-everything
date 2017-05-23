@@ -155,5 +155,6 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="spew-jvm-0" />
   </component>
 </module>

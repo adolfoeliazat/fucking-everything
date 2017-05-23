@@ -89,15 +89,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib-gradle/slf4j-api-1.7.24.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/../lib-gradle/jcl-over-slf4j-1.7.24.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -268,5 +259,6 @@
     </orderEntry>
     <orderEntry type="module" module-name="spew" />
     <orderEntry type="module" module-name="db-stuff" />
+    <orderEntry type="module" module-name="spew-jvm-0" />
   </component>
 </module>

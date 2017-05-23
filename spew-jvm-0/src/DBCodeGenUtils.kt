@@ -167,6 +167,13 @@ object DBCodeGenUtils {
             imf("ca6c7f7a-8da5-4969-bbe8-eea87005a5e7")
         }
     }
+
+    fun currentTimestampForEntity(): XTimestamp {
+        return when {
+//        backPlatform.isRequestThread() -> backPlatform.requestGlobus.stamp
+            else -> XTimestamp(sharedPlatform.currentTimeMillis())
+        }
+    }
 }
 
 

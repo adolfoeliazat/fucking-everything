@@ -93,7 +93,7 @@ val kh3 = TagCtor("h3")
 val kh4 = TagCtor("h4")
 val kh5 = TagCtor("h5")
 
-class Tag(val tag: String, val attrs: Attrs) : Renderable {
+class Tag(val tag: String, var attrs: Attrs) : Renderable {
     val children = mutableListOf<Renderable>()
 
     override fun render(): String {
@@ -132,6 +132,10 @@ class Tag(val tag: String, val attrs: Attrs) : Renderable {
     fun text(x: String): Tag {
         add(Text(x))
         return this
+    }
+
+    fun amend(style: Style) {
+        attrs = attrs.copy(style = style)
     }
 }
 
@@ -181,7 +185,7 @@ class Text(val value: String) : Renderable {
     }
 }
 
-class Attrs(
+data class Attrs(
     val id: String? = null,
     val className: String? = null,
     val style: Style? = null,

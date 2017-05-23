@@ -116,12 +116,18 @@ object StartAlrauneBack {
 
                                 fun declareField(prop: KProperty0<String>, title: String, validator: (String?) -> ValidationResult, fieldType: FieldType = FieldType.TEXT) {
                                     val vr = validator(prop.get())
-                                    if (isPost && vr.error != null)
+                                    val theError = when {
+                                        isPost -> vr.error
+                                        else -> null
+                                    }
+                                    if (theError != null)
                                         hasErrors = true
 
                                     fieldRenderers += {
                                         val id = AlSharedPile.fieldDOMID(name = prop.name)
                                         o- kdiv.className("form-group") {o->
+                                            if (theError != null)
+                                                o.amend(Style(marginBottom = "0"))
                                             o- klabel(text = title)
                                             val control = when (fieldType) {
                                                 FieldType.TEXT -> kinput(Attrs(type = "text", id = id, value = vr.sanitizedString, className = "form-control")) {}
@@ -129,9 +135,9 @@ object StartAlrauneBack {
                                             }
                                             o- kdiv(Style(position = "relative")){o->
                                                 o- control
-                                                if (isPost && vr.error != null) {
+                                                if (theError != null) {
                                                     o- kdiv(Style(marginTop = "5px", marginRight = "9px", textAlign = "right", color = "${Color.RED_700}"))
-                                                        .text(vr.error)
+                                                        .text(theError)
                                                     // TODO:vgrechka Shift red circle if control has scrollbar
                                                     o- kdiv(Style(width = "15px", height = "15px", backgroundColor = "${Color.RED_300}",
                                                                   borderRadius = "10px", position = "absolute", top = "10px", right = "8px"))
@@ -147,14 +153,18 @@ object StartAlrauneBack {
                                 declareField(data::documentTitle, t("TOTE", "Тема работы (задание)"), q::validateDocumentTitle)
                                 declareField(data::documentDetails, t("TOTE", "Детали"), q::validateDocumentDetails, FieldType.TEXTAREA)
 
-                                if (hasErrors)
-                                    o- kdiv.className(AlCSS.errorBanner).text(t("TOTE", "Кое-что нужно исправить..."))
-                                for (renderField in fieldRenderers)
-                                    renderField()
-
-                                o- kdiv{o->
-                                    o- kbutton(Attrs(id = AlDomID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Вперед"))
-                                    o- kdiv.id(AlDomID.ticker){}
+                                if (!isPost || hasErrors) {
+                                    if (hasErrors)
+                                        o- kdiv.className(AlCSS.errorBanner).text(t("TOTE", "Кое-что нужно исправить..."))
+                                    for (renderField in fieldRenderers)
+                                        renderField()
+                                    o- kdiv{o->
+                                        o- kbutton(Attrs(id = AlDomID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Вперед"))
+                                        o- kdiv.id(AlDomID.ticker){}
+                                    }
+                                } else {
+//                                    o- q.renderOrderTitle(order)
+                                    o- t("TOTE", "Все круто. Мы с тобой скоро свяжемся")
                                 }
                             }
                         }

@@ -34,8 +34,9 @@
       <module fileurl="file://$PROJECT_DIR$/shit-for-tests/shit-for-tests.iml" filepath="$PROJECT_DIR$/shit-for-tests/shit-for-tests.iml" />
       <module fileurl="file://$PROJECT_DIR$/spew/spew.iml" filepath="$PROJECT_DIR$/spew/spew.iml" />
       <module fileurl="file://$PROJECT_DIR$/spew-gen-tests/spew-gen-tests.iml" filepath="$PROJECT_DIR$/spew-gen-tests/spew-gen-tests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spew-jvm-0/spew-jvm-0.iml" filepath="$PROJECT_DIR$/spew-jvm-0/spew-jvm-0.iml" />
       <module fileurl="file://$PROJECT_DIR$/spew-run-configs/spew-run-configs.iml" filepath="$PROJECT_DIR$/spew-run-configs/spew-run-configs.iml" />
-      <module fileurl="file://$PROJECT_DIR$/spew-x-src/spew-x-src.iml" filepath="$PROJECT_DIR$/spew-x-src/spew-x-src.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spew-symlinked/spew-symlinked.iml" filepath="$PROJECT_DIR$/spew-symlinked/spew-symlinked.iml" />
       <module fileurl="file://$PROJECT_DIR$/test-index/test-index.iml" filepath="$PROJECT_DIR$/test-index/test-index.iml" />
       <module fileurl="file://$PROJECT_DIR$/txt/txt.iml" filepath="$PROJECT_DIR$/txt/txt.iml" />
     </modules>
