@@ -14,7 +14,7 @@ PostgreSQL
     Create test database
         cd /d E:\fegh\alraune\alraune-back\bin\dev\win
         pg-test-psql-postgres.cmd
-        create database alraune encoding 'UTF8';
+        create database "alraune-test" encoding 'UTF8';
         \l
         \q
 
@@ -25,6 +25,8 @@ PostgreSQL
     PSQL stuff
         \x auto                         Automatic output format (rows/columns) depending on whether data fits on screen
         \pset pager
+        \dt                             Show tables
+        \d+ alraune_orders              Show table columns
 
 
 

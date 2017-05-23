@@ -27,6 +27,10 @@ class KotlinDBEntitySpew : Spew {
                         val entity = juanCtx.entity
 
                         return object : CommonDBEntitySpew.Juan {
+                            override fun columnDDL(field: FieldSpec, sqlType: String): String {
+                                return "${end}_${field.name}${(field.kind is FieldKind.One).thenElseEmpty{"__id"}} $sqlType"
+                            }
+
                             override fun spitDDLForSpecialColumns(buf: StringBuilder) {
                                 fun ln(s: String) = buf.append(s + "\n")
 

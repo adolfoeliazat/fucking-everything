@@ -10,19 +10,7 @@ import vgrechka.*
 import java.io.File
 
 object AlBackPile {
-    val backResourceRootDir = "E:/fegh/alraune/alraune-back"
-    val frontOutDir = "E:/fegh/out/production/alraune-front"
-    val sharedKJSOutDir = "E:/fegh/out/production/shared-kjs"
-    val tmpDirPath = "c:/tmp"
-    val log = LoggerFactory.getLogger(this.javaClass)
     var httpServerExchange by volatileNotNull<HttpServerExchange>()
-    val orderCreationPagePath = "/order"
-    val baseURL = "https://alraune.local"
-
-    val secrets by lazy {
-        // TODO:vgrechka Get file name from environment variable
-        ObjectMapper().readValue(File("e:/fpebb/alraune/alraune-secrets.json"), JSON_AlrauneSecrets::class.java)!!
-    }
 
     fun t(en: String, ru: String) = ru
 
@@ -75,6 +63,12 @@ object AlBackPile {
     fun validateDocumentTitle(x: String?) = fuckValidate1(x, minLen = 5, maxLen = 250) {null}
 
     fun validateDocumentDetails(x: String?) = fuckValidate1(x, minLen = 5, maxLen = 1000) {null}
+
+    fun renderOrderTitle(order: AlOrder): Renderable {
+        return kdiv{o->
+            o- pageTitle(t("Order #", "Заказ №") + order.id)
+        }
+    }
 }
 
 val kdiv = TagCtor("div")

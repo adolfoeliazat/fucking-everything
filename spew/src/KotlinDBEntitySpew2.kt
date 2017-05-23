@@ -24,8 +24,16 @@ class KotlinDBEntitySpew2 : Spew {
                         val en = juanCtx.en
                         val end = juanCtx.end
                         val entity = juanCtx.entity
+                        val colPrefix = run {
+                            val i = entity.tableName.indexOfOrNull("_") ?: wtf("33ebcba7-54e6-4b13-881a-fd010c6dd3df")
+                            entity.tableName.substring(i + 1) + "_"
+                        }
 
                         return object : CommonDBEntitySpew.Juan {
+                            override fun columnDDL(field: FieldSpec, sqlType: String): String {
+                                return "$colPrefix${field.name}${(field.kind is FieldKind.One).thenElseEmpty{"__id"}} $sqlType"
+                            }
+
                             override fun spitDDLForSpecialColumns(buf: StringBuilder) {
                                 fun ln(s: String) = buf.append(s + "\n")
 
@@ -35,10 +43,10 @@ class KotlinDBEntitySpew2 : Spew {
                                     GDBEntitySpewDatabaseDialect.MYSQL -> "id bigint not null auto_increment primary key"
                                 }
 
-                                ln("    $idColumnDefinition,")
-                                ln("    ${end}_common_createdAt ${juanCtx.timestampType} not null,")
-                                ln("    ${end}_common_updatedAt ${juanCtx.timestampType} not null,")
-                                ln("    ${end}_common_deleted ${juanCtx.booleanType} not null,")
+                                ln("    $colPrefix$idColumnDefinition,")
+                                ln("    ${colPrefix}createdAt ${juanCtx.timestampType} not null,")
+                                ln("    ${colPrefix}updatedAt ${juanCtx.timestampType} not null,")
+                                ln("    ${colPrefix}deleted ${juanCtx.booleanType} not null,")
 
                             }
 
@@ -136,10 +144,6 @@ class KotlinDBEntitySpew2 : Spew {
                             }
 
                             override fun spitEntityClass() {
-                                val colPrefix = run {
-                                    val i = entity.tableName.indexOfOrNull("_") ?: wtf("33ebcba7-54e6-4b13-881a-fd010c6dd3df")
-                                    entity.tableName.substring(i + 1)
-                                }
                                 out.append("@XEntity @XTable(name = \"${entity.tableName}\")\n")
                                 out.append("class Generated_$en // Generated at ${mangleUUID("8079453c-f675-490e-8367-7891d1a8b01a")}\n")
                                 out.append("    : DBCodeGenUtils.GeneratedEntity<$en>\n")
@@ -148,17 +152,17 @@ class KotlinDBEntitySpew2 : Spew {
                                 ln("    @XId")
                                 ln("    @XGeneratedValue(strategy = XGenerationType.IDENTITY, generator = \"IdentityIfNotSetGenerator\")")
                                 ln("    @XGenericGenerator(name = \"IdentityIfNotSetGenerator\", strategy = \"vgrechka.db.IdentityIfNotSetGenerator\")")
-                                ln("    @XColumn(name = \"${colPrefix}_id\") var id: Long? = null")
+                                ln("    @XColumn(name = \"${colPrefix}id\") var id: Long? = null")
                                 ln("    @XTransient var imposedIDToGenerate: Long? = null")
                                 ln("")
-                                ln("    @XColumn(name = \"${colPrefix}_createdAt\") var createdAt: XTimestamp = DBCodeGenUtils.currentTimestampForEntity()")
-                                ln("    @XColumn(name = \"${colPrefix}_updatedAt\") var updatedAt: XTimestamp = createdAt")
-                                ln("    @XColumn(name = \"${colPrefix}_deleted\") var deleted: Boolean = false")
+                                ln("    @XColumn(name = \"${colPrefix}createdAt\") var createdAt: XTimestamp = DBCodeGenUtils.currentTimestampForEntity()")
+                                ln("    @XColumn(name = \"${colPrefix}updatedAt\") var updatedAt: XTimestamp = createdAt")
+                                ln("    @XColumn(name = \"${colPrefix}deleted\") var deleted: Boolean = false")
 
                                 for ((index, field) in entity.fields.withIndex()) {
                                     exhaustive=when (field.kind) {
                                         is FieldKind.Simple -> {
-                                            out.append("    @XColumn(name = \"${colPrefix}_${field.name}\"")
+                                            out.append("    @XColumn(name = \"${colPrefix}${field.name}\"")
                                             if (field.type == "String")
                                                 out.append(", columnDefinition = \"text\")")
                                             if (field.type.endsWith("?"))

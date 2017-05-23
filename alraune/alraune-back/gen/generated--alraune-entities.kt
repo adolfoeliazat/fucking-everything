@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Tue May 23 10:32:57 EEST 2017
+// Generated on Tue May 23 12:52:51 EEST 2017
 // Model: e:/fegh/alraune/alraune-back/src/alraune-entities.kt
 //
 
@@ -156,15 +156,15 @@ object AlGeneratedDBPile {
         val dropCreateAllScript = """
 drop table if exists "alraune_orders";
 create table "alraune_orders" (
-    id bigserial primary key,
-    alOrder_common_createdAt timestamp not null,
-    alOrder_common_updatedAt timestamp not null,
-    alOrder_common_deleted boolean not null,
-    alOrder_email text not null,
-    alOrder_contactName text not null,
-    alOrder_phone text not null,
-    alOrder_documentTitle text not null,
-    alOrder_documentDetails text not null
+    orders_id bigserial primary key,
+    orders_createdAt timestamp not null,
+    orders_updatedAt timestamp not null,
+    orders_deleted boolean not null,
+    orders_email text not null,
+    orders_contactName text not null,
+    orders_phone text not null,
+    orders_documentTitle text not null,
+    orders_documentDetails text not null
 ) ;
 
         """
@@ -178,15 +178,15 @@ DDL
 
 drop table if exists "alraune_orders";
 create table "alraune_orders" (
-    id bigserial primary key,
-    alOrder_common_createdAt timestamp not null,
-    alOrder_common_updatedAt timestamp not null,
-    alOrder_common_deleted boolean not null,
-    alOrder_email text not null,
-    alOrder_contactName text not null,
-    alOrder_phone text not null,
-    alOrder_documentTitle text not null,
-    alOrder_documentDetails text not null
+    orders_id bigserial primary key,
+    orders_createdAt timestamp not null,
+    orders_updatedAt timestamp not null,
+    orders_deleted boolean not null,
+    orders_email text not null,
+    orders_contactName text not null,
+    orders_phone text not null,
+    orders_documentTitle text not null,
+    orders_documentDetails text not null
 ) ;
 
 */

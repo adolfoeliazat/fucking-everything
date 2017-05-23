@@ -1,19 +1,10 @@
 package alraune.back
 
-import alraune.back.AlBackPile.log
+import alraune.back.AlBackPile0.log
 import alraune.back.AlBackPile.pageTitle
 import alraune.back.AlBackPile.t
 import alraune.shared.OrderCreationForm
 import alraune.shared.ShitPassedFromBackToFront
-import ch.qos.logback.classic.Logger
-import ch.qos.logback.classic.LoggerContext
-import ch.qos.logback.classic.PatternLayout
-import ch.qos.logback.classic.pattern.ClassicConverter
-import ch.qos.logback.classic.spi.Configurator
-import ch.qos.logback.classic.spi.ILoggingEvent
-import ch.qos.logback.core.ConsoleAppender
-import ch.qos.logback.core.encoder.LayoutWrappingEncoder
-import ch.qos.logback.core.spi.ContextAwareBase
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.undertow.Handlers
 import vgrechka.*
@@ -37,12 +28,6 @@ import kotlin.reflect.KProperty0
 import kotlin.reflect.full.memberProperties
 
 
-@Ser class JSON_AlrauneSecrets(
-    val keyStore: String,
-    val keyStorePassword: String,
-    val keyManagerPassword: String
-)
-
 object StartAlrauneBack {
     @JvmStatic
     fun main(args: Array<String>) {
@@ -54,13 +39,14 @@ object StartAlrauneBack {
         val kmf = KeyManagerFactory.getInstance("SunX509")
         val ks = KeyStore.getInstance("JKS")
 
-        ks.load(FileInputStream(AlBackPile.secrets.keyStore), AlBackPile.secrets.keyStorePassword.toCharArray())
-        kmf.init(ks, AlBackPile.secrets.keyManagerPassword.toCharArray())
+        val secrets = AlBackPile0.secrets
+        ks.load(FileInputStream(secrets.keyStore), secrets.keyStorePassword.toCharArray())
+        kmf.init(ks, secrets.keyManagerPassword.toCharArray())
         sslContext.init(kmf.keyManagers, null, null)
 
-        val backResourceHandler = Handlers.resource(PathResourceManager(Paths.get(AlBackPile.backResourceRootDir)))
-        val frontResourceHandler = Handlers.resource(PathResourceManager(Paths.get(AlBackPile.frontOutDir)))
-        val sharedKJSResourceHandler = Handlers.resource(PathResourceManager(Paths.get(AlBackPile.sharedKJSOutDir)))
+        val backResourceHandler = Handlers.resource(PathResourceManager(Paths.get(AlBackPile0.backResourceRootDir)))
+        val frontResourceHandler = Handlers.resource(PathResourceManager(Paths.get(AlBackPile0.frontOutDir)))
+        val sharedKJSResourceHandler = Handlers.resource(PathResourceManager(Paths.get(AlBackPile0.sharedKJSOutDir)))
 
         val port = 443
         val server = Undertow.builder()
@@ -91,7 +77,7 @@ object StartAlrauneBack {
                             sharedKJSResourceHandler.handleRequest(exchange)
                         }
                         else -> when (path) {
-                            AlBackPile.orderCreationPagePath -> spitOrderFormPage(exchange)
+                            AlBackPile0.orderCreationPagePath -> spitOrderFormPage(exchange)
                             else -> spitLandingPage(exchange)
                         }
                     }
@@ -114,7 +100,9 @@ object StartAlrauneBack {
                                 var hasErrors = false
                                 val fieldRenderers = mutableListOf<() -> Unit>()
 
-                                fun declareField(prop: KProperty0<String>, title: String, validator: (String?) -> ValidationResult, fieldType: FieldType = FieldType.TEXT) {
+                                fun declareField(prop: KProperty0<String>,
+                                                 title: String, validator: (String?) -> ValidationResult,
+                                                 fieldType: FieldType = FieldType.TEXT): String {
                                     val vr = validator(prop.get())
                                     val theError = when {
                                         isPost -> vr.error
@@ -145,13 +133,15 @@ object StartAlrauneBack {
                                             }
                                         }
                                     }
+
+                                    return vr.sanitizedString
                                 }
 
-                                declareField(data::email, t("TOTE", "Почта"), q::validateEmail)
-                                declareField(data::name, t("TOTE", "Имя"), q::validateName)
-                                declareField(data::phone, t("TOTE", "Телефон"), q::validatePhone)
-                                declareField(data::documentTitle, t("TOTE", "Тема работы (задание)"), q::validateDocumentTitle)
-                                declareField(data::documentDetails, t("TOTE", "Детали"), q::validateDocumentDetails, FieldType.TEXTAREA)
+                                val email = declareField(data::email, t("TOTE", "Почта"), q::validateEmail)
+                                val contactName = declareField(data::name, t("TOTE", "Имя"), q::validateName)
+                                val phone = declareField(data::phone, t("TOTE", "Телефон"), q::validatePhone)
+                                val documentTitle = declareField(data::documentTitle, t("TOTE", "Тема работы (задание)"), q::validateDocumentTitle)
+                                val documentDetails = declareField(data::documentDetails, t("TOTE", "Детали"), q::validateDocumentDetails, FieldType.TEXTAREA)
 
                                 if (!isPost || hasErrors) {
                                     if (hasErrors)
@@ -163,7 +153,11 @@ object StartAlrauneBack {
                                         o- kdiv.id(AlDomID.ticker){}
                                     }
                                 } else {
-//                                    o- q.renderOrderTitle(order)
+                                    // TODO:vgrechka Think about making DB calls non-blocking
+                                    val order = alOrderRepo.save(newAlOrder(
+                                        email = email, contactName = contactName, phone = phone,
+                                        documentTitle = documentTitle, documentDetails = documentDetails))
+                                    o- q.renderOrderTitle(order)
                                     o- t("TOTE", "Все круто. Мы с тобой скоро свяжемся")
                                 }
                             }
@@ -199,7 +193,7 @@ object StartAlrauneBack {
                 private fun spitUsualPage(pageID: String, exchange: HttpServerExchange, build: (Tag) -> Unit) {
                     val shit = ShitPassedFromBackToFront(
                         pageID = pageID,
-                        postURL = "${AlBackPile.baseURL}${AlBackPile.orderCreationPagePath}")
+                        postURL = "${AlBackPile0.baseURL}${AlBackPile0.orderCreationPagePath}")
 
                     exchange.responseHeaders.put(Headers.CONTENT_TYPE, "text/html; charset=utf-8")
                     exchange.responseSender.send(buildString {
@@ -237,7 +231,7 @@ object StartAlrauneBack {
             }).build()
         server.start()
         log.info("Shit is spinning on port $port")
-        File(AlBackPile.tmpDirPath + "/alraune-back-started").writeText("Fuck, yeah...")
+        File(AlBackPile0.tmpDirPath + "/alraune-back-started").writeText("Fuck, yeah...")
     }
 
 
@@ -288,59 +282,6 @@ object StartAlrauneBack {
 }
 
 
-class AlrauneLogConfigurator : ContextAwareBase(), Configurator {
-
-    class ShortLevelConverter : ClassicConverter() {
-        override fun convert(le: ILoggingEvent): String {
-            return le.level.toString().substring(0, 1)
-        }
-    }
-
-    override fun configure(lc: LoggerContext) {
-        run { // Default
-            val ca = ConsoleAppender<ILoggingEvent>()
-            ca.context = lc
-            ca.name = "console"
-            val encoder = LayoutWrappingEncoder<ILoggingEvent>()
-            encoder.context = lc
-
-
-            val layout = PatternLayout()
-            layout.setPattern("%-5level %logger{36} - %msg%n")
-            layout.context = lc
-            layout.start()
-
-            encoder.layout = layout
-            ca.encoder = encoder
-            ca.start()
-
-            val rootLogger = lc.getLogger(Logger.ROOT_LOGGER_NAME)
-            rootLogger.addAppender(ca)
-        }
-
-        run { // Alraune
-            val ca = ConsoleAppender<ILoggingEvent>()
-            ca.context = lc
-            ca.name = "alrauneConsole"
-            val encoder = LayoutWrappingEncoder<ILoggingEvent>()
-            encoder.context = lc
-
-            val layout = PatternLayout()
-            layout.getInstanceConverterMap().put("shortLevel", ShortLevelConverter::class.java.name)
-            layout.pattern = "[Alraune-%shortLevel] %msg%n"
-            layout.context = lc
-            layout.start()
-
-            encoder.layout = layout
-            ca.encoder = encoder
-            ca.start()
-
-            val logger = lc.getLogger("alraune")
-            logger.isAdditive = false
-            logger.addAppender(ca)
-        }
-    }
-}
 
 object AlBackDebug {
     val messAroundBack201 by fuck()

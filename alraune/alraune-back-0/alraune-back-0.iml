@@ -5,18 +5,13 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/symlink--alraune-symlinked-src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/symlink--spew-symlinked-src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="kotlin-jvm" level="project" />
-    <orderEntry type="module" module-name="shared-jvm" />
     <orderEntry type="module-library">
       <library name="pizda">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../lib-gradle/antlr-2.7.7.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib-gradle/asm-5.2.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib-gradle/asm-analysis-5.2.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib-gradle/asm-commons-5.1.jar!/" />
@@ -25,8 +20,12 @@
           <root url="jar://$MODULE_DIR$/../../lib-gradle/aspectjrt-1.8.10.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib-gradle/byte-buddy-1.6.9.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib-gradle/classmate-1.3.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../lib-gradle/commons-beanutils-1.9.2.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib-gradle/commons-codec-1.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../lib-gradle/commons-collections-3.2.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../lib-gradle/commons-digester-1.8.1.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib-gradle/commons-logging-1.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../lib-gradle/commons-validator-1.6.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib-gradle/datasource-proxy-1.4.1.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib-gradle/dom4j-1.6.1.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib-gradle/dropbox-core-sdk-3.0.3.jar!/" />
@@ -129,6 +128,7 @@
         <JAVADOC />
         <SOURCES>
           <root url="jar://$MODULE_DIR$/../../lib-gradle/byte-buddy-1.6.9-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../lib-gradle/commons-validator-1.6-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib-gradle/datasource-proxy-1.4.1-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib-gradle/dropbox-core-sdk-3.0.3-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib-gradle/fontawesomefx-commons-8.15-sources.jar!/" />
@@ -159,23 +159,10 @@
           <root url="jar://$MODULE_DIR$/../../lib-gradle/undertow-websockets-jsr-1.4.14.Final-sources.jar!/" />
           <root url="jar://$MODULE_DIR$/../../lib-gradle/args4j-2.33.jar!/OSGI-OPT/src" />
           <root url="jar://$MODULE_DIR$/../../lib-gradle/closure-compiler-v20170218.jar!/OSGI-OPT/src" />
-          <root url="jar://$USER_HOME$/.ideaLibSources/logback-core-1.2.3-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="alraune-front" scope="PROVIDED" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../lib-gradle/commons-validator-1.6.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../lib-gradle/commons-validator-1.6-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module" module-name="spew-jvm-0" />
-    <orderEntry type="module" module-name="alraune-back-0" />
+    <orderEntry type="module" module-name="db-stuff" />
+    <orderEntry type="module" module-name="shared-jvm" />
   </component>
 </module>

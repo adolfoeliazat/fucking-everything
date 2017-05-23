@@ -30,6 +30,10 @@ class PHPDBEntitySpew : Spew {
                         fun ap(s: String) = out.append(s)
 
                         return object : CommonDBEntitySpew.Juan {
+                            override fun columnDDL(field: FieldSpec, sqlType: String): String {
+                                imf("c7f5e133-8e9d-42d0-a3ab-f42b1f48d7e1")
+                            }
+
                             override fun spitDDLForSpecialColumns(buf: StringBuilder) {
                                 fun ln(s: String) = buf.append(s + "\n")
 

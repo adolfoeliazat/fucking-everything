@@ -1,5 +1,6 @@
 package vgrechka.spew
 
+import alraune.back.AlrauneTestAppConfig
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import vgrechka.*
 import vgrechka.botinok.*
@@ -60,6 +61,19 @@ object SpewAlrauneEntities {
     fun main(args: Array<String>) {
         val res = spewForInputFiles(listOf("%FE%/alraune/alraune-back/src/alraune-entities.kt"))
         clog(res.ddl)
+        clog("OK")
+    }
+}
+
+object SpewAlrauneEntities_recreateTestDBSchema {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val res = spewForInputFiles(listOf("%FE%/alraune/alraune-back/src/alraune-entities.kt"))
+
+        clog(res.ddl)
+        backPlatform.springctx = AnnotationConfigApplicationContext(AlrauneTestAppConfig::class.java)
+        DBPile.executeBunchOfSQLStatementsAndCloseConnection(res.ddl.toString())
+
         clog("OK")
     }
 }

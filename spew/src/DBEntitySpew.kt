@@ -68,6 +68,7 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
         fun spitVariousShit()
         fun spitRepo()
         fun spitDDLForSpecialColumns(buf: StringBuilder)
+        fun columnDDL(field: FieldSpec, sqlType: String): String
     }
 
     interface Pedro {
@@ -314,7 +315,7 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
                                 is FieldKind.Many -> wtf("0f79f787-be13-49ba-ac1d-6855476605da")
                             }
 
-                            append("    ${end}_${field.name}${(field.kind is FieldKind.One).thenElseEmpty{"__id"}} $sqlType")
+                            append("    " + juan.columnDDL(field, sqlType))
                             if (index < fields.lastIndex) {
                                 append(",\n")
                             }
