@@ -8,8 +8,6 @@ import org.apache.commons.validator.routines.EmailValidator
 import vgrechka.*
 
 object AlBackPile {
-    var httpServerExchange by volatileNotNull<HttpServerExchange>()
-
     fun fuckValidate1(x: String?, minLen: Int, maxLen: Int, boobs: (String) -> String?): ValidationResult {
         val sane = (x ?: "").trim()
         var error = when {

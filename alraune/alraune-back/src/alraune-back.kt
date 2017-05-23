@@ -55,7 +55,8 @@ object StartAlrauneBack {
             .addHttpsListener(port, "localhost", sslContext)
             .setHandler(object : HttpHandler {
                 override fun handleRequest(exchange: HttpServerExchange) {
-                    AlBackPile.httpServerExchange = exchange
+                    val ctx = AlRequestContext()
+                    ctx.exchange = exchange
 
                     val path = exchange.requestPath
                     log.debug("path = " + path)
@@ -79,23 +80,23 @@ object StartAlrauneBack {
                             sharedKJSResourceHandler.handleRequest(exchange)
                         }
                         else -> when (path) {
-                            AlBackPile0.orderCreationPagePath -> spitOrderFormPage(exchange)
-                            else -> spitLandingPage(exchange)
+                            AlBackPile0.orderCreationPagePath -> spitOrderFormPage(ctx)
+                            else -> spitLandingPage(ctx)
                         }
                     }
                 }
 
-                private fun spitLandingPage(exchange: HttpServerExchange) {
-                    spitUsualPage(AlPageID.landing, exchange) {o->
+                private fun spitLandingPage(ctx: AlRequestContext) {
+                    spitUsualPage(AlPageID.landing, ctx) {o->
                         o- pageTitle("Fuck You")
                     }
                 }
 
-                private fun spitOrderFormPage(exchange: HttpServerExchange) {
-                    val isPost = exchange.requestMethod == Methods.POST
+                private fun spitOrderFormPage(ctx: AlRequestContext) {
+                    val isPost = ctx.exchange.requestMethod == Methods.POST
 
                     fun onDataAvailable(data: OrderCreationForm) {
-                        spitUsualPage(AlPageID.orderCreation, exchange) {o->
+                        spitUsualPage(AlPageID.orderCreation, ctx) {o->
                             val q = AlBackPile
                             var hasErrors = false
                             val fieldRenderers = mutableListOf<() -> Unit>()
@@ -145,12 +146,17 @@ object StartAlrauneBack {
                             val documentDetails = declareField(data::documentDetails, f.documentDetails.title, q::validateDocumentDetails, FieldType.TEXTAREA)
 
                             if (!isPost || hasErrors) {
+                                ctx.shit.documentCategoryID = "101"
                                 o- pageTitle(t("TOTE", "Заказ"))
                                 o- kform{o->
                                     if (hasErrors)
                                         o- kdiv.className(AlCSS.errorBanner).text(t("TOTE", "Кое-что нужно исправить..."))
                                     for (renderField in fieldRenderers)
                                         renderField()
+                                    o- kdiv.className("form-group"){o->
+                                        o- klabel(text = f.documentCategory.title)
+                                        o- kdiv(Attrs(id = AlDomID.documentCategoryPickerContainer))
+                                    }
                                     o- kdiv{o->
                                         o- kbutton(Attrs(id = AlDomID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Вперед"))
                                         o- kdiv.id(AlDomID.ticker){}
@@ -178,10 +184,10 @@ object StartAlrauneBack {
                             exchange.responseHeaders.put(Headers.CONTENT_TYPE, "text/html; charset=utf-8")
                             exchange.responseSender.send("Pizdets")
                         }
-                        exchange.requestReceiver.receiveFullString(onSuccess, onError, Charsets.UTF_8)
+                        ctx.exchange.requestReceiver.receiveFullString(onSuccess, onError, Charsets.UTF_8)
                     } else {
                         val data = when {
-                            AlBackDebug.messAroundBack201.should -> {
+                            ctx.debug.messAroundBack201.should -> {
                                 OrderCreationForm(email = "fuck",
                                                   name = "shit",
                                                   phone = "bitch",
@@ -194,13 +200,17 @@ object StartAlrauneBack {
                     }
                 }
 
-                private fun spitUsualPage(pageID: String, exchange: HttpServerExchange, build: (Tag) -> Unit) {
-                    val shit = ShitPassedFromBackToFront(
-                        pageID = pageID,
-                        postURL = "${AlBackPile0.baseURL}${AlBackPile0.orderCreationPagePath}")
+                private fun spitUsualPage(pageID: String, ctx: AlRequestContext, build: (Tag) -> Unit) {
+                    ctx.shit.pageID = pageID
+                    ctx.shit.postURL = "${AlBackPile0.baseURL}${AlBackPile0.orderCreationPagePath}"
 
-                    exchange.responseHeaders.put(Headers.CONTENT_TYPE, "text/html; charset=utf-8")
-                    exchange.responseSender.send(buildString {
+                    // XXX ctx.shit is populated as part of `build`
+                    val content = kdiv.id(AlDomID.replaceableContent){o->
+                        o- kdiv.className("container", build)
+                    }.render()
+
+                    ctx.exchange.responseHeaders.put(Headers.CONTENT_TYPE, "text/html; charset=utf-8")
+                    ctx.exchange.responseSender.send(buildString {
                         ln("<!DOCTYPE html>")
                         ln("<html lang='en'>")
                         ln("<head>")
@@ -213,14 +223,12 @@ object StartAlrauneBack {
                         ln("    <link rel='stylesheet' href='/node_modules/font-awesome/css/font-awesome.min.css'>")
                         ln("    <link rel='stylesheet' href='alraune.css'>")
                         ln("    <script>")
-                        ln("        window['${shit::class.simpleName}'] = '${ObjectMapper().writeValueAsString(shit)}'")
+                        ln("        window['${ctx.shit::class.simpleName}'] = '${ObjectMapper().writeValueAsString(ctx.shit)}'")
                         ln("    </script>")
                         ln("</head>")
                         ln("<body>")
                         ln(AlSharedPile.beginContentMarker)
-                        ln(kdiv.id(AlDomID.replaceableContent){o->
-                            o- kdiv.className("container", build)
-                        }.render())
+                        ln(content)
                         ln(AlSharedPile.endContentMarker)
                         ln("")
                         ln("    <script src='/node_modules/jquery/dist/jquery.min.js'></script>")
@@ -287,23 +295,6 @@ object StartAlrauneBack {
 
 
 
-object AlBackDebug {
-    val messAroundBack201 by fuck()
-
-    interface Fuck {
-        val should: Boolean
-    }
-
-    fun fuck() = object : ReadOnlyProperty<Any?, Fuck> {
-        override fun getValue(thisRef: Any?, property: KProperty<*>): Fuck {
-            return object : Fuck {
-                override val should: Boolean
-                    get() = AlBackPile.httpServerExchange
-                        .queryParameters["backMessAround"]?.contains(property.name) == true
-            }
-        }
-    }
-}
 
 object AlCSS_Back {
     val sheet by lazy {
@@ -331,6 +322,29 @@ object AlCSS_Back {
     }
 }
 
+interface Should {
+    val should: Boolean
+}
+
+class AlRequestContext {
+    var exchange by volatileNotNullOnce<HttpServerExchange>()
+    val shit = ShitPassedFromBackToFront()
+
+    val debug = _Debug()
+    inner class _Debug {
+        val messAroundBack201 by fuck()
+
+
+        fun fuck() = object : ReadOnlyProperty<Any?, Should> {
+            override fun getValue(thisRef: Any?, property: KProperty<*>): Should {
+                return object : Should {
+                    override val should: Boolean
+                        get() = exchange.queryParameters["backMessAround"]?.contains(property.name) == true
+                }
+            }
+        }
+    }
+}
 
 
 

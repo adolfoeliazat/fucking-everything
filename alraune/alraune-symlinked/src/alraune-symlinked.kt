@@ -23,11 +23,12 @@ object AlSharedPile {
 }
 
 object AlDomID {
-    //        val googleSignInButton by myName()
+//        val googleSignInButton by myName()
 //        val facebookSignInButton by myName()
     val createOrderForm_submitButton by myName()
     val ticker by myName()
     val replaceableContent by myName()
+    val documentCategoryPickerContainer by myName()
 }
 
 object AlPageID {
@@ -122,10 +123,11 @@ object AlCSS {
     val documentDetails: String
 )
 
-class ShitPassedFromBackToFront(
-    val pageID: String,
-    val postURL: String
-)
+class ShitPassedFromBackToFront {
+    @Volatile var pageID: String = "boobs"
+    @Volatile var postURL: String = "boobs"
+    @Volatile var documentCategoryID = "boobs"
+}
 
 
 enum class Color(val string: String) {

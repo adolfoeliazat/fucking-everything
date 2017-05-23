@@ -247,6 +247,7 @@ object AlFields {
         val contactName = Fuck(t("TOTE", "Имя"))
         val phone = Fuck(t("TOTE", "Телефон"))
         val documentTitle = Fuck(t("TOTE", "Тема работы (задание)"))
+        val documentCategory = Fuck(t("TOTE", "Категория"))
         val documentDetails = Fuck(t("TOTE", "Детали"))
     }
 }

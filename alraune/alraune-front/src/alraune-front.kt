@@ -125,6 +125,7 @@ object AlFrontPile {
                 // clog("data", data)
                 async {
                     AlFrontPile.sleep(AlFrontPile.debug_sleepBeforePost)
+                    AlFrontPile.sleepTillEndOfTime()
 
                     val html = AlFrontPile.post(AlFrontPile.shitFromBack.postURL, data)
                     // clog("html", html)
@@ -169,6 +170,11 @@ object AlFrontPile {
 
     suspend fun sleep(ms: Int) {
         await(delay(ms))
+    }
+
+    suspend fun sleepTillEndOfTime() {
+        clog("===== Sleeping till end of time =====")
+        sleep(Int.MAX_VALUE)
     }
 
     fun delay(ms: Int): Promise<Unit> = Promise {resolve, _ ->
