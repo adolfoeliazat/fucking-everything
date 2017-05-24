@@ -325,6 +325,7 @@ fun spitOrderFormPage() {
                     o- col(6, numSources.render())
                 }
                 o- documentDetails.render()
+                o- kdiv(Attrs(id = AlDomID.filePickerContainer))
                 o- kdiv{o->
                     o- kbutton(Attrs(id = AlDomID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Вперед"))
                     o- kdiv.id(AlDomID.ticker){}

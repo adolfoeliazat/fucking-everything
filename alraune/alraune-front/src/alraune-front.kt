@@ -135,6 +135,7 @@ object AlFrontPile {
 
         if (AlFrontPile.shitFromBack.pageID == AlPageID.orderCreationForm) {
             val documentCategoryPicker = DocumentCategoryPicker()
+            val filePicker = FilePicker()
 
             val button = byID(AlDomID.createOrderForm_submitButton)
             // TODO:vgrechka Remove event handlers

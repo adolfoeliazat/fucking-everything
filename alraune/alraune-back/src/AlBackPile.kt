@@ -1,6 +1,6 @@
 package alraune.back
 
-import alraune.back.AlRenderPile.escapeHTML
+import alraune.shared.AlSharedPile.escapeHTML
 import alraune.back.AlRenderPile.t
 import alraune.shared.AlCSS
 import alraune.shared.AlSharedPile

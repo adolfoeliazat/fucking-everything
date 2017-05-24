@@ -27,6 +27,7 @@ enum class AlLocale {
     UA, EN
 }
 
+
 @Ser class JSON_AlrauneSecrets(
     val keyStore: String,
     val keyStorePassword: String,

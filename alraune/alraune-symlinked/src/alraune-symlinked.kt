@@ -29,6 +29,15 @@ object AlSharedPile {
 
     fun fieldDOMID(prop: KProperty0<String>) = fieldDOMID(prop.name)
     fun fieldDOMID(name: String) = "field-" + name
+
+    fun escapeHTML(s: String): String {
+        return s
+            .replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace("'", "&#39;")
+            .replace("\"", "&#34;")
+    }
 }
 
 object AlDomID {
@@ -38,6 +47,7 @@ object AlDomID {
     val ticker by myName()
     val replaceableContent by myName()
     val documentCategoryPickerContainer by myName()
+    val filePickerContainer by myName()
 }
 
 object AlPageID {

@@ -21,14 +21,6 @@ object AlRenderPile {
 
     fun pageTitle(text: String) = kh3(text)
 
-    fun escapeHTML(s: String): String {
-        return s
-            .replace("&", "&amp;")
-            .replace("<", "&lt;")
-            .replace(">", "&gt;")
-            .replace("'", "&#39;")
-            .replace("\"", "&#34;")
-    }
     fun formatUnixTime(ms: Long, includeTZ: Boolean = true): String =
         when (AlBackPile0.locale) {
             AlLocale.UA -> {
