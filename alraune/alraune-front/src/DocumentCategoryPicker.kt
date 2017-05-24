@@ -3,7 +3,6 @@ package alraune.front
 import alraune.shared.AlDocumentCategories
 import alraune.shared.AlDomID
 import vgrechka.*
-import vgrechka.kjs.*
 import vgrechka.kjs.JQueryPile.byIDNoneOrSingle
 import vgrechka.kjs.JQueryPile.byIDSingle
 
@@ -12,18 +11,33 @@ import vgrechka.kjs.JQueryPile.byIDSingle
 class DocumentCategoryPicker {
     val selectID = "c03af235-f18e-48ad-9a68-4ae0e523eff9"
     val backButtonID = "92c15f06-fd82-4d0a-9445-fd3eb59e8aab"
-    val currentPath = mutableListOf(AlDocumentCategories.root)
+    val pathExceptLast = mutableListOf<AlDocumentCategories.Category>()
 
     init {
+        var category = AlDocumentCategories.findByID(AlFrontPile.shitFromBack.documentCategoryID)
+        while (true) {
+            pathExceptLast += category
+            val parent = category.parent
+            if (parent == null)
+                break
+            else
+                category = parent
+        }
+        pathExceptLast.reverse()
+        val last = pathExceptLast.last()
+        pathExceptLast.removeAt(pathExceptLast.lastIndex)
+
         update()
+
+        selectJQ().setVal(last.id)
     }
 
     fun update() {
         val container = byIDSingle(AlDomID.documentCategoryPickerContainer)
         container.html(buildString {
-            val items = currentPath.last().children
+            val items = pathExceptLast.last().children
             ln("<div style='display: flex; align-items: center;'>")
-            val pathToShow = currentPath.drop(1)
+            val pathToShow = pathExceptLast.drop(1)
             for (step in pathToShow) {
                 ln("<div style='margin-right: 0.5rem;'>${step.title}</div>")
             }
@@ -40,31 +54,38 @@ class DocumentCategoryPicker {
             }
         })
 
-        byIDSingle(selectID).on("change") {
+        selectJQ().on("change") {
             handleSelectChange()
         }
 
         byIDNoneOrSingle(backButtonID)?.let {
             it.on("click") {
-                currentPath.removeAt(currentPath.lastIndex)
+                pathExceptLast.removeAt(pathExceptLast.lastIndex)
                 update()
             }
         }
     }
 
     private fun handleSelectChange() {
-        val categoryID = byIDSingle(selectID).getVal() ?: wtf("975e6a00-5798-44dd-a704-5e9f47e1e678")
-        val item = currentPath.last().children.find {it.id == categoryID} ?: wtf("5162f6ed-31bc-4e89-8088-5528b9ea43d5")
+        val categoryID = getSelectedCategoryID()
+        val item = pathExceptLast.last().children.find {it.id == categoryID} ?: wtf("5162f6ed-31bc-4e89-8088-5528b9ea43d5")
         if (item.children.isNotEmpty()) {
-            currentPath += item
+            pathExceptLast += item
             update()
         }
     }
 
+    fun getSelectedCategoryID(): String {
+        val categoryID = selectJQ().getVal() ?: wtf("975e6a00-5798-44dd-a704-5e9f47e1e678")
+        return categoryID
+    }
+
     fun debug_setSelectValue(categoryID: String) {
-        byIDSingle(selectID).setVal(categoryID)
+        selectJQ().setVal(categoryID)
         handleSelectChange()
     }
+
+    private fun selectJQ() = byIDSingle(selectID)
 }
 
 

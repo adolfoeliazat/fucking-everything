@@ -1,5 +1,7 @@
 package alraune.shared
 
+import vgrechka.*
+
 object AlDocumentCategories {
     val miscID = "102"
     val humanitiesID = "226"
@@ -176,6 +178,41 @@ object AlDocumentCategories {
         ))
     ))
 
+    class Category(val title: String, val id: String, val children: List<Category> = listOf()) {
+        var parent: Category? = null
 
-    class Category(val title: String, val id: String, val children: List<Category> = listOf())
+        init {
+            for (child in children) {
+                child.parent = this
+            }
+        }
+    }
+
+    fun findByID(id: String): Category {
+        return maybeFindByID(id, root) ?: bitch("c6606a3c-c677-4f8d-8a0b-b1336efbd3fb")
+    }
+
+    fun maybeFindByID(id: String, parent: Category): Category? {
+        for (child in parent.children) {
+            if (child.id == id)
+                return child
+            else
+                maybeFindByID(id, child)?.let {
+                    return it
+                }
+        }
+        return null
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+

@@ -17,6 +17,8 @@ object AlRenderPile {
             .replace("&", "&amp;")
             .replace("<", "&lt;")
             .replace(">", "&gt;")
+            .replace("'", "&#39;")
+            .replace("\"", "&#34;")
     }
     fun formatUnixTime(ms: Long, includeTZ: Boolean = true): String =
         when (AlBackPile0.locale) {

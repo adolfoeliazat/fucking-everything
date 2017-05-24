@@ -7,16 +7,14 @@ import vgrechka.kjs.JQueryPile.byID
 import vgrechka.kjs.JQueryPile.byIDSingle
 import kotlin.browser.window
 import kotlin.js.Promise
+import kotlin.properties.Delegates
+import kotlin.properties.Delegates.notNull
 import kotlin.reflect.KFunction0
 import kotlin.reflect.KProperty0
 
 fun main(args: Array<String>) {
     clog("I am alraune-front 4")
     window.asDynamic()[AlFrontDebug::class.simpleName] = AlFrontDebug
-
-    @Suppress("UnsafeCastFromDynamic")
-    AlFrontPile.shitFromBack = JSON.parse(window.asDynamic()[ShitPassedFromBackToFront::class.simpleName])
-    clog("shitFromBack", AlFrontPile.shitFromBack)
 
     jqDocumentReady {
         AlFrontPile.initShit()
@@ -63,7 +61,7 @@ object AlFrontDebug {
 
 object AlFrontPile {
     val debug_sleepBeforePost = 1000
-    var shitFromBack by notNullOnce<ShitPassedFromBackToFront>()
+    var shitFromBack by notNull<ShitPassedFromBackToFront>()
 
 //    object google {
 //        var auth2 by notNullOnce<gapi.auth2.GoogleAuth>()
@@ -106,6 +104,15 @@ object AlFrontPile {
     }
 
     fun initShit() {
+        @Suppress("UnsafeCastFromDynamic")
+        run {
+            val j = JQueryPile.byIDSingle(ShitPassedFromBackToFront::class.simpleName!!)
+            val dataShit = j.attr("data-shit")
+            clog("dataShit =", dataShit)
+            AlFrontPile.shitFromBack = JSON.parse(dataShit)
+            clog("shitFromBack =", AlFrontPile.shitFromBack)
+        }
+
         if (AlFrontPile.shitFromBack.pageID == AlPageID.orderCreation) {
             val documentCategoryPicker = DocumentCategoryPicker()
 
@@ -123,6 +130,7 @@ object AlFrontPile {
                     clog("propName", propName)
                     inst[propName] = byIDSingle(AlSharedPile.fieldDOMID(propName)).getVal()
                 }
+                inst[OrderCreationForm::documentCategoryID.name] = documentCategoryPicker.getSelectedCategoryID()
                 val data = JSON.stringify(inst)
                 // clog("data", data)
                 async {

@@ -146,7 +146,7 @@ object StartAlrauneBack {
                             val documentDetails = declareField(data::documentDetails, f.documentDetails.title, q::validateDocumentDetails, FieldType.TEXTAREA)
 
                             if (!isPost || hasErrors) {
-                                ctx.shit.documentCategoryID = "101"
+                                ctx.shitPassedFromBackToFront.documentCategoryID = data.documentCategoryID
                                 o- pageTitle(t("TOTE", "Заказ"))
                                 o- kform{o->
                                     if (hasErrors)
@@ -173,6 +173,9 @@ object StartAlrauneBack {
                                 o- kdiv.className(AlCSS.successBanner).text(t("TOTE", "Все круто. Мы с тобой скоро свяжемся"))
                                 o- AlRenderPile.renderOrderParams(order)
                             }
+
+                            o- kdiv(Attrs(id = ctx.shitPassedFromBackToFront::class.simpleName,
+                                          dataShit = ObjectMapper().writeValueAsString(ctx.shitPassedFromBackToFront)))
                         }
                     }
 
@@ -204,8 +207,8 @@ object StartAlrauneBack {
                 }
 
                 private fun spitUsualPage(pageID: String, ctx: AlRequestContext, build: (Tag) -> Unit) {
-                    ctx.shit.pageID = pageID
-                    ctx.shit.postURL = "${AlBackPile0.baseURL}${AlBackPile0.orderCreationPagePath}"
+                    ctx.shitPassedFromBackToFront.pageID = pageID
+                    ctx.shitPassedFromBackToFront.postURL = "${AlBackPile0.baseURL}${AlBackPile0.orderCreationPagePath}"
 
                     // XXX ctx.shit is populated as part of `build`
                     val content = kdiv.id(AlDomID.replaceableContent){o->
@@ -225,9 +228,6 @@ object StartAlrauneBack {
                         ln("    <link href='/node_modules/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet'>")
                         ln("    <link rel='stylesheet' href='/node_modules/font-awesome/css/font-awesome.min.css'>")
                         ln("    <link rel='stylesheet' href='alraune.css'>")
-                        ln("    <script>")
-                        ln("        window['${ctx.shit::class.simpleName}'] = '${ObjectMapper().writeValueAsString(ctx.shit)}'")
-                        ln("    </script>")
                         ln("</head>")
                         ln("<body>")
                         ln(AlSharedPile.beginContentMarker)
@@ -331,7 +331,7 @@ interface Should {
 
 class AlRequestContext {
     var exchange by volatileNotNullOnce<HttpServerExchange>()
-    val shit = ShitPassedFromBackToFront()
+    val shitPassedFromBackToFront = ShitPassedFromBackToFront()
 
     val debug = _Debug()
     inner class _Debug {

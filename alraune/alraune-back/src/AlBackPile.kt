@@ -81,6 +81,7 @@ class Tag(val tag: String, var attrs: Attrs) : Renderable {
             attrs.name?.let {append(" name='$it'")}
             attrs.value?.let {append(" value='${escapeHTML(it)}'")}
             attrs.rows?.let {append(" rows='$it'")}
+            attrs.dataShit?.let {append(" data-shit='${escapeHTML(it)}'")}
             append(">")
             for (child in children) {
                 append(child.render())
@@ -167,7 +168,8 @@ data class Attrs(
     val type: String? = null,
     val value: String? = null,
     val name: String? = null,
-    val rows: Int? = null
+    val rows: Int? = null,
+    val dataShit: String? = null
 )
 
 class ValidationResult(val sanitizedString: String, val error: String?)
