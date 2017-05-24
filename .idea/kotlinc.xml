@@ -2,15 +2,12 @@
 <project version="4">
   <component name="Kotlin2JsCompilerArguments">
     <option name="sourceMap" value="true" />
-    <option name="moduleKind" value="plain" />
   </component>
   <component name="Kotlin2JvmCompilerArguments">
     <option name="jvmTarget" value="1.8" />
   </component>
   <component name="KotlinCommonCompilerArguments">
-    <option name="languageVersion" value="1.1" />
-    <option name="apiVersion" value="1.1" />
-    <option name="coroutinesEnable" value="true" />
+    <option name="coroutinesState" value="enable" />
   </component>
   <component name="KotlinCompilerSettings">
     <option name="additionalArguments" value="-Xplugin C:\Users\Vladimir\.IdeaIC2017.1\config\plugins\Kotlin\kotlinc\lib\noarg-compiler-plugin.jar -P plugin:org.jetbrains.kotlin.noarg:annotation=vgrechka.Ser -P plugin:org.jetbrains.kotlin.noarg:annotation=javax.persistence.MappedSuperclass -P plugin:org.jetbrains.kotlin.noarg:annotation=javax.persistence.Entity -P plugin:org.jetbrains.kotlin.noarg:annotation=javax.persistence.Embeddable -Xplugin C:\Users\Vladimir\.IdeaIC2017.1\config\plugins\Kotlin\kotlinc\lib\allopen-compiler-plugin.jar -P plugin:org.jetbrains.kotlin.allopen:annotation=vgrechka.Ser -P plugin:org.jetbrains.kotlin.allopen:annotation=vgrechka.AllOpen -P plugin:org.jetbrains.kotlin.allopen:annotation=javax.persistence.MappedSuperclass -P plugin:org.jetbrains.kotlin.allopen:annotation=javax.persistence.Entity -P plugin:org.jetbrains.kotlin.allopen:annotation=javax.persistence.Embeddable -version" />

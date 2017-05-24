@@ -10,6 +10,11 @@ object AlSharedPile {
     val endContentMarker = "<!--53693d6d-acc5-4a87-9dc4-b043e6370c10-->"
     val scrollbarWidth = 17
 
+    object attribute {
+        val data_tagCreationStackID = "data-tagCreationStackID"
+        val data_shit = "data-shit"
+    }
+
     enum class GetParam {
         page, fakeSetting
     }
@@ -125,13 +130,17 @@ object AlCSS {
     val documentCategoryID: String
 )
 
+@Ser data class DumpStackByIDRequest(
+    val stackID: String
+)
+
 class ShitPassedFromBackToFront {
+    var funnyChars = "fuck & shit < 'bitch' \"boobs\" >"
     val debug_domElementStackTraces = true
     var pageID: String = "boobs"
     var postURL: String = "boobs"
     var documentCategoryID = "boobs"
-    var funnyChars = "fuck & shit < 'bitch' \"boobs\" >"
-    var idToTagCreationStack = mutableMapOf<String, String>()
+    var debug_urlForSendingStackID = "boobs"
 }
 
 
@@ -161,6 +170,7 @@ enum class Color(val string: String) {
 
     override fun toString() = string
 }
+
 
 
 

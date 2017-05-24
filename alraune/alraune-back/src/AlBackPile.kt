@@ -3,11 +3,15 @@ package alraune.back
 import alraune.back.AlRenderPile.escapeHTML
 import alraune.back.AlRenderPile.t
 import alraune.shared.AlCSS
+import alraune.shared.AlSharedPile
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.validator.routines.EmailValidator
 import vgrechka.*
+import java.util.concurrent.ConcurrentHashMap
 
 object AlBackPile {
+    var idToTagCreationStack = ConcurrentHashMap<String, String>()
+
     fun fuckValidate1(x: String?, minLen: Int, maxLen: Int, boobs: (String) -> String?): ValidationResult {
         val sane = (x ?: "").trim()
         var error = when {
@@ -76,9 +80,9 @@ class Tag(val tag: String, var attrs: Attrs) : Renderable {
         val ctx = AlRequestContext.the
         tagCreationStackID = when {
             ctx.shitPassedFromBackToFront.debug_domElementStackTraces -> {
-                val id = ctx.nextUID().toString()
+                val id = DebugPile.nextPUID().toString()
                 val stack = Exception("Capturing Tag creation stack").stackTraceString
-                ctx.shitPassedFromBackToFront.idToTagCreationStack[id] = stack
+                AlBackPile.idToTagCreationStack[id] = stack
                 id
             }
             else -> null
@@ -95,8 +99,9 @@ class Tag(val tag: String, var attrs: Attrs) : Renderable {
             attrs.name?.let {append(" name='$it'")}
             attrs.value?.let {append(" value='${escapeHTML(it)}'")}
             attrs.rows?.let {append(" rows='$it'")}
-            attrs.dataShit?.let {append(" data-shit='${escapeHTML(it)}'")}
-            tagCreationStackID?.let {append(" data-tagCreationStackID='$it'")}
+            val attr = AlSharedPile.attribute
+            attrs.dataShit?.let {append(" ${attr.data_shit}='${escapeHTML(it)}'")}
+            tagCreationStackID?.let {append(" ${attr.data_tagCreationStackID}='$it'")}
 
             append(">")
             for (child in children) {

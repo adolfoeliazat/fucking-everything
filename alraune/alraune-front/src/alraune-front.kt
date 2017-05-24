@@ -1,7 +1,6 @@
 package alraune.front
 
 import alraune.shared.*
-import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.MouseEvent
 import vgrechka.*
@@ -11,6 +10,7 @@ import vgrechka.kjs.JQueryPile.byIDSingle
 import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.js.Promise
+import kotlin.js.json
 import kotlin.properties.Delegates.notNull
 import kotlin.reflect.KFunction0
 import kotlin.reflect.KProperty0
@@ -26,10 +26,12 @@ fun main(args: Array<String>) {
                 e.preventAndStop()
                 // clog("target =", e.target)
                 val el = e.target as HTMLElement
-                val stackID = el.getAttribute("data-tagCreationStackID") ?: bitch("1a23fa57-0fd2-404a-82cf-b300294aa6cc")
-                clog("stackID =", stackID)
-                val stack = AlFrontPile.shitFromBack.idToTagCreationStack[stackID]
-                clog("stack =", stack)
+                val stackID = el.getAttribute(AlSharedPile.attribute.data_tagCreationStackID) ?: bitch("1a23fa57-0fd2-404a-82cf-b300294aa6cc")
+                async {
+                    // TODO:vgrechka Should URL be in AlSharedPile?
+                    AlFrontPile.post(AlFrontPile.shitFromBack.debug_urlForSendingStackID, JSON.stringify(DumpStackByIDRequest(stackID)))
+                    clog("Sent request for dumping stackID $stackID")
+                }
             }
         }, /*capturingPhase*/ true)
 
@@ -94,9 +96,9 @@ object AlFrontPile {
         byIDSingle(AlSharedPile.fieldDOMID(prop)).setVal(prop.get())
     }
 
-    suspend fun post(url: String, data: Any?) = await(postPromise(url, data))
+    suspend fun post(url: String, rawData: Any?) = await(postPromise(url, rawData))
 
-    fun postPromise(url: String, data: Any?): Promise<String> {
+    fun postPromise(url: String, rawData: Any?): Promise<String> {
 //        val stackBeforeXHR: String = CaptureStackException().stack
         return Promise {resolve, reject ->
             val xhr = js("new XMLHttpRequest()")
@@ -115,25 +117,16 @@ object AlFrontPile {
                 }
             }
 
-            xhr.send(data)
+            xhr.send(rawData)
         }
     }
 
     fun initShit() {
         AlFrontPile.shitFromBack = run {
             val j = JQueryPile.byIDSingle(ShitPassedFromBackToFront::class.simpleName!!)
-            val dataShit = j.attr("data-shit")
+            val dataShit = j.attr(AlSharedPile.attribute.data_shit)
             // clog("dataShit =", dataShit)
-            val shit = JSON.parse<ShitPassedFromBackToFront>(dataShit)
-
-            val dejsonizedMap = shit.asDynamic()[shit::idToTagCreationStack.name]
-            val keys = JSObject.getOwnPropertyNames(dejsonizedMap)
-            shit.idToTagCreationStack = mutableMapOf()
-            for (key in keys) {
-                shit.idToTagCreationStack[key] = dejsonizedMap[key]
-            }
-
-            shit
+            JSON.parse<ShitPassedFromBackToFront>(dataShit)
         }
         clog("shitFromBack =", AlFrontPile.shitFromBack)
 

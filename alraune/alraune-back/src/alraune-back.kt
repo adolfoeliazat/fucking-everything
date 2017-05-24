@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import alraune.back.AlBackPile0.log
 import alraune.back.AlRenderPile.pageTitle
-import alraune.back.AlRenderPile.rawHTML
 import alraune.back.AlRenderPile.renderOrderTitle
 import alraune.back.AlRenderPile.t
 import alraune.shared.*
@@ -61,9 +60,12 @@ object StartAlrauneBack {
             val servletHandler = ServletHandler()-{o->
                 val servlet = object : HttpServlet() {
                     override fun service(req: HttpServletRequest, res: HttpServletResponse) {
+                        val path_debug_dumpStackByID = "/debug_dumpStackByID"
+
                         AlRequestContext.the = AlRequestContext().also {
                             it.req = req
                             it.res = res
+                            it.shitPassedFromBackToFront.debug_urlForSendingStackID = "${AlBackPile0.baseURL}$path_debug_dumpStackByID"
                         }
 
                         log.debug("req.pathInfo = ${req.pathInfo}")
@@ -74,6 +76,12 @@ object StartAlrauneBack {
                             "/alraune.css" -> {
                                 res.contentType = "text/css; charset=utf-8"
                                 res.writer.print(AlCSS_Back.sheet)
+                            }
+                            path_debug_dumpStackByID -> {
+                                val json = req.reader.readText()
+                                val bean = ObjectMapper().readValue(json, DumpStackByIDRequest::class.java)
+                                val stack = AlBackPile.idToTagCreationStack[bean.stackID] ?: bitch("5aaece41-c3f3-4eae-8c98-e7f69147ef3b")
+                                clog(stack)
                             }
                             AlBackPile0.orderCreationPagePath -> spitOrderFormPage()
                             else -> spitLandingPage()

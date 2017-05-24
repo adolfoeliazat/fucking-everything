@@ -1,11 +1,14 @@
 package vgrechka
 
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicLong
+
 object DebugPile {
-    private var nextPUID = 1L
+    private var nextPUID = AtomicLong(1L)
     val shitToDebugTag = mutableMapOf<Any, String>()
     val shitToAttachedShit = mutableMapOf<Any, MutableMap<String, Any?>>()
 
-    fun nextPUID(): Long = nextPUID++
+    fun nextPUID(): Long = nextPUID.getAndIncrement()
 }
 
 fun Any.debug_attachAllShitFrom(src: Any) {
