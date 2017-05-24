@@ -20,10 +20,13 @@ import alraune.shared.*
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.eclipse.jetty.server.handler.HandlerCollection
 import org.eclipse.jetty.server.handler.ResourceHandler
+import org.hibernate.criterion.Order
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 import kotlin.reflect.full.memberProperties
+
+// TODO:vgrechka Field: document type
 
 object StartAlrauneBack {
     @JvmStatic
@@ -223,18 +226,22 @@ fun spitOrderFormPage() {
 //                                                  documentTitle = "boobs",
 //                                                  documentDetails = "vagina")
             }
-            else -> OrderCreationForm("", "", "", "", "", AlDocumentCategories.miscID, "", "")
+            else -> OrderCreationForm(
+                email = "", name = "", phone = "", documentTypeID = AlDocumentType.ABSTRACT.name, documentTitle = "",
+                documentDetails = "", documentCategoryID = AlDocumentCategories.miscID, numPages = "", numSources = "")
         }
     }
+
 
     spitUsualPage {o->
         val q = AlBackPile
         var hasErrors = false
-        val fieldRenderers = mutableListOf<() -> Renderable>()
+
+        class FuckingField(val value: String, val render: () -> Renderable)
 
         fun declareField(prop: KProperty0<String>,
                          title: String, validator: (String?) -> ValidationResult,
-                         fieldType: FieldType = FieldType.TEXT): String {
+                         fieldType: FieldType = FieldType.TEXT): FuckingField {
             val vr = validator(prop.get())
             val theError = when {
                 isPost -> vr.error
@@ -243,30 +250,31 @@ fun spitOrderFormPage() {
             if (theError != null)
                 hasErrors = true
 
-            fieldRenderers += {
-                val id = AlSharedPile.fieldDOMID(name = prop.name)
-                kdiv.className("form-group") {o->
-                    if (theError != null)
-                        o.amend(Style(marginBottom = "0"))
-                    o- klabel(text = title)
-                    val control = when (fieldType) {
-                        FieldType.TEXT -> kinput(Attrs(type = "text", id = id, value = vr.sanitizedString, className = "form-control")) {}
-                        FieldType.TEXTAREA -> ktextarea(Attrs(id = id, rows = 5, className = "form-control"), text = vr.sanitizedString)
-                    }
-                    o- kdiv(Style(position = "relative")){o->
-                        o- control
-                        if (theError != null) {
-                            o- kdiv(Style(marginTop = "5px", marginRight = "9px", textAlign = "right", color = "${Color.RED_700}"))
-                                .text(theError)
-                            // TODO:vgrechka Shift red circle if control has scrollbar
-                            o- kdiv(Style(width = "15px", height = "15px", backgroundColor = "${Color.RED_300}",
-                                          borderRadius = "10px", position = "absolute", top = "10px", right = "8px"))
+            return FuckingField(
+                value = vr.sanitizedString,
+                render = {
+                    val id = AlSharedPile.fieldDOMID(name = prop.name)
+                    kdiv.className("form-group") {o->
+                        if (theError != null)
+                            o.amend(Style(marginBottom = "0"))
+                        o- klabel(text = title)
+                        val control = when (fieldType) {
+                            FieldType.TEXT -> kinput(Attrs(type = "text", id = id, value = vr.sanitizedString, className = "form-control")) {}
+                            FieldType.TEXTAREA -> ktextarea(Attrs(id = id, rows = 5, className = "form-control"), text = vr.sanitizedString)
+                        }
+                        o- kdiv(Style(position = "relative")){o->
+                            o- control
+                            if (theError != null) {
+                                o- kdiv(Style(marginTop = "5px", marginRight = "9px", textAlign = "right", color = "${Color.RED_700}"))
+                                    .text(theError)
+                                // TODO:vgrechka Shift red circle if control has scrollbar
+                                o- kdiv(Style(width = "15px", height = "15px", backgroundColor = "${Color.RED_300}",
+                                              borderRadius = "10px", position = "absolute", top = "10px", right = "8px"))
+                            }
                         }
                     }
                 }
-            }
-
-            return vr.sanitizedString
+            )
         }
 
         // TODO:vgrechka @improve d0fc960d-76be-4a0b-969c-7bbf94275e09
@@ -290,22 +298,33 @@ fun spitOrderFormPage() {
                     o- kdiv.className(AlCSS.errorBanner).text(t("TOTE", "Кое-что нужно исправить..."))
 
                 o- row(marginBottom = null){o->
-                    o- col(4) {it-fieldRenderers[1]()}
-                    o- col(4) {it-fieldRenderers[0]()}
-                    o- col(4) {it-fieldRenderers[2]()}
+                    o- col(4, contactName.render())
+                    o- col(4, email.render())
+                    o- col(4, phone.render())
                 }
-                o- fieldRenderers[3]()
                 o- row(marginBottom = null){o->
-                    o- col(2) {it-fieldRenderers[5]()}
-                    o- col(2) {it-fieldRenderers[6]()}
-                    o- col(8) {o->
-                        o- kdiv.className("form-group"){o->
-                            o- klabel(text = f.documentCategory.title)
-                            o- kdiv(Attrs(id = AlDomID.documentCategoryPickerContainer))
+                    o- col(4, kdiv.className("form-group"){o->
+                        o- klabel(text = f.documentType.title)
+                        o- kselect(Attrs(id = AlSharedPile.fieldDOMID(name = OrderCreationForm::documentTypeID.name),
+                                         className = "form-control")) {o->
+                            for (value in AlDocumentType.values()) {
+                                o- koption(Attrs(value = value.name,
+                                                 selected = data.documentTypeID == value.name),
+                                           value.title)
+                            }
                         }
-                    }
+                    })
+                    o- col(8, kdiv.className("form-group"){o->
+                        o- klabel(text = f.documentCategory.title)
+                        o- kdiv(Attrs(id = AlDomID.documentCategoryPickerContainer))
+                    })
                 }
-                o- fieldRenderers[4]()
+                o- documentTitle.render()
+                o- row(marginBottom = null){o->
+                    o- col(6, numPages.render())
+                    o- col(6, numSources.render())
+                }
+                o- documentDetails.render()
                 o- kdiv{o->
                     o- kbutton(Attrs(id = AlDomID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Вперед"))
                     o- kdiv.id(AlDomID.ticker){}
@@ -315,12 +334,13 @@ fun spitOrderFormPage() {
             ctx.shitPassedFromBackToFront.pageID = AlPageID.orderCreated
 
             AlDocumentCategories.findByIDOrBitch(data.documentCategoryID)
+            AlDocumentType.values().find {it.name == data.documentTypeID} ?: bitch("e63b006c-3cda-4db8-b7e0-e2413e980dbc")
 
             val order = alOrderRepo.save(newAlOrder(
-                email = email, contactName = contactName, phone = phone,
-                documentTitle = documentTitle, documentDetails = documentDetails,
-                documentCategoryID = data.documentCategoryID,
-                numPages = numPages.toInt(), numSources = numSources.toInt()))
+                email = email.value, contactName = contactName.value, phone = phone.value,
+                documentTitle = documentTitle.value, documentDetails = documentDetails.value,
+                documentTypeID = data.documentTypeID, documentCategoryID = data.documentCategoryID,
+                numPages = numPages.value.toInt(), numSources = numSources.value.toInt()))
             o- renderOrderTitle(order)
             o- kdiv.className(AlCSS.successBanner).text(t("TOTE", "Все круто, заказ создан. Мы с тобой скоро свяжемся"))
             o- AlRenderPile.renderOrderParams(order)
@@ -365,12 +385,18 @@ private fun spitUsualPage(build: (Tag) -> Unit) {
     })
 }
 
-
-
-
-
-
-
-
+enum class AlDocumentType(val title: String) {
+    ABSTRACT("Реферат"),
+    COURSE("Курсовая работа"),
+    GRADUATION("Дипломная работа"),
+    LAB("Лабораторная работа"),
+    TEST("Контрольная работа"),
+    RGR("РГР"),
+    DRAWING("Чертеж"),
+    DISSERTATION("Диссертация"),
+    ESSAY("Эссе (сочинение)"),
+    PRACTICE("Отчет по практике"),
+    OTHER("Другое")
+}
 
 

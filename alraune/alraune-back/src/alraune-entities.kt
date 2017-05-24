@@ -11,6 +11,7 @@ interface AlOrder : GCommonEntityFields {
     var email: String
     var contactName: String
     var phone: String
+    var documentTypeID: String
     var documentTitle: String
     var documentDetails: String
     var documentCategoryID: String

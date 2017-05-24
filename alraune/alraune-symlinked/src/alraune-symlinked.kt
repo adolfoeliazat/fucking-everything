@@ -129,6 +129,7 @@ object AlCSS {
     val email: String,
     val name: String,
     val phone: String,
+    val documentTypeID: String,
     val documentTitle: String,
     val documentDetails: String,
     val documentCategoryID: String,

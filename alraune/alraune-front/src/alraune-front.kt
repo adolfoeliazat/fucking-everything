@@ -174,6 +174,7 @@ object AlFrontPile {
                         email = "iperdonde@mail.com",
                         name = "Иммануил Пердондэ",
                         phone = "+38 (068) 4542823",
+                        documentTypeID = "PRACTICE",
                         documentTitle = "Как я пинал хуи на практике",
                         documentDetails = "Детали? Я ебу, какие там детали...",
                         documentCategoryID = "boobs",
@@ -188,6 +189,7 @@ object AlFrontPile {
                     o(data::documentDetails)
                     o(data::numPages)
                     o(data::numSources)
+                    o(data::documentTypeID)
 
                     documentCategoryPicker.debug_setSelectValue(AlDocumentCategories.humanitiesID)
                     documentCategoryPicker.debug_setSelectValue(AlDocumentCategories.linguisticsID)

@@ -81,6 +81,8 @@ val kh2 = TagCtor("h2")
 val kh3 = TagCtor("h3")
 val kh4 = TagCtor("h4")
 val kh5 = TagCtor("h5")
+val kselect = TagCtor("select")
+val koption = TagCtor("option")
 
 class Tag(val tag: String, var attrs: Attrs) : Renderable {
     val tagCreationStackID: String?
@@ -109,6 +111,7 @@ class Tag(val tag: String, var attrs: Attrs) : Renderable {
             attrs.name?.let {append(" name='$it'")}
             attrs.value?.let {append(" value='${escapeHTML(it)}'")}
             attrs.rows?.let {append(" rows='$it'")}
+            if (attrs.selected) append(" selected")
             val attr = AlSharedPile.attribute
             attrs.dataShit?.let {append(" ${attr.data_shit}='${escapeHTML(it)}'")}
             tagCreationStackID?.let {append(" ${attr.data_tagCreationStackID}='$it'")}
@@ -200,7 +203,8 @@ data class Attrs(
     val value: String? = null,
     val name: String? = null,
     val rows: Int? = null,
-    val dataShit: String? = null
+    val dataShit: String? = null,
+    val selected: Boolean = false
 )
 
 class ValidationResult(val sanitizedString: String, val error: String?)

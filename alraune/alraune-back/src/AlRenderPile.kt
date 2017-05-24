@@ -54,9 +54,9 @@ object AlRenderPile {
             }
         }
 
-    fun col(size: Int, colClassName: String? = null, build: (Tag) -> Unit) =
-        kdiv(Attrs(className = "col-md-$size ${colClassName?:""}")){o->
-            build(o)
+    fun col(size: Int, content: Renderable) =
+        kdiv(Attrs(className = "col-md-$size")){o->
+            o- content
         }
 
     fun col(size: Int, title: String, content: Renderable, contentClassName: String? = null, colClassName: String? = null) =
@@ -115,8 +115,7 @@ object AlRenderPile {
             }
 
             o- row{o->
-                o- col(3, f.numPages.title, order.numPages.toString())
-                o- col(3, f.numSources.title, order.numSources.toString())
+                o- col(3, f.documentType.title, AlDocumentType.valueOf(order.documentTypeID).title)
                 o- col(6, f.documentCategory.title, run {
                     var cat = AlDocumentCategories.findByIDOrBitch(order.documentCategoryID)
                     val steps = mutableListOf<String>()
@@ -127,6 +126,11 @@ object AlRenderPile {
                     steps.reverse()
                     steps.joinToString(" " + AlSharedPile.text.rightAngleQuote + " ")
                 })
+            }
+
+            o- row{o->
+                o- col(3, f.numPages.title, order.numPages.toString())
+                o- col(3, f.numSources.title, order.numSources.toString())
             }
 
 //            o- detailsRow(order.details, order.detailsHighlightRanges, title = fields.orderDetails.title)
@@ -278,6 +282,7 @@ object AlFields {
         val contactName = Fuck(t("TOTE", "Имя"))
         val phone = Fuck(t("TOTE", "Телефон"))
         val documentTitle = Fuck(t("TOTE", "Тема работы (задание)"))
+        val documentType = Fuck(t("TOTE", "Тип документа"))
         val documentCategory = Fuck(t("TOTE", "Категория"))
         val documentDetails = Fuck(t("TOTE", "Детали"))
         val numPages = Fuck(t("TOTE", "Страниц"))
