@@ -7,7 +7,6 @@ import vgrechka.kjs.JQueryPile.byID
 import vgrechka.kjs.JQueryPile.byIDSingle
 import kotlin.browser.window
 import kotlin.js.Promise
-import kotlin.properties.Delegates
 import kotlin.properties.Delegates.notNull
 import kotlin.reflect.KFunction0
 import kotlin.reflect.KProperty0
@@ -108,12 +107,12 @@ object AlFrontPile {
         run {
             val j = JQueryPile.byIDSingle(ShitPassedFromBackToFront::class.simpleName!!)
             val dataShit = j.attr("data-shit")
-            clog("dataShit =", dataShit)
+            // clog("dataShit =", dataShit)
             AlFrontPile.shitFromBack = JSON.parse(dataShit)
             clog("shitFromBack =", AlFrontPile.shitFromBack)
         }
 
-        if (AlFrontPile.shitFromBack.pageID == AlPageID.orderCreation) {
+        if (AlFrontPile.shitFromBack.pageID == AlPageID.orderCreationForm) {
             val documentCategoryPicker = DocumentCategoryPicker()
 
             val button = byID(AlDomID.createOrderForm_submitButton)

@@ -13,6 +13,7 @@ interface AlOrder : GCommonEntityFields {
     var phone: String
     var documentTitle: String
     var documentDetails: String
+    var documentCategoryID: String
 }
 
 interface AlOrderRepository : GRepository<AlOrder> {

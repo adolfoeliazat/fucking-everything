@@ -33,7 +33,8 @@ object AlDomID {
 
 object AlPageID {
     val landing by myName()
-    val orderCreation by myName()
+    val orderCreationForm by myName()
+    val orderCreated by myName()
 }
 
 object AlCSS {

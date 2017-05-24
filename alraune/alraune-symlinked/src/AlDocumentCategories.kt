@@ -188,7 +188,7 @@ object AlDocumentCategories {
         }
     }
 
-    fun findByID(id: String): Category {
+    fun findByIDOrBitch(id: String): Category {
         return maybeFindByID(id, root) ?: bitch("c6606a3c-c677-4f8d-8a0b-b1336efbd3fb")
     }
 

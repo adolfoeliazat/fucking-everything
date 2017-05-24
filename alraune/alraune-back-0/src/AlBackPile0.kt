@@ -8,8 +8,10 @@ import java.io.File
 object AlBackPile0 {
     val locale = AlLocale.UA
     val backResourceRootDir = "E:/fegh/alraune/alraune-back"
-    val frontOutDir = "E:/fegh/out/production/alraune-front"
-    val sharedKJSOutDir = "E:/fegh/out/production/shared-kjs"
+//    val frontOutDir = "E:/fegh/out/production/alraune-front"
+//    val sharedKJSOutDir = "E:/fegh/out/production/shared-kjs"
+    val frontOutDirParent = "E:/fegh/out/production"
+    val sharedKJSOutDirParent = "E:/fegh/out/production"
     val tmpDirPath = "c:/tmp"
     val log = LoggerFactory.getLogger(this.javaClass)
     val orderCreationPagePath = "/order"

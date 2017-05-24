@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Tue May 23 13:27:38 EEST 2017
+// Generated on Wed May 24 11:03:11 EEST 2017
 // Model: e:/fegh/alraune/alraune-back/src/alraune-entities.kt
 //
 
@@ -25,13 +25,15 @@ fun newAlOrder(email: String,
                contactName: String,
                phone: String,
                documentTitle: String,
-               documentDetails: String): AlOrder {
+               documentDetails: String,
+               documentCategoryID: String): AlOrder {
     val backing = Generated_AlOrder()
         .also {it.email = email
                it.contactName = contactName
                it.phone = phone
                it.documentTitle = documentTitle
-               it.documentDetails = documentDetails}
+               it.documentDetails = documentDetails
+               it.documentCategoryID = documentCategoryID}
     return backing.toManuallyDefinedInterface()
 }
 
@@ -93,6 +95,7 @@ class Generated_AlOrder // Generated at 8-079453c-f675-490e-8367-7891d1a8b01a
     @XColumn(name = "orders_phone", columnDefinition = "text") lateinit var phone: String
     @XColumn(name = "orders_documentTitle", columnDefinition = "text") lateinit var documentTitle: String
     @XColumn(name = "orders_documentDetails", columnDefinition = "text") lateinit var documentDetails: String
+    @XColumn(name = "orders_documentCategoryID", columnDefinition = "text") lateinit var documentCategoryID: String
 
     override fun toManuallyDefinedInterface(): AlOrder {
         return object : AlOrder, Generated_AlOrderBackingProvider {
@@ -135,6 +138,10 @@ class Generated_AlOrder // Generated at 8-079453c-f675-490e-8367-7891d1a8b01a
                 get() = _backing.documentDetails
                 set(value) {_backing.documentDetails = value}
 
+            override var documentCategoryID: String
+                get() = _backing.documentCategoryID
+                set(value) {_backing.documentCategoryID = value}
+
             override fun toString() = _backing.toString()
 
             override fun hashCode() = _backing.hashCode()
@@ -147,7 +154,7 @@ class Generated_AlOrder // Generated at 8-079453c-f675-490e-8367-7891d1a8b01a
     }
 
     override fun toString(): String {
-        return "AlOrder(email=${email}, contactName=${contactName}, phone=${phone}, documentTitle=${documentTitle}, documentDetails=${documentDetails})"
+        return "AlOrder(email=${email}, contactName=${contactName}, phone=${phone}, documentTitle=${documentTitle}, documentDetails=${documentDetails}, documentCategoryID=${documentCategoryID})"
     }
 }
 
@@ -165,7 +172,8 @@ create table "alraune_orders" (
     orders_contactName text not null,
     orders_phone text not null,
     orders_documentTitle text not null,
-    orders_documentDetails text not null
+    orders_documentDetails text not null,
+    orders_documentCategoryID text not null
 ) ;
 
         """
@@ -187,7 +195,8 @@ create table "alraune_orders" (
     orders_contactName text not null,
     orders_phone text not null,
     orders_documentTitle text not null,
-    orders_documentDetails text not null
+    orders_documentDetails text not null,
+    orders_documentCategoryID text not null
 ) ;
 
 */

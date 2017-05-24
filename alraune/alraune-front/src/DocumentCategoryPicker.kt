@@ -14,7 +14,7 @@ class DocumentCategoryPicker {
     val pathExceptLast = mutableListOf<AlDocumentCategories.Category>()
 
     init {
-        var category = AlDocumentCategories.findByID(AlFrontPile.shitFromBack.documentCategoryID)
+        var category = AlDocumentCategories.findByIDOrBitch(AlFrontPile.shitFromBack.documentCategoryID)
         while (true) {
             pathExceptLast += category
             val parent = category.parent

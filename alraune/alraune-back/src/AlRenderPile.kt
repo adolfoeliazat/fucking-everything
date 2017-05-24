@@ -4,6 +4,8 @@ import alraune.back.AlBackPile0.log
 import alraune.back.AlRenderPile.t
 import alraune.shared.Color
 import vgrechka.*
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
 
 // TODO:vgrechka Revisit all this shit...
 
@@ -59,10 +61,16 @@ object AlRenderPile {
         }
 
 
-    fun createdAtCol(size: Int, value: Long) =
+    fun createdAtCol(size: Int, value: Timestamp) =
         col(size, t("Created", "Создан")){o->
-            o- formatUnixTime(value)
+//            o- formatTimestamp(value)
         }
+
+    fun formatTimestamp(x: Timestamp): String {
+        imf("3a34ac49-32e7-4536-8c16-fc1d6d0fd1ed")
+//        val format = when (AlBackPile0.locale) {}
+//        return format.format(x)
+    }
 
     fun updatedAtCol(size: Int, value: Long) =
         col(size, t("Updated", "Изменен")){o->
@@ -80,6 +88,7 @@ object AlRenderPile {
     fun renderOrderTitle(order: AlOrder): Renderable {
         return kdiv{o->
             o- pageTitle(t("Order #", "Заказ №") + order.id)
+            o- kh4(order.documentTitle)
         }
     }
 
@@ -87,12 +96,10 @@ object AlRenderPile {
         val f = AlFields.order
         return kdiv{o->
 //            o- row{o->
-//                if (order.state != UAOrderState.CUSTOMER_DRAFT) {
-//                    o- createdAtCol(3, order.createdAt)
-//                }
 //                o- col(3, t("TOTE", "Статус"), order.state.title, contentClassName = css.order.stateLabel(order.state))
 //            }
             o- row{o->
+                o- createdAtCol(3, order.createdAt)
                 o- col(3, f.contactName.title, order.contactName)
                 o- col(3, f.phone.title, order.phone)
             }
