@@ -30,7 +30,7 @@ object AlBackPile {
         return ValidationResult(sane, run {
             if (sane.isBlank()) return@run t("TOTE", "Поле обязательно")
             val int = try {sane.toInt()}
-                      catch (e: NumberFormatException) {return@run t("TOTE", "Я такие числа не понимаю")}
+                      catch (e: NumberFormatException) {return@run t("TOTE", "Странное число")}
             if (int < min) return@run t("TOTE", "Не менее $min")
             if (int > max) return@run t("TOTE", "Не более $max")
             null

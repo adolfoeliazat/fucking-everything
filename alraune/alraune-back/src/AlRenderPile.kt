@@ -54,6 +54,11 @@ object AlRenderPile {
             }
         }
 
+    fun col(size: Int, colClassName: String? = null, build: (Tag) -> Unit) =
+        kdiv(Attrs(className = "col-md-$size ${colClassName?:""}")){o->
+            build(o)
+        }
+
     fun col(size: Int, title: String, content: Renderable, contentClassName: String? = null, colClassName: String? = null) =
         col(size, title, contentClassName = contentClassName, colClassName = colClassName){o->
             o- content
@@ -98,18 +103,17 @@ object AlRenderPile {
     fun renderOrderParams(order: AlOrder): Renderable {
         val f = AlFields.order
         return kdiv{o->
-//            o- row{o->
-//                o- col(3, t("TOTE", "Статус"), order.state.title, contentClassName = css.order.stateLabel(order.state))
-//            }
             o- row{o->
                 o- createdAtCol(3, order.createdAt)
                 o- col(3, f.status.title, t("TOTE", "Рассматривается"))
+            }
+
+            o- row{o->
                 o- col(3, f.contactName.title, order.contactName)
+                o- col(3, f.email.title, order.email)
                 o- col(3, f.phone.title, order.phone)
             }
 
-//            o- row{o->
-//            }
             o- row{o->
                 o- col(3, f.numPages.title, order.numPages.toString())
                 o- col(3, f.numSources.title, order.numSources.toString())

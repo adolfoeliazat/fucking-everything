@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import alraune.back.AlBackPile0.log
+import alraune.back.AlRenderPile.col
 import alraune.back.AlRenderPile.pageTitle
 import alraune.back.AlRenderPile.renderOrderTitle
+import alraune.back.AlRenderPile.row
 import alraune.back.AlRenderPile.t
 import alraune.shared.*
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -286,14 +288,24 @@ fun spitOrderFormPage() {
             o- kform{o->
                 if (hasErrors)
                     o- kdiv.className(AlCSS.errorBanner).text(t("TOTE", "Кое-что нужно исправить..."))
-                fieldRenderers.add(3, {
-                    kdiv.className("form-group"){o->
-                        o- klabel(text = f.documentCategory.title)
-                        o- kdiv(Attrs(id = AlDomID.documentCategoryPickerContainer))
+
+                o- row(marginBottom = null){o->
+                    o- col(4) {it-fieldRenderers[1]()}
+                    o- col(4) {it-fieldRenderers[0]()}
+                    o- col(4) {it-fieldRenderers[2]()}
+                }
+                o- fieldRenderers[3]()
+                o- row(marginBottom = null){o->
+                    o- col(2) {it-fieldRenderers[5]()}
+                    o- col(2) {it-fieldRenderers[6]()}
+                    o- col(8) {o->
+                        o- kdiv.className("form-group"){o->
+                            o- klabel(text = f.documentCategory.title)
+                            o- kdiv(Attrs(id = AlDomID.documentCategoryPickerContainer))
+                        }
                     }
-                })
-                for (renderField in fieldRenderers)
-                    o- renderField()
+                }
+                o- fieldRenderers[4]()
                 o- kdiv{o->
                     o- kbutton(Attrs(id = AlDomID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Вперед"))
                     o- kdiv.id(AlDomID.ticker){}

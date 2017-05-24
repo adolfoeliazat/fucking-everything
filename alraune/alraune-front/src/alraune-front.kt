@@ -15,6 +15,9 @@ import kotlin.properties.Delegates.notNull
 import kotlin.reflect.KFunction0
 import kotlin.reflect.KProperty0
 
+// https://alraune.local/order?frontMessAround=messAroundFront201
+// https://alraune.local/order?frontMessAround=messAroundFront202
+
 fun main(args: Array<String>) {
     clog("I am alraune-front 4")
     window.asDynamic()[AlFrontDebug::class.simpleName] = AlFrontDebug
@@ -208,7 +211,7 @@ object AlFrontPile {
     }
 
     suspend fun sleepTillEndOfTime() {
-        clog("===== Sleeping till end of time =====")
+        clog("===== Sleeping till the end of time =====")
         sleep(Int.MAX_VALUE)
     }
 
