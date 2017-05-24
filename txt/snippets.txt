@@ -24,6 +24,16 @@
         git push -f origin master
 
 
+========== TFVC ==========
+
+    tf status
+    tf add /recursive .
+    tf commit
+
+    tf delete /detect /recursive
+    tf commit
+
+
 ========== IntelliJ ==========
 
     Reload ideavimrc          :source ~/.ideavimrc
