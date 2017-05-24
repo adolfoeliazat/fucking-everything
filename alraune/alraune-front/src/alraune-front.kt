@@ -1,10 +1,14 @@
 package alraune.front
 
 import alraune.shared.*
+import org.w3c.dom.Element
+import org.w3c.dom.HTMLElement
+import org.w3c.dom.events.MouseEvent
 import vgrechka.*
 import vgrechka.kjs.*
 import vgrechka.kjs.JQueryPile.byID
 import vgrechka.kjs.JQueryPile.byIDSingle
+import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.js.Promise
 import kotlin.properties.Delegates.notNull
@@ -16,6 +20,19 @@ fun main(args: Array<String>) {
     window.asDynamic()[AlFrontDebug::class.simpleName] = AlFrontDebug
 
     jqDocumentReady {
+        document.body!!.addEventListener("click", {e->
+            e as MouseEvent
+            if (AlFrontPile.shitFromBack.debug_domElementStackTraces && e.ctrlKey) {
+                e.preventAndStop()
+                // clog("target =", e.target)
+                val el = e.target as HTMLElement
+                val stackID = el.getAttribute("data-tagCreationStackID") ?: bitch("1a23fa57-0fd2-404a-82cf-b300294aa6cc")
+                clog("stackID =", stackID)
+                val stack = AlFrontPile.shitFromBack.idToTagCreationStack[stackID]
+                clog("stack =", stack)
+            }
+        }, /*capturingPhase*/ true)
+
         AlFrontPile.initShit()
 
         @Suppress("UnsafeCastFromDynamic")
@@ -103,14 +120,22 @@ object AlFrontPile {
     }
 
     fun initShit() {
-        @Suppress("UnsafeCastFromDynamic")
-        run {
+        AlFrontPile.shitFromBack = run {
             val j = JQueryPile.byIDSingle(ShitPassedFromBackToFront::class.simpleName!!)
             val dataShit = j.attr("data-shit")
             // clog("dataShit =", dataShit)
-            AlFrontPile.shitFromBack = JSON.parse(dataShit)
-            clog("shitFromBack =", AlFrontPile.shitFromBack)
+            val shit = JSON.parse<ShitPassedFromBackToFront>(dataShit)
+
+            val dejsonizedMap = shit.asDynamic()[shit::idToTagCreationStack.name]
+            val keys = JSObject.getOwnPropertyNames(dejsonizedMap)
+            shit.idToTagCreationStack = mutableMapOf()
+            for (key in keys) {
+                shit.idToTagCreationStack[key] = dejsonizedMap[key]
+            }
+
+            shit
         }
+        clog("shitFromBack =", AlFrontPile.shitFromBack)
 
         if (AlFrontPile.shitFromBack.pageID == AlPageID.orderCreationForm) {
             val documentCategoryPicker = DocumentCategoryPicker()

@@ -126,10 +126,12 @@ object AlCSS {
 )
 
 class ShitPassedFromBackToFront {
-    @Volatile var pageID: String = "boobs"
-    @Volatile var postURL: String = "boobs"
-    @Volatile var documentCategoryID = "boobs"
-    @Volatile var funnyChars = "fuck & shit < 'bitch' \"boobs\" >"
+    val debug_domElementStackTraces = true
+    var pageID: String = "boobs"
+    var postURL: String = "boobs"
+    var documentCategoryID = "boobs"
+    var funnyChars = "fuck & shit < 'bitch' \"boobs\" >"
+    var idToTagCreationStack = mutableMapOf<String, String>()
 }
 
 

@@ -3,6 +3,7 @@ package alraune.back
 import alraune.back.AlRenderPile.escapeHTML
 import alraune.back.AlRenderPile.t
 import alraune.shared.AlCSS
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.validator.routines.EmailValidator
 import vgrechka.*
 
@@ -68,7 +69,21 @@ val kh4 = TagCtor("h4")
 val kh5 = TagCtor("h5")
 
 class Tag(val tag: String, var attrs: Attrs) : Renderable {
+    val tagCreationStackID: String?
     val children = mutableListOf<Renderable>()
+
+    init {
+        val ctx = AlRequestContext.the
+        tagCreationStackID = when {
+            ctx.shitPassedFromBackToFront.debug_domElementStackTraces -> {
+                val id = ctx.nextUID().toString()
+                val stack = Exception("Capturing Tag creation stack").stackTraceString
+                ctx.shitPassedFromBackToFront.idToTagCreationStack[id] = stack
+                id
+            }
+            else -> null
+        }
+    }
 
     override fun render(): String {
         return buildString {
@@ -81,6 +96,8 @@ class Tag(val tag: String, var attrs: Attrs) : Renderable {
             attrs.value?.let {append(" value='${escapeHTML(it)}'")}
             attrs.rows?.let {append(" rows='$it'")}
             attrs.dataShit?.let {append(" data-shit='${escapeHTML(it)}'")}
+            tagCreationStackID?.let {append(" data-tagCreationStackID='$it'")}
+
             append(">")
             for (child in children) {
                 append(child.render())

@@ -180,9 +180,10 @@ object AlRenderPile {
             }
         }
 
-        var html = kp(markedText).render()
-        check(html.startsWith("<p>") && html.endsWith("</p>"))
-        html = html.substring("<p>".length, html.length - "</p>".length)
+//        var html = kp(markedText).render()
+//        check(html.startsWith("<p>") && html.endsWith("</p>"))
+//        html = html.substring("<p>".length, html.length - "</p>".length)
+        val html = Text(markedText).render()
 
         return buildString {
             var i = 0

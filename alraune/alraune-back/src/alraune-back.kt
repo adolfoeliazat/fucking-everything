@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import alraune.back.AlBackPile0.log
 import alraune.back.AlRenderPile.pageTitle
+import alraune.back.AlRenderPile.rawHTML
 import alraune.back.AlRenderPile.renderOrderTitle
 import alraune.back.AlRenderPile.t
 import alraune.shared.*
@@ -29,6 +30,7 @@ import kotlin.reflect.full.memberProperties
 object StartAlrauneBack {
     @JvmStatic
     fun main(args: Array<String>) {
+        System.setProperty("user.timezone", "GMT")
         backPlatform.springctx = AnnotationConfigApplicationContext(AlrauneTestAppConfig::class.java)
 
         // val httpPort = 80
@@ -59,7 +61,7 @@ object StartAlrauneBack {
             val servletHandler = ServletHandler()-{o->
                 val servlet = object : HttpServlet() {
                     override fun service(req: HttpServletRequest, res: HttpServletResponse) {
-                        AlRequestContext.the.let {
+                        AlRequestContext.the = AlRequestContext().also {
                             it.req = req
                             it.res = res
                         }
@@ -156,14 +158,18 @@ class AlRequestContext {
     var req by notNullOnce<HttpServletRequest>()
     var res by notNullOnce<HttpServletResponse>()
     val shitPassedFromBackToFront = ShitPassedFromBackToFront()
+    private var nextUID = 1
+//    val scriptPile = StringBuilder()
 
     companion object {
-        private val threadLocal = object : ThreadLocal<AlRequestContext>() {
-            override fun initialValue() = AlRequestContext()
-        }
+        private val threadLocal = ThreadLocal<AlRequestContext>()
 
-        val the get() = threadLocal.get()
+        var the
+            get() = threadLocal.get()!!
+            set(value) {threadLocal.set(value)}
     }
+
+    fun nextUID() = nextUID++
 
     val debug = _Debug()
     inner class _Debug {
@@ -292,19 +298,19 @@ fun spitOrderFormPage() {
             o- kdiv.className(AlCSS.successBanner).text(t("TOTE", "Все круто, заказ создан. Мы с тобой скоро свяжемся"))
             o- AlRenderPile.renderOrderParams(order)
         }
-
-        o- kdiv(Attrs(id = ctx.shitPassedFromBackToFront::class.simpleName,
-                      dataShit = ObjectMapper().writeValueAsString(ctx.shitPassedFromBackToFront)))
     }
 
 }
 
 private fun spitUsualPage(build: (Tag) -> Unit) {
+    val ctx = AlRequestContext.the
     val content = kdiv.id(AlDomID.replaceableContent){o->
         o- kdiv.className("container", build)
+        o- kdiv(Attrs(id = ctx.shitPassedFromBackToFront::class.simpleName,
+                      dataShit = ObjectMapper().writeValueAsString(ctx.shitPassedFromBackToFront)))
     }.render()
 
-    AlRequestContext.the.res.writer.print(buildString {
+    ctx.res.writer.print(buildString {
         ln("<!DOCTYPE html>")
         ln("<html lang='en'>")
         ln("<head>")
