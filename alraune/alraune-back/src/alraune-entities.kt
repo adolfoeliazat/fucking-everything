@@ -14,6 +14,8 @@ interface AlOrder : GCommonEntityFields {
     var documentTitle: String
     var documentDetails: String
     var documentCategoryID: String
+    var numPages: Int
+    var numSources: Int
 }
 
 interface AlOrderRepository : GRepository<AlOrder> {

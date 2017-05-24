@@ -173,13 +173,18 @@ object AlFrontPile {
                         phone = "+38 (068) 4542823",
                         documentTitle = "Как я пинал хуи на практике",
                         documentDetails = "Детали? Я ебу, какие там детали...",
-                        documentCategoryID = "boobs"))
+                        documentCategoryID = "boobs",
+                        numPages = "35",
+                        numSources = "7"))
+                    // TODO:vgrechka @improve d0fc960d-76be-4a0b-969c-7bbf94275e09
                     val o = AlFrontPile::populateTextField
                     o(data::email)
                     o(data::name)
                     o(data::phone)
                     o(data::documentTitle)
                     o(data::documentDetails)
+                    o(data::numPages)
+                    o(data::numSources)
 
                     documentCategoryPicker.debug_setSelectValue(AlDocumentCategories.humanitiesID)
                     documentCategoryPicker.debug_setSelectValue(AlDocumentCategories.linguisticsID)

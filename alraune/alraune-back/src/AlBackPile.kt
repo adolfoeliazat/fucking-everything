@@ -4,7 +4,6 @@ import alraune.back.AlRenderPile.escapeHTML
 import alraune.back.AlRenderPile.t
 import alraune.shared.AlCSS
 import alraune.shared.AlSharedPile
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.validator.routines.EmailValidator
 import vgrechka.*
 import java.util.concurrent.ConcurrentHashMap
@@ -12,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap
 object AlBackPile {
     var idToTagCreationStack = ConcurrentHashMap<String, String>()
 
-    fun fuckValidate1(x: String?, minLen: Int, maxLen: Int, boobs: (String) -> String?): ValidationResult {
+    fun validateString(x: String?, minLen: Int, maxLen: Int, validate: (String) -> String? = {null}): ValidationResult {
         val sane = (x ?: "").trim()
         var error = when {
             sane.isBlank() -> t("TOTE", "Поле обязательно")
@@ -21,26 +20,36 @@ object AlBackPile {
             else -> null
         }
         if (error == null) {
-            error = boobs(sane)
+            error = validate(sane)
         }
         return ValidationResult(sane, error)
     }
 
-    fun validateEmail(x: String?) = fuckValidate1(x, minLen = 3, maxLen = 50) {
+    fun validateInt(x: String?, min: Int, max: Int): ValidationResult {
+        val sane = (x ?: "").trim()
+        return ValidationResult(sane, run {
+            if (sane.isBlank()) return@run t("TOTE", "Поле обязательно")
+            val int = try {sane.toInt()}
+                      catch (e: NumberFormatException) {return@run t("TOTE", "Я такие числа не понимаю")}
+            if (int < min) return@run t("TOTE", "Не менее $min")
+            if (int > max) return@run t("TOTE", "Не более $max")
+            null
+        })
+    }
+
+    fun validateEmail(x: String?) = validateString(x, minLen = 3, maxLen = 50) {
         when {
             EmailValidator.getInstance().isValid(it) -> null
             else -> t("TOTE", "Странная почта какая-то")
         }
     }
 
-    fun validateName(x: String?) = fuckValidate1(x, minLen = 3, maxLen = 50) {null}
-
-    fun validatePhone(x: String?) = fuckValidate1(x, minLen = 3, maxLen = 50) {
+    fun validatePhone(x: String?) = validateString(x, minLen = 3, maxLen = 50) {
         // TODO:vgrechka Revisit
         val minDigits = 6
         var digitCount = 0
         for (c in it.toCharArray()) {
-            if (!Regex("(\\d| |-|\\+|\\(|\\))+").matches("$c")) return@fuckValidate1 t("TOTE", "Странный телефон какой-то")
+            if (!Regex("(\\d| |-|\\+|\\(|\\))+").matches("$c")) return@validateString t("TOTE", "Странный телефон какой-то")
             if (Regex("\\d").matches("$c")) ++digitCount
         }
         when {
@@ -49,10 +58,11 @@ object AlBackPile {
         }
     }
 
-    fun validateDocumentTitle(x: String?) = fuckValidate1(x, minLen = 5, maxLen = 250) {null}
-
-    fun validateDocumentDetails(x: String?) = fuckValidate1(x, minLen = 5, maxLen = 1000) {null}
-
+    fun validateName(x: String?) = validateString(x, minLen = 3, maxLen = 50)
+    fun validateDocumentTitle(x: String?) = validateString(x, minLen = 5, maxLen = 250)
+    fun validateDocumentDetails(x: String?) = validateString(x, minLen = 5, maxLen = 1000)
+    fun validateNumPages(x: String?) = validateInt(x, min = 3, max = 500)
+    fun validateNumSources(x: String?) = validateInt(x, min = 0, max = 50)
 }
 
 val kdiv = TagCtor("div")

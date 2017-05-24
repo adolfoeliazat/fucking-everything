@@ -6,6 +6,7 @@ import vgrechka.BigPile.mangleUUID
 
 class KotlinDBEntitySpew2 : Spew {
     override fun ignite(ktFile: KtFile, outputFilePath: String, spewResults: SpewResults) {
+        GlobalSpewContext.opts = SpewForInputFileOptions(annotations = true)
         CommonDBEntitySpew(
             ktFile, outputFilePath, spewResults,
             makePedro = {pedroCtx->
@@ -166,6 +167,9 @@ class KotlinDBEntitySpew2 : Spew {
                                             out.append("    @XColumn(name = \"${colPrefix}${field.name}\"")
                                             if (field.type == "String")
                                                 out.append(", columnDefinition = \"text\")")
+                                            else
+                                                out.append(")")
+
                                             if (field.type.endsWith("?"))
                                                 out.append(" var ${field.name}: ${field.type} = null")
                                             else

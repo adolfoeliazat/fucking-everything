@@ -23,9 +23,6 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 import kotlin.reflect.full.memberProperties
 
-
-// TODO:vgrechka Timestamps in DB should be in UTC
-
 object StartAlrauneBack {
     @JvmStatic
     fun main(args: Array<String>) {
@@ -81,7 +78,13 @@ object StartAlrauneBack {
                                 val json = req.reader.readText()
                                 val bean = ObjectMapper().readValue(json, DumpStackByIDRequest::class.java)
                                 val stack = AlBackPile.idToTagCreationStack[bean.stackID] ?: bitch("5aaece41-c3f3-4eae-8c98-e7f69147ef3b")
-                                clog(stack)
+                                clog(stack
+                                         .lines()
+                                         .filter {line-> !listOf(
+                                             "Tag.<init>",
+                                             "TagCtor.invoke")
+                                             .any {line.contains(it)}}
+                                         .joinToString("\n"))
                             }
                             AlBackPile0.orderCreationPagePath -> spitOrderFormPage()
                             else -> spitLandingPage()
@@ -218,7 +221,7 @@ fun spitOrderFormPage() {
 //                                                  documentTitle = "boobs",
 //                                                  documentDetails = "vagina")
             }
-            else -> OrderCreationForm("", "", "", "", "", AlDocumentCategories.miscID)
+            else -> OrderCreationForm("", "", "", "", "", AlDocumentCategories.miscID, "", "")
         }
     }
 
@@ -264,12 +267,15 @@ fun spitOrderFormPage() {
             return vr.sanitizedString
         }
 
+        // TODO:vgrechka @improve d0fc960d-76be-4a0b-969c-7bbf94275e09
         val f = AlFields.order
         val email = declareField(data::email, f.email.title, q::validateEmail)
         val contactName = declareField(data::name, f.contactName.title, q::validateName)
         val phone = declareField(data::phone, f.phone.title, q::validatePhone)
         val documentTitle = declareField(data::documentTitle, f.documentTitle.title, q::validateDocumentTitle)
         val documentDetails = declareField(data::documentDetails, f.documentDetails.title, q::validateDocumentDetails, FieldType.TEXTAREA)
+        val numPages = declareField(data::numPages, f.numPages.title, q::validateNumPages)
+        val numSources = declareField(data::numSources, f.numSources.title, q::validateNumSources)
 
         if (!isPost || hasErrors) {
             ctx.shitPassedFromBackToFront.pageID = AlPageID.orderCreationForm
@@ -301,7 +307,8 @@ fun spitOrderFormPage() {
             val order = alOrderRepo.save(newAlOrder(
                 email = email, contactName = contactName, phone = phone,
                 documentTitle = documentTitle, documentDetails = documentDetails,
-                documentCategoryID = data.documentCategoryID))
+                documentCategoryID = data.documentCategoryID,
+                numPages = numPages.toInt(), numSources = numSources.toInt()))
             o- renderOrderTitle(order)
             o- kdiv.className(AlCSS.successBanner).text(t("TOTE", "Все круто, заказ создан. Мы с тобой скоро свяжемся"))
             o- AlRenderPile.renderOrderParams(order)

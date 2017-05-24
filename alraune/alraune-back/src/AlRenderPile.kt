@@ -2,10 +2,17 @@ package alraune.back
 
 import alraune.back.AlBackPile0.log
 import alraune.back.AlRenderPile.t
+import alraune.shared.AlDocumentCategories
+import alraune.shared.AlSharedPile
 import alraune.shared.Color
 import vgrechka.*
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 // TODO:vgrechka Revisit all this shit...
 
@@ -63,14 +70,10 @@ object AlRenderPile {
 
     fun createdAtCol(size: Int, value: Timestamp) =
         col(size, t("Created", "Создан")){o->
-//            o- formatTimestamp(value)
+            val inLondon = ZonedDateTime.ofInstant(Instant.ofEpochMilli(value.time), ZoneId.of("UTC"))
+            val inKiev = inLondon.withZoneSameInstant(ZoneId.of("Europe/Kiev"))
+            o- DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").format(inKiev)
         }
-
-    fun formatTimestamp(x: Timestamp): String {
-        imf("3a34ac49-32e7-4536-8c16-fc1d6d0fd1ed")
-//        val format = when (AlBackPile0.locale) {}
-//        return format.format(x)
-    }
 
     fun updatedAtCol(size: Int, value: Long) =
         col(size, t("Updated", "Изменен")){o->
@@ -100,14 +103,26 @@ object AlRenderPile {
 //            }
             o- row{o->
                 o- createdAtCol(3, order.createdAt)
+                o- col(3, f.status.title, t("TOTE", "Рассматривается"))
                 o- col(3, f.contactName.title, order.contactName)
                 o- col(3, f.phone.title, order.phone)
             }
 
+//            o- row{o->
+//            }
             o- row{o->
-//                o- col(3, fields.uaDocumentType.title, order.documentType.title)
-//                o- col(3, fields.numPages.title, order.numPages.toString())
-//                o- col(3, fields.numSources.title, order.numSources.toString())
+                o- col(3, f.numPages.title, order.numPages.toString())
+                o- col(3, f.numSources.title, order.numSources.toString())
+                o- col(6, f.documentCategory.title, run {
+                    var cat = AlDocumentCategories.findByIDOrBitch(order.documentCategoryID)
+                    val steps = mutableListOf<String>()
+                    while (cat.id != AlDocumentCategories.root.id) {
+                        steps += cat.title
+                        cat = cat.parent!!
+                    }
+                    steps.reverse()
+                    steps.joinToString(" " + AlSharedPile.text.rightAngleQuote + " ")
+                })
             }
 
 //            o- detailsRow(order.details, order.detailsHighlightRanges, title = fields.orderDetails.title)
@@ -253,12 +268,16 @@ data class AlIntRange(
 object AlFields {
     class Fuck(val title: String)
     object order {
+        // TODO:vgrechka @improve d0fc960d-76be-4a0b-969c-7bbf94275e09
+        val status = Fuck(t("TOTE", "Статус"))
         val email = Fuck(t("TOTE", "Почта"))
         val contactName = Fuck(t("TOTE", "Имя"))
         val phone = Fuck(t("TOTE", "Телефон"))
         val documentTitle = Fuck(t("TOTE", "Тема работы (задание)"))
         val documentCategory = Fuck(t("TOTE", "Категория"))
         val documentDetails = Fuck(t("TOTE", "Детали"))
+        val numPages = Fuck(t("TOTE", "Страниц"))
+        val numSources = Fuck(t("TOTE", "Источников"))
     }
 }
 

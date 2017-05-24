@@ -15,6 +15,10 @@ object AlSharedPile {
         val data_shit = "data-shit"
     }
 
+    object text {
+        val rightAngleQuote = "»"
+    }
+
     enum class GetParam {
         page, fakeSetting
     }
@@ -127,7 +131,9 @@ object AlCSS {
     val phone: String,
     val documentTitle: String,
     val documentDetails: String,
-    val documentCategoryID: String
+    val documentCategoryID: String,
+    val numPages: String,
+    val numSources: String
 )
 
 @Ser data class DumpStackByIDRequest(
