@@ -17,6 +17,7 @@ object AlSharedPile {
 
     object text {
         val rightAngleQuote = "»"
+        val times = "×"
     }
 
     enum class GetParam {
@@ -50,6 +51,8 @@ object AlDomID {
     val filePickerContainer by myName()
     val submitOrderForReviewButton by myName()
     val editOrderParamsButton by myName()
+    val orderParamsModal by myName()
+    val closeModalButton by myName()
 }
 
 object AlPageID {
@@ -87,9 +90,9 @@ object AlCSS {
     val submitForReviewBanner by Pack("""
         background-color: #eceff1;
         border-left: 3px solid #90a4ae;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
         padding-left: 1rem;
-        padding-right: 0.5rem;
+        padding-right: 0;
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
         display: flex;

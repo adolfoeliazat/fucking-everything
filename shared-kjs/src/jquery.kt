@@ -4,6 +4,7 @@ package vgrechka.kjs
 
 import org.w3c.dom.*
 import org.w3c.dom.events.Event
+import org.w3c.dom.events.MouseEvent
 import vgrechka.*
 import kotlin.browser.*
 
@@ -53,6 +54,17 @@ external class JQuery() {
 
     fun on(event: String, handler: (Event) -> Unit)
     fun off(event: String = definedExternally)
+}
+
+fun JQuery.onClick(handler: (MouseEvent) -> Unit) {
+    on("click") {handler(it.asDynamic())}
+}
+
+fun JQuery.onClickPreventStop(handler: (MouseEvent) -> Unit) {
+    onClick {
+        it.preventAndStop()
+        handler(it)
+    }
 }
 
 //open external class MouseEvent() {

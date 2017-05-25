@@ -76,6 +76,7 @@ val kul = TagCtor("ul")
 val kol = TagCtor("ol")
 val kli = TagCtor("li")
 val ki = TagCtor("i")
+val ka = TagCtor("a")
 val kinput = TagCtor("input")
 val ktextarea = TagCtor("textarea")
 val klabel = TagCtor("label")
@@ -113,10 +114,13 @@ class Tag(val tag: String, var attrs: Attrs) : Renderable {
             attrs.type?.let {append(" type='$it'")}
             attrs.name?.let {append(" name='$it'")}
             attrs.value?.let {append(" value='${escapeHTML(it)}'")}
+            attrs.href?.let {append(" href='${escapeHTML(it)}'")}
             attrs.rows?.let {append(" rows='$it'")}
+            attrs.tabIndex?.let {append(" tabindex='$it'")}
             if (attrs.selected) append(" selected")
             val attr = AlSharedPile.attribute
             attrs.dataShit?.let {append(" ${attr.data_shit}='${escapeHTML(it)}'")}
+            attrs.dataDismiss?.let {append(" data-dismiss='${escapeHTML(it)}'")}
             tagCreationStackID?.let {append(" ${attr.data_tagCreationStackID}='$it'")}
 
             append(">")
@@ -149,8 +153,9 @@ class Tag(val tag: String, var attrs: Attrs) : Renderable {
         return this
     }
 
-    fun amend(style: Style) {
+    fun amend(style: Style): Tag {
         attrs = attrs.copy(style = style)
+        return this
     }
 }
 
@@ -213,7 +218,10 @@ data class Attrs(
     val name: String? = null,
     val rows: Int? = null,
     val dataShit: String? = null,
-    val selected: Boolean = false
+    val dataDismiss: String? = null,
+    val selected: Boolean = false,
+    val href: String? = null,
+    val tabIndex: Int? = null
 )
 
 class ValidationResult(val sanitizedString: String, val error: String?)

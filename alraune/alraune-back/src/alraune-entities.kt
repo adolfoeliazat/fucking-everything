@@ -4,6 +4,8 @@
 
 package alraune.back
 
+import alraune.shared.AlDocumentCategories
+import alraune.shared.OrderCreationForm
 import vgrechka.spew.*
 
 @GEntity(table = "ua_orders")
@@ -19,6 +21,19 @@ interface AlUAOrder : GCommonEntityFields {
     var documentCategoryID: String
     var numPages: Int
     var numSources: Int
+
+    fun toForm() = OrderCreationForm(
+        email = email, name = contactName, phone = phone, documentTypeID = documentTypeID, documentTitle = documentTitle,
+        documentDetails = documentDetails, documentCategoryID = documentCategoryID,
+        numPages = when (numPages) {
+            -1 -> ""
+            else -> numPages.toString()
+        },
+        numSources = when (numSources) {
+            -1 -> ""
+            else -> numSources.toString()
+        }
+    )
 }
 
 interface AlUAOrderRepository : GRepository<AlUAOrder> {

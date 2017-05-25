@@ -164,7 +164,9 @@ class Style(
     val zIndex: String? = null,
     val zoom: String? = null,
     val borderRadius: String? = null,
-    val flexGrow: String? = null
+    val flexGrow: String? = null,
+    val borderTopLeftRadius: String? = null,
+    val borderTopRightRadius : String? = null
 ) {
     fun render(): String {
         return buildString {
@@ -332,6 +334,8 @@ class Style(
             zoom?.let {append("zoom: $it;")}
             borderRadius?.let {append("border-radius: $it;")}
             flexGrow?.let {append("flex-grow: $it;")}
+            borderTopLeftRadius?.let {append("border-top-left-radius: $it;")}
+            borderTopRightRadius?.let {append("border-top-right-radius: $it;")}
         }
     }
 }

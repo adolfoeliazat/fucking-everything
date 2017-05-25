@@ -163,13 +163,6 @@ object AlRenderPile {
 
 //            o- renderBottomPageSpace()
 
-            val canEdit = order.state == UAOrderState.CUSTOMER_DRAFT
-
-            if (canEdit) {
-                o- kbutton(Attrs(id = AlDomID.editOrderParamsButton, className = "btn btn-default",
-                                 style = Style(position = "absolute", right = "0.5rem", top = "0")))
-                    .add(ki.className(fa.pencil))
-            }
         }
     }
 
@@ -227,7 +220,9 @@ object AlRenderPile {
             }
         }
     }
+
 }
+
 
 interface XIcon {
     fun render0(style: Style, size: Int): Renderable

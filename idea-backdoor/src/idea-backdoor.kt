@@ -270,7 +270,8 @@ object CustomBuilds {
                     robot.mouseMove(origLocation.x, origLocation.y)
 
 //                    refreshBrowser()
-                    navigateBrowser("https://alraune.local/orderCreationForm?frontMessAround=messAroundFront201")
+//                    navigateBrowser("https://alraune.local/orderCreationForm?frontMessAround=messAroundFront201")
+                    navigateBrowser("https://alraune.local/orderParams?orderUUID=816dc211-2cfa-4423-a99a-fd0e3c8915ee&frontMessAround=messAroundFront301")
                 }
             }
 

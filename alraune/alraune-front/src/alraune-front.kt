@@ -14,8 +14,9 @@ import kotlin.properties.Delegates.notNull
 import kotlin.reflect.KFunction0
 import kotlin.reflect.KProperty0
 
-// https://alraune.local/order?frontMessAround=messAroundFront201
-// https://alraune.local/order?frontMessAround=messAroundFront202
+// https://alraune.local/orderCreationForm?frontMessAround=messAroundFront201
+// https://alraune.local/orderParams?orderUUID=816dc211-2cfa-4423-a99a-fd0e3c8915ee&frontMessAround=messAroundFront301
+// https://alraune.local/orderParamsForm?orderUUID=816dc211-2cfa-4423-a99a-fd0e3c8915ee
 
 fun main(args: Array<String>) {
     clog("I am alraune-front 4")
@@ -55,28 +56,11 @@ class AlFrontSecurity {
 }
 
 object AlFrontDebug {
-    // Ex: AlDebug.AlFrontPile.google.auth2
-
     val AlFrontPile = alraune.front.AlFrontPile
-
-    fun postShit1() {
-        imf("66ea9a6b-4fc2-4bdb-86a3-5d039f0ac5e7")
-//        val q = AlSharedPile.domID.orderCreationForm
-//        val data = json(q.email to "iperdonde@mail.com",
-//                        q.name to "Иммануил Пердондэ",
-//                        q.phone to "+38 (068) 4542823",
-//                        q.documentTitle to "Как я пинал хуи на практике",
-//                        q.documentDetails to "Детали? Я ебу, какие там детали...")
-//        window.location.href = "https://alraune.local/order?post=true&data=" + encodeURIComponent(JSON.stringify(data))
-    }
-
-    fun messAround1() {
-        val button = byID(AlDomID.createOrderForm_submitButton)
-        button.off()
-    }
 
     var messAroundFront201: (() -> Unit)? = null
     var messAroundFront202: (() -> Unit)? = null
+    var messAroundFront301: (() -> Unit)? = null
 }
 
 object AlFrontPile {
@@ -136,79 +120,95 @@ object AlFrontPile {
             window.history.pushState(null, "", it)
         }
 
-        if (AlFrontPile.shitFromBack.pageID == AlPageID.orderCreationForm) {
-            val documentCategoryPicker = DocumentCategoryPicker()
-            val filePicker = FilePicker()
+        when (AlFrontPile.shitFromBack.pageID) {
+            AlPageID.orderCreationForm -> dorothyOrderCreationFormPage()
+            AlPageID.orderParams -> dorothyOrderParamsPage()
+        }
+    }
 
-            val button = byID(AlDomID.createOrderForm_submitButton)
-            // TODO:vgrechka Remove event handlers
-            fun submitButtonHandler() {
-                clog("i am the fucking submitButtonHandler")
-                AlFrontPile.showTicker()
+    private fun dorothyOrderParamsPage() {
+        fun handler() {
+            byIDSingle(AlDomID.orderParamsModal).asDynamic().modal()
+        }
+        byIDSingle(AlDomID.editOrderParamsButton).onClickPreventStop {handler()}
 
-                @Suppress("UNUSED_VARIABLE")
-                val clazz = window.asDynamic()["alraune-front"].alraune.shared[OrderCreationForm::class.simpleName]
-                val inst = js("new clazz()")
-                val propNames = JSObject.getOwnPropertyNames(inst)
-                for (propName in propNames.toList() - OrderCreationForm::documentCategoryID.name) {
-                    clog("propName", propName)
-                    inst[propName] = byIDSingle(AlSharedPile.fieldDOMID(propName)).getVal()
-                }
-                inst[OrderCreationForm::documentCategoryID.name] = documentCategoryPicker.getSelectedCategoryID()
-                val data = JSON.stringify(inst)
-                // clog("data", data)
-                async {
-                    AlFrontPile.sleep(AlFrontPile.debug_sleepBeforePost)
-                    // AlFrontPile.sleepTillEndOfTime()
+        AlFrontDebug.messAroundFront301 = {
+            handler()
+        }
+    }
 
-                    val html = AlFrontPile.post(AlFrontPile.shitFromBack.postURL, data)
-                    // clog("html", html)
-                    val i1 = html.indexOfOrNull(AlSharedPile.beginContentMarker) ?: wtf("c7ef8f87-c3ea-4d02-b31a-717dc1a8a01f")
-                    val i2 = html.indexOfOrNull(AlSharedPile.endContentMarker) ?: wtf("91747d64-af48-43a6-85ec-59a69994fd11")
-                    val content = html.substring(i1 + AlSharedPile.beginContentMarker.length, i2)
-                    byIDSingle(AlDomID.replaceableContent)[0]!!.outerHTML = content
+    private fun dorothyOrderCreationFormPage() {
+        val documentCategoryPicker = DocumentCategoryPicker()
+        val filePicker = FilePicker()
 
-                    AlFrontPile.initShit()
-                }
+        val button = byID(AlDomID.createOrderForm_submitButton)
+        // TODO:vgrechka Remove event handlers
+        fun submitButtonHandler() {
+            clog("i am the fucking submitButtonHandler")
+            showTicker()
+
+            @Suppress("UNUSED_VARIABLE")
+            val clazz = window.asDynamic()["alraune-front"].alraune.shared[OrderCreationForm::class.simpleName]
+            val inst = js("new clazz()")
+            val propNames = JSObject.getOwnPropertyNames(inst)
+            for (propName in propNames.toList() - OrderCreationForm::documentCategoryID.name) {
+                clog("propName", propName)
+                inst[propName] = byIDSingle(AlSharedPile.fieldDOMID(propName)).getVal()
             }
+            inst[OrderCreationForm::documentCategoryID.name] = documentCategoryPicker.getSelectedCategoryID()
+            val data = JSON.stringify(inst)
+            // clog("data", data)
+            async {
+                sleep(debug_sleepBeforePost)
+                // AlFrontPile.sleepTillEndOfTime()
 
-            fun make2xx(tamperWith: (OrderCreationForm) -> OrderCreationForm): () -> Unit {
-                return {
-                    val data = tamperWith(OrderCreationForm(
-                        email = "iperdonde@mail.com",
-                        name = "Иммануил Пердондэ",
-                        phone = "+38 (068) 4542823",
-                        documentTypeID = "PRACTICE",
-                        documentTitle = "Как я пинал хуи на практике",
-                        documentDetails = "Детали? Я ебу, какие там детали...",
-                        documentCategoryID = "boobs",
-                        numPages = "35",
-                        numSources = "7"))
-                    // TODO:vgrechka @improve d0fc960d-76be-4a0b-969c-7bbf94275e09
-                    val o = AlFrontPile::populateTextField
-                    o(data::email)
-                    o(data::name)
-                    o(data::phone)
-                    o(data::documentTitle)
-                    o(data::documentDetails)
-                    o(data::numPages)
-                    o(data::numSources)
-                    o(data::documentTypeID)
+                val html = post(shitFromBack.postURL, data)
+                // clog("html", html)
+                val i1 = html.indexOfOrNull(AlSharedPile.beginContentMarker) ?: wtf("c7ef8f87-c3ea-4d02-b31a-717dc1a8a01f")
+                val i2 = html.indexOfOrNull(AlSharedPile.endContentMarker) ?: wtf("91747d64-af48-43a6-85ec-59a69994fd11")
+                val content = html.substring(i1 + AlSharedPile.beginContentMarker.length, i2)
+                byIDSingle(AlDomID.replaceableContent)[0]!!.outerHTML = content
 
-                    documentCategoryPicker.debug_setSelectValue(AlDocumentCategories.humanitiesID)
-                    documentCategoryPicker.debug_setSelectValue(AlDocumentCategories.linguisticsID)
-                    submitButtonHandler()
-                }
+                initShit()
             }
+        }
 
-            // https://alraune.local/order?frontMessAround=messAroundFront201
-            AlFrontDebug.messAroundFront201 = make2xx {it}
-            AlFrontDebug.messAroundFront202 = make2xx {it.copy(email = "", phone = "bullshit", documentDetails = "")}
+        fun make2xx(tamperWith: (OrderCreationForm) -> OrderCreationForm): () -> Unit {
+            return {
+                val data = tamperWith(OrderCreationForm(
+                    email = "iperdonde@mail.com",
+                    name = "Иммануил Пердондэ",
+                    phone = "+38 (068) 4542823",
+                    documentTypeID = "PRACTICE",
+                    documentTitle = "Как я пинал хуи на практике",
+                    documentDetails = "Детали? Я ебу, какие там детали...",
+                    documentCategoryID = "boobs",
+                    numPages = "35",
+                    numSources = "7"))
+                // TODO:vgrechka @improve d0fc960d-76be-4a0b-969c-7bbf94275e09
+                val o = AlFrontPile::populateTextField
+                o(data::email)
+                o(data::name)
+                o(data::phone)
+                o(data::documentTitle)
+                o(data::documentDetails)
+                o(data::numPages)
+                o(data::numSources)
+                o(data::documentTypeID)
 
-            button.on("click") {
-                it.preventAndStop()
+                documentCategoryPicker.debug_setSelectValue(AlDocumentCategories.humanitiesID)
+                documentCategoryPicker.debug_setSelectValue(AlDocumentCategories.linguisticsID)
                 submitButtonHandler()
             }
+        }
+
+        // https://alraune.local/order?frontMessAround=messAroundFront201
+        AlFrontDebug.messAroundFront201 = make2xx {it}
+        AlFrontDebug.messAroundFront202 = make2xx {it.copy(email = "", phone = "bullshit", documentDetails = "")}
+
+        button.on("click") {
+            it.preventAndStop()
+            submitButtonHandler()
         }
     }
 

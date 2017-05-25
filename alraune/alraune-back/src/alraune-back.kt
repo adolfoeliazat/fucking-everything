@@ -71,7 +71,7 @@ object StartAlrauneBack {
                             it.res = res
 
                             it.getParams = run {
-                                if (req.method == "POST") {
+                                if (it.isPost) {
                                     // Attempt to read request body after `getParameter` call causes exception, kind of because shit is already consumed.
                                     // In case of POST we are passing all data via body anyway, so...
                                     AlGetParams()
@@ -237,6 +237,8 @@ class AlRequestContext {
 
     fun nextUID() = nextUID++
 
+    val isPost get() = req.method == "POST"
+
     val debug = _Debug()
     inner class _Debug {
         val messAroundBack201 by fuck()
@@ -260,140 +262,87 @@ fun spitLandingPage() {
 
 fun spitOrderCreationFormPage() {
     val ctx = AlRequestContext.the
-    val isPost = ctx.req.method == "POST"
 
     val data = when {
-        isPost -> {
-            val dataString = ctx.req.reader.readText()
-            ObjectMapper().readValue(dataString, OrderCreationForm::class.java)
-        }
-        else -> when {
-            ctx.debug.messAroundBack201.should -> {
-                imf("79569177-b1c4-4692-9230-0ad7f3e75ae9")
-//                                OrderCreationForm(email = "fuck",
-//                                                  name = "shit",
-//                                                  phone = "bitch",
-//                                                  documentTitle = "boobs",
-//                                                  documentDetails = "vagina")
-            }
-            else -> OrderCreationForm(
-                email = "", name = "", phone = "", documentTypeID = AlDocumentType.ABSTRACT.name, documentTitle = "",
-                documentDetails = "", documentCategoryID = AlDocumentCategories.miscID, numPages = "", numSources = "")
-        }
+        ctx.isPost -> postDataToOrderCreationForm()
+        else -> newAlUAOrder(
+            uuid = "", state = UAOrderState.CUSTOMER_DRAFT, email = "",
+            contactName = "", phone = "", documentTypeID = AlDocumentType.ABSTRACT.name, documentTitle = "",
+            documentDetails = "", documentCategoryID = AlDocumentCategories.miscID, numPages = -1, numSources = -1)
+            .toForm()
     }
 
-
     spitUsualPage {o->
-        val q = AlBackPile
-        var hasErrors = false
-
-        class FuckingField(val value: String, val render: () -> Renderable)
-
-        fun declareField(prop: KProperty0<String>,
-                         title: String, validator: (String?) -> ValidationResult,
-                         fieldType: FieldType = FieldType.TEXT): FuckingField {
-            val vr = validator(prop.get())
-            val theError = when {
-                isPost -> vr.error
-                else -> null
-            }
-            if (theError != null)
-                hasErrors = true
-
-            return FuckingField(
-                value = vr.sanitizedString,
-                render = {
-                    val id = AlSharedPile.fieldDOMID(name = prop.name)
-                    kdiv.className("form-group") {o->
-                        if (theError != null)
-                            o.amend(Style(marginBottom = "0"))
-                        o- klabel(text = title)
-                        val control = when (fieldType) {
-                            FieldType.TEXT -> kinput(Attrs(type = "text", id = id, value = vr.sanitizedString, className = "form-control")) {}
-                            FieldType.TEXTAREA -> ktextarea(Attrs(id = id, rows = 5, className = "form-control"), text = vr.sanitizedString)
-                        }
-                        o- kdiv(Style(position = "relative")){o->
-                            o- control
-                            if (theError != null) {
-                                o- kdiv(Style(marginTop = "5px", marginRight = "9px", textAlign = "right", color = "${Color.RED_700}"))
-                                    .text(theError)
-                                // TODO:vgrechka Shift red circle if control has scrollbar
-                                o- kdiv(Style(width = "15px", height = "15px", backgroundColor = "${Color.RED_300}",
-                                              borderRadius = "10px", position = "absolute", top = "10px", right = "8px"))
-                            }
-                        }
-                    }
-                }
-            )
-        }
-
-        // TODO:vgrechka @improve d0fc960d-76be-4a0b-969c-7bbf94275e09
-        val f = AlFields.order
-        val email = declareField(data::email, f.email.title, q::validateEmail)
-        val contactName = declareField(data::name, f.contactName.title, q::validateName)
-        val phone = declareField(data::phone, f.phone.title, q::validatePhone)
-        val documentTitle = declareField(data::documentTitle, f.documentTitle.title, q::validateDocumentTitle)
-        val documentDetails = declareField(data::documentDetails, f.documentDetails.title, q::validateDocumentDetails, FieldType.TEXTAREA)
-        val numPages = declareField(data::numPages, f.numPages.title, q::validateNumPages)
-        val numSources = declareField(data::numSources, f.numSources.title, q::validateNumSources)
-
-        if (!isPost || hasErrors) {
+        val fields = OrderParamsFields(data)
+        if (!ctx.isPost || fields.dfctx.hasErrors) {
             ctx.shitPassedFromBackToFront.pageID = AlPageID.orderCreationForm
             ctx.shitPassedFromBackToFront.postURL = makeURL(AlPagePath.orderCreationForm)
 
             ctx.shitPassedFromBackToFront.documentCategoryID = data.documentCategoryID
             o- pageTitle(t("TOTE", "Заказ"))
-            o- kform{o->
-                if (hasErrors)
-                    o- kdiv.className(AlCSS.errorBanner).text(t("TOTE", "Кое-что нужно исправить..."))
-
-                o- row(marginBottom = null){o->
-                    o- col(4, contactName.render())
-                    o- col(4, email.render())
-                    o- col(4, phone.render())
-                }
-                o- row(marginBottom = null){o->
-                    o- col(4, kdiv.className("form-group"){o->
-                        o- klabel(text = f.documentType.title)
-                        o- kselect(Attrs(id = AlSharedPile.fieldDOMID(name = OrderCreationForm::documentTypeID.name),
-                                         className = "form-control")) {o->
-                            for (value in AlDocumentType.values()) {
-                                o- koption(Attrs(value = value.name,
-                                                 selected = data.documentTypeID == value.name),
-                                           value.title)
-                            }
-                        }
-                    })
-                    o- col(8, kdiv.className("form-group"){o->
-                        o- klabel(text = f.documentCategory.title)
-                        o- kdiv(Attrs(id = AlDomID.documentCategoryPickerContainer))
-                    })
-                }
-                o- documentTitle.render()
-                o- row(marginBottom = null){o->
-                    o- col(6, numPages.render())
-                    o- col(6, numSources.render())
-                }
-                o- documentDetails.render()
-                o- kdiv(Attrs(id = AlDomID.filePickerContainer))
-                o- kdiv{o->
-                    o- kbutton(Attrs(id = AlDomID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Продолжить"))
-                    o- kdiv.id(AlDomID.ticker){}
-                }
-            }
+            o- renderOrderParamsForm(Marfa(data, fields))
         } else {
             AlDocumentCategories.findByIDOrBitch(data.documentCategoryID)
             AlDocumentType.values().find {it.name == data.documentTypeID} ?: bitch("e63b006c-3cda-4db8-b7e0-e2413e980dbc")
 
             val order = alUAOrderRepo.save(newAlUAOrder(
                 uuid = UUID.randomUUID().toString(), state = UAOrderState.CUSTOMER_DRAFT,
-                email = email.value, contactName = contactName.value, phone = phone.value,
-                documentTitle = documentTitle.value, documentDetails = documentDetails.value,
+                email = fields.email.value, contactName = fields.contactName.value, phone = fields.phone.value,
+                documentTitle = fields.documentTitle.value, documentDetails = fields.documentDetails.value,
                 documentTypeID = data.documentTypeID, documentCategoryID = data.documentCategoryID,
-                numPages = numPages.value.toInt(), numSources = numSources.value.toInt()))
+                numPages = fields.numPages.value.toInt(), numSources = fields.numSources.value.toInt()))
 
             ctx.shitPassedFromBackToFront.historyPushState = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))
             nancyOrderParams(o, order)
+        }
+    }
+}
+
+private fun postDataToOrderCreationForm(): OrderCreationForm {
+    val dataString = AlRequestContext.the.req.reader.readText()
+    return ObjectMapper().readValue(dataString, OrderCreationForm::class.java)
+}
+
+class Marfa(val data: OrderCreationForm, val fields: OrderParamsFields)
+
+fun renderOrderParamsForm(m: Marfa): Renderable {
+    val f = AlFields.order
+    return kform{o->
+        if (m.fields.dfctx.hasErrors)
+            o- kdiv.className(AlCSS.errorBanner).text(t("TOTE", "Кое-что нужно исправить..."))
+
+        o- row(marginBottom = null){o->
+            o- col(4, m.fields.contactName.render())
+            o- col(4, m.fields.email.render())
+            o- col(4, m.fields.phone.render())
+        }
+        o- row(marginBottom = null){o->
+            o- col(4, kdiv.className("form-group"){o->
+                o- klabel(text = f.documentType.title)
+                o- kselect(Attrs(id = AlSharedPile.fieldDOMID(name = OrderCreationForm::documentTypeID.name),
+                                 className = "form-control")) {o->
+                    for (value in AlDocumentType.values()) {
+                        o- koption(Attrs(value = value.name,
+                                         selected = m.data.documentTypeID == value.name),
+                                   value.title)
+                    }
+                }
+            })
+            o- col(8, kdiv.className("form-group"){o->
+                o- klabel(text = f.documentCategory.title)
+                o- kdiv(Attrs(id = AlDomID.documentCategoryPickerContainer))
+            })
+        }
+        o- m.fields.documentTitle.render()
+        o- row(marginBottom = null){o->
+            o- col(6, m.fields.numPages.render())
+            o- col(6, m.fields.numSources.render())
+        }
+        o- m.fields.documentDetails.render()
+        o- kdiv(Attrs(id = AlDomID.filePickerContainer))
+        o- kdiv{o->
+            o- kbutton(Attrs(id = AlDomID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Продолжить"))
+            o- kdiv.id(AlDomID.ticker){}
         }
     }
 }
@@ -402,13 +351,50 @@ private fun nancyOrderParams(o: Tag, order: AlUAOrder) {
     val ctx = AlRequestContext.the
     ctx.shitPassedFromBackToFront.pageID = AlPageID.orderParams
 
+    val canEdit = order.state == UAOrderState.CUSTOMER_DRAFT
+
     o- renderOrderTitle(order)
 //            o- kdiv.className(AlCSS.successBanner).text(t("TOTE", "Все круто, заказ создан. Мы с тобой скоро свяжемся"))
     o- kdiv.className(AlCSS.submitForReviewBanner){o->
         o- kdiv(Style(flexGrow = "1")).text(t("TOTE", "Убедись, что все верно. Подредактируй, если нужно. Возможно, добавь файлы. А затем..."))
         o- kbutton(Attrs(id = AlDomID.submitOrderForReviewButton, className = "btn btn-primary"), t("TOTE", "Отправить на проверку"))
     }
+
+    o- kdiv(Style(position = "relative")){o->
+        o- kdiv(Attrs(className = "nav nav-tabs", style = Style(marginBottom = "0.5rem"))){o->
+            o- kli.className("active")
+                .add(ka(Attrs(href = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))))
+                         .add(t("Parameters", "Параметры")))
+
+            o- kli.className("")
+                .add(ka(Attrs(href = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))))
+                         .add(t("Files", "Файлы")))
+        }
+
+        if (canEdit) {
+            o- kbutton(Attrs(id = AlDomID.editOrderParamsButton, className = "btn btn-default",
+                             style = Style(position = "absolute", right = "0", top = "0")))
+                .add(ki.className(fa.pencil))
+        }
+    }
+
     o- AlRenderPile.renderOrderParams(order)
+
+    if (canEdit) {
+        o- AlRenderPile.renderModal(ModalParams(
+            width = "80rem",
+            leftMarginColor = Color.BLUE_GRAY_300,
+            title = t("Parameters", "Параметры"),
+            body = kdiv{o->
+                val data = when {
+                    ctx.isPost -> postDataToOrderCreationForm()
+                    else -> order.toForm()
+                }
+                val fields = OrderParamsFields(data)
+                o- renderOrderParamsForm(Marfa(data, fields))
+            }
+        ))
+    }
 }
 
 fun makeURL(path: String, params: AlGetParams = AlGetParams()): String {
@@ -428,7 +414,6 @@ fun makeURL(path: String, params: AlGetParams = AlGetParams()): String {
 
 fun spitOrderParamsPage() {
     val ctx = AlRequestContext.the
-    val isPost = ctx.req.method == "POST"
 
 //    val data = when {
 //        isPost -> {
@@ -497,5 +482,70 @@ enum class AlDocumentType(val title: String) {
     PRACTICE("Отчет по практике"),
     OTHER("Другое")
 }
+
+
+class FuckingField(val value: String, val render: () -> Renderable)
+
+class DeclareFieldContext {
+    var hasErrors = false
+}
+
+fun declareField(ctx: DeclareFieldContext,
+                 prop: KProperty0<String>,
+                 title: String, validator: (String?) -> ValidationResult,
+                 fieldType: FieldType = FieldType.TEXT): FuckingField {
+    val vr = validator(prop.get())
+    val theError = when {
+        AlRequestContext.the.isPost -> vr.error
+        else -> null
+    }
+    if (theError != null)
+        ctx.hasErrors = true
+
+    return FuckingField(
+        value = vr.sanitizedString,
+        render = {
+            val id = AlSharedPile.fieldDOMID(name = prop.name)
+            kdiv.className("form-group") {o->
+                if (theError != null)
+                    o.amend(Style(marginBottom = "0"))
+                o- klabel(text = title)
+                val control = when (fieldType) {
+                    FieldType.TEXT -> kinput(Attrs(type = "text", id = id, value = vr.sanitizedString, className = "form-control")) {}
+                    FieldType.TEXTAREA -> ktextarea(Attrs(id = id, rows = 5, className = "form-control"), text = vr.sanitizedString)
+                }
+                o- kdiv(Style(position = "relative")){o->
+                    o- control
+                    if (theError != null) {
+                        o- kdiv(Style(marginTop = "5px", marginRight = "9px", textAlign = "right", color = "${Color.RED_700}"))
+                            .text(theError)
+                        // TODO:vgrechka Shift red circle if control has scrollbar
+                        o- kdiv(Style(width = "15px", height = "15px", backgroundColor = "${Color.RED_300}",
+                                      borderRadius = "10px", position = "absolute", top = "10px", right = "8px"))
+                    }
+                }
+            }
+        }
+    )
+}
+
+
+class OrderParamsFields(data: OrderCreationForm) {
+    val f = AlFields.order
+    val v = AlBackPile
+    val dfctx = DeclareFieldContext()
+
+    val email = declareField(dfctx, data::email, f.email.title, v::validateEmail)
+    val contactName = declareField(dfctx, data::name, f.contactName.title, v::validateName)
+    val phone = declareField(dfctx, data::phone, f.phone.title, v::validatePhone)
+    val documentTitle = declareField(dfctx, data::documentTitle, f.documentTitle.title, v::validateDocumentTitle)
+    val documentDetails = declareField(dfctx, data::documentDetails, f.documentDetails.title, v::validateDocumentDetails, FieldType.TEXTAREA)
+    val numPages = declareField(dfctx, data::numPages, f.numPages.title, v::validateNumPages)
+    val numSources = declareField(dfctx, data::numSources, f.numSources.title, v::validateNumSources)
+}
+
+
+
+
 
 
