@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse
 import alraune.back.AlBackPile0.log
 import alraune.back.AlRenderPile.col
 import alraune.back.AlRenderPile.pageTitle
+import alraune.back.AlRenderPile.rawHTML
 import alraune.back.AlRenderPile.renderOrderTitle
 import alraune.back.AlRenderPile.row
 import alraune.back.AlRenderPile.t
@@ -107,12 +108,15 @@ object StartAlrauneBack {
                                              .any {line.contains(it)}}
                                          .joinToString("\n"))
                             }
-                            AlPagePath.orderCreationForm -> spitOrderCreationFormPage()
-                            AlPagePath.orderParams -> spitOrderParamsPage()
+                            AlPagePath.orderCreationForm -> handleGet_orderCreationForm()
+                            AlPagePath.post_createOrder -> handlePost_createOrder()
+                            AlPagePath.orderParams -> handleGet_orderParams()
+                            AlPagePath.post_setOrderParams -> handlePost_setOrderParams()
                             else -> spitLandingPage()
                         }
                         res.status = HttpServletResponse.SC_OK
                     }
+
                 }
                 o.addServletWithMapping(ServletHolder(servlet), "/*")
             }
@@ -155,6 +159,7 @@ object StartAlrauneBack {
         File(AlBackPile0.tmpDirPath + "/alraune-back-started").writeText("Fuck, yeah...")
         server.join()
     }
+
 }
 
 
@@ -255,66 +260,69 @@ class AlRequestContext {
 }
 
 fun spitLandingPage() {
-    spitUsualPage {o->
-        o- pageTitle("Fuck You")
-    }
+    spitUsualPage(pageTitle("Fuck You"))
 }
 
-fun spitOrderCreationFormPage() {
-    val ctx = AlRequestContext.the
+fun handleGet_orderCreationForm() {
+    spitOrderCreationFormPage(
+        OrderParamsFields(
+            newAlUAOrder(
+                uuid = "", state = UAOrderState.CUSTOMER_DRAFT, email = "",
+                contactName = "", phone = "", documentTypeID = AlDocumentType.ABSTRACT.name, documentTitle = "",
+                documentDetails = "", documentCategoryID = AlDocumentCategories.miscID, numPages = -1, numSources = -1)
+                .toForm()))
+}
 
-    val data = when {
-        ctx.isPost -> postDataToOrderCreationForm()
-        else -> newAlUAOrder(
-            uuid = "", state = UAOrderState.CUSTOMER_DRAFT, email = "",
-            contactName = "", phone = "", documentTypeID = AlDocumentType.ABSTRACT.name, documentTitle = "",
-            documentDetails = "", documentCategoryID = AlDocumentCategories.miscID, numPages = -1, numSources = -1)
-            .toForm()
-    }
+val shitForFront get() = AlRequestContext.the.shitPassedFromBackToFront
 
-    spitUsualPage {o->
-        val fields = OrderParamsFields(data)
-        if (!ctx.isPost || fields.dfctx.hasErrors) {
-            ctx.shitPassedFromBackToFront.pageID = AlPageID.orderCreationForm
-            ctx.shitPassedFromBackToFront.postURL = makeURL(AlPagePath.orderCreationForm)
+fun replaceableContent(content: Renderable) =
+    insideMarkers(id = AlDomID.replaceableContent,
+                  beginMarker = AlSharedPile.beginContentMarker,
+                  endMarker = AlSharedPile.endContentMarker,
+                  content = content)
 
-            ctx.shitPassedFromBackToFront.documentCategoryID = data.documentCategoryID
-            o- pageTitle(t("TOTE", "Заказ"))
-            o- renderOrderParamsForm(Marfa(data, fields))
-        } else {
-            AlDocumentCategories.findByIDOrBitch(data.documentCategoryID)
-            AlDocumentType.values().find {it.name == data.documentTypeID} ?: bitch("e63b006c-3cda-4db8-b7e0-e2413e980dbc")
-
-            val order = alUAOrderRepo.save(newAlUAOrder(
-                uuid = UUID.randomUUID().toString(), state = UAOrderState.CUSTOMER_DRAFT,
-                email = fields.email.value, contactName = fields.contactName.value, phone = fields.phone.value,
-                documentTitle = fields.documentTitle.value, documentDetails = fields.documentDetails.value,
-                documentTypeID = data.documentTypeID, documentCategoryID = data.documentCategoryID,
-                numPages = fields.numPages.value.toInt(), numSources = fields.numSources.value.toInt()))
-
-            ctx.shitPassedFromBackToFront.historyPushState = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))
-            nancyOrderParams(o, order)
+private fun insideMarkers(id: String, beginMarker: String, endMarker: String, content: Renderable): Tag {
+    return kdiv{o->
+        o- rawHTML(beginMarker)
+        o- kdiv.id(id){o->
+            o- content
         }
+        o- rawHTML(endMarker)
     }
 }
 
-private fun postDataToOrderCreationForm(): OrderCreationForm {
+fun shitToFront(shitterUID: String, block: (ShitPassedFromBackToFront) -> Unit) {
+    shitForFront.logOfShitters += shitterUID + "; "
+    block(shitForFront)
+}
+
+private fun spitOrderCreationFormPage(fields: OrderParamsFields) {
+    shitToFront("cc6b96c4-d89b-41e9-b4db-85c6d985366e") {
+        it.pageID = AlPageID.orderCreationForm
+        it.postURL = makeURL(AlPagePath.post_createOrder)
+    }
+    spitUsualPage(replaceableContent(
+        kdiv()
+            .add(pageTitle(t("TOTE", "Заказ")))
+            .add(renderOrderParamsForm(fields))))
+}
+
+private fun readPostDataAsOrderCreationForm(): OrderCreationForm {
     val dataString = AlRequestContext.the.req.reader.readText()
     return ObjectMapper().readValue(dataString, OrderCreationForm::class.java)
 }
 
-class Marfa(val data: OrderCreationForm, val fields: OrderParamsFields)
-
-fun renderOrderParamsForm(m: Marfa): Renderable {
+fun renderOrderParamsForm(fields: OrderParamsFields): Renderable {
     val f = AlFields.order
+    AlRequestContext.the.shitPassedFromBackToFront.documentCategoryID = fields.data.documentCategoryID
     return kform{o->
-        if (m.fields.dfctx.hasErrors)
+        if (fields.dfctx.hasErrors)
             o- kdiv.className(AlCSS.errorBanner).text(t("TOTE", "Кое-что нужно исправить..."))
 
         o- row(marginBottom = null){o->
-            o- col(4, m.fields.contactName.render())
-            o- col(4, m.fields.email.render())
-            o- col(4, m.fields.phone.render())
+            o- col(4, fields.contactName.render())
+            o- col(4, fields.email.render())
+            o- col(4, fields.phone.render())
         }
         o- row(marginBottom = null){o->
             o- col(4, kdiv.className("form-group"){o->
@@ -323,7 +331,7 @@ fun renderOrderParamsForm(m: Marfa): Renderable {
                                  className = "form-control")) {o->
                     for (value in AlDocumentType.values()) {
                         o- koption(Attrs(value = value.name,
-                                         selected = m.data.documentTypeID == value.name),
+                                         selected = fields.data.documentTypeID == value.name),
                                    value.title)
                     }
                 }
@@ -333,12 +341,12 @@ fun renderOrderParamsForm(m: Marfa): Renderable {
                 o- kdiv(Attrs(id = AlDomID.documentCategoryPickerContainer))
             })
         }
-        o- m.fields.documentTitle.render()
+        o- fields.documentTitle.render()
         o- row(marginBottom = null){o->
-            o- col(6, m.fields.numPages.render())
-            o- col(6, m.fields.numSources.render())
+            o- col(6, fields.numPages.render())
+            o- col(6, fields.numSources.render())
         }
-        o- m.fields.documentDetails.render()
+        o- fields.documentDetails.render()
         o- kdiv(Attrs(id = AlDomID.filePickerContainer))
         o- kdiv{o->
             o- kbutton(Attrs(id = AlDomID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Продолжить"))
@@ -347,54 +355,63 @@ fun renderOrderParamsForm(m: Marfa): Renderable {
     }
 }
 
-private fun nancyOrderParams(o: Tag, order: AlUAOrder) {
-    val ctx = AlRequestContext.the
-    ctx.shitPassedFromBackToFront.pageID = AlPageID.orderParams
+fun shitBigReplacementToFront(shitterUID: String) {
+    shitToFront(shitterUID) {
+        it.replacement_id = AlDomID.replaceableContent
+        it.replacement_beginMarker = AlSharedPile.beginContentMarker
+        it.replacement_endMarker = AlSharedPile.endContentMarker
+    }
+}
 
-    val canEdit = order.state == UAOrderState.CUSTOMER_DRAFT
-
-    o- renderOrderTitle(order)
-//            o- kdiv.className(AlCSS.successBanner).text(t("TOTE", "Все круто, заказ создан. Мы с тобой скоро свяжемся"))
-    o- kdiv.className(AlCSS.submitForReviewBanner){o->
-        o- kdiv(Style(flexGrow = "1")).text(t("TOTE", "Убедись, что все верно. Подредактируй, если нужно. Возможно, добавь файлы. А затем..."))
-        o- kbutton(Attrs(id = AlDomID.submitOrderForReviewButton, className = "btn btn-primary"), t("TOTE", "Отправить на проверку"))
+private fun spitOrderParamsPage(order: AlUAOrder, fields: OrderParamsFields) {
+    shitToFront("054bb78d-238e-4313-9b75-820c5a37097c") {
+        it.pageID = AlPageID.orderParams
+        it.postURL = makeURL(AlPagePath.post_setOrderParams)
+        it.orderUUID = order.uuid
     }
 
-    o- kdiv(Style(position = "relative")){o->
-        o- kdiv(Attrs(className = "nav nav-tabs", style = Style(marginBottom = "0.5rem"))){o->
-            o- kli.className("active")
-                .add(ka(Attrs(href = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))))
-                         .add(t("Parameters", "Параметры")))
+    spitUsualPage(replaceableContent(kdiv{o->
+        val canEdit = order.state == UAOrderState.CUSTOMER_DRAFT
 
-            o- kli.className("")
-                .add(ka(Attrs(href = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))))
-                         .add(t("Files", "Файлы")))
+        o- renderOrderTitle(order)
+//            o- kdiv.className(AlCSS.successBanner).text(t("TOTE", "Все круто, заказ создан. Мы с тобой скоро свяжемся"))
+        o- kdiv.className(AlCSS.submitForReviewBanner){o->
+            o- kdiv(Style(flexGrow = "1")).text(t("TOTE", "Убедись, что все верно. Подредактируй, если нужно. Возможно, добавь файлы. А затем..."))
+            o- kbutton(Attrs(id = AlDomID.submitOrderForReviewButton, className = "btn btn-primary"), t("TOTE", "Отправить на проверку"))
         }
+
+        o- kdiv(Style(position = "relative")){o->
+            o- kdiv(Attrs(className = "nav nav-tabs", style = Style(marginBottom = "0.5rem"))){o->
+                o- kli.className("active")
+                    .add(ka(Attrs(href = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))))
+                             .add(t("Parameters", "Параметры")))
+
+                o- kli.className("")
+                    .add(ka(Attrs(href = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))))
+                             .add(t("Files", "Файлы")))
+            }
+
+            if (canEdit) {
+                o- kbutton(Attrs(id = AlDomID.editOrderParamsButton, className = "btn btn-default",
+                                 style = Style(position = "absolute", right = "0", top = "0")))
+                    .add(ki.className(fa.pencil))
+            }
+        }
+
+        o- AlRenderPile.renderOrderParams(order)
 
         if (canEdit) {
-            o- kbutton(Attrs(id = AlDomID.editOrderParamsButton, className = "btn btn-default",
-                             style = Style(position = "absolute", right = "0", top = "0")))
-                .add(ki.className(fa.pencil))
+            o- AlRenderPile.renderModal(ModalParams(
+                width = "80rem",
+                leftMarginColor = Color.BLUE_GRAY_300,
+                title = t("Parameters", "Параметры"),
+                body = insideMarkers(id = AlDomID.modalContent,
+                                     beginMarker = AlSharedPile.beginModalContentMarker,
+                                     endMarker = AlSharedPile.endModalContentMarker,
+                                     content = renderOrderParamsForm(fields))
+            ))
         }
-    }
-
-    o- AlRenderPile.renderOrderParams(order)
-
-    if (canEdit) {
-        o- AlRenderPile.renderModal(ModalParams(
-            width = "80rem",
-            leftMarginColor = Color.BLUE_GRAY_300,
-            title = t("Parameters", "Параметры"),
-            body = kdiv{o->
-                val data = when {
-                    ctx.isPost -> postDataToOrderCreationForm()
-                    else -> order.toForm()
-                }
-                val fields = OrderParamsFields(data)
-                o- renderOrderParamsForm(Marfa(data, fields))
-            }
-        ))
-    }
+    }))
 }
 
 fun makeURL(path: String, params: AlGetParams = AlGetParams()): String {
@@ -412,33 +429,22 @@ fun makeURL(path: String, params: AlGetParams = AlGetParams()): String {
     return buf.toString()
 }
 
-fun spitOrderParamsPage() {
-    val ctx = AlRequestContext.the
-
-//    val data = when {
-//        isPost -> {
-//            imf("bf0bb107-b3d7-4d41-b495-6912c7b7108c")
-////            val dataString = ctx.req.reader.readText()
-////            ObjectMapper().readValue(dataString, OrderCreationForm::class.java)
-//        }
-//        else -> OrderCreationForm(
-//            email = "", name = "", phone = "", documentTypeID = AlDocumentType.ABSTRACT.name, documentTitle = "",
-//            documentDetails = "", documentCategoryID = AlDocumentCategories.miscID, numPages = "", numSources = "")
-//    }
-
-    spitUsualPage {o->
-        val uuid = ctx.getParams.orderUUID ?: bitch("0fe1dd78-8afd-4511-b743-7fc3b5ac78ce")
-        val order = alUAOrderRepo.findByUuid(uuid) ?: bitch("bcfc6c38-585c-43f9-8984-c26d9c113e4e")
-        nancyOrderParams(o, order)
-    }
+fun handleGet_orderParams() {
+    val uuid = AlRequestContext.the.getParams.orderUUID ?: bitch("0fe1dd78-8afd-4511-b743-7fc3b5ac78ce")
+    val order = alUAOrderRepo.findByUuid(uuid) ?: bitch("bcfc6c38-585c-43f9-8984-c26d9c113e4e")
+    val fields = OrderParamsFields(order.toForm())
+    shitBigReplacementToFront("37636e9d-5060-43b8-a50d-34a95fe5bce1")
+    spitOrderParamsPage(order, fields)
 }
 
-private fun spitUsualPage(build: (Tag) -> Unit) {
+private fun spitUsualPage(pipiska: Renderable) {
     val ctx = AlRequestContext.the
-    val content = kdiv.id(AlDomID.replaceableContent){o->
-        o- kdiv.className("container", build)
-        o- kdiv(Attrs(id = ctx.shitPassedFromBackToFront::class.simpleName,
+    val html = kdiv.className("container"){o->
+        o- pipiska
+        o- rawHTML(AlSharedPile.beginShitPassedFromBackToFrontMarker)
+        o- kdiv(Attrs(id = AlDomID.shitPassedFromBackToFront,
                       dataShit = ObjectMapper().writeValueAsString(ctx.shitPassedFromBackToFront)))
+        o- rawHTML(AlSharedPile.endShitPassedFromBackToFrontMarker)
     }.render()
 
     ctx.res.writer.print(buildString {
@@ -455,10 +461,7 @@ private fun spitUsualPage(build: (Tag) -> Unit) {
         ln("    <link rel='stylesheet' href='alraune.css'>")
         ln("</head>")
         ln("<body>")
-        ln(AlSharedPile.beginContentMarker)
-        ln(content)
-        ln(AlSharedPile.endContentMarker)
-        ln("")
+        ln(html)
         ln("    <script src='/node_modules/jquery/dist/jquery.min.js'></script>")
         ln("    <script src='/node_modules/bootstrap/dist/js/bootstrap.min.js'></script>")
         ln("    <script src='/alraune-front/lib/kotlin.js'></script>")
@@ -530,7 +533,7 @@ fun declareField(ctx: DeclareFieldContext,
 }
 
 
-class OrderParamsFields(data: OrderCreationForm) {
+class OrderParamsFields(val data: OrderCreationForm) {
     val f = AlFields.order
     val v = AlBackPile
     val dfctx = DeclareFieldContext()
@@ -543,6 +546,87 @@ class OrderParamsFields(data: OrderCreationForm) {
     val numPages = declareField(dfctx, data::numPages, f.numPages.title, v::validateNumPages)
     val numSources = declareField(dfctx, data::numSources, f.numSources.title, v::validateNumSources)
 }
+
+
+private fun handlePost_createOrder() {
+    val fields = OrderParamsFields(readPostDataAsOrderCreationForm())
+    if (fields.dfctx.hasErrors) {
+        spitOrderCreationFormPage(fields)
+    } else {
+        validateOrderParamsFields(fields)
+        val order = alUAOrderRepo.save(newAlUAOrder(
+            uuid = UUID.randomUUID().toString(), state = UAOrderState.CUSTOMER_DRAFT,
+            email = fields.email.value, contactName = fields.contactName.value, phone = fields.phone.value,
+            documentTitle = fields.documentTitle.value, documentDetails = fields.documentDetails.value,
+            documentTypeID = fields.data.documentTypeID, documentCategoryID = fields.data.documentCategoryID,
+            numPages = fields.numPages.value.toInt(), numSources = fields.numSources.value.toInt()))
+
+        shitToFront("cce77e9c-e7f2-4f17-9554-0e27ee982ed2") {
+            it.historyPushState = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))
+        }
+        shitBigReplacementToFront("d2039b9e-7c7e-4487-b230-78203c35fdf7")
+        spitOrderParamsPage(order, fields)
+    }
+}
+
+private fun validateOrderParamsFields(fields: OrderParamsFields) {
+    AlDocumentCategories.findByIDOrBitch(fields.data.documentCategoryID)
+    AlDocumentType.values().find {it.name == fields.data.documentTypeID} ?: bitch("e63b006c-3cda-4db8-b7e0-e2413e980dbc")
+}
+
+private fun handlePost_setOrderParams() {
+    val data = readPostDataAsOrderCreationForm()
+    val uuid = data.orderUUID ?: bitch("4c7f82b3-6347-4f25-8949-2f96e5af4713")
+    val order = alUAOrderRepo.findByUuid(uuid) ?: bitch("0ef3a079-e1c6-41bf-bfa9-8540ae9d0082")
+    val fields = OrderParamsFields(data)
+    if (fields.dfctx.hasErrors) {
+        shitToFront("030a3b7c-7f4d-4d69-8473-88396049630f") {
+            it.replacement_id = AlDomID.modalContent
+            it.replacement_beginMarker = AlSharedPile.beginModalContentMarker
+            it.replacement_endMarker = AlSharedPile.endModalContentMarker
+        }
+        spitOrderParamsPage(order, fields)
+    } else {
+        validateOrderParamsFields(fields)
+
+        order.email = fields.email.value
+        order.contactName = fields.contactName.value
+        order.phone = fields.phone.value
+        order.documentTitle = fields.documentTitle.value
+        order.documentDetails = fields.documentDetails.value
+        order.documentTypeID = fields.data.documentTypeID
+        order.documentCategoryID = fields.data.documentCategoryID
+        order.numPages = fields.numPages.value.toInt()
+        order.numSources = fields.numSources.value.toInt()
+        alUAOrderRepo.save(order)
+
+        shitToFront("9b4f1a3e-c2ca-4bfb-a567-4a612caa7fc9") {
+            it.historyPushState = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))
+        }
+        shitBigReplacementToFront("917b0edd-df3c-499d-9ffe-93f4152bddfb")
+        spitOrderParamsPage(order, fields)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -23,6 +23,7 @@ interface AlUAOrder : GCommonEntityFields {
     var numSources: Int
 
     fun toForm() = OrderCreationForm(
+        orderUUID = null,
         email = email, name = contactName, phone = phone, documentTypeID = documentTypeID, documentTitle = documentTitle,
         documentDetails = documentDetails, documentCategoryID = documentCategoryID,
         numPages = when (numPages) {

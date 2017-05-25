@@ -31,13 +31,13 @@ fun main(args: Array<String>) {
                 val el = e.target as HTMLElement
                 val stackID = el.getAttribute(AlSharedPile.attribute.data_tagCreationStackID) ?: bitch("1a23fa57-0fd2-404a-82cf-b300294aa6cc")
                 async {
-                    // TODO:vgrechka Should URL be in AlSharedPile?
                     AlFrontPile.post(AlFrontPile.shitFromBack.debug_urlForSendingStackID, JSON.stringify(DumpStackByIDRequest(stackID)))
                     clog("Sent request for dumping stackID $stackID")
                 }
             }
         }, /*capturingPhase*/ true)
 
+        parseShitFromBack()
         AlFrontPile.initShit()
 
         @Suppress("UnsafeCastFromDynamic")
@@ -62,6 +62,17 @@ object AlFrontDebug {
     var messAroundFront202: (() -> Unit)? = null
     var messAroundFront301: (() -> Unit)? = null
 }
+
+private fun parseShitFromBack() {
+    AlFrontPile.shitFromBack = run {
+        val j = byIDSingle(AlDomID.shitPassedFromBackToFront)
+        val dataShit = j.attr(AlSharedPile.attribute.data_shit)
+        // clog("dataShit =", dataShit)
+        JSON.parse<ShitPassedFromBackToFront>(dataShit)
+    }
+    clog("shitFromBack =", AlFrontPile.shitFromBack)
+}
+
 
 object AlFrontPile {
     val debug_sleepBeforePost = 1000
@@ -108,14 +119,6 @@ object AlFrontPile {
     }
 
     fun initShit() {
-        AlFrontPile.shitFromBack = run {
-            val j = JQueryPile.byIDSingle(ShitPassedFromBackToFront::class.simpleName!!)
-            val dataShit = j.attr(AlSharedPile.attribute.data_shit)
-            // clog("dataShit =", dataShit)
-            JSON.parse<ShitPassedFromBackToFront>(dataShit)
-        }
-        clog("shitFromBack =", AlFrontPile.shitFromBack)
-
         AlFrontPile.shitFromBack.historyPushState?.let {
             window.history.pushState(null, "", it)
         }
@@ -127,6 +130,8 @@ object AlFrontPile {
     }
 
     private fun dorothyOrderParamsPage() {
+        amanda(AmandaParams())
+
         fun handler() {
             byIDSingle(AlDomID.orderParamsModal).asDynamic().modal()
         }
@@ -138,10 +143,21 @@ object AlFrontPile {
     }
 
     private fun dorothyOrderCreationFormPage() {
-        val documentCategoryPicker = DocumentCategoryPicker()
-        val filePicker = FilePicker()
+        amanda(AmandaParams())
+    }
 
+    class AmandaParams()
+
+    fun findShitBetweenMarkers(haystack: String, beginMarker: String, endMarker: String): String {
+        val i1 = haystack.indexOfOrNull(beginMarker) ?: wtf("c7ef8f87-c3ea-4d02-b31a-717dc1a8a01f")
+        val i2 = haystack.indexOfOrNull(endMarker) ?: wtf("91747d64-af48-43a6-85ec-59a69994fd11")
+        return haystack.substring(i1 + beginMarker.length, i2)
+    }
+
+    private fun amanda(p: AmandaParams) {
+        val documentCategoryPicker = DocumentCategoryPicker()
         val button = byID(AlDomID.createOrderForm_submitButton)
+
         // TODO:vgrechka Remove event handlers
         fun submitButtonHandler() {
             clog("i am the fucking submitButtonHandler")
@@ -151,11 +167,13 @@ object AlFrontPile {
             val clazz = window.asDynamic()["alraune-front"].alraune.shared[OrderCreationForm::class.simpleName]
             val inst = js("new clazz()")
             val propNames = JSObject.getOwnPropertyNames(inst)
-            for (propName in propNames.toList() - OrderCreationForm::documentCategoryID.name) {
+            for (propName in propNames.toList() - listOf(OrderCreationForm::documentCategoryID.name,
+                                                         OrderCreationForm::orderUUID.name)) {
                 clog("propName", propName)
                 inst[propName] = byIDSingle(AlSharedPile.fieldDOMID(propName)).getVal()
             }
             inst[OrderCreationForm::documentCategoryID.name] = documentCategoryPicker.getSelectedCategoryID()
+            inst[OrderCreationForm::orderUUID.name] = shitFromBack.orderUUID
             val data = JSON.stringify(inst)
             // clog("data", data)
             async {
@@ -164,10 +182,17 @@ object AlFrontPile {
 
                 val html = post(shitFromBack.postURL, data)
                 // clog("html", html)
-                val i1 = html.indexOfOrNull(AlSharedPile.beginContentMarker) ?: wtf("c7ef8f87-c3ea-4d02-b31a-717dc1a8a01f")
-                val i2 = html.indexOfOrNull(AlSharedPile.endContentMarker) ?: wtf("91747d64-af48-43a6-85ec-59a69994fd11")
-                val content = html.substring(i1 + AlSharedPile.beginContentMarker.length, i2)
-                byIDSingle(AlDomID.replaceableContent)[0]!!.outerHTML = content
+
+                fun jerk(beginMarker: String, endMarker: String, idToReplace: String) {
+                    val content = findShitBetweenMarkers(html, beginMarker, endMarker)
+                    byIDSingle(idToReplace)[0]!!.outerHTML = content
+                }
+
+                jerk(AlSharedPile.beginShitPassedFromBackToFrontMarker, AlSharedPile.endShitPassedFromBackToFrontMarker, AlDomID.shitPassedFromBackToFront)
+                parseShitFromBack()
+                val modalJQ = byID(AlDomID.orderParamsModal).asDynamic()
+                jerk(shitFromBack.replacement_beginMarker, shitFromBack.replacement_endMarker, shitFromBack.replacement_id)
+                modalJQ.modal("hide")
 
                 initShit()
             }
@@ -176,6 +201,7 @@ object AlFrontPile {
         fun make2xx(tamperWith: (OrderCreationForm) -> OrderCreationForm): () -> Unit {
             return {
                 val data = tamperWith(OrderCreationForm(
+                    orderUUID = "boobs",
                     email = "iperdonde@mail.com",
                     name = "Иммануил Пердондэ",
                     phone = "+38 (068) 4542823",

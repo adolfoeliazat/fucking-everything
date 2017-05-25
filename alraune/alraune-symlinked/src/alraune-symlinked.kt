@@ -8,6 +8,10 @@ import kotlin.reflect.KProperty0
 object AlSharedPile {
     val beginContentMarker = "<!--4e2bb1ac-ec20-494c-8731-36d7c31e62ce-->"
     val endContentMarker = "<!--53693d6d-acc5-4a87-9dc4-b043e6370c10-->"
+    val beginShitPassedFromBackToFrontMarker = "<!--a070f8fb-e925-4420-b74a-5de399f14277-->"
+    val endShitPassedFromBackToFrontMarker = "<!--96a1cbe1-deae-46f5-a9ef-84446169acb0-->"
+    val beginModalContentMarker = "<!--68b1a994-5b0c-4bb3-b932-63332997e4ec-->"
+    val endModalContentMarker = "<!--ff947aac-6bdb-41e0-b157-b4d113901c70-->"
     val scrollbarWidth = 17
 
     object attribute {
@@ -42,8 +46,7 @@ object AlSharedPile {
 }
 
 object AlDomID {
-//        val googleSignInButton by myName()
-//        val facebookSignInButton by myName()
+    val shitPassedFromBackToFront by myName()
     val createOrderForm_submitButton by myName()
     val ticker by myName()
     val replaceableContent by myName()
@@ -53,6 +56,7 @@ object AlDomID {
     val editOrderParamsButton by myName()
     val orderParamsModal by myName()
     val closeModalButton by myName()
+    val modalContent by myName()
 }
 
 object AlPageID {
@@ -63,7 +67,9 @@ object AlPageID {
 
 object AlPagePath {
     val orderCreationForm by slashMyName()
+    val post_createOrder by slashMyName()
     val orderParams by slashMyName()
+    val post_setOrderParams by slashMyName()
 }
 
 class AlGetParams(
@@ -161,6 +167,7 @@ object AlCSS {
 
 
 @Ser data class OrderCreationForm(
+    val orderUUID: String?,
     val email: String,
     val name: String,
     val phone: String,
@@ -178,12 +185,17 @@ object AlCSS {
 
 class ShitPassedFromBackToFront {
     var funnyChars = "fuck & shit < 'bitch' \"boobs\" >"
+    var logOfShitters = ""
     val debug_domElementStackTraces = true
-    var pageID: String = "boobs"
-    var postURL: String = "boobs"
-    var documentCategoryID = "boobs"
-    var debug_urlForSendingStackID = "boobs"
+    var pageID: String = "boobs-pageID"
+    var postURL: String = "boobs-postURL"
+    var documentCategoryID = "boobs-documentCategoryID"
+    var debug_urlForSendingStackID = "boobs-debug_urlForSendingStackID"
     var historyPushState: String? = null
+    var replacement_beginMarker = "boobs-replacement_beginMarker"
+    var replacement_endMarker = "boobs-replacement_endMarker"
+    var replacement_id = "boobs-replacement_id"
+    var orderUUID = "boobs-orderUUID"
 }
 
 

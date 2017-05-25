@@ -186,7 +186,7 @@ class TagCtor(val tag: String) {
         return this(Attrs(className = x.className), block)
     }
 
-    fun id(id: String, block: (Tag) -> Unit): Tag {
+    fun id(id: String, block: (Tag) -> Unit = {}): Tag {
         return this(Attrs(id = id), block)
     }
 
