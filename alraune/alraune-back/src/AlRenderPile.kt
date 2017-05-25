@@ -3,6 +3,7 @@ package alraune.back
 import alraune.back.AlBackPile0.log
 import alraune.back.AlRenderPile.t
 import alraune.shared.AlDocumentCategories
+import alraune.shared.AlDomID
 import alraune.shared.AlSharedPile
 import alraune.shared.Color
 import vgrechka.*
@@ -92,7 +93,7 @@ object AlRenderPile {
 
     fun renderOrderParams(order: AlUAOrder): Renderable {
         val f = AlFields.order
-        return kdiv{o->
+        return kdiv(Style(position = "relative")){o->
             o- row{o->
                 o- createdAtCol(3, order.createdAt)
                 o- col(3, f.status.title, order.state.title)
@@ -161,6 +162,14 @@ object AlRenderPile {
 //            }
 
 //            o- renderBottomPageSpace()
+
+            val canEdit = order.state == UAOrderState.CUSTOMER_DRAFT
+
+            if (canEdit) {
+                o- kbutton(Attrs(id = AlDomID.editOrderParamsButton, className = "btn btn-default",
+                                 style = Style(position = "absolute", right = "0.5rem", top = "0")))
+                    .add(ki.className(fa.pencil))
+            }
         }
     }
 

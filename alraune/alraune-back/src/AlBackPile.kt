@@ -75,6 +75,7 @@ val kform = TagCtor("form")
 val kul = TagCtor("ul")
 val kol = TagCtor("ol")
 val kli = TagCtor("li")
+val ki = TagCtor("i")
 val kinput = TagCtor("input")
 val ktextarea = TagCtor("textarea")
 val klabel = TagCtor("label")
@@ -126,16 +127,18 @@ class Tag(val tag: String, var attrs: Attrs) : Renderable {
         }
     }
 
-    fun add(x: Renderable?) {
+    fun add(x: Renderable?): Tag {
         if (x != null) {
             children += x
         }
+        return this
     }
 
-    fun add(x: String?) {
+    fun add(x: String?): Tag {
         if (x != null) {
             children += Text(x)
         }
+        return this
     }
 
     operator fun minus(x: Renderable?) = add(x)
@@ -172,6 +175,10 @@ class TagCtor(val tag: String) {
 
     fun className(pack: AlCSS.Pack, block: (Tag) -> Unit = {}): Tag {
         return this(Attrs(className = pack.className), block)
+    }
+
+    fun className(x: IconClass, block: (Tag) -> Unit = {}): Tag {
+        return this(Attrs(className = x.className), block)
     }
 
     fun id(id: String, block: (Tag) -> Unit): Tag {

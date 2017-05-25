@@ -49,6 +49,7 @@ object AlDomID {
     val documentCategoryPickerContainer by myName()
     val filePickerContainer by myName()
     val submitOrderForReviewButton by myName()
+    val editOrderParamsButton by myName()
 }
 
 object AlPageID {
