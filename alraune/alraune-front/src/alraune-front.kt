@@ -10,7 +10,6 @@ import vgrechka.kjs.JQueryPile.byIDSingle
 import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.js.Promise
-import kotlin.js.json
 import kotlin.properties.Delegates.notNull
 import kotlin.reflect.KFunction0
 import kotlin.reflect.KProperty0
@@ -132,6 +131,10 @@ object AlFrontPile {
             JSON.parse<ShitPassedFromBackToFront>(dataShit)
         }
         clog("shitFromBack =", AlFrontPile.shitFromBack)
+
+        AlFrontPile.shitFromBack.historyPushState?.let {
+            window.history.pushState(null, "", it)
+        }
 
         if (AlFrontPile.shitFromBack.pageID == AlPageID.orderCreationForm) {
             val documentCategoryPicker = DocumentCategoryPicker()

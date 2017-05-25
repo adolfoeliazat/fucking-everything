@@ -14,6 +14,10 @@ class PHPDBEntitySpew : Spew {
                 val out = pedroCtx.out
 
                 object : CommonDBEntitySpew.Pedro {
+                    override fun generatedFinderName(entityName: String, shit: String, operator: String): String {
+                        imf("ae5ed683-5110-48c4-98ec-a7079d46881b")
+                    }
+
                     override fun createTableSuffix(): String {
                         return "engine=InnoDB"
                     }

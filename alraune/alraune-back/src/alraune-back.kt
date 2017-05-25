@@ -20,12 +20,13 @@ import alraune.shared.*
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.eclipse.jetty.server.handler.HandlerCollection
 import org.eclipse.jetty.server.handler.ResourceHandler
-import org.hibernate.criterion.Order
 import java.util.*
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
+import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.valueParameters
 
 // TODO:vgrechka Field: document type
 
@@ -68,7 +69,21 @@ object StartAlrauneBack {
                         AlRequestContext.the = AlRequestContext().also {
                             it.req = req
                             it.res = res
-                            it.shitPassedFromBackToFront.debug_urlForSendingStackID = "${AlBackPile0.baseURL}$path_debug_dumpStackByID"
+
+                            it.getParams = run {
+                                if (req.method == "POST") {
+                                    // Attempt to read request body after `getParameter` call causes exception, kind of because shit is already consumed.
+                                    // In case of POST we are passing all data via body anyway, so...
+                                    AlGetParams()
+                                } else {
+                                    val ctor = AlGetParams::class.constructors.first()
+                                    ctor.call(*ctor.valueParameters.map {
+                                        req.getParameter(it.name)
+                                    }.toTypedArray())
+                                }
+                            }
+
+                            it.shitPassedFromBackToFront.debug_urlForSendingStackID = makeURL(path_debug_dumpStackByID)
                         }
 
                         log.debug("req.pathInfo = ${req.pathInfo}")
@@ -92,7 +107,8 @@ object StartAlrauneBack {
                                              .any {line.contains(it)}}
                                          .joinToString("\n"))
                             }
-                            AlBackPile0.orderCreationPagePath -> spitOrderFormPage()
+                            AlPagePath.orderCreationForm -> spitOrderCreationFormPage()
+                            AlPagePath.orderParams -> spitOrderParamsPage()
                             else -> spitLandingPage()
                         }
                         res.status = HttpServletResponse.SC_OK
@@ -207,6 +223,7 @@ class AlRequestContext {
     var req by notNullOnce<HttpServletRequest>()
     var res by notNullOnce<HttpServletResponse>()
     val shitPassedFromBackToFront = ShitPassedFromBackToFront()
+    var getParams by notNullOnce<AlGetParams>()
     private var nextUID = 1
 //    val scriptPile = StringBuilder()
 
@@ -241,7 +258,7 @@ fun spitLandingPage() {
     }
 }
 
-fun spitOrderFormPage() {
+fun spitOrderCreationFormPage() {
     val ctx = AlRequestContext.the
     val isPost = ctx.req.method == "POST"
 
@@ -322,7 +339,7 @@ fun spitOrderFormPage() {
 
         if (!isPost || hasErrors) {
             ctx.shitPassedFromBackToFront.pageID = AlPageID.orderCreationForm
-            ctx.shitPassedFromBackToFront.postURL = "${AlBackPile0.baseURL}${AlBackPile0.orderCreationPagePath}"
+            ctx.shitPassedFromBackToFront.postURL = makeURL(AlPagePath.orderCreationForm)
 
             ctx.shitPassedFromBackToFront.documentCategoryID = data.documentCategoryID
             o- pageTitle(t("TOTE", "Заказ"))
@@ -365,8 +382,6 @@ fun spitOrderFormPage() {
                 }
             }
         } else {
-            ctx.shitPassedFromBackToFront.pageID = AlPageID.orderParams
-
             AlDocumentCategories.findByIDOrBitch(data.documentCategoryID)
             AlDocumentType.values().find {it.name == data.documentTypeID} ?: bitch("e63b006c-3cda-4db8-b7e0-e2413e980dbc")
 
@@ -376,16 +391,61 @@ fun spitOrderFormPage() {
                 documentTitle = documentTitle.value, documentDetails = documentDetails.value,
                 documentTypeID = data.documentTypeID, documentCategoryID = data.documentCategoryID,
                 numPages = numPages.value.toInt(), numSources = numSources.value.toInt()))
-            o- renderOrderTitle(order)
-//            o- kdiv.className(AlCSS.successBanner).text(t("TOTE", "Все круто, заказ создан. Мы с тобой скоро свяжемся"))
-            o- kdiv.className(AlCSS.submitForReviewBanner){o->
-                o- kdiv(Style(flexGrow = "1")).text(t("TOTE", "Убедись, что все верно. Подредактируй, если нужно. Возможно, добавь файлы. А затем..."))
-                o- kbutton(Attrs(id = AlDomID.submitOrderForReviewButton, className = "btn btn-primary"), t("TOTE", "Отправить на проверку"))
-            }
-            o- AlRenderPile.renderOrderParams(order)
+
+            ctx.shitPassedFromBackToFront.historyPushState = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))
+            nancyOrderParams(o, order)
         }
     }
+}
 
+private fun nancyOrderParams(o: Tag, order: AlUAOrder) {
+    val ctx = AlRequestContext.the
+    ctx.shitPassedFromBackToFront.pageID = AlPageID.orderParams
+
+    o- renderOrderTitle(order)
+//            o- kdiv.className(AlCSS.successBanner).text(t("TOTE", "Все круто, заказ создан. Мы с тобой скоро свяжемся"))
+    o- kdiv.className(AlCSS.submitForReviewBanner){o->
+        o- kdiv(Style(flexGrow = "1")).text(t("TOTE", "Убедись, что все верно. Подредактируй, если нужно. Возможно, добавь файлы. А затем..."))
+        o- kbutton(Attrs(id = AlDomID.submitOrderForReviewButton, className = "btn btn-primary"), t("TOTE", "Отправить на проверку"))
+    }
+    o- AlRenderPile.renderOrderParams(order)
+}
+
+fun makeURL(path: String, params: AlGetParams = AlGetParams()): String {
+    val buf = StringBuilder("${AlBackPile0.baseURL}$path")
+    var first = true
+    for (p in AlGetParams::class.declaredMemberProperties) {
+        p.get(params)?.let {value->
+            if (first) {
+                first = false
+                buf += "?"
+            }
+            buf += "${p.name}=$value" // TODO:vgrechka Encode
+        }
+    }
+    return buf.toString()
+}
+
+fun spitOrderParamsPage() {
+    val ctx = AlRequestContext.the
+    val isPost = ctx.req.method == "POST"
+
+//    val data = when {
+//        isPost -> {
+//            imf("bf0bb107-b3d7-4d41-b495-6912c7b7108c")
+////            val dataString = ctx.req.reader.readText()
+////            ObjectMapper().readValue(dataString, OrderCreationForm::class.java)
+//        }
+//        else -> OrderCreationForm(
+//            email = "", name = "", phone = "", documentTypeID = AlDocumentType.ABSTRACT.name, documentTitle = "",
+//            documentDetails = "", documentCategoryID = AlDocumentCategories.miscID, numPages = "", numSources = "")
+//    }
+
+    spitUsualPage {o->
+        val uuid = ctx.getParams.orderUUID ?: bitch("0fe1dd78-8afd-4511-b743-7fc3b5ac78ce")
+        val order = alUAOrderRepo.findByUuid(uuid) ?: bitch("bcfc6c38-585c-43f9-8984-c26d9c113e4e")
+        nancyOrderParams(o, order)
+    }
 }
 
 private fun spitUsualPage(build: (Tag) -> Unit) {

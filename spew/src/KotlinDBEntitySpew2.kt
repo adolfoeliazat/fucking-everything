@@ -20,6 +20,10 @@ class KotlinDBEntitySpew2 : Spew {
 
 
 private class PedroImpl(val pedroCtx: CommonDBEntitySpew) : CommonDBEntitySpew.Pedro {
+    override fun generatedFinderName(entityName: String, shit: String, operator: String): String {
+        return "findBy$shit$operator"
+    }
+
     val ln = pedroCtx.out::appendln
 
     override fun createTableSuffix(): String {

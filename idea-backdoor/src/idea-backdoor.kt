@@ -270,7 +270,7 @@ object CustomBuilds {
                     robot.mouseMove(origLocation.x, origLocation.y)
 
 //                    refreshBrowser()
-                    navigateBrowser("https://alraune.local/order?frontMessAround=messAroundFront201")
+                    navigateBrowser("https://alraune.local/orderCreationForm?frontMessAround=messAroundFront201")
                 }
             }
 

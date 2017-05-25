@@ -58,6 +58,15 @@ object AlPageID {
     val orderParams by myName()
 }
 
+object AlPagePath {
+    val orderCreationForm by slashMyName()
+    val orderParams by slashMyName()
+}
+
+class AlGetParams(
+    val orderUUID: String? = null
+)
+
 object AlCSS {
     val errorBanner by Pack("""
         background-color: ${Color.RED_50};
@@ -171,6 +180,7 @@ class ShitPassedFromBackToFront {
     var postURL: String = "boobs"
     var documentCategoryID = "boobs"
     var debug_urlForSendingStackID = "boobs"
+    var historyPushState: String? = null
 }
 
 

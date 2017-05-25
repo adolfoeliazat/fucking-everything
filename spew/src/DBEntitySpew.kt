@@ -75,6 +75,7 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
         fun makeJuan(juanCtx: spitShitForEntity): Juan
         fun spitImports()
         fun createTableSuffix(): String
+        fun generatedFinderName(entityName: String, shit: String, operator: String): String
     }
 
     companion object {
@@ -473,7 +474,7 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
                                                 "LikeIgnoreCase",
                                                 "Like").find {shit.endsWith(it)} ?: ""
                                             shit = shit.dropLast(operator.length)
-                                            generatedFinderName = "findBy${entityName}_$shit$operator"
+                                            generatedFinderName = pedro.generatedFinderName(entityName, shit, operator)
                                         }
                                         else {
                                             wtf("52cd36a0-9de1-436f-be73-86b166f202cf")

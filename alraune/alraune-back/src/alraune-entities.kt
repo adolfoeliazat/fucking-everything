@@ -22,6 +22,7 @@ interface AlUAOrder : GCommonEntityFields {
 }
 
 interface AlUAOrderRepository : GRepository<AlUAOrder> {
+    fun findByUuid(x: String): AlUAOrder?
 }
 
 

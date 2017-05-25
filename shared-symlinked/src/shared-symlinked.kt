@@ -38,6 +38,7 @@ fun <T> named(make: (ident: String) -> T) = object : ReadOnlyProperty<Any?, T> {
 }
 
 fun myName() = named {it}
+fun slashMyName() = named {"/" + it}
 
 /**
  * Until KJS source mapping for !! is fixed

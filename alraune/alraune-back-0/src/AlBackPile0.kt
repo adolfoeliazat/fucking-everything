@@ -14,7 +14,6 @@ object AlBackPile0 {
     val sharedKJSOutDirParent = "E:/fegh/out/production"
     val tmpDirPath = "c:/tmp"
     val log = LoggerFactory.getLogger(this.javaClass)
-    val orderCreationPagePath = "/order"
     val baseURL = "https://alraune.local"
 
     val secrets by lazy {
