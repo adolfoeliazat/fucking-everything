@@ -8,6 +8,7 @@ import vgrechka.spew.*
 
 @GEntity(table = "ua_orders")
 interface AlUAOrder : GCommonEntityFields {
+    var uuid: String
     var state: UAOrderState
     var email: String
     var contactName: String

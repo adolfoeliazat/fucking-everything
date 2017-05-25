@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.eclipse.jetty.server.handler.HandlerCollection
 import org.eclipse.jetty.server.handler.ResourceHandler
 import org.hibernate.criterion.Order
+import java.util.*
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
@@ -364,13 +365,13 @@ fun spitOrderFormPage() {
                 }
             }
         } else {
-            ctx.shitPassedFromBackToFront.pageID = AlPageID.orderCreated
+            ctx.shitPassedFromBackToFront.pageID = AlPageID.orderParams
 
             AlDocumentCategories.findByIDOrBitch(data.documentCategoryID)
             AlDocumentType.values().find {it.name == data.documentTypeID} ?: bitch("e63b006c-3cda-4db8-b7e0-e2413e980dbc")
 
             val order = alUAOrderRepo.save(newAlUAOrder(
-                state = UAOrderState.CUSTOMER_DRAFT,
+                uuid = UUID.randomUUID().toString(), state = UAOrderState.CUSTOMER_DRAFT,
                 email = email.value, contactName = contactName.value, phone = phone.value,
                 documentTitle = documentTitle.value, documentDetails = documentDetails.value,
                 documentTypeID = data.documentTypeID, documentCategoryID = data.documentCategoryID,

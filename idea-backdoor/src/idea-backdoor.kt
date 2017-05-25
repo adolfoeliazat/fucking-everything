@@ -23,6 +23,7 @@ import java.awt.MouseInfo
 import java.awt.Robot
 import java.awt.Toolkit
 import java.awt.datatransfer.DataFlavor
+import java.awt.datatransfer.StringSelection
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.io.File
@@ -229,6 +230,7 @@ private fun loadHotClass(className: String): Class<*> {
 }
 
 object CustomBuilds {
+    val robot = Robot()
 
     fun rerunAlrauneAndShowInBrowser(e: AnActionEvent) {
         val configurationName = "alraune.back.StartAlrauneBack"
@@ -262,16 +264,13 @@ object CustomBuilds {
                             ?: bitch("No necessary Chrome window")
                     User32.INSTANCE.SetForegroundWindow(hwnd) || bitch("Cannot bring Chrome to foreground")
                     val origLocation = MouseInfo.getPointerInfo().location
-                    val robot = Robot()
                     robot.mouseMove(600, 190) // Somewhere in page (or modal, so it won't be closed!) title
                     robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
                     robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
                     robot.mouseMove(origLocation.x, origLocation.y)
 
-                    robot.keyPress(KeyEvent.VK_CONTROL)
-                    robot.keyPress('R'.toInt())
-                    robot.keyRelease('R'.toInt())
-                    robot.keyRelease(KeyEvent.VK_CONTROL)
+//                    refreshBrowser()
+                    navigateBrowser("https://alraune.local/order?frontMessAround=messAroundFront201")
                 }
             }
 
@@ -303,6 +302,23 @@ object CustomBuilds {
 //            robot.keyRelease('R'.toInt())
 //            robot.keyRelease(KeyEvent.VK_CONTROL)
 //        }
+    }
+
+    private fun refreshBrowser() {
+        RobotPile.keyWithModifier(KeyEvent.VK_CONTROL, 'R')
+    }
+
+    private fun navigateBrowser(url: String) {
+        val clipboard = Toolkit.getDefaultToolkit().systemClipboard
+        val selection = StringSelection(url)
+        clipboard.setContents(selection, selection)
+
+        RobotPile.keyWithModifier(KeyEvent.VK_ALT, 'D')
+        Thread.sleep(100)
+        RobotPile.keyWithModifier(KeyEvent.VK_CONTROL, 'V')
+        RobotPile.key(KeyEvent.VK_ENTER)
+
+        // RobotPile.typeTextCR(url)
     }
 
 //    fun killme_buildAlrauneAndShowInBrowser(e: AnActionEvent) {
