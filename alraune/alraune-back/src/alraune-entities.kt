@@ -6,8 +6,9 @@ package alraune.back
 
 import vgrechka.spew.*
 
-@GEntity(table = "alraune_orders")
-interface AlOrder : GCommonEntityFields {
+@GEntity(table = "ua_orders")
+interface AlUAOrder : GCommonEntityFields {
+    var state: UAOrderState
     var email: String
     var contactName: String
     var phone: String
@@ -19,7 +20,7 @@ interface AlOrder : GCommonEntityFields {
     var numSources: Int
 }
 
-interface AlOrderRepository : GRepository<AlOrder> {
+interface AlUAOrderRepository : GRepository<AlUAOrder> {
 }
 
 

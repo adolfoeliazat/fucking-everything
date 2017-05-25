@@ -7,9 +7,7 @@ import alraune.shared.AlSharedPile
 import alraune.shared.Color
 import vgrechka.*
 import java.sql.Timestamp
-import java.text.SimpleDateFormat
 import java.time.Instant
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -85,19 +83,19 @@ object AlRenderPile {
         }
     }
 
-    fun renderOrderTitle(order: AlOrder): Renderable {
+    fun renderOrderTitle(order: AlUAOrder): Renderable {
         return kdiv{o->
             o- pageTitle(t("Order #", "Заказ №") + order.id)
             o- kh4(order.documentTitle)
         }
     }
 
-    fun renderOrderParams(order: AlOrder): Renderable {
+    fun renderOrderParams(order: AlUAOrder): Renderable {
         val f = AlFields.order
         return kdiv{o->
             o- row{o->
                 o- createdAtCol(3, order.createdAt)
-                o- col(3, f.status.title, t("TOTE", "Рассматривается"))
+                o- col(3, f.status.title, order.state.title)
             }
 
             o- row{o->

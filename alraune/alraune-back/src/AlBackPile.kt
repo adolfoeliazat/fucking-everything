@@ -4,6 +4,8 @@ import alraune.shared.AlSharedPile.escapeHTML
 import alraune.back.AlRenderPile.t
 import alraune.shared.AlCSS
 import alraune.shared.AlSharedPile
+import alraune.shared.Color
+import alraune.shared.Color.*
 import org.apache.commons.validator.routines.EmailValidator
 import vgrechka.*
 import java.util.concurrent.ConcurrentHashMap
@@ -209,7 +211,23 @@ data class Attrs(
 
 class ValidationResult(val sanitizedString: String, val error: String?)
 
+interface Titled {
+    val title: String
+}
 
+enum class UAOrderState(override val title: String, val icon: XIcon? = null, val style: String = "") : Titled {
+    // TODO:vgrechka Need this?
+    CREATED("Создан", null, "background-color: green;"),
+
+    CUSTOMER_DRAFT("Черновик", null, "background-color: green;"),
+    LOOKING_WRITERS("Ищем писателей", null, "background-color: green;"),
+    WAITING_PAYMENT("Ждем оплаты", null, "background-color: green;"),
+    WRITER_ASSIGNED("Писатель назначен", null, "background-color: green;"),
+    WAITING_EMAIL_CONFIRMATION("Ждем подтверждения имейла", null, "background-color: green;"),
+    WAITING_ADMIN_APPROVAL("Ждем одобрения админом", null, "background-color: $AMBER_100;"),
+    RETURNED_TO_CUSTOMER_FOR_FIXING("Заказчик фиксит заявку", null, "background-color: $RED_50;"),
+    IN_STORE("Ищем писателей", null, "background-color: $BLUE_100;")
+}
 
 
 

@@ -78,6 +78,8 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
     }
 
     companion object {
+        val hardcodedEnumTypes = setOf("UAOrderState")
+
         fun maybeQuestion(finder: FinderSpec) =
             finder.returnsNullable.thenElseEmpty {"?"}
 
@@ -266,38 +268,45 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
                             val sqlType = when (field.kind) {
                                 is FieldKind.Simple -> {
                                     val fieldTypeWithoutQuestion = field.type.replace(Regex("\\?$"), "")
-                                    val sql = when (fieldTypeWithoutQuestion) {
-                                        "Int" -> when (databaseDialect) {
-                                            SQLITE -> "integer"
-                                            POSTGRESQL -> "integer"
-                                            MYSQL -> "integer"
-                                        }
-                                        "Long" -> when (databaseDialect) {
-                                            SQLITE -> "bigint"
-                                            POSTGRESQL -> "bigint"
-                                            MYSQL -> "bigint"
-                                        }
-                                        "Boolean" -> when (databaseDialect) {
-                                            SQLITE -> "int"
-                                            POSTGRESQL -> "boolean"
-                                            MYSQL -> "boolean"
-                                        }
-                                        "String" -> when (databaseDialect) {
+                                    val sql = when {
+                                        fieldTypeWithoutQuestion in hardcodedEnumTypes -> when (databaseDialect) {
                                             SQLITE -> "text"
                                             POSTGRESQL -> "text"
                                             MYSQL -> "longtext"
                                         }
-                                        "ByteArray" -> when (databaseDialect) {
-                                            SQLITE -> "blob"
-                                            POSTGRESQL -> "bytea"
-                                            MYSQL -> "longblob"
+                                        else -> when (fieldTypeWithoutQuestion) {
+                                            "Int" -> when (databaseDialect) {
+                                                SQLITE -> "integer"
+                                                POSTGRESQL -> "integer"
+                                                MYSQL -> "integer"
+                                            }
+                                            "Long" -> when (databaseDialect) {
+                                                SQLITE -> "bigint"
+                                                POSTGRESQL -> "bigint"
+                                                MYSQL -> "bigint"
+                                            }
+                                            "Boolean" -> when (databaseDialect) {
+                                                SQLITE -> "int"
+                                                POSTGRESQL -> "boolean"
+                                                MYSQL -> "boolean"
+                                            }
+                                            "String" -> when (databaseDialect) {
+                                                SQLITE -> "text"
+                                                POSTGRESQL -> "text"
+                                                MYSQL -> "longtext"
+                                            }
+                                            "ByteArray" -> when (databaseDialect) {
+                                                SQLITE -> "blob"
+                                                POSTGRESQL -> "bytea"
+                                                MYSQL -> "longblob"
+                                            }
+                                            "PHPTimestamp" -> when (databaseDialect) {
+                                                SQLITE -> imf("696a10c7-83f1-4562-8b71-2a1d6e48a08c")
+                                                POSTGRESQL -> imf("6d372efa-62d0-4573-a98f-f8134f91b4ae")
+                                                MYSQL -> "datetime"
+                                            }
+                                            else -> wtf("field.type = ${field.type}    5e84c6fb-b523-43cc-aa45-bdef1dca7ff2")
                                         }
-                                        "PHPTimestamp" -> when (databaseDialect) {
-                                            SQLITE -> imf("696a10c7-83f1-4562-8b71-2a1d6e48a08c")
-                                            POSTGRESQL -> imf("6d372efa-62d0-4573-a98f-f8134f91b4ae")
-                                            MYSQL -> "datetime"
-                                        }
-                                        else -> wtf("field.type = ${field.type}    5e84c6fb-b523-43cc-aa45-bdef1dca7ff2")
                                     }
                                     if (field.type.endsWith("?"))
                                         sql
@@ -430,7 +439,7 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
                                             }
                                         }
 
-                                        val isEntity = type !in setOf("Int", "Long", "Boolean", "String", "XTimestamp", "ByteArray")
+                                        val isEntity = type !in setOf("Int", "Long", "Boolean", "String", "XTimestamp", "ByteArray") + hardcodedEnumTypes
                                         val isInToString = !isEntity && type !in setOf("ByteArray")
 
                                         fields += FieldSpec(name = name,

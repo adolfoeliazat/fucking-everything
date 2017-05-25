@@ -146,6 +146,38 @@ object AlCSS_Back {
         val buf = StringBuilder()
         AlCSS.addShit(buf)
 
+        buf.append("""
+            body {overflow-x: hidden; padding-right: 0px !important;}
+
+            button:disabled {cursor: default !important;}
+            input:disabled {cursor: default !important;}
+            textarea:disabled {cursor: default !important;}
+            select:disabled {cursor: default !important;}
+
+            .form-control:focus {border-color: #b0bec5; box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(176,190,197,.6);}
+
+            .btn-primary {background-color: #78909c; border-color: #546e7a;}
+            .btn-primary:hover {background-color: #546e7a; border-color: #37474f;}
+            .btn-primary:focus {background-color: #455a64; border-color: #263238; outline-color: #b0bec5;}
+            .btn-primary:focus:hover {background-color: #455a64; border-color: #263238;}
+            .btn-primary:active {background-color: #455a64; border-color: #263238;}
+            .btn-primary:active:focus {background-color: #455a64; border-color: #263238; outline-color: #b0bec5;}
+            .btn-primary:active:hover {background-color: #455a64; border-color: #263238;}
+
+            .btn-primary.disabled.focus,
+            .btn-primary.disabled:focus,
+            .btn-primary.disabled:hover,
+            .btn-primary[disabled].focus,
+            .btn-primary[disabled]:focus,
+            .btn-primary[disabled]:hover,
+            fieldset[disabled] .btn-primary.focus,
+            fieldset[disabled] .btn-primary:focus,
+            fieldset[disabled] .btn-primary:hover {
+                background-color: #78909c;
+                border-color: #546e7a;
+            }
+        """)
+
         for (prop in AlCSS::class.memberProperties) {
             if (prop.returnType.classifier == AlCSS.Pack::class) {
                 val pack = prop.get(AlCSS) as AlCSS.Pack
@@ -327,7 +359,7 @@ fun spitOrderFormPage() {
                 o- documentDetails.render()
                 o- kdiv(Attrs(id = AlDomID.filePickerContainer))
                 o- kdiv{o->
-                    o- kbutton(Attrs(id = AlDomID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Вперед"))
+                    o- kbutton(Attrs(id = AlDomID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Продолжить"))
                     o- kdiv.id(AlDomID.ticker){}
                 }
             }
@@ -337,13 +369,18 @@ fun spitOrderFormPage() {
             AlDocumentCategories.findByIDOrBitch(data.documentCategoryID)
             AlDocumentType.values().find {it.name == data.documentTypeID} ?: bitch("e63b006c-3cda-4db8-b7e0-e2413e980dbc")
 
-            val order = alOrderRepo.save(newAlOrder(
+            val order = alUAOrderRepo.save(newAlUAOrder(
+                state = UAOrderState.CUSTOMER_DRAFT,
                 email = email.value, contactName = contactName.value, phone = phone.value,
                 documentTitle = documentTitle.value, documentDetails = documentDetails.value,
                 documentTypeID = data.documentTypeID, documentCategoryID = data.documentCategoryID,
                 numPages = numPages.value.toInt(), numSources = numSources.value.toInt()))
             o- renderOrderTitle(order)
-            o- kdiv.className(AlCSS.successBanner).text(t("TOTE", "Все круто, заказ создан. Мы с тобой скоро свяжемся"))
+//            o- kdiv.className(AlCSS.successBanner).text(t("TOTE", "Все круто, заказ создан. Мы с тобой скоро свяжемся"))
+            o- kdiv.className(AlCSS.submitForReviewBanner){o->
+                o- kdiv(Style(flexGrow = "1")).text(t("TOTE", "Убедись, что все верно. Подредактируй, если нужно. Возможно, добавь файлы. А затем..."))
+                o- kbutton(Attrs(id = AlDomID.submitOrderForReviewButton, className = "btn btn-primary"), t("TOTE", "Отправить на проверку"))
+            }
             o- AlRenderPile.renderOrderParams(order)
         }
     }

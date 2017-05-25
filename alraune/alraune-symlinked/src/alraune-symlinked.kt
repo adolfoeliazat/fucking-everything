@@ -48,6 +48,7 @@ object AlDomID {
     val replaceableContent by myName()
     val documentCategoryPickerContainer by myName()
     val filePickerContainer by myName()
+    val submitOrderForReviewButton by myName()
 }
 
 object AlPageID {
@@ -72,6 +73,17 @@ object AlCSS {
         padding-left: 1rem;
         padding-top: 1rem;
         padding-bottom: 1rem;""")
+
+    val submitForReviewBanner by Pack("""
+        background-color: #eceff1;
+        border-left: 3px solid #90a4ae;
+        margin-bottom: 1.5rem;
+        padding-left: 1rem;
+        padding-right: 0.5rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        display: flex;
+        align-items: center;""")
 
     fun addShit(buf: StringBuilder) {
         fun forID(id: String, pack: Pack) {
