@@ -186,12 +186,12 @@ object AlCSS {
 )
 
 @Ser data class DumpBackCodePathPostData(
-    val pieceOfShitFromBackID: String
+    val requestContextID: String
 )
 
 class PieceOfShitFromBack {
     var funnyChars = "fuck & shit < 'bitch' \"boobs\" >"
-    var pieceOfShitFromBackID = "boobs-pieceOfShitFromBackID"
+    var requestContextID = "boobs-requestContextID"
     var baseURL = "boobs-baseURL"
     var logOfShitters = ""
     val debug_domElementStackTraces = true

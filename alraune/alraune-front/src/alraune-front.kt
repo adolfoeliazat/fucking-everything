@@ -121,7 +121,7 @@ object AlFrontDebug {
     fun dumpBackCodePath() {
         async {
             AlFrontPile.post(AlPagePath.debug_post_dumpBackCodePath, JSON.stringify(
-                DumpBackCodePathPostData(pieceOfShitFromBackID = AlFrontPile.shitFromBack.pieceOfShitFromBackID)))
+                DumpBackCodePathPostData(requestContextID = AlFrontPile.shitFromBack.requestContextID)))
             clog("Sent debug request")
         }
     }

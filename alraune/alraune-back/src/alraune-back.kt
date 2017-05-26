@@ -85,11 +85,12 @@ object StartAlrauneBack {
                             }
                         }
 
-                        shitToFront("c125ccc7-3bdc-499f-ab19-a12ecc826fa5") {
-                            it.pieceOfShitFromBackID = DebugPile.nextPUID().toString()
-                            AlBackDebug.idToPieceOfShitFromBack[it.pieceOfShitFromBackID] = it
+                        shitToFront("c125ccc7-3bdc-499f-ab19-a12ecc826fa5") {shit->
+                            val requestContextID = AlRequestContext.the.requestContextID
+                            shit.requestContextID = requestContextID
+                            AlBackDebug.idToRequestContext[requestContextID] = AlRequestContext.the
 
-                            it.baseURL = AlBackPile0.baseURL
+                            shit.baseURL = AlBackPile0.baseURL
                         }
 
                         log.debug("req.pathInfo = ${req.pathInfo}")
@@ -173,9 +174,21 @@ private fun handlePost_debug_post_dumpStackByID() {
              .joinToString("\n"))
 }
 
+class CodeStep(val title: String, val throwableForStack: Throwable, val stackStringLinesToDrop: Int)
+
 private fun handlePost_debug_post_dumpBackCodePath() {
     val data = readPostData(DumpBackCodePathPostData::class)
-    clog("=============== pieceOfShitFromBackID = ${data.pieceOfShitFromBackID}")
+    clog("\n=============== requestContextID = ${data.requestContextID} ===================")
+    val ctx = AlBackDebug.idToRequestContext[data.requestContextID] ?: bitch("data.requestID = ${data.requestContextID}    225159bd-f456-4cb2-9503-b8e6be6d6139")
+    for ((index, codeStep) in ctx.codeSteps.withIndex()) {
+        clog()
+        clog("${index + 1}) ${codeStep.title}")
+        clog(codeStep.throwableForStack.stackTraceString
+                 .lines()
+                 .drop(codeStep.stackStringLinesToDrop)
+                 .map {"    $it"}
+                 .joinToString("\n"))
+    }
 }
 
 
@@ -241,12 +254,12 @@ interface Should {
 }
 
 class AlRequestContext {
+    val requestContextID = DebugPile.nextPUID().toString()
     var req by notNullOnce<HttpServletRequest>()
     var res by notNullOnce<HttpServletResponse>()
     val shitPassedFromBackToFront = PieceOfShitFromBack()
     var getParams by notNullOnce<AlGetParams>()
-    private var nextUID = 1
-//    val scriptPile = StringBuilder()
+    val codeSteps = mutableListOf<CodeStep>()
 
     companion object {
         private val threadLocal = ThreadLocal<AlRequestContext>()
@@ -255,8 +268,6 @@ class AlRequestContext {
             get() = threadLocal.get()!!
             set(value) {threadLocal.set(value)}
     }
-
-    fun nextUID() = nextUID++
 
     val isPost get() = req.method == "POST"
 
@@ -308,6 +319,10 @@ private fun insideMarkers(id: String, beginMarker: String, endMarker: String, co
 }
 
 fun shitToFront(shitterUID: String, block: (PieceOfShitFromBack) -> Unit) {
+    AlRequestContext.the.codeSteps += CodeStep(
+        title = "shitToFront    $shitterUID",
+        throwableForStack = Exception("Capturing stack"),
+        stackStringLinesToDrop = 2)
     shitForFront.logOfShitters += shitterUID + "; "
     block(shitForFront)
 }
@@ -633,7 +648,7 @@ private fun handlePost_setOrderParams() {
 }
 
 object AlBackDebug {
-    val idToPieceOfShitFromBack = ConcurrentHashMap<String, PieceOfShitFromBack>()
+    val idToRequestContext = ConcurrentHashMap<String, AlRequestContext>()
 }
 
 
