@@ -4,8 +4,7 @@
 
 package alraune.back
 
-import alraune.shared.AlDocumentCategories
-import alraune.shared.OrderCreationForm
+import alraune.shared.OrderCreationFormPostData
 import vgrechka.spew.*
 
 @GEntity(table = "ua_orders")
@@ -22,7 +21,7 @@ interface AlUAOrder : GCommonEntityFields {
     var numPages: Int
     var numSources: Int
 
-    fun toForm() = OrderCreationForm(
+    fun toForm() = OrderCreationFormPostData(
         orderUUID = null,
         email = email, name = contactName, phone = phone, documentTypeID = documentTypeID, documentTitle = documentTitle,
         documentDetails = documentDetails, documentCategoryID = documentCategoryID,

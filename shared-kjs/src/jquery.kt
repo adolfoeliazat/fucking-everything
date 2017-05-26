@@ -38,6 +38,7 @@ external class JQuery() {
 //    fun change(handler: Element.() -> Unit): JQuery
 
     fun append(str: String): JQuery
+    fun append(x: JQuery): JQuery
     fun ready(handler: () -> Unit): JQuery
     fun text(text: String): JQuery
     fun slideUp(): JQuery

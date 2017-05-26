@@ -22,7 +22,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.eclipse.jetty.server.handler.HandlerCollection
 import org.eclipse.jetty.server.handler.ResourceHandler
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 import kotlin.reflect.full.declaredMemberProperties
@@ -65,8 +67,6 @@ object StartAlrauneBack {
             val servletHandler = ServletHandler()-{o->
                 val servlet = object : HttpServlet() {
                     override fun service(req: HttpServletRequest, res: HttpServletResponse) {
-                        val path_debug_dumpStackByID = "/debug_dumpStackByID"
-
                         AlRequestContext.the = AlRequestContext().also {
                             it.req = req
                             it.res = res
@@ -83,8 +83,13 @@ object StartAlrauneBack {
                                     }.toTypedArray())
                                 }
                             }
+                        }
 
-                            it.shitPassedFromBackToFront.debug_urlForSendingStackID = makeURL(path_debug_dumpStackByID)
+                        shitToFront("c125ccc7-3bdc-499f-ab19-a12ecc826fa5") {
+                            it.pieceOfShitFromBackID = DebugPile.nextPUID().toString()
+                            AlBackDebug.idToPieceOfShitFromBack[it.pieceOfShitFromBackID] = it
+
+                            it.baseURL = AlBackPile0.baseURL
                         }
 
                         log.debug("req.pathInfo = ${req.pathInfo}")
@@ -96,18 +101,9 @@ object StartAlrauneBack {
                                 res.contentType = "text/css; charset=utf-8"
                                 res.writer.print(AlCSS_Back.sheet)
                             }
-                            path_debug_dumpStackByID -> {
-                                val json = req.reader.readText()
-                                val bean = ObjectMapper().readValue(json, DumpStackByIDRequest::class.java)
-                                val stack = AlBackPile.idToTagCreationStack[bean.stackID] ?: bitch("5aaece41-c3f3-4eae-8c98-e7f69147ef3b")
-                                clog(stack
-                                         .lines()
-                                         .filter {line-> !listOf(
-                                             "Tag.<init>",
-                                             "TagCtor.invoke")
-                                             .any {line.contains(it)}}
-                                         .joinToString("\n"))
-                            }
+                            // TODO:vgrechka Unduplicate
+                            AlPagePath.debug_post_dumpStackByID -> handlePost_debug_post_dumpStackByID()
+                            AlPagePath.debug_post_dumpBackCodePath -> handlePost_debug_post_dumpBackCodePath()
                             AlPagePath.orderCreationForm -> handleGet_orderCreationForm()
                             AlPagePath.post_createOrder -> handlePost_createOrder()
                             AlPagePath.orderParams -> handleGet_orderParams()
@@ -160,6 +156,26 @@ object StartAlrauneBack {
         server.join()
     }
 
+
+}
+
+private fun handlePost_debug_post_dumpStackByID() {
+    val data = readPostData(DumpStackByIDPostData::class)
+    val stack = AlBackPile.idToTagCreationStack[data.stackID] ?: bitch("5aaece41-c3f3-4eae-8c98-e7f69147ef3b")
+    clog(stack
+             .lines()
+             .filter {line ->
+                 !listOf(
+                     "Tag.<init>",
+                     "TagCtor.invoke")
+                     .any {line.contains(it)}
+             }
+             .joinToString("\n"))
+}
+
+private fun handlePost_debug_post_dumpBackCodePath() {
+    val data = readPostData(DumpBackCodePathPostData::class)
+    clog("=============== pieceOfShitFromBackID = ${data.pieceOfShitFromBackID}")
 }
 
 
@@ -227,7 +243,7 @@ interface Should {
 class AlRequestContext {
     var req by notNullOnce<HttpServletRequest>()
     var res by notNullOnce<HttpServletResponse>()
-    val shitPassedFromBackToFront = ShitPassedFromBackToFront()
+    val shitPassedFromBackToFront = PieceOfShitFromBack()
     var getParams by notNullOnce<AlGetParams>()
     private var nextUID = 1
 //    val scriptPile = StringBuilder()
@@ -291,7 +307,7 @@ private fun insideMarkers(id: String, beginMarker: String, endMarker: String, co
     }
 }
 
-fun shitToFront(shitterUID: String, block: (ShitPassedFromBackToFront) -> Unit) {
+fun shitToFront(shitterUID: String, block: (PieceOfShitFromBack) -> Unit) {
     shitForFront.logOfShitters += shitterUID + "; "
     block(shitForFront)
 }
@@ -299,7 +315,7 @@ fun shitToFront(shitterUID: String, block: (ShitPassedFromBackToFront) -> Unit) 
 private fun spitOrderCreationFormPage(fields: OrderParamsFields) {
     shitToFront("cc6b96c4-d89b-41e9-b4db-85c6d985366e") {
         it.pageID = AlPageID.orderCreationForm
-        it.postURL = makeURL(AlPagePath.post_createOrder)
+        it.postPath = makeURLPart(AlPagePath.post_createOrder)
     }
     spitUsualPage(replaceableContent(
         kdiv()
@@ -307,9 +323,9 @@ private fun spitOrderCreationFormPage(fields: OrderParamsFields) {
             .add(renderOrderParamsForm(fields))))
 }
 
-private fun readPostDataAsOrderCreationForm(): OrderCreationForm {
+private fun <T : Any> readPostData(klass: KClass<T>): T {
     val dataString = AlRequestContext.the.req.reader.readText()
-    return ObjectMapper().readValue(dataString, OrderCreationForm::class.java)
+    return ObjectMapper().readValue(dataString, klass.java)
 }
 
 fun renderOrderParamsForm(fields: OrderParamsFields): Renderable {
@@ -327,7 +343,7 @@ fun renderOrderParamsForm(fields: OrderParamsFields): Renderable {
         o- row(marginBottom = null){o->
             o- col(4, kdiv.className("form-group"){o->
                 o- klabel(text = f.documentType.title)
-                o- kselect(Attrs(id = AlSharedPile.fieldDOMID(name = OrderCreationForm::documentTypeID.name),
+                o- kselect(Attrs(id = AlSharedPile.fieldDOMID(name = OrderCreationFormPostData::documentTypeID.name),
                                  className = "form-control")) {o->
                     for (value in AlDocumentType.values()) {
                         o- koption(Attrs(value = value.name,
@@ -366,7 +382,7 @@ fun shitBigReplacementToFront(shitterUID: String) {
 private fun spitOrderParamsPage(order: AlUAOrder, fields: OrderParamsFields) {
     shitToFront("054bb78d-238e-4313-9b75-820c5a37097c") {
         it.pageID = AlPageID.orderParams
-        it.postURL = makeURL(AlPagePath.post_setOrderParams)
+        it.postPath = makeURLPart(AlPagePath.post_setOrderParams)
         it.orderUUID = order.uuid
     }
 
@@ -383,11 +399,11 @@ private fun spitOrderParamsPage(order: AlUAOrder, fields: OrderParamsFields) {
         o- kdiv(Style(position = "relative")){o->
             o- kdiv(Attrs(className = "nav nav-tabs", style = Style(marginBottom = "0.5rem"))){o->
                 o- kli.className("active")
-                    .add(ka(Attrs(href = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))))
+                    .add(ka(Attrs(href = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))))
                              .add(t("Parameters", "Параметры")))
 
                 o- kli.className("")
-                    .add(ka(Attrs(href = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))))
+                    .add(ka(Attrs(href = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))))
                              .add(t("Files", "Файлы")))
             }
 
@@ -414,8 +430,8 @@ private fun spitOrderParamsPage(order: AlUAOrder, fields: OrderParamsFields) {
     }))
 }
 
-fun makeURL(path: String, params: AlGetParams = AlGetParams()): String {
-    val buf = StringBuilder("${AlBackPile0.baseURL}$path")
+fun makeURLPart(path: String, params: AlGetParams = AlGetParams()): String {
+    val buf = StringBuilder(path)
     var first = true
     for (p in AlGetParams::class.declaredMemberProperties) {
         p.get(params)?.let {value->
@@ -536,7 +552,7 @@ fun declareField(ctx: DeclareFieldContext,
 }
 
 
-class OrderParamsFields(val data: OrderCreationForm) {
+class OrderParamsFields(val data: OrderCreationFormPostData) {
     val f = AlFields.order
     val v = AlBackPile
     val dfctx = DeclareFieldContext()
@@ -552,7 +568,7 @@ class OrderParamsFields(val data: OrderCreationForm) {
 
 
 private fun handlePost_createOrder() {
-    val fields = OrderParamsFields(readPostDataAsOrderCreationForm())
+    val fields = OrderParamsFields(readPostData(OrderCreationFormPostData::class))
     if (fields.dfctx.hasErrors) {
         spitOrderCreationFormPage(fields)
     } else {
@@ -566,7 +582,7 @@ private fun handlePost_createOrder() {
 
         shitToFront("cce77e9c-e7f2-4f17-9554-0e27ee982ed2") {
             it.hasErrors = false
-            it.historyPushState = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))
+            it.historyPushState = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))
         }
         shitBigReplacementToFront("d2039b9e-7c7e-4487-b230-78203c35fdf7")
         spitOrderParamsPage(order, fields)
@@ -582,7 +598,7 @@ private fun handlePost_setOrderParams() {
     shitToFront("b4e2fd47-3a65-41a2-be93-959118883938") {
         it.hasErrors = true
     }
-    val data = readPostDataAsOrderCreationForm()
+    val data = readPostData(OrderCreationFormPostData::class)
     val uuid = data.orderUUID ?: bitch("4c7f82b3-6347-4f25-8949-2f96e5af4713")
     val order = alUAOrderRepo.findByUuid(uuid) ?: bitch("0ef3a079-e1c6-41bf-bfa9-8540ae9d0082")
     val fields = OrderParamsFields(data)
@@ -608,7 +624,7 @@ private fun handlePost_setOrderParams() {
         alUAOrderRepo.save(order)
 
         shitToFront("9b4f1a3e-c2ca-4bfb-a567-4a612caa7fc9") {
-            it.historyPushState = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))
+            it.historyPushState = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))
             it.hasErrors = false
         }
         shitBigReplacementToFront("917b0edd-df3c-499d-9ffe-93f4152bddfb")
@@ -616,6 +632,9 @@ private fun handlePost_setOrderParams() {
     }
 }
 
+object AlBackDebug {
+    val idToPieceOfShitFromBack = ConcurrentHashMap<String, PieceOfShitFromBack>()
+}
 
 
 

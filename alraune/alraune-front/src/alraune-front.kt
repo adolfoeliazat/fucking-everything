@@ -7,6 +7,7 @@ import vgrechka.*
 import vgrechka.kjs.*
 import vgrechka.kjs.JQueryPile.byID
 import vgrechka.kjs.JQueryPile.byIDSingle
+import vgrechka.kjs.JQueryPile.jqbody
 import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.js.Promise
@@ -27,19 +28,7 @@ fun main(args: Array<String>) {
     window.asDynamic()[AlFrontDebug::class.simpleName] = AlFrontDebug
 
     jqDocumentReady {
-        document.body!!.addEventListener("click", {e->
-            e as MouseEvent
-            if (AlFrontPile.shitFromBack.debug_domElementStackTraces && e.ctrlKey) {
-                e.preventAndStop()
-                // clog("target =", e.target)
-                val el = e.target as HTMLElement
-                val stackID = el.getAttribute(AlSharedPile.attribute.data_tagCreationStackID) ?: bitch("1a23fa57-0fd2-404a-82cf-b300294aa6cc")
-                async {
-                    AlFrontPile.post(AlFrontPile.shitFromBack.debug_urlForSendingStackID, JSON.stringify(DumpStackByIDRequest(stackID)))
-                    clog("Sent request for dumping stackID $stackID")
-                }
-            }
-        }, /*capturingPhase*/ true)
+        initDebugFacilities()
 
         parseShitFromBack()
         AlFrontPile.initShit()
@@ -49,6 +38,64 @@ fun main(args: Array<String>) {
             val f = AlFrontDebug.asDynamic()[it] as? KFunction0<*> ?: bitch("$it is not a function")
             f()
         }
+    }
+}
+
+private fun initDebugFacilities() {
+    val body = document.body!!
+    body.addEventListener("click", {e ->
+        e as MouseEvent
+        if (AlFrontPile.shitFromBack.debug_domElementStackTraces && e.ctrlKey) {
+            e.preventAndStop()
+            // clog("target =", e.target)
+            val el = e.target as HTMLElement
+            val stackID = el.getAttribute(AlSharedPile.attribute.data_tagCreationStackID) ?: bitch("1a23fa57-0fd2-404a-82cf-b300294aa6cc")
+            async {
+                AlFrontPile.post(AlPagePath.debug_post_dumpStackByID, JSON.stringify(DumpStackByIDPostData(stackID)))
+                clog("Sent request for dumping stackID $stackID")
+            }
+        }
+    }, /*capturingPhase*/ true)
+
+    run {
+        val drawerClass = "c-5ccefe3e-7cbf-4a0f-8d8e-3883f8dda8e3"
+        val linkClass = "c-dc1eb630-2231-4eaf-b9a7-44b425badf7d"
+        val linkStyle = "{display: block; color: white; padding: 2px;}"
+        jqbody.append("""
+            <style>
+                .$drawerClass {
+                    background: gray;
+                    width: 3px;
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    bottom: 0;
+                    overflow-x: hidden;
+                    opacity: 0.75;
+                }
+                .$drawerClass:hover {
+                    width: 150px;
+                }
+                .$linkClass $linkStyle
+                .$linkClass:hover $linkStyle
+                .$linkClass:visited $linkStyle
+                .$linkClass:active $linkStyle
+                .$linkClass:focus $linkStyle
+            </style>
+        """)
+        val drawerJQ = jq("<div class='$drawerClass'></div>")
+        jqbody.append(drawerJQ)
+
+        fun addItem(f: KFunction0<Unit>) {
+            val itemJQ = jq("<a class='$linkClass' href='#'>${f.name}</a>")
+            drawerJQ.append(itemJQ)
+            itemJQ.on("click") {
+                it.preventAndStop()
+                f()
+            }
+        }
+
+        addItem(AlFrontDebug::dumpBackCodePath)
     }
 }
 
@@ -64,7 +111,20 @@ object AlFrontDebug {
 
     var messAroundFront201: (() -> Unit)? = null
     var messAroundFront202: (() -> Unit)? = null
+
+    fun messAroundFront203() {
+//        byIDSingle(AlDomID.createOrderForm_submitButton).click()
+    }
+
     var messAroundFront301: (() -> Unit)? = null
+
+    fun dumpBackCodePath() {
+        async {
+            AlFrontPile.post(AlPagePath.debug_post_dumpBackCodePath, JSON.stringify(
+                DumpBackCodePathPostData(pieceOfShitFromBackID = AlFrontPile.shitFromBack.pieceOfShitFromBackID)))
+            clog("Sent debug request")
+        }
+    }
 }
 
 private fun parseShitFromBack() {
@@ -72,7 +132,7 @@ private fun parseShitFromBack() {
         val j = byIDSingle(AlDomID.shitPassedFromBackToFront)
         val dataShit = j.attr(AlSharedPile.attribute.data_shit)
         // clog("dataShit =", dataShit)
-        JSON.parse<ShitPassedFromBackToFront>(dataShit)
+        JSON.parse<PieceOfShitFromBack>(dataShit)
     }
     clog("shitFromBack =", AlFrontPile.shitFromBack)
 }
@@ -80,7 +140,7 @@ private fun parseShitFromBack() {
 
 object AlFrontPile {
     val debug_sleepBeforePost = 1000
-    var shitFromBack by notNull<ShitPassedFromBackToFront>()
+    var shitFromBack by notNull<PieceOfShitFromBack>()
     var pristineModalContentHTML by notNull<String>()
 
 //    object google {
@@ -98,13 +158,13 @@ object AlFrontPile {
         byIDSingle(AlSharedPile.fieldDOMID(prop)).setVal(prop.get())
     }
 
-    suspend fun post(url: String, rawData: Any?) = await(postPromise(url, rawData))
+    suspend fun post(path: String, rawData: Any?) = await(postPromise(path, rawData))
 
-    fun postPromise(url: String, rawData: Any?): Promise<String> {
+    fun postPromise(path: String, rawData: Any?): Promise<String> {
 //        val stackBeforeXHR: String = CaptureStackException().stack
         return Promise {resolve, reject ->
             val xhr = js("new XMLHttpRequest()")
-            xhr.open("POST", url)
+            xhr.open("POST", shitFromBack.baseURL + path)
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
 
             xhr.onreadystatechange = {
@@ -114,7 +174,7 @@ object AlFrontPile {
                         // clog("response", response)
                         resolve(response)
                     } else {
-                        reject(Exception("Got shitty backend response from $url: status = ${xhr.status}"))
+                        reject(Exception("Got shitty backend response from $path: status = ${xhr.status}"))
                     }
                 }
             }
@@ -177,23 +237,23 @@ object AlFrontPile {
             showTicker()
 
             @Suppress("UNUSED_VARIABLE")
-            val clazz = window.asDynamic()["alraune-front"].alraune.shared[OrderCreationForm::class.simpleName]
+            val clazz = window.asDynamic()["alraune-front"].alraune.shared[OrderCreationFormPostData::class.simpleName]
             val inst = js("new clazz()")
             val propNames = JSObject.getOwnPropertyNames(inst)
-            for (propName in propNames.toList() - listOf(OrderCreationForm::documentCategoryID.name,
-                                                         OrderCreationForm::orderUUID.name)) {
+            for (propName in propNames.toList() - listOf(OrderCreationFormPostData::documentCategoryID.name,
+                                                         OrderCreationFormPostData::orderUUID.name)) {
                 clog("propName", propName)
                 inst[propName] = byIDSingle(AlSharedPile.fieldDOMID(propName)).getVal()
             }
-            inst[OrderCreationForm::documentCategoryID.name] = documentCategoryPicker.getSelectedCategoryID()
-            inst[OrderCreationForm::orderUUID.name] = shitFromBack.orderUUID
+            inst[OrderCreationFormPostData::documentCategoryID.name] = documentCategoryPicker.getSelectedCategoryID()
+            inst[OrderCreationFormPostData::orderUUID.name] = shitFromBack.orderUUID
             val data = JSON.stringify(inst)
             // clog("data", data)
             async {
                 sleep(debug_sleepBeforePost)
                 // AlFrontPile.sleepTillEndOfTime()
 
-                val html = post(shitFromBack.postURL, data)
+                val html = post(shitFromBack.postPath, data)
                 // clog("html", html)
 
                 fun jerk(beginMarker: String, endMarker: String, idToReplace: String) {
@@ -204,7 +264,9 @@ object AlFrontPile {
                 jerk(AlSharedPile.beginShitPassedFromBackToFrontMarker, AlSharedPile.endShitPassedFromBackToFrontMarker, AlDomID.shitPassedFromBackToFront)
                 parseShitFromBack()
                 val modalJQ = byID(AlDomID.orderParamsModal).asDynamic()
-                jerk(shitFromBack.replacement_beginMarker, shitFromBack.replacement_endMarker, shitFromBack.replacement_id)
+                jerk(shitFromBack.replacement_beginMarker ?: wtf("3172e16b-1fd7-4774-b661-de17be1676dc"),
+                     shitFromBack.replacement_endMarker ?: wtf("cc342050-d17f-4fb5-b316-b1f52c8371af"),
+                     shitFromBack.replacement_id ?: wtf("40531be5-b7de-47e3-9f7e-6ff4b5f12c4c"))
                 val hasErrors = shitFromBack.hasErrors ?: wtf("b7b2b8ef-dd9c-4212-bbc7-842d6ef91af0")
                 if (!hasErrors) {
                     modalJQ.modal("hide")
@@ -214,9 +276,9 @@ object AlFrontPile {
             }
         }
 
-        fun make2xx(tamperWith: (OrderCreationForm) -> OrderCreationForm): () -> Unit {
+        fun make2xx(tamperWith: (OrderCreationFormPostData) -> OrderCreationFormPostData): () -> Unit {
             return {
-                val data = tamperWith(OrderCreationForm(
+                val data = tamperWith(OrderCreationFormPostData(
                     orderUUID = "boobs",
                     email = "iperdonde@mail.com",
                     name = "Иммануил Пердондэ",

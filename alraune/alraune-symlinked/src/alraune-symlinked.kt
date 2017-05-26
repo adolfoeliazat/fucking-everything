@@ -66,6 +66,8 @@ object AlPageID {
 }
 
 object AlPagePath {
+    val debug_post_dumpStackByID by slashMyName()
+    val debug_post_dumpBackCodePath by slashMyName()
     val orderCreationForm by slashMyName()
     val post_createOrder by slashMyName()
     val orderParams by slashMyName()
@@ -166,7 +168,7 @@ object AlCSS {
 }
 
 
-@Ser data class OrderCreationForm(
+@Ser data class OrderCreationFormPostData(
     val orderUUID: String?,
     val email: String,
     val name: String,
@@ -179,22 +181,27 @@ object AlCSS {
     val numSources: String
 )
 
-@Ser data class DumpStackByIDRequest(
+@Ser data class DumpStackByIDPostData(
     val stackID: String
 )
 
-class ShitPassedFromBackToFront {
+@Ser data class DumpBackCodePathPostData(
+    val pieceOfShitFromBackID: String
+)
+
+class PieceOfShitFromBack {
     var funnyChars = "fuck & shit < 'bitch' \"boobs\" >"
+    var pieceOfShitFromBackID = "boobs-pieceOfShitFromBackID"
+    var baseURL = "boobs-baseURL"
     var logOfShitters = ""
     val debug_domElementStackTraces = true
     var pageID: String = "boobs-pageID"
-    var postURL: String = "boobs-postURL"
+    var postPath: String = "boobs-postPath"
     var documentCategoryID = "boobs-documentCategoryID"
-    var debug_urlForSendingStackID = "boobs-debug_urlForSendingStackID"
     var historyPushState: String? = null
-    var replacement_beginMarker = "boobs-replacement_beginMarker"
-    var replacement_endMarker = "boobs-replacement_endMarker"
-    var replacement_id = "boobs-replacement_id"
+    var replacement_beginMarker: String? = null
+    var replacement_endMarker: String? = null
+    var replacement_id: String? = null
     var orderUUID = "boobs-orderUUID"
     var hasErrors: Boolean? = null
 }
