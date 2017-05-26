@@ -12,7 +12,9 @@ import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.js.Promise
 import kotlin.properties.Delegates.notNull
+import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KFunction0
+import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 
 // https://alraune.local/orderCreationForm?frontMessAround=messAroundFront201
@@ -186,6 +188,8 @@ class ResolvableShit<T> {
     }
 }
 
+fun ResolvableShit<Unit>.resolve() = this.resolve(Unit)
+
 object AlFrontDebug {
     val AlFrontPile = alraune.front.AlFrontPile
 
@@ -204,39 +208,96 @@ object AlFrontDebug {
         }
     }
 
+    suspend fun clickButtonAndAwaitModalShown(buttonID: String) {
+        val lock = AlFrontPile.modalShownLock
+        lock.reset()
+        byIDSingle(buttonID).click()
+        lock.pauseTestFromTest()
+    }
+
+    suspend fun awaitModalHiddenAfterDoing(block: suspend () -> Unit) {
+        val lock = AlFrontPile.modalHiddenLock
+        lock.reset()
+        block()
+        lock.pauseTestFromTest()
+    }
+
     fun messAroundFront203() {
         async {
-            clickSubmitAndAwaitPageInit()
-            clog("yyyyyyyeeeeeeeahhhhhhh")
-            val data = OrderCreationFormPostData(
-                orderUUID = "boobs",
-                email = "iperdonde@mail.com",
-                name = "Иммануил Пердондэ",
-                phone = "+38 (068) 4542823",
-                documentTypeID = "PRACTICE",
-                documentTitle = "Как я пинал хуи на практике",
-                documentDetails = "Детали? Я ебу, какие там детали...",
-                documentCategoryID = "boobs",
-                numPages = "35",
-                numSources = "7")
-            // TODO:vgrechka @improve d0fc960d-76be-4a0b-969c-7bbf94275e09
-            val o = AlFrontPile::populateTextField
-            o(data::email)
-            o(data::name)
-            o(data::phone)
-            o(data::documentTitle)
-            o(data::documentDetails)
-            o(data::numPages)
-            o(data::numSources)
-            o(data::documentTypeID)
-
-            AlFrontPile.documentCategoryPicker.let {
-                it.debug_setSelectValue(AlDocumentCategories.humanitiesID)
-                it.debug_setSelectValue(AlDocumentCategories.linguisticsID)
+            run { // Errors in order creation form
+                clickSubmitAndAwaitPageInit()
             }
 
-            clickSubmitAndAwaitPageInit()
-            clog("wooooooohooooooooooo")
+            run { // Create order
+                populateOrderParamsForm(
+                    data = OrderCreationFormPostData(
+                        orderUUID = "boobs",
+                        email = "iperdonde@mail.com",
+                        name = "Иммануил Пердондэ",
+                        phone = "+38 (068) 4542823",
+                        documentTypeID = "PRACTICE",
+                        documentTitle = "Как я пинал хуи на практике",
+                        documentDetails = "Детали? Я ебу, какие там детали...",
+                        documentCategoryID = "boobs",
+                        numPages = "35",
+                        numSources = "7"),
+                    documentCategoryPath = listOf(
+                        AlDocumentCategories.humanitiesID,
+                        AlDocumentCategories.linguisticsID))
+                clickSubmitAndAwaitPageInit()
+            }
+
+            run { // Modal
+                clickButtonAndAwaitModalShown(AlDomID.editOrderParamsButton)
+
+                run { // Validation errors
+                    AlFrontPile.documentCategoryPicker.debug_handleBackButtonClick()
+                    populateOrderParamsForm(
+                        data = OrderCreationFormPostData(
+                            orderUUID = "boobs",
+                            email = "fart@mail.com",
+                            name = "Иммануил Пердондэ III",
+                            phone = "bullshit",
+                            documentTypeID = "ESSAY",
+                            documentTitle = "Как я пинал большие хуи на практике",
+                            documentDetails = "Детали? Я ебу, какие там детали... Да, ебу. И не ебет",
+                            documentCategoryID = "boobs",
+                            numPages = "55",
+                            numSources = "3"),
+                        documentCategoryPath = listOf(
+                            AlDocumentCategories.technicalID,
+                            AlDocumentCategories.programmingID))
+                    clickSubmitAndAwaitPageInit()
+                }
+
+                run { // OK
+                    byIDSingle(AlSharedPile.fieldDOMID(OrderCreationFormPostData::phone.name)).setVal("+38 (911) 4542823")
+                    awaitModalHiddenAfterDoing {
+                        clickSubmitAndAwaitPageInit()
+                    }
+                }
+            }
+
+            clog("We good... hopefully")
+        }
+    }
+
+    private fun populateOrderParamsForm(data: OrderCreationFormPostData, documentCategoryPath: List<String>) {
+        // TODO:vgrechka @improve d0fc960d-76be-4a0b-969c-7bbf94275e09
+        val o = AlFrontPile::populateTextField
+        o(data::email)
+        o(data::name)
+        o(data::phone)
+        o(data::documentTitle)
+        o(data::documentDetails)
+        o(data::numPages)
+        o(data::numSources)
+        o(data::documentTypeID)
+
+        AlFrontPile.documentCategoryPicker.let {
+            val categoryIDs = documentCategoryPath
+            for (id in categoryIDs)
+                it.debug_setSelectValue(id)
         }
     }
 
@@ -261,6 +322,83 @@ private fun parseShitFromBack() {
     clog("shitFromBack =", AlFrontPile.shitFromBack)
 }
 
+fun <T: Any> notNullNamed(initial: T, parentNamed: Any? = null): ReadWriteProperty<Any?, T> = NotNullNamedVar(initial, parentNamed)
+
+private class NotNullNamedVar<T: Any>(initial: T?, val parentNamed: Any? = null) : ReadWriteProperty<Any?, T> {
+    private var value: T? = initial
+
+    override fun getValue(thisRef: Any?, property: KProperty<*>): T {
+        val res = value ?: throw IllegalStateException("Property ${property.name} should be initialized before get.")
+        val namePrefix = parentNamed?.let {NamesOfThings[it]}?.let {"$it."} ?: ""
+        NamesOfThings[res] = namePrefix + property.name
+        return res
+    }
+
+    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+        this.value = value
+    }
+}
+
+fun timeoutSet(ms: Int, cb: () -> Unit) {
+    window.setTimeout(cb, ms)
+}
+
+fun <T> Promise<T>.orTestTimeout(ms: Int, getPromiseName: (() -> String?)? = null): Promise<T> {
+    val shit = ResolvableShit<T>()
+    val thePromiseName = getPromiseName?.invoke() ?: "shit"
+    timeoutSet(ms) {
+        val msg = "Sick of waiting for $thePromiseName"
+//        if (isTestPausedOnAssertion()) {
+//            // console.warn("--- $msg, but not dying because test is paused on assertion ---")
+//        } else {
+            shit.reject(Exception(msg))
+//        }
+    }
+    this.then({shit.resolve(it)})
+    return shit.promise
+}
+
+fun <T> Promise<T>.orTestTimeoutNamedAfter(ms: Int, getPromiseNameBearer: () -> Any): Promise<T> {
+    return this.orTestTimeout(ms, getPromiseName = {NamesOfThings[getPromiseNameBearer()]})
+}
+
+class TestLock(
+    virgin: Boolean = false,
+    val testPauseTimeout: Int = 10000,
+    val sutPauseTimeout: Int = 10000
+) {
+    private val testPause by notNullNamed(ResolvableShit<Unit>(), parentNamed = this)
+    private val sutPause by notNullNamed(ResolvableShit<Unit>(), parentNamed = this)
+
+    init {
+        if (!virgin) { // Initially everything is resolved, so if not in test, shit just works
+            testPause.resolve()
+            sutPause.resolve()
+        }
+    }
+
+    fun reset() {
+        testPause.reset()
+        sutPause.reset()
+    }
+
+    suspend fun pauseTestFromTest() {
+        await(testPause.promise.orTestTimeoutNamedAfter(testPauseTimeout, {testPause}))
+    }
+
+    fun resumeSutFromTest() {
+        sutPause.resolve()
+    }
+
+    fun resumeTestFromSut() {
+        testPause.resolve()
+    }
+
+    suspend fun resumeTestAndPauseSutFromSut() {
+        testPause.resolve()
+        await(sutPause.promise.orTestTimeoutNamedAfter(sutPauseTimeout, {sutPause}))
+    }
+}
 
 object AlFrontPile {
     val debug_sleepBeforePost = 1000
@@ -268,6 +406,8 @@ object AlFrontPile {
     var pristineModalContentHTML by notNull<String>()
     val pageInitSignal = ResolvableShit<Unit>()
     var documentCategoryPicker by notNull<DocumentCategoryPicker>()
+    val modalShownLock by notNullNamed(TestLock())
+    val modalHiddenLock by notNullNamed(TestLock())
 
 //    object google {
 //        var auth2 by notNullOnce<gapi.auth2.GoogleAuth>()
@@ -333,10 +473,19 @@ object AlFrontPile {
 
         initOrderParamsLikeControls()
 
+        val modalJQ = byIDSingle(AlDomID.orderParamsModal).asDynamic()
+        modalJQ.on("shown.bs.modal") {
+            clog("shown")
+            AlFrontPile.modalShownLock.resumeTestFromSut()
+        }
+        modalJQ.on("hidden.bs.modal") {
+            AlFrontPile.modalHiddenLock.resumeTestFromSut()
+        }
+
         fun handler() {
             byIDSingle(AlDomID.modalContent)[0]!!.outerHTML = AlFrontPile.pristineModalContentHTML
             initOrderParamsLikeControls()
-            byIDSingle(AlDomID.orderParamsModal).asDynamic().modal()
+            modalJQ.modal()
         }
         byIDSingle(AlDomID.editOrderParamsButton).onClick {handler()}
 

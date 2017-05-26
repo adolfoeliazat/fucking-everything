@@ -6,6 +6,8 @@ object AlDocumentCategories {
     val miscID = "102"
     val humanitiesID = "226"
     val linguisticsID = "238"
+    val technicalID = "174"
+    val programmingID = "186"
 
     val t = AlXPile::t
     val root = Category("ROOT", "101", listOf(
@@ -85,7 +87,7 @@ object AlDocumentCategories {
             Category(t("TOTE", "Химия"), "173")
         )),
 
-        Category(t("TOTE", "Технические"), "174", listOf(
+        Category(t("TOTE", "Технические"), technicalID, listOf(
             Category(t("TOTE", "Авиация и космонавтика"), "175"),
             Category(t("TOTE", "Архитектура"), "176"),
             Category(t("TOTE", "Базы данных"), "177"),
@@ -97,7 +99,7 @@ object AlDocumentCategories {
             Category(t("TOTE", "Информационно-аналитическая деятельность"), "183"),
             Category(t("TOTE", "Кибернетика"), "184"),
             Category(t("TOTE", "Чертежи"), "185"),
-            Category(t("TOTE", "Программирование"), "186"),
+            Category(t("TOTE", "Программирование"), programmingID),
             Category(t("TOTE", "Проектирование"), "187"),
             Category(t("TOTE", "Радиоэлектроника, радиотехника"), "188"),
             Category(t("TOTE", "Теоретическая механика"), "189"),

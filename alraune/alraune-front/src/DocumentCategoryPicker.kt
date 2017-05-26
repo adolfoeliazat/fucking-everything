@@ -60,10 +60,18 @@ class DocumentCategoryPicker {
 
         byIDNoneOrSingle(backButtonID)?.let {
             it.on("click") {
-                pathExceptLast.removeAt(pathExceptLast.lastIndex)
-                update()
+                handleBackButtonClick()
             }
         }
+    }
+
+    private fun handleBackButtonClick() {
+        pathExceptLast.removeAt(pathExceptLast.lastIndex)
+        update()
+    }
+
+    fun debug_handleBackButtonClick() {
+        handleBackButtonClick()
     }
 
     private fun handleSelectChange() {
