@@ -498,32 +498,41 @@ object AlFrontPile {
         when (AlFrontPile.shitFromBack.pageID) {
             AlPageID.orderCreationForm -> frontInitPage_orderCreationForm()
             AlPageID.orderParams -> frontInitPage_orderParams()
+            AlPageID.orderFiles -> frontInitPage_orderFiles()
         }
 
         AlFrontPile.pageInitSignal.resolve(Unit)
     }
 
     private fun frontInitPage_orderParams() {
+        pizda1(vagina = {initOrderParamsLikeControls()})
+    }
+
+    private fun frontInitPage_orderFiles() {
+        pizda1(vagina = {})
+    }
+
+    private fun pizda1(vagina: () -> Unit) {
         val hasErrors = shitFromBack.hasErrors ?: wtf("07ebdde7-3a73-48bc-992a-54aba4cfb986")
         if (!hasErrors) {
-            AlFrontPile.pristineModalContentHTML = findShitBetweenMarkersForDOMID(
+            pristineModalContentHTML = findShitBetweenMarkersForDOMID(
                 document.body!!.innerHTML,
                 AlDomID.modalContent)
         }
 
-        initOrderParamsLikeControls()
+        vagina()
 
         val modalJQ = byIDSingle(AlDomID.orderParamsModal).asDynamic()
         modalJQ.on("shown.bs.modal") {
-            AlFrontPile.modalShownLock.resumeTestFromSut()
+            modalShownLock.resumeTestFromSut()
         }
         modalJQ.on("hidden.bs.modal") {
-            AlFrontPile.modalHiddenLock.resumeTestFromSut()
+            modalHiddenLock.resumeTestFromSut()
         }
 
         fun handler() {
-            byIDSingle(AlDomID.modalContent)[0]!!.outerHTML = AlFrontPile.pristineModalContentHTML
-            initOrderParamsLikeControls()
+            byIDSingle(AlDomID.modalContent)[0]!!.outerHTML = pristineModalContentHTML
+            vagina()
             modalJQ.modal()
         }
         byIDSingle(AlDomID.editOrderParamsButton).onClick {handler()}

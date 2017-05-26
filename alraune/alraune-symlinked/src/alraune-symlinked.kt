@@ -81,6 +81,7 @@ object AlPagePath {
     val orderParams by slashMyName()
     val orderFiles by slashMyName()
     val post_setOrderParams by slashMyName()
+    val post_addOrderFile by slashMyName()
 }
 
 class AlGetParams(

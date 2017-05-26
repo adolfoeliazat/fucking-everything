@@ -8,32 +8,16 @@ import alraune.shared.*
 import vgrechka.*
 
 fun handleGet_orderParams() {
-    val a = Algo1(object : Algo1Pedro {
-        private var fields by notNullOnce<OrderParamsFields>()
-
-        override fun jerk1(ctx: Algo1) {
-            fields = OrderParamsFields(ctx.order.toForm())
-        }
-
-        override fun makeSpitOrderTabPagePedro() = object : SpitOrderTabPagePedro {
-            override fun jerk1(ctx: SpitOrderTabPage) {
-                val o = ctx.o
-                if (ctx.canEdit) {
-                    o- AlRenderPile.renderModal(ModalParams(
-                        width = "80rem",
-                        leftMarginColor = Color.BLUE_GRAY_300,
-                        title = t("Parameters", "Параметры"),
-                        body = insideMarkers(id = AlDomID.modalContent, content = renderOrderParamsForm(fields))
-                    ))
-                }
-            }
+    Algo1(object : Algo1Pedro {
+        override fun makeSpitOrderTabPagePedro(algo1: Algo1): SpitOrderTabPagePedro {
+            val fields = OrderParamsFields(algo1.order.toForm())
+            return makePedroForParamsTag(algo1.order, fields)
         }
     })
 }
 
 interface Algo1Pedro {
-    fun jerk1(ctx: Algo1)
-    fun makeSpitOrderTabPagePedro(): SpitOrderTabPagePedro
+    fun makeSpitOrderTabPagePedro(algo1: Algo1): SpitOrderTabPagePedro
 }
 
 class Algo1(pedro: Algo1Pedro) {
@@ -44,9 +28,7 @@ class Algo1(pedro: Algo1Pedro) {
         shitToFront("954a5058-5ae6-40c7-bb45-06b0eeae8bc7") {
             it.hasErrors = false
         }
-        pedro.jerk1(this)
-
-        SpitOrderTabPage(order, pedro.makeSpitOrderTabPagePedro())
+        SpitOrderTabPage(order, pedro.makeSpitOrderTabPagePedro(this))
     }
 }
 
@@ -87,17 +69,25 @@ fun handlePost_setOrderParams() {
 }
 
 interface SpitOrderTabPagePedro {
-    fun jerk1(ctx: SpitOrderTabPage)
+    val activeTab: SpitOrderTabPage.Tab
+    fun renderContent(): Renderable
+    val topRightButtonIcon: IconClass
+    fun renderModalContent(): Renderable
+    val pageID: String
+    val postPath: String
+    val topRightButtonModalTitle: String
 }
 
 class SpitOrderTabPage(order: AlUAOrder, pedro: SpitOrderTabPagePedro) {
     var o by notNullOnce<Tag>()
     var canEdit by notNullOnce<Boolean>()
 
+    enum class Tab {PARAMS, FILES}
+
     init {
         shitToFront("054bb78d-238e-4313-9b75-820c5a37097c") {
-            it.pageID = AlPageID.orderParams
-            it.postPath = makeURLPart(AlPagePath.post_setOrderParams)
+            it.pageID = pedro.pageID
+            it.postPath = pedro.postPath
             it.orderUUID = order.uuid
         }
 
@@ -114,11 +104,13 @@ class SpitOrderTabPage(order: AlUAOrder, pedro: SpitOrderTabPagePedro) {
 
             o- kdiv(Style(position = "relative")){o->
                 o- kdiv(Attrs(className = "nav nav-tabs", style = Style(marginBottom = "0.5rem"))){o->
-                    o- kli.className("active")
+                    fun maybeActive(tab: Tab) = if (pedro.activeTab == tab) "active" else ""
+
+                    o- kli.className(maybeActive(Tab.PARAMS))
                         .add(ka(Attrs(href = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))))
                                  .add(t("Parameters", "Параметры")))
 
-                    o- kli.className("")
+                    o- kli.className(maybeActive(Tab.FILES))
                         .add(ka(Attrs(href = makeURLPart(AlPagePath.orderFiles, AlGetParams(orderUUID = order.uuid))))
                                  .add(t("Files", "Файлы")))
                 }
@@ -126,31 +118,46 @@ class SpitOrderTabPage(order: AlUAOrder, pedro: SpitOrderTabPagePedro) {
                 if (canEdit) {
                     o- kbutton(Attrs(id = AlDomID.editOrderParamsButton, className = "btn btn-default",
                                      style = Style(position = "absolute", right = "0", top = "0")))
-                        .add(ki.className(fa.pencil))
+                        .add(ki.className(pedro.topRightButtonIcon))
                 }
             }
 
-            o- AlRenderPile.renderOrderParams(order)
+            o- pedro.renderContent()
 
-            pedro.jerk1(this)
+            if (canEdit) {
+                o- AlRenderPile.renderModal(ModalParams(
+                    width = "80rem",
+                    leftMarginColor = Color.BLUE_GRAY_300,
+                    title = pedro.topRightButtonModalTitle,
+                    body = insideMarkers(id = AlDomID.modalContent, content = pedro.renderModalContent())
+                ))
+            }
+
         }))
     }
 }
 
 fun spitOrderParamsPage(order: AlUAOrder, fields: OrderParamsFields) {
-    SpitOrderTabPage(order, object : SpitOrderTabPagePedro {
-        override fun jerk1(ctx: SpitOrderTabPage) {
-            val o = ctx.o
-            if (ctx.canEdit) {
-                o- AlRenderPile.renderModal(ModalParams(
-                    width = "80rem",
-                    leftMarginColor = Color.BLUE_GRAY_300,
-                    title = t("Parameters", "Параметры"),
-                    body = insideMarkers(id = AlDomID.modalContent, content = renderOrderParamsForm(fields))
-                ))
-            }
+    SpitOrderTabPage(order, makePedroForParamsTag(order, fields))
+}
+
+private fun makePedroForParamsTag(order: AlUAOrder, fields: OrderParamsFields): SpitOrderTabPagePedro {
+    return object : SpitOrderTabPagePedro {
+        override val topRightButtonModalTitle = t("Parameters", "Параметры")
+        override val pageID = AlPageID.orderParams
+        override val postPath = AlPagePath.post_setOrderParams
+
+        override fun renderModalContent(): Renderable {
+            return renderOrderParamsForm(fields)
         }
-    })
+
+        override val topRightButtonIcon = fa.pencil
+        override val activeTab = SpitOrderTabPage.Tab.PARAMS
+
+        override fun renderContent(): Renderable {
+            return AlRenderPile.renderOrderParams(order)
+        }
+    }
 }
 
 fun validateOrderParamsFields(fields: OrderParamsFields) {
