@@ -5,6 +5,7 @@
 package alraune.back
 
 import alraune.shared.OrderCreationFormPostData
+import alraune.shared.OrderFileFormPostData
 import vgrechka.spew.*
 
 @GEntity(table = "ua_orders")
@@ -20,6 +21,9 @@ interface AlUAOrder : GCommonEntityFields {
     var documentCategoryID: String
     var numPages: Int
     var numSources: Int
+
+    @GOneToMany(mappedBy = "order")
+    var files: MutableList<AlUAOrderFile>
 
     fun toForm() = OrderCreationFormPostData(
         orderUUID = null,
@@ -39,5 +43,40 @@ interface AlUAOrder : GCommonEntityFields {
 interface AlUAOrderRepository : GRepository<AlUAOrder> {
     fun findByUuid(x: String): AlUAOrder?
 }
+
+
+
+@GEntity(table = "ua_order_files")
+interface AlUAOrderFile : GCommonEntityFields {
+    var uuid: String
+    var state: UAOrderFileState
+    var name: String
+    var title: String
+    var details: String
+    @GManyToOne var order: AlUAOrder
+
+    fun toForm() = OrderFileFormPostData(
+        orderUUID = null, fileUUID = uuid,
+        name = name, title = title, details = details)
+}
+
+interface AlUAOrderFileRepository : GRepository<AlUAOrderFile> {
+    fun findByUuid(x: String): AlUAOrderFile?
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

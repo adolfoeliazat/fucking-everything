@@ -269,8 +269,8 @@ data class AlIntRange(
 
 object AlFields {
     class Fuck(val title: String)
+
     object order {
-        // TODO:vgrechka @improve d0fc960d-76be-4a0b-969c-7bbf94275e09
         val status = Fuck(t("TOTE", "Статус"))
         val email = Fuck(t("TOTE", "Почта"))
         val contactName = Fuck(t("TOTE", "Имя"))
@@ -281,6 +281,11 @@ object AlFields {
         val documentDetails = Fuck(t("TOTE", "Детали"))
         val numPages = Fuck(t("TOTE", "Страниц"))
         val numSources = Fuck(t("TOTE", "Источников"))
+    }
+
+    object orderFile {
+        val title = Fuck(t("TOTE", "Название"))
+        val documentDetails = Fuck(t("TOTE", "Детали"))
     }
 }
 

@@ -14,6 +14,10 @@ class PHPDBEntitySpew : Spew {
                 val out = pedroCtx.out
 
                 object : CommonDBEntitySpew.Pedro {
+                    override fun mappedByCode(type: String, mappedBy: String): String {
+                        imf("31687638-ad1e-463f-b63c-54b32a6c63ec")
+                    }
+
                     override fun generatedFinderName(entityName: String, shit: String, operator: String): String {
                         imf("ae5ed683-5110-48c4-98ec-a7079d46881b")
                     }
@@ -34,6 +38,14 @@ class PHPDBEntitySpew : Spew {
                         fun ap(s: String) = out.append(s)
 
                         return object : CommonDBEntitySpew.Juan {
+                            override fun createForeignKeyIndexDDL(field: FieldSpec, g: CommonDBEntitySpew.spitShitForEntity.generateDDLForEntity): String {
+                                imf("d625f258-6929-4558-b6b0-a5899a0516e2")
+                            }
+
+                            override fun foreignKeyDDL(field: FieldSpec, oneEntity: EntitySpec): String {
+                                imf("5d9f1b66-209f-4217-9746-1d5e49b87d36")
+                            }
+
                             override fun columnDDL(field: FieldSpec, sqlType: String): String {
                                 imf("c7f5e133-8e9d-42d0-a3ab-f42b1f48d7e1")
                             }

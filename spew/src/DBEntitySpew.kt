@@ -69,6 +69,8 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
         fun spitRepo()
         fun spitDDLForSpecialColumns(buf: StringBuilder)
         fun columnDDL(field: FieldSpec, sqlType: String): String
+        fun foreignKeyDDL(field: FieldSpec, oneEntity: EntitySpec): String
+        fun createForeignKeyIndexDDL(field: FieldSpec, g: spitShitForEntity.generateDDLForEntity): String
     }
 
     interface Pedro {
@@ -76,10 +78,11 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
         fun spitImports()
         fun createTableSuffix(): String
         fun generatedFinderName(entityName: String, shit: String, operator: String): String
+        fun mappedByCode(type: String, mappedBy: String): String
     }
 
     companion object {
-        val hardcodedEnumTypes = setOf("UAOrderState")
+        val hardcodedEnumTypes = setOf("UAOrderState", "UAOrderFileState")
 
         fun maybeQuestion(finder: FinderSpec) =
             finder.returnsNullable.thenElseEmpty {"?"}
@@ -333,7 +336,7 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
 
                         val foreignKeyLines = foreignKeyFields.map {field->
                             val oneEntity = entities.find {it.name == field.typeWithoutQuestion()} ?: wtf("aa058895-cbce-453a-b0f0-e551abaf95e1")
-                            "    foreign key (${end}_${field.name}__id) references ${oneEntity.tableName}(id)"
+                            juan.foreignKeyDDL(field, oneEntity)
                         }
                         if (foreignKeyLines.isNotEmpty())
                             append(",\n")
@@ -343,7 +346,7 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
 
                         if (databaseDialect == POSTGRESQL) {
                             foreignKeyFields.forEach {field->
-                                append("create index on $quotedTableName (${end}_${field.name}__id);\n")
+                                append(juan.createForeignKeyIndexDDL(field, this@generateDDLForEntity))
                             }
                         }
 
@@ -430,7 +433,8 @@ class CommonDBEntitySpew(val ktFile: KtFile, val outputFilePath: String, val spe
                                             val oneToManyAnnotationEntry = prop.freakingFindAnnotation("GOneToMany") ?: wtf("556650b2-91b5-45de-887f-81f87f701c49")
                                             val mappedBy = oneToManyAnnotationEntry.freakingGetStringAttribute("mappedBy") ?: wtf("9aafe9de-9a02-49c9-b4db-2300055b0026")
                                             val fetchType = findFetchType(oneToManyAnnotationEntry, default = GFetchType.LAZY)
-                                            kind = FieldKind.Many(mappedBy = type.decapitalize() + "." + mappedBy,
+
+                                            kind = FieldKind.Many(mappedBy = pedro.mappedByCode(type, mappedBy),
                                                                   fetchType = fetchType)
                                         } else {
                                             val manyToOneAnnotationEntry = prop.freakingFindAnnotation("GManyToOne")

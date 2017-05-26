@@ -9,7 +9,7 @@ fun handleGet_orderCreationForm() {
     spitOrderCreationFormPage(
         OrderParamsFields(
             newAlUAOrder(
-                uuid = "", state = UAOrderState.CUSTOMER_DRAFT, email = "",
+                uuid = "boobs", state = UAOrderState.CUSTOMER_DRAFT, email = "",
                 contactName = "", phone = "", documentTypeID = AlDocumentType.ABSTRACT.name, documentTitle = "",
                 documentDetails = "", documentCategoryID = AlDocumentCategories.miscID, numPages = -1, numSources = -1)
                 .toForm()))

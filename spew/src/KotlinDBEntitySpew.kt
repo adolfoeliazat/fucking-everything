@@ -13,6 +13,10 @@ class KotlinDBEntitySpew : Spew {
                 val ln = pedroCtx.out::appendln
 
                 object : CommonDBEntitySpew.Pedro {
+                    override fun mappedByCode(type: String, mappedBy: String): String {
+                        return type.decapitalize() + "." + mappedBy
+                    }
+
                     override fun generatedFinderName(entityName: String, shit: String, operator: String): String {
                         return "findBy${entityName}_$shit$operator"
                     }
@@ -31,6 +35,14 @@ class KotlinDBEntitySpew : Spew {
                         val entity = juanCtx.entity
 
                         return object : CommonDBEntitySpew.Juan {
+                            override fun createForeignKeyIndexDDL(field: FieldSpec, g: CommonDBEntitySpew.spitShitForEntity.generateDDLForEntity): String {
+                                return "create index on ${g.quote(entity.tableName)} (${end}_${field.name}__id);\n"
+                            }
+
+                            override fun foreignKeyDDL(field: FieldSpec, oneEntity: EntitySpec): String {
+                                return "    foreign key (${end}_${field.name}__id) references ${oneEntity.tableName}(id)"
+                            }
+
                             override fun columnDDL(field: FieldSpec, sqlType: String): String {
                                 return "${end}_${field.name}${(field.kind is FieldKind.One).thenElseEmpty{"__id"}} $sqlType"
                             }

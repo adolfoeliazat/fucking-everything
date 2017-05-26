@@ -20,6 +20,10 @@ class KotlinDBEntitySpew2 : Spew {
 
 
 private class PedroImpl(val pedroCtx: CommonDBEntitySpew) : CommonDBEntitySpew.Pedro {
+    override fun mappedByCode(type: String, mappedBy: String): String {
+        return mappedBy
+    }
+
     override fun generatedFinderName(entityName: String, shit: String, operator: String): String {
         return "findBy$shit$operator"
     }
@@ -51,8 +55,16 @@ private class JuanImpl(val juanCtx: CommonDBEntitySpew.spitShitForEntity, val pe
 //        entity.tableName.substring(i + 1) + "_"
     }
 
+    override fun createForeignKeyIndexDDL(field: FieldSpec, g: CommonDBEntitySpew.spitShitForEntity.generateDDLForEntity): String {
+        return "create index on ${g.quote(entity.tableName)} (${colPrefix}${field.name}__fk);\n"
+    }
+
+    override fun foreignKeyDDL(field: FieldSpec, oneEntity: EntitySpec): String {
+        return "    foreign key (${colPrefix}${field.name}__fk) references ${oneEntity.tableName}(${oneEntity.tableName}_id)"
+    }
+
     override fun columnDDL(field: FieldSpec, sqlType: String): String {
-        return "$colPrefix${field.name}${(field.kind is FieldKind.One).thenElseEmpty{"__id"}} $sqlType"
+        return "$colPrefix${field.name}${(field.kind is FieldKind.One).thenElseEmpty{"__fk"}} $sqlType"
     }
 
     override fun spitDDLForSpecialColumns(buf: StringBuilder) {
@@ -199,7 +211,7 @@ private class JuanImpl(val juanCtx: CommonDBEntitySpew.spitShitForEntity, val pe
                         out.append(" lateinit var ${field.name}: ${CommonDBEntitySpew.platformType(field)}")
                 }
                 is FieldKind.One -> {
-                    out.append("    @XManyToOne(fetch = XFetchType.${field.kind.fetchType.name}/*, cascade = arrayOf(XCascadeType.ALL)*/)")
+                    out.append("    @XJoinColumn(name = \"${colPrefix}${field.name}__fk\") @XManyToOne(fetch = XFetchType.${field.kind.fetchType.name}/*, cascade = arrayOf(XCascadeType.ALL)*/)")
                     out.append(" lateinit var ${field.name}: Generated_${field.type}")
                 }
                 is FieldKind.Many -> {

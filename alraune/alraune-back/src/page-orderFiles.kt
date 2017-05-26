@@ -4,6 +4,7 @@ import alraune.back.AlRenderPile.t
 import alraune.shared.AlDomID
 import alraune.shared.AlPageID
 import alraune.shared.AlPagePath
+import alraune.shared.OrderFileFormPostData
 import vgrechka.*
 
 fun handleGet_orderFiles() {
@@ -14,9 +15,21 @@ fun handleGet_orderFiles() {
                 override val pageID = AlPageID.orderFiles
                 override val postPath = AlPagePath.post_addOrderFile
 
-                override fun renderModalContent(): Renderable {
+                override fun renderTopRightModalContent(): Renderable {
                     return kdiv{o->
-                        o- "fucking modal"
+                        val fields = OrderFileFields(newAlUAOrderFile(
+                            uuid = "boobs",
+                            state = UAOrderFileState.UNKNOWN,
+                            name = "",
+                            title = "",
+                            details = "",
+                            order = algo1.order).toForm())
+                        o- renderForm(dfctx = fields.dfctx,
+                                      shitDataNecessaryForControlsToFront = {},
+                                      renderFormBody = {kdiv{o->
+                                          o- fields.title.render()
+                                          o- fields.details.render()
+                                      }})
                     }
                 }
 
@@ -32,5 +45,23 @@ fun handleGet_orderFiles() {
         }
     })
 }
+
+
+class OrderFileFields(data: OrderFileFormPostData) {
+    val f = AlFields.orderFile
+    val v = AlBackPile
+    val dfctx = DeclareFieldContext()
+
+    val title = declareField(dfctx, data::title, f.title.title, v::validateDocumentTitle)
+    val details = declareField(dfctx, data::details, f.documentDetails.title, v::validateDocumentDetails, FieldType.TEXTAREA)
+}
+
+
+
+
+
+
+
+
 
 

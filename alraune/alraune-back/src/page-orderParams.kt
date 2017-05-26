@@ -72,7 +72,7 @@ interface SpitOrderTabPagePedro {
     val activeTab: SpitOrderTabPage.Tab
     fun renderContent(): Renderable
     val topRightButtonIcon: IconClass
-    fun renderModalContent(): Renderable
+    fun renderTopRightModalContent(): Renderable
     val pageID: String
     val postPath: String
     val topRightButtonModalTitle: String
@@ -116,7 +116,7 @@ class SpitOrderTabPage(order: AlUAOrder, pedro: SpitOrderTabPagePedro) {
                 }
 
                 if (canEdit) {
-                    o- kbutton(Attrs(id = AlDomID.editOrderParamsButton, className = "btn btn-default",
+                    o- kbutton(Attrs(id = AlDomID.topRightButton, className = "btn btn-default",
                                      style = Style(position = "absolute", right = "0", top = "0")))
                         .add(ki.className(pedro.topRightButtonIcon))
                 }
@@ -129,7 +129,7 @@ class SpitOrderTabPage(order: AlUAOrder, pedro: SpitOrderTabPagePedro) {
                     width = "80rem",
                     leftMarginColor = Color.BLUE_GRAY_300,
                     title = pedro.topRightButtonModalTitle,
-                    body = insideMarkers(id = AlDomID.modalContent, content = pedro.renderModalContent())
+                    body = insideMarkers(id = AlDomID.modalContent, content = pedro.renderTopRightModalContent())
                 ))
             }
 
@@ -146,10 +146,7 @@ private fun makePedroForParamsTag(order: AlUAOrder, fields: OrderParamsFields): 
         override val topRightButtonModalTitle = t("Parameters", "Параметры")
         override val pageID = AlPageID.orderParams
         override val postPath = AlPagePath.post_setOrderParams
-
-        override fun renderModalContent(): Renderable {
-            return renderOrderParamsForm(fields)
-        }
+        override fun renderTopRightModalContent() = renderOrderParamsForm(fields)
 
         override val topRightButtonIcon = fa.pencil
         override val activeTab = SpitOrderTabPage.Tab.PARAMS
@@ -165,47 +162,64 @@ fun validateOrderParamsFields(fields: OrderParamsFields) {
     AlDocumentType.values().find {it.name == fields.data.documentTypeID} ?: bitch("e63b006c-3cda-4db8-b7e0-e2413e980dbc")
 }
 
-fun renderOrderParamsForm(fields: OrderParamsFields): Renderable {
-    val f = AlFields.order
-    AlRequestContext.the.shitPassedFromBackToFront.documentCategoryID = fields.data.documentCategoryID
+fun renderForm(dfctx: DeclareFieldContext, shitDataNecessaryForControlsToFront: () -> Unit, renderFormBody: () -> Renderable): Renderable {
+    shitDataNecessaryForControlsToFront()
     return kdiv{o->
-        if (fields.dfctx.hasErrors)
+        if (dfctx.hasErrors)
             o- kdiv.className(AlCSS.errorBanner).text(t("TOTE", "Кое-что нужно исправить..."))
 
-        o- row(marginBottom = null){o->
-            o- col(4, fields.contactName.render())
-            o- col(4, fields.email.render())
-            o- col(4, fields.phone.render())
-        }
-        o- row(marginBottom = null){o->
-            o- col(4, kdiv.className("form-group"){o->
-                o- klabel(text = f.documentType.title)
-                o- kselect(Attrs(id = AlSharedPile.fieldDOMID(name = OrderCreationFormPostData::documentTypeID.name),
-                                 className = "form-control")) {o->
-                    for (value in AlDocumentType.values()) {
-                        o- koption(Attrs(value = value.name,
-                                         selected = fields.data.documentTypeID == value.name),
-                                   value.title)
-                    }
-                }
-            })
-            o- col(8, kdiv.className("form-group"){o->
-                o- klabel(text = f.documentCategory.title)
-                o- kdiv(Attrs(id = AlDomID.documentCategoryPickerContainer))
-            })
-        }
-        o- fields.documentTitle.render()
-        o- row(marginBottom = null){o->
-            o- col(6, fields.numPages.render())
-            o- col(6, fields.numSources.render())
-        }
-        o- fields.documentDetails.render()
-        o- kdiv(Attrs(id = AlDomID.filePickerContainer))
+        o- renderFormBody()
+
         o- kdiv{o->
             o- kbutton(Attrs(id = AlDomID.submitButton, className = "btn btn-primary"), t("TOTE", "Продолжить"))
             o- kdiv.id(AlDomID.ticker){}
         }
     }
+}
+
+fun renderOrderParamsForm(fields: OrderParamsFields): Renderable {
+    return renderForm(
+        dfctx = fields.dfctx,
+        shitDataNecessaryForControlsToFront = {
+            shitToFront("b822b894-0b67-4821-8aa5-d49dccab6e09") {
+                it.documentCategoryID = fields.data.documentCategoryID
+            }
+        },
+        renderFormBody = {
+            kdiv{o->
+                val f = AlFields.order
+                o- row(marginBottom = null){o->
+                    o- col(4, fields.contactName.render())
+                    o- col(4, fields.email.render())
+                    o- col(4, fields.phone.render())
+                }
+                o- row(marginBottom = null){o->
+                    o- col(4, kdiv.className("form-group"){o->
+                        o- klabel(text = f.documentType.title)
+                        o- kselect(Attrs(id = AlSharedPile.fieldDOMID(name = OrderCreationFormPostData::documentTypeID.name),
+                                         className = "form-control")) {o->
+                            for (value in AlDocumentType.values()) {
+                                o- koption(Attrs(value = value.name,
+                                                 selected = fields.data.documentTypeID == value.name),
+                                           value.title)
+                            }
+                        }
+                    })
+                    o- col(8, kdiv.className("form-group"){o->
+                        o- klabel(text = f.documentCategory.title)
+                        o- kdiv(Attrs(id = AlDomID.documentCategoryPickerContainer))
+                    })
+                }
+                o- fields.documentTitle.render()
+                o- row(marginBottom = null){o->
+                    o- col(6, fields.numPages.render())
+                    o- col(6, fields.numSources.render())
+                }
+                o- fields.documentDetails.render()
+                o- kdiv(Attrs(id = AlDomID.filePickerContainer))
+            }
+        }
+    )
 }
 
 

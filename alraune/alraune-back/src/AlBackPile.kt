@@ -244,6 +244,10 @@ enum class UAOrderState(override val title: String, val icon: XIcon? = null, val
     IN_STORE("Ищем писателей", null, "background-color: $BLUE_100;")
 }
 
+enum class UAOrderFileState(override val title: String, val icon: XIcon? = null, val style: String = "") : Titled {
+    UNKNOWN("ХЗ", null, "background-color: green;")
+}
+
 
 
 

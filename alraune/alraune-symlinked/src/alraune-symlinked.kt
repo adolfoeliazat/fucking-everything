@@ -60,7 +60,7 @@ object AlDomID {
     val documentCategoryPickerContainer by myName()
     val filePickerContainer by myName()
     val submitOrderForReviewButton by myName()
-    val editOrderParamsButton by myName()
+    val topRightButton by myName()
     val orderParamsModal by myName()
     val closeModalButton by myName()
     val modalContent by myName()
@@ -189,6 +189,14 @@ object AlCSS {
     val documentCategoryID: String,
     val numPages: String,
     val numSources: String
+)
+
+@Ser data class OrderFileFormPostData(
+    val orderUUID: String?,
+    val fileUUID: String?,
+    val name: String,
+    val title: String,
+    val details: String
 )
 
 @Ser data class DumpStackByIDPostData(
