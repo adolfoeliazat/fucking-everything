@@ -57,13 +57,10 @@ external class JQuery() {
 }
 
 fun JQuery.onClick(handler: (MouseEvent) -> Unit) {
-    on("click") {handler(it.asDynamic())}
-}
-
-fun JQuery.onClickPreventStop(handler: (MouseEvent) -> Unit) {
-    onClick {
+    this.off("click")
+    this.on("click") {
         it.preventAndStop()
-        handler(it)
+        handler(it.asDynamic())
     }
 }
 

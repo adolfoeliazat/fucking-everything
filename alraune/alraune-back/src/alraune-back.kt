@@ -29,7 +29,7 @@ import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.valueParameters
 
-// TODO:vgrechka Field: document type
+// TODO:vgrechka Backend dies on exception?
 
 object StartAlrauneBack {
     @JvmStatic
@@ -434,6 +434,9 @@ fun handleGet_orderParams() {
     val order = alUAOrderRepo.findByUuid(uuid) ?: bitch("bcfc6c38-585c-43f9-8984-c26d9c113e4e")
     val fields = OrderParamsFields(order.toForm())
     shitBigReplacementToFront("37636e9d-5060-43b8-a50d-34a95fe5bce1")
+    shitToFront("954a5058-5ae6-40c7-bb45-06b0eeae8bc7") {
+        it.hasErrors = false
+    }
     spitOrderParamsPage(order, fields)
 }
 
@@ -562,6 +565,7 @@ private fun handlePost_createOrder() {
             numPages = fields.numPages.value.toInt(), numSources = fields.numSources.value.toInt()))
 
         shitToFront("cce77e9c-e7f2-4f17-9554-0e27ee982ed2") {
+            it.hasErrors = false
             it.historyPushState = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))
         }
         shitBigReplacementToFront("d2039b9e-7c7e-4487-b230-78203c35fdf7")
@@ -575,6 +579,9 @@ private fun validateOrderParamsFields(fields: OrderParamsFields) {
 }
 
 private fun handlePost_setOrderParams() {
+    shitToFront("b4e2fd47-3a65-41a2-be93-959118883938") {
+        it.hasErrors = true
+    }
     val data = readPostDataAsOrderCreationForm()
     val uuid = data.orderUUID ?: bitch("4c7f82b3-6347-4f25-8949-2f96e5af4713")
     val order = alUAOrderRepo.findByUuid(uuid) ?: bitch("0ef3a079-e1c6-41bf-bfa9-8540ae9d0082")
@@ -602,6 +609,7 @@ private fun handlePost_setOrderParams() {
 
         shitToFront("9b4f1a3e-c2ca-4bfb-a567-4a612caa7fc9") {
             it.historyPushState = makeURL(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))
+            it.hasErrors = false
         }
         shitBigReplacementToFront("917b0edd-df3c-499d-9ffe-93f4152bddfb")
         spitOrderParamsPage(order, fields)

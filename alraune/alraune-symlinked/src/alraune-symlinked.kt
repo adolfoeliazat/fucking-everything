@@ -196,6 +196,7 @@ class ShitPassedFromBackToFront {
     var replacement_endMarker = "boobs-replacement_endMarker"
     var replacement_id = "boobs-replacement_id"
     var orderUUID = "boobs-orderUUID"
+    var hasErrors: Boolean? = null
 }
 
 

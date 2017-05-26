@@ -18,6 +18,10 @@ import kotlin.reflect.KProperty0
 // https://alraune.local/orderParams?orderUUID=816dc211-2cfa-4423-a99a-fd0e3c8915ee&frontMessAround=messAroundFront301
 // https://alraune.local/orderParamsForm?orderUUID=816dc211-2cfa-4423-a99a-fd0e3c8915ee
 
+// TODO:vgrechka UI for showing logOfShitters
+//               - Just ask backend to dump shit to its console
+//               - Include stack traces along with UUIDs of shitters
+
 fun main(args: Array<String>) {
     clog("I am alraune-front 4")
     window.asDynamic()[AlFrontDebug::class.simpleName] = AlFrontDebug
@@ -77,6 +81,7 @@ private fun parseShitFromBack() {
 object AlFrontPile {
     val debug_sleepBeforePost = 1000
     var shitFromBack by notNull<ShitPassedFromBackToFront>()
+    var pristineModalContentHTML by notNull<String>()
 
 //    object google {
 //        var auth2 by notNullOnce<gapi.auth2.GoogleAuth>()
@@ -124,29 +129,37 @@ object AlFrontPile {
         }
 
         when (AlFrontPile.shitFromBack.pageID) {
-            AlPageID.orderCreationForm -> dorothyOrderCreationFormPage()
-            AlPageID.orderParams -> dorothyOrderParamsPage()
+            AlPageID.orderCreationForm -> frontInitPage_orderCreationForm()
+            AlPageID.orderParams -> frontInitPage_orderParams()
         }
     }
 
-    private fun dorothyOrderParamsPage() {
-        amanda(AmandaParams())
+    private fun frontInitPage_orderParams() {
+        val hasErrors = shitFromBack.hasErrors ?: wtf("818b2f27-c252-4ce7-9d96-022e4936e7bf")
+        if (!hasErrors) {
+            AlFrontPile.pristineModalContentHTML = findShitBetweenMarkers(
+                document.body!!.innerHTML,
+                AlSharedPile.beginModalContentMarker,
+                AlSharedPile.endModalContentMarker)
+        }
+
+        initOrderParamsLikeControls()
 
         fun handler() {
+            byIDSingle(AlDomID.modalContent)[0]!!.outerHTML = AlFrontPile.pristineModalContentHTML
+            initOrderParamsLikeControls()
             byIDSingle(AlDomID.orderParamsModal).asDynamic().modal()
         }
-        byIDSingle(AlDomID.editOrderParamsButton).onClickPreventStop {handler()}
+        byIDSingle(AlDomID.editOrderParamsButton).onClick {handler()}
 
         AlFrontDebug.messAroundFront301 = {
             handler()
         }
     }
 
-    private fun dorothyOrderCreationFormPage() {
-        amanda(AmandaParams())
+    private fun frontInitPage_orderCreationForm() {
+        initOrderParamsLikeControls()
     }
-
-    class AmandaParams()
 
     fun findShitBetweenMarkers(haystack: String, beginMarker: String, endMarker: String): String {
         val i1 = haystack.indexOfOrNull(beginMarker) ?: wtf("c7ef8f87-c3ea-4d02-b31a-717dc1a8a01f")
@@ -154,7 +167,7 @@ object AlFrontPile {
         return haystack.substring(i1 + beginMarker.length, i2)
     }
 
-    private fun amanda(p: AmandaParams) {
+    private fun initOrderParamsLikeControls() {
         val documentCategoryPicker = DocumentCategoryPicker()
         val button = byID(AlDomID.createOrderForm_submitButton)
 
@@ -192,7 +205,10 @@ object AlFrontPile {
                 parseShitFromBack()
                 val modalJQ = byID(AlDomID.orderParamsModal).asDynamic()
                 jerk(shitFromBack.replacement_beginMarker, shitFromBack.replacement_endMarker, shitFromBack.replacement_id)
-                modalJQ.modal("hide")
+                val hasErrors = shitFromBack.hasErrors ?: wtf("b7b2b8ef-dd9c-4212-bbc7-842d6ef91af0")
+                if (!hasErrors) {
+                    modalJQ.modal("hide")
+                }
 
                 initShit()
             }
@@ -274,100 +290,4 @@ object AlFrontPile {
 
 
 
-
-//fun initGoogleAuth() {
-//    gapi.load("auth2") {
-//        clog("gapi.load")
-//        AlFrontPile.google.auth2 = gapi.auth2.init(GApiClientConfig(
-//            client_id = "1064147176813-n6l5pddt9qggcp9n4losnknb2dm5hl9t.apps.googleusercontent.com",
-//            cookiepolicy = "single_host_origin"
-//        ))
-//        AlFrontPile.google.auth2.then(
-//            onInit = {
-//                clog("onInit: AlFrontPile.google.auth2.then")
-//            },
-//            onError = {e->
-//                console.log("onError: AlFrontPile.google.auth2.then", e)
-//            }
-//        )
-//    }
-//}
-//
-//// https://developers.google.com/api-client-library/javascript/reference/referencedocs
-//external object gapi {
-//    fun load(what: String, block: () -> Unit)
-//
-//    object auth2 {
-//        class GoogleAuth {
-//            fun then(onInit: () -> Unit, onError: (dynamic) -> Unit)
-//            fun signIn(options: GApiSignInOptions): Promise<dynamic>
-//        }
-//
-//        fun init(params: GApiClientConfig): GoogleAuth
-//    }
-//}
-//
-//// https://developers.google.com/api-client-library/javascript/reference/referencedocs#gapiauth2clientconfig
-//class GApiClientConfig(
-//    val client_id: String,
-//    val cookiepolicy: String
-//)
-//
-//// https://developers.google.com/api-client-library/javascript/reference/referencedocs#gapiauth2signinoptions
-//class GApiSignInOptions(
-//    val redirect_uri: String
-//)
-//
-//
-//
-//
-//
-///*
-//// google.auth2.disconnect()
-//// p = google.auth2.currentUser.get().getBasicProfile()
-//// p.getName()
-//
-//$(_=> {
-//    initGoogleAuth()
-//
-//    function initGoogleAuth() {
-//        window.google = {}
-//        gapi.load('auth2', _=> {
-//            console.log('gapi.load')
-//            google.auth2 = gapi.auth2.init({
-//                client_id: '1064147176813-n6l5pddt9qggcp9n4losnknb2dm5hl9t.apps.googleusercontent.com',
-//                cookiepolicy: 'single_host_origin'
-//            })
-//
-//            google.auth2.then(
-//                function onSuccess() {
-//                    console.log('onSuccess: google.auth2.then')
-//                },
-//                function onError(error) {
-//                    console.error('onError: google.auth2.then', error)
-//                }
-//            )
-//
-//            google.auth2.attachClickHandler(document.getElementById('googleSignInButton'),
-//                {
-//                    redirect_uri: pile.myIndexURL + '?page='
-//                },
-//                function onSuccess(googleUser) {
-//                    console.log('onSuccess: google.auth2.attachClickHandler')
-//                    google.user = googleUser
-//                    var profile = google.user.getBasicProfile()
-//                    console.log('ID: ' + profile.getId())
-//                    console.log('Name: ' + profile.getName())
-//                    console.log('Image URL: ' + profile.getImageUrl())
-//                    console.log('Email: ' + profile.getEmail())
-//                },
-//                function onError(error) {
-//                    console.error('onError: google.auth2.attachClickHandler', error)
-//                }
-//            )
-//        })
-//    }
-//})
-//
-//*/
 
