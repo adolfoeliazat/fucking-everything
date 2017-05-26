@@ -318,11 +318,6 @@ fun <T : Any> readPostData(klass: KClass<T>): T {
 }
 
 
-fun shitBigReplacementToFront(shitterUID: String) {
-    shitToFront(shitterUID) {
-        it.replacement_id = AlDomID.replaceableContent
-    }
-}
 
 
 fun makeURLPart(path: String, params: AlGetParams = AlGetParams()): String {

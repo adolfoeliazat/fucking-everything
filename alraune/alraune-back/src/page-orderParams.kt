@@ -8,19 +8,46 @@ import alraune.shared.*
 import vgrechka.*
 
 fun handleGet_orderParams() {
-    val order = getOrderFromGetParams()
-    val fields = OrderParamsFields(order.toForm())
-    shitBigReplacementToFront("37636e9d-5060-43b8-a50d-34a95fe5bce1")
-    shitToFront("954a5058-5ae6-40c7-bb45-06b0eeae8bc7") {
-        it.hasErrors = false
-    }
-    spitOrderParamsPage(order, fields)
+    val a = Algo1(object : Algo1Pedro {
+        private var fields by notNullOnce<OrderParamsFields>()
+
+        override fun jerk1(ctx: Algo1) {
+            fields = OrderParamsFields(ctx.order.toForm())
+        }
+
+        override fun makeSpitOrderTabPagePedro() = object : SpitOrderTabPagePedro {
+            override fun jerk1(ctx: SpitOrderTabPage) {
+                val o = ctx.o
+                if (ctx.canEdit) {
+                    o- AlRenderPile.renderModal(ModalParams(
+                        width = "80rem",
+                        leftMarginColor = Color.BLUE_GRAY_300,
+                        title = t("Parameters", "Параметры"),
+                        body = insideMarkers(id = AlDomID.modalContent, content = renderOrderParamsForm(fields))
+                    ))
+                }
+            }
+        }
+    })
 }
 
-fun getOrderFromGetParams(): AlUAOrder {
-    val uuid = AlRequestContext.the.getParams.orderUUID ?: bitch("0fe1dd78-8afd-4511-b743-7fc3b5ac78ce")
-    val order = alUAOrderRepo.findByUuid(uuid) ?: bitch("bcfc6c38-585c-43f9-8984-c26d9c113e4e")
-    return order
+interface Algo1Pedro {
+    fun jerk1(ctx: Algo1)
+    fun makeSpitOrderTabPagePedro(): SpitOrderTabPagePedro
+}
+
+class Algo1(pedro: Algo1Pedro) {
+    val orderUUID = AlRequestContext.the.getParams.orderUUID ?: bitch("0fe1dd78-8afd-4511-b743-7fc3b5ac78ce")
+    val order = alUAOrderRepo.findByUuid(orderUUID) ?: bitch("bcfc6c38-585c-43f9-8984-c26d9c113e4e")
+
+    init {
+        shitToFront("954a5058-5ae6-40c7-bb45-06b0eeae8bc7") {
+            it.hasErrors = false
+        }
+        pedro.jerk1(this)
+
+        SpitOrderTabPage(order, pedro.makeSpitOrderTabPagePedro())
+    }
 }
 
 fun handlePost_setOrderParams() {
@@ -53,58 +80,77 @@ fun handlePost_setOrderParams() {
         shitToFront("9b4f1a3e-c2ca-4bfb-a567-4a612caa7fc9") {
             it.historyPushState = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))
             it.hasErrors = false
+            it.replacement_id = AlDomID.replaceableContent
         }
-        shitBigReplacementToFront("917b0edd-df3c-499d-9ffe-93f4152bddfb")
         spitOrderParamsPage(order, fields)
     }
 }
 
-fun spitOrderParamsPage(order: AlUAOrder, fields: OrderParamsFields) {
-    shitToFront("054bb78d-238e-4313-9b75-820c5a37097c") {
-        it.pageID = AlPageID.orderParams
-        it.postPath = makeURLPart(AlPagePath.post_setOrderParams)
-        it.orderUUID = order.uuid
-    }
+interface SpitOrderTabPagePedro {
+    fun jerk1(ctx: SpitOrderTabPage)
+}
 
-    spitUsualPage(replaceableContent(kdiv{o->
-        val canEdit = order.state == UAOrderState.CUSTOMER_DRAFT
+class SpitOrderTabPage(order: AlUAOrder, pedro: SpitOrderTabPagePedro) {
+    var o by notNullOnce<Tag>()
+    var canEdit by notNullOnce<Boolean>()
 
-        o- renderOrderTitle(order)
+    init {
+        shitToFront("054bb78d-238e-4313-9b75-820c5a37097c") {
+            it.pageID = AlPageID.orderParams
+            it.postPath = makeURLPart(AlPagePath.post_setOrderParams)
+            it.orderUUID = order.uuid
+        }
+
+        spitUsualPage(replaceableContent(kdiv{o->
+            this.o = o
+            canEdit = order.state == UAOrderState.CUSTOMER_DRAFT
+
+            o- renderOrderTitle(order)
 //            o- kdiv.className(AlCSS.successBanner).text(t("TOTE", "Все круто, заказ создан. Мы с тобой скоро свяжемся"))
-        o- kdiv.className(AlCSS.submitForReviewBanner){o->
-            o- kdiv(Style(flexGrow = "1")).text(t("TOTE", "Убедись, что все верно. Подредактируй, если нужно. Возможно, добавь файлы. А затем..."))
-            o- kbutton(Attrs(id = AlDomID.submitOrderForReviewButton, className = "btn btn-primary"), t("TOTE", "Отправить на проверку"))
-        }
-
-        o- kdiv(Style(position = "relative")){o->
-            o- kdiv(Attrs(className = "nav nav-tabs", style = Style(marginBottom = "0.5rem"))){o->
-                o- kli.className("active")
-                    .add(ka(Attrs(href = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))))
-                             .add(t("Parameters", "Параметры")))
-
-                o- kli.className("")
-                    .add(ka(Attrs(href = makeURLPart(AlPagePath.orderFiles, AlGetParams(orderUUID = order.uuid))))
-                             .add(t("Files", "Файлы")))
+            o- kdiv.className(AlCSS.submitForReviewBanner){o->
+                o- kdiv(Style(flexGrow = "1")).text(t("TOTE", "Убедись, что все верно. Подредактируй, если нужно. Возможно, добавь файлы. А затем..."))
+                o- kbutton(Attrs(id = AlDomID.submitOrderForReviewButton, className = "btn btn-primary"), t("TOTE", "Отправить на проверку"))
             }
 
-            if (canEdit) {
-                o- kbutton(Attrs(id = AlDomID.editOrderParamsButton, className = "btn btn-default",
-                                 style = Style(position = "absolute", right = "0", top = "0")))
-                    .add(ki.className(fa.pencil))
+            o- kdiv(Style(position = "relative")){o->
+                o- kdiv(Attrs(className = "nav nav-tabs", style = Style(marginBottom = "0.5rem"))){o->
+                    o- kli.className("active")
+                        .add(ka(Attrs(href = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))))
+                                 .add(t("Parameters", "Параметры")))
+
+                    o- kli.className("")
+                        .add(ka(Attrs(href = makeURLPart(AlPagePath.orderFiles, AlGetParams(orderUUID = order.uuid))))
+                                 .add(t("Files", "Файлы")))
+                }
+
+                if (canEdit) {
+                    o- kbutton(Attrs(id = AlDomID.editOrderParamsButton, className = "btn btn-default",
+                                     style = Style(position = "absolute", right = "0", top = "0")))
+                        .add(ki.className(fa.pencil))
+                }
+            }
+
+            o- AlRenderPile.renderOrderParams(order)
+
+            pedro.jerk1(this)
+        }))
+    }
+}
+
+fun spitOrderParamsPage(order: AlUAOrder, fields: OrderParamsFields) {
+    SpitOrderTabPage(order, object : SpitOrderTabPagePedro {
+        override fun jerk1(ctx: SpitOrderTabPage) {
+            val o = ctx.o
+            if (ctx.canEdit) {
+                o- AlRenderPile.renderModal(ModalParams(
+                    width = "80rem",
+                    leftMarginColor = Color.BLUE_GRAY_300,
+                    title = t("Parameters", "Параметры"),
+                    body = insideMarkers(id = AlDomID.modalContent, content = renderOrderParamsForm(fields))
+                ))
             }
         }
-
-        o- AlRenderPile.renderOrderParams(order)
-
-        if (canEdit) {
-            o- AlRenderPile.renderModal(ModalParams(
-                width = "80rem",
-                leftMarginColor = Color.BLUE_GRAY_300,
-                title = t("Parameters", "Параметры"),
-                body = insideMarkers(id = AlDomID.modalContent, content = renderOrderParamsForm(fields))
-            ))
-        }
-    }))
+    })
 }
 
 fun validateOrderParamsFields(fields: OrderParamsFields) {

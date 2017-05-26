@@ -274,6 +274,8 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
                 }
             }
 
+            AlFrontPile.reload()
+
             clog("We good... hopefully")
         }
     }
@@ -502,7 +504,7 @@ object AlFrontPile {
     }
 
     private fun frontInitPage_orderParams() {
-        val hasErrors = shitFromBack.hasErrors ?: wtf("818b2f27-c252-4ce7-9d96-022e4936e7bf")
+        val hasErrors = shitFromBack.hasErrors ?: wtf("07ebdde7-3a73-48bc-992a-54aba4cfb986")
         if (!hasErrors) {
             AlFrontPile.pristineModalContentHTML = findShitBetweenMarkersForDOMID(
                 document.body!!.innerHTML,
@@ -619,6 +621,10 @@ object AlFrontPile {
     fun replaceWithNewContent(domid: String, html: String) {
         val content = findShitBetweenMarkersForDOMID(html, domid)
         byIDSingle(domid)[0]!!.outerHTML = content
+    }
+
+    fun reload() {
+        window.location.reload()
     }
 
 }

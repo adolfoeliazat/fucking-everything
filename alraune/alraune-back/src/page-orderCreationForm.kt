@@ -17,7 +17,9 @@ fun handleGet_orderCreationForm() {
 
 fun handlePost_createOrder() {
     val fields = OrderParamsFields(readPostData(OrderCreationFormPostData::class))
-    shitBigReplacementToFront("d2039b9e-7c7e-4487-b230-78203c35fdf7")
+    shitToFront("d2039b9e-7c7e-4487-b230-78203c35fdf7") {
+        it.replacement_id = AlDomID.replaceableContent
+    }
     if (fields.dfctx.hasErrors) {
         spitOrderCreationFormPage(fields)
     } else {
