@@ -48,7 +48,7 @@ object AlSharedPile {
 
 object AlDomID {
     val shitPassedFromBackToFront by myName()
-    val createOrderForm_submitButton by myName()
+    val submitButton by myName()
     val ticker by myName()
     val replaceableContent by myName()
     val documentCategoryPickerContainer by myName()

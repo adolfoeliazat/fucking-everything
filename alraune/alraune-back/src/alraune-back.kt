@@ -346,7 +346,7 @@ private fun <T : Any> readPostData(klass: KClass<T>): T {
 fun renderOrderParamsForm(fields: OrderParamsFields): Renderable {
     val f = AlFields.order
     AlRequestContext.the.shitPassedFromBackToFront.documentCategoryID = fields.data.documentCategoryID
-    return kform{o->
+    return kdiv{o->
         if (fields.dfctx.hasErrors)
             o- kdiv.className(AlCSS.errorBanner).text(t("TOTE", "Кое-что нужно исправить..."))
 
@@ -380,7 +380,7 @@ fun renderOrderParamsForm(fields: OrderParamsFields): Renderable {
         o- fields.documentDetails.render()
         o- kdiv(Attrs(id = AlDomID.filePickerContainer))
         o- kdiv{o->
-            o- kbutton(Attrs(id = AlDomID.createOrderForm_submitButton, className = "btn btn-primary"), t("TOTE", "Продолжить"))
+            o- kbutton(Attrs(id = AlDomID.submitButton, className = "btn btn-primary"), t("TOTE", "Продолжить"))
             o- kdiv.id(AlDomID.ticker){}
         }
     }

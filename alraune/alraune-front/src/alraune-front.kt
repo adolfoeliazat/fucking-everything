@@ -17,14 +17,6 @@ import kotlin.reflect.KFunction0
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 
-// https://alraune.local/orderCreationForm?frontMessAround=messAroundFront201
-// https://alraune.local/orderParams?orderUUID=816dc211-2cfa-4423-a99a-fd0e3c8915ee&frontMessAround=messAroundFront301
-// https://alraune.local/orderParamsForm?orderUUID=816dc211-2cfa-4423-a99a-fd0e3c8915ee
-
-// TODO:vgrechka UI for showing logOfShitters
-//               - Just ask backend to dump shit to its console
-//               - Include stack traces along with UUIDs of shitters
-
 fun main(args: Array<String>) {
     clog("I am alraune-front 4")
     window.asDynamic()[AlFrontDebug::class.simpleName] = AlFrontDebug
@@ -191,10 +183,14 @@ class ResolvableShit<T> {
 fun ResolvableShit<Unit>.resolve() = this.resolve(Unit)
 
 object AlFrontDebug {
-    val AlFrontPile = alraune.front.AlFrontPile
+/*
+https://alraune.local/orderCreationForm?frontMessAround=messAroundFront201
+https://alraune.local/orderCreationForm?frontMessAround=messAroundFront202
+https://alraune.local/orderCreationForm?frontMessAround=messAroundFront203
+https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961&frontMessAround=messAroundFront301
+*/
 
-    var messAroundFront201: (() -> Unit)? = null
-    var messAroundFront202: (() -> Unit)? = null
+    val AlFrontPile = alraune.front.AlFrontPile
 
     suspend fun awaitPageInitAfterDoing(block: () -> Unit) {
         AlFrontPile.pageInitSignal.reset()
@@ -204,7 +200,7 @@ object AlFrontDebug {
 
     suspend fun clickSubmitAndAwaitPageInit() {
         awaitPageInitAfterDoing {
-            byIDSingle(AlDomID.createOrderForm_submitButton).click()
+            byIDSingle(AlDomID.submitButton).click()
         }
     }
 
@@ -301,7 +297,11 @@ object AlFrontDebug {
         }
     }
 
-    var messAroundFront301: (() -> Unit)? = null
+    fun messAroundFront301() {
+        async {
+            clickButtonAndAwaitModalShown(AlDomID.editOrderParamsButton)
+        }
+    }
 
     fun dumpBackCodePath() {
         async {
@@ -310,6 +310,44 @@ object AlFrontDebug {
             clog("Sent debug request")
         }
     }
+
+    fun make2xx(tamperWith: (OrderCreationFormPostData) -> OrderCreationFormPostData): () -> Unit {
+        return {
+            async {
+                val data = tamperWith(OrderCreationFormPostData(
+                    orderUUID = "boobs",
+                    email = "iperdonde@mail.com",
+                    name = "Иммануил Пердондэ",
+                    phone = "+38 (068) 4542823",
+                    documentTypeID = "PRACTICE",
+                    documentTitle = "Как я пинал хуи на практике",
+                    documentDetails = "Детали? Я ебу, какие там детали...",
+                    documentCategoryID = "boobs",
+                    numPages = "35",
+                    numSources = "7"))
+                // TODO:vgrechka @improve d0fc960d-76be-4a0b-969c-7bbf94275e09
+                val o = AlFrontPile::populateTextField
+                o(data::email)
+                o(data::name)
+                o(data::phone)
+                o(data::documentTitle)
+                o(data::documentDetails)
+                o(data::numPages)
+                o(data::numSources)
+                o(data::documentTypeID)
+
+                AlFrontPile.documentCategoryPicker.let {
+                    it.debug_setSelectValue(AlDocumentCategories.humanitiesID)
+                    it.debug_setSelectValue(AlDocumentCategories.linguisticsID)
+                }
+
+                clickSubmitAndAwaitPageInit()
+            }
+        }
+    }
+
+    val messAroundFront201 = make2xx {it}
+    val messAroundFront202 = make2xx {it.copy(email = "", phone = "bullshit", documentDetails = "")}
 }
 
 private fun parseShitFromBack() {
@@ -475,7 +513,6 @@ object AlFrontPile {
 
         val modalJQ = byIDSingle(AlDomID.orderParamsModal).asDynamic()
         modalJQ.on("shown.bs.modal") {
-            clog("shown")
             AlFrontPile.modalShownLock.resumeTestFromSut()
         }
         modalJQ.on("hidden.bs.modal") {
@@ -488,10 +525,6 @@ object AlFrontPile {
             modalJQ.modal()
         }
         byIDSingle(AlDomID.editOrderParamsButton).onClick {handler()}
-
-        AlFrontDebug.messAroundFront301 = {
-            handler()
-        }
     }
 
     private fun frontInitPage_orderCreationForm() {
@@ -507,11 +540,12 @@ object AlFrontPile {
     private fun initOrderParamsLikeControls() {
         val documentCategoryPicker = DocumentCategoryPicker()
         AlFrontPile.documentCategoryPicker = documentCategoryPicker
-        val button = byID(AlDomID.createOrderForm_submitButton)
+        val buttonJQ = byID(AlDomID.submitButton)
 
         // TODO:vgrechka Remove event handlers
         fun submitButtonHandler() {
             clog("i am the fucking submitButtonHandler")
+            buttonJQ.attr("disabled", "true")
             showTicker()
 
             @Suppress("UNUSED_VARIABLE")
@@ -557,42 +591,7 @@ object AlFrontPile {
             }
         }
 
-        fun make2xx(tamperWith: (OrderCreationFormPostData) -> OrderCreationFormPostData): () -> Unit {
-            return {
-                val data = tamperWith(OrderCreationFormPostData(
-                    orderUUID = "boobs",
-                    email = "iperdonde@mail.com",
-                    name = "Иммануил Пердондэ",
-                    phone = "+38 (068) 4542823",
-                    documentTypeID = "PRACTICE",
-                    documentTitle = "Как я пинал хуи на практике",
-                    documentDetails = "Детали? Я ебу, какие там детали...",
-                    documentCategoryID = "boobs",
-                    numPages = "35",
-                    numSources = "7"))
-                // TODO:vgrechka @improve d0fc960d-76be-4a0b-969c-7bbf94275e09
-                val o = AlFrontPile::populateTextField
-                o(data::email)
-                o(data::name)
-                o(data::phone)
-                o(data::documentTitle)
-                o(data::documentDetails)
-                o(data::numPages)
-                o(data::numSources)
-                o(data::documentTypeID)
-
-                documentCategoryPicker.debug_setSelectValue(AlDocumentCategories.humanitiesID)
-                documentCategoryPicker.debug_setSelectValue(AlDocumentCategories.linguisticsID)
-                submitButtonHandler()
-            }
-        }
-
-        // https://alraune.local/order?frontMessAround=messAroundFront201
-        AlFrontDebug.messAroundFront201 = make2xx {it}
-        AlFrontDebug.messAroundFront202 = make2xx {it.copy(email = "", phone = "bullshit", documentDetails = "")}
-
-        button.on("click") {
-            it.preventAndStop()
+        buttonJQ.onClick {
             submitButtonHandler()
         }
     }
