@@ -439,6 +439,7 @@ class TestLock(
 }
 
 object AlFrontPile {
+    val isDebugMode = true
     val debug_sleepBeforePost = 1000
     var shitFromBack by notNull<PieceOfShitFromBack>()
     var pristineModalContentHTML by notNull<String>()
@@ -503,10 +504,9 @@ object AlFrontPile {
     private fun frontInitPage_orderParams() {
         val hasErrors = shitFromBack.hasErrors ?: wtf("818b2f27-c252-4ce7-9d96-022e4936e7bf")
         if (!hasErrors) {
-            AlFrontPile.pristineModalContentHTML = findShitBetweenMarkers(
+            AlFrontPile.pristineModalContentHTML = findShitBetweenMarkersForDOMID(
                 document.body!!.innerHTML,
-                AlSharedPile.beginModalContentMarker,
-                AlSharedPile.endModalContentMarker)
+                AlDomID.modalContent)
         }
 
         initOrderParamsLikeControls()
@@ -531,10 +531,24 @@ object AlFrontPile {
         initOrderParamsLikeControls()
     }
 
-    fun findShitBetweenMarkers(haystack: String, beginMarker: String, endMarker: String): String {
-        val i1 = haystack.indexOfOrNull(beginMarker) ?: wtf("c7ef8f87-c3ea-4d02-b31a-717dc1a8a01f")
-        val i2 = haystack.indexOfOrNull(endMarker) ?: wtf("91747d64-af48-43a6-85ec-59a69994fd11")
+    fun findShitBetweenMarkersForDOMID(haystack: String, id: String): String {
+        val beginMarker = AlSharedPile.beginContentMarkerForDOMID(id)
+        val endMarker = AlSharedPile.endContentMarkerForDOMID(id)
+        val i1 = indexOfOrBitchNoisily(haystack, beginMarker, "abe97b2e-f40a-4f3a-9b8f-38642695b22a")
+        val i2 = indexOfOrBitchNoisily(haystack, endMarker, "52d8da6a-7e19-41ae-8065-be94247314d9")
         return haystack.substring(i1 + beginMarker.length, i2)
+    }
+
+    private fun indexOfOrBitchNoisily(haystack: String, needle: String, errorMessage: String): Int {
+        val index = haystack.indexOfOrNull(needle)
+        if (index == null) {
+            if (AlFrontPile.isDebugMode) {
+                clog("needle =", needle)
+                clog("haystack =", haystack)
+            }
+            bitch(errorMessage)
+        }
+        return index
     }
 
     private fun initOrderParamsLikeControls() {
@@ -565,20 +579,13 @@ object AlFrontPile {
                 sleep(debug_sleepBeforePost)
                 // AlFrontPile.sleepTillEndOfTime()
 
-                val html = post(shitFromBack.postPath, data)
                 // clog("html", html)
 
-                fun jerk(beginMarker: String, endMarker: String, idToReplace: String) {
-                    val content = findShitBetweenMarkers(html, beginMarker, endMarker)
-                    byIDSingle(idToReplace)[0]!!.outerHTML = content
-                }
-
-                jerk(AlSharedPile.beginShitPassedFromBackToFrontMarker, AlSharedPile.endShitPassedFromBackToFrontMarker, AlDomID.shitPassedFromBackToFront)
+                val html = post(shitFromBack.postPath, data)
+                replaceWithNewContent(AlDomID.shitPassedFromBackToFront, html)
                 parseShitFromBack()
                 val modalJQ = byID(AlDomID.orderParamsModal).asDynamic()
-                jerk(shitFromBack.replacement_beginMarker ?: wtf("3172e16b-1fd7-4774-b661-de17be1676dc"),
-                     shitFromBack.replacement_endMarker ?: wtf("cc342050-d17f-4fb5-b316-b1f52c8371af"),
-                     shitFromBack.replacement_id ?: wtf("40531be5-b7de-47e3-9f7e-6ff4b5f12c4c"))
+                replaceWithNewContent(shitFromBack.replacement_id ?: wtf("40531be5-b7de-47e3-9f7e-6ff4b5f12c4c"), html)
 
                 if (shitFromBack.pageID == AlPageID.orderParams) {
                     val hasErrors = shitFromBack.hasErrors ?: wtf("b7b2b8ef-dd9c-4212-bbc7-842d6ef91af0")
@@ -608,6 +615,12 @@ object AlFrontPile {
     fun delay(ms: Int): Promise<Unit> = Promise {resolve, _ ->
         window.setTimeout({resolve(Unit)}, ms)
     }
+
+    fun replaceWithNewContent(domid: String, html: String) {
+        val content = findShitBetweenMarkersForDOMID(html, domid)
+        byIDSingle(domid)[0]!!.outerHTML = content
+    }
+
 }
 
 

@@ -6,12 +6,12 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 
 object AlSharedPile {
-    val beginContentMarker = "<!--4e2bb1ac-ec20-494c-8731-36d7c31e62ce-->"
-    val endContentMarker = "<!--53693d6d-acc5-4a87-9dc4-b043e6370c10-->"
-    val beginShitPassedFromBackToFrontMarker = "<!--a070f8fb-e925-4420-b74a-5de399f14277-->"
-    val endShitPassedFromBackToFrontMarker = "<!--96a1cbe1-deae-46f5-a9ef-84446169acb0-->"
-    val beginModalContentMarker = "<!--68b1a994-5b0c-4bb3-b932-63332997e4ec-->"
-    val endModalContentMarker = "<!--ff947aac-6bdb-41e0-b157-b4d113901c70-->"
+//    val beginContentMarker = "<!--4e2bb1ac-ec20-494c-8731-36d7c31e62ce-->"
+//    val endContentMarker = "<!--53693d6d-acc5-4a87-9dc4-b043e6370c10-->"
+//    val beginShitPassedFromBackToFrontMarker = "<!--a070f8fb-e925-4420-b74a-5de399f14277-->"
+//    val endShitPassedFromBackToFrontMarker = "<!--96a1cbe1-deae-46f5-a9ef-84446169acb0-->"
+//    val beginModalContentMarker = "<!--68b1a994-5b0c-4bb3-b932-63332997e4ec-->"
+//    val endModalContentMarker = "<!--ff947aac-6bdb-41e0-b157-b4d113901c70-->"
     val scrollbarWidth = 17
 
     object attribute {
@@ -23,6 +23,12 @@ object AlSharedPile {
         val rightAngleQuote = "»"
         val times = "×"
     }
+
+    fun beginContentMarkerForDOMID(id: String) =
+        "<!--beginContent--$id--38a770eb-8115-4dce-a9f5-be77da11b8ed-->"
+
+    fun endContentMarkerForDOMID(id: String) =
+        "<!--endContent--$id--bae5759c-4e98-41e7-9b02-c32dea4939c2-->"
 
     enum class GetParam {
         page, fakeSetting
@@ -64,6 +70,7 @@ object AlPageID {
     val landing by myName()
     val orderCreationForm by myName()
     val orderParams by myName()
+    val orderFiles by myName()
 }
 
 object AlPagePath {
@@ -72,6 +79,7 @@ object AlPagePath {
     val orderCreationForm by slashMyName()
     val post_createOrder by slashMyName()
     val orderParams by slashMyName()
+    val orderFiles by slashMyName()
     val post_setOrderParams by slashMyName()
 }
 
@@ -200,8 +208,6 @@ class PieceOfShitFromBack {
     var postPath: String = "boobs-postPath"
     var documentCategoryID = "boobs-documentCategoryID"
     var historyPushState: String? = null
-    var replacement_beginMarker: String? = null
-    var replacement_endMarker: String? = null
     var replacement_id: String? = null
     var orderUUID = "boobs-orderUUID"
     var hasErrors: Boolean? = null

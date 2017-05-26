@@ -18,6 +18,7 @@
       <w>dejsonized</w>
       <w>devtools</w>
       <w>dirname</w>
+      <w>domid</w>
       <w>dunduk</w>
       <w>env;</w>
       <w>exts</w>
@@ -78,6 +79,7 @@
       <w>struct</w>
       <w>testref</w>
       <w>tfvc</w>
+      <w>unboilerplate</w>
       <w>unparsable</w>
       <w>unserialize</w>
       <w>vbox</w>
