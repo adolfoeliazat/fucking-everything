@@ -43,6 +43,7 @@ object AlSharedPile {
             .replace("'", "&#39;")
             .replace("\"", "&#34;")
     }
+
 }
 
 object AlDomID {
@@ -128,7 +129,7 @@ object AlCSS {
                 height: 34px;
                 float: right;
                 animation-name: ${AlDomID.ticker};
-                animation-duration: 5000ms;
+                animation-duration: 500ms;
                 animation-iteration-count: infinite;
             }
 

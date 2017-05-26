@@ -584,6 +584,7 @@ class OrderParamsFields(val data: OrderCreationFormPostData) {
 
 private fun handlePost_createOrder() {
     val fields = OrderParamsFields(readPostData(OrderCreationFormPostData::class))
+    shitBigReplacementToFront("d2039b9e-7c7e-4487-b230-78203c35fdf7")
     if (fields.dfctx.hasErrors) {
         spitOrderCreationFormPage(fields)
     } else {
@@ -599,7 +600,6 @@ private fun handlePost_createOrder() {
             it.hasErrors = false
             it.historyPushState = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))
         }
-        shitBigReplacementToFront("d2039b9e-7c7e-4487-b230-78203c35fdf7")
         spitOrderParamsPage(order, fields)
     }
 }

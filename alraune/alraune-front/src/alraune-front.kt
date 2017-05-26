@@ -35,11 +35,12 @@ fun main(args: Array<String>) {
 
         @Suppress("UnsafeCastFromDynamic")
         KJSPile.getURLParam("frontMessAround")?.let {
-            val f = AlFrontDebug.asDynamic()[it] as? KFunction0<*> ?: bitch("$it is not a function")
-            f()
+            val f = AlFrontDebug.asDynamic()[it] ?: bitch("de7c46eb-7ad6-4c39-a605-81b21aa4d539")
+            f.call(AlFrontDebug)
         }
     }
 }
+
 
 private fun initDebugFacilities() {
     val body = document.body!!
@@ -106,14 +107,137 @@ class AlFrontSecurity {
     }
 }
 
+external class WeakMap<in K: Any, V: Any?> {
+    fun delete(key: K): Boolean
+    operator fun get(key: K): V?
+    fun has(key: K): Boolean
+    operator fun set(key: K, value: V): WeakMap<K, V>
+}
+
+inline fun <K: Any, V> WeakMap<K, V>.getOrPut(key: K, defaultValue: () -> V): V {
+    val value = get(key)
+    return if (value == null) {
+        val answer = defaultValue()
+        set(key, answer)
+        answer
+    } else {
+        value
+    }
+}
+
+object NamesOfThings {
+    private val thingToName = WeakMap<Any, String>()
+    private val sourceToSinks = WeakMap<Any, MutableList<Any>>()
+
+    operator fun set(thing: Any, name: String) {
+        thingToName[thing] = name
+        val sinks = sourceToSinks[thing]
+        sinks?.forEach {set(it, name)}
+    }
+
+    operator fun get(thing: Any): String? {
+        return thingToName[thing]
+    }
+
+    fun flow(from: Any, to: Any) {
+        val sinks = sourceToSinks.getOrPut(from) {mutableListOf()}
+        sinks += to
+
+        get(from)?.let {name->
+            sinks.forEach {set(it, name)}
+        }
+    }
+
+    fun unflow(from: Any, to: Any) {
+        sourceToSinks[from]?.let {sinks->
+            sinks -= to
+        }
+    }
+}
+
+class ResolvableShit<T> {
+    private var _resolve by notNull<(T) -> Unit>()
+    private var _reject by notNull<(Throwable) -> Unit>()
+    private var _promise by notNull<Promise<T>>()
+    private var hasPromise = false
+
+    init {
+        reset()
+    }
+
+    val promise: Promise<T> get() = _promise
+    fun resolve(value: T) = _resolve(value)
+    fun reject(e: Throwable) = _reject(e)
+
+    suspend fun get(): T = await(promise)
+    suspend fun wait(): T = await(promise)
+
+    fun reset() {
+        if (hasPromise) {
+            NamesOfThings.unflow(this, promise)
+        }
+
+        _promise = Promise<T> {resolve, reject ->
+            this._resolve = resolve
+            this._reject = reject
+        }
+        hasPromise = true
+        NamesOfThings.flow(this, promise)
+    }
+}
+
 object AlFrontDebug {
     val AlFrontPile = alraune.front.AlFrontPile
 
     var messAroundFront201: (() -> Unit)? = null
     var messAroundFront202: (() -> Unit)? = null
 
+    suspend fun awaitPageInitAfterDoing(block: () -> Unit) {
+        AlFrontPile.pageInitSignal.reset()
+        block()
+        AlFrontPile.pageInitSignal.wait()
+    }
+
+    suspend fun clickSubmitAndAwaitPageInit() {
+        awaitPageInitAfterDoing {
+            byIDSingle(AlDomID.createOrderForm_submitButton).click()
+        }
+    }
+
     fun messAroundFront203() {
-//        byIDSingle(AlDomID.createOrderForm_submitButton).click()
+        async {
+            clickSubmitAndAwaitPageInit()
+            clog("yyyyyyyeeeeeeeahhhhhhh")
+            val data = OrderCreationFormPostData(
+                orderUUID = "boobs",
+                email = "iperdonde@mail.com",
+                name = "Иммануил Пердондэ",
+                phone = "+38 (068) 4542823",
+                documentTypeID = "PRACTICE",
+                documentTitle = "Как я пинал хуи на практике",
+                documentDetails = "Детали? Я ебу, какие там детали...",
+                documentCategoryID = "boobs",
+                numPages = "35",
+                numSources = "7")
+            // TODO:vgrechka @improve d0fc960d-76be-4a0b-969c-7bbf94275e09
+            val o = AlFrontPile::populateTextField
+            o(data::email)
+            o(data::name)
+            o(data::phone)
+            o(data::documentTitle)
+            o(data::documentDetails)
+            o(data::numPages)
+            o(data::numSources)
+            o(data::documentTypeID)
+
+            AlFrontPile.documentCategoryPicker.let {
+                it.debug_setSelectValue(AlDocumentCategories.humanitiesID)
+                it.debug_setSelectValue(AlDocumentCategories.linguisticsID)
+            }
+
+            clickSubmitAndAwaitPageInit()
+            clog("wooooooohooooooooooo")
+        }
     }
 
     var messAroundFront301: (() -> Unit)? = null
@@ -142,6 +266,8 @@ object AlFrontPile {
     val debug_sleepBeforePost = 1000
     var shitFromBack by notNull<PieceOfShitFromBack>()
     var pristineModalContentHTML by notNull<String>()
+    val pageInitSignal = ResolvableShit<Unit>()
+    var documentCategoryPicker by notNull<DocumentCategoryPicker>()
 
 //    object google {
 //        var auth2 by notNullOnce<gapi.auth2.GoogleAuth>()
@@ -192,6 +318,8 @@ object AlFrontPile {
             AlPageID.orderCreationForm -> frontInitPage_orderCreationForm()
             AlPageID.orderParams -> frontInitPage_orderParams()
         }
+
+        AlFrontPile.pageInitSignal.resolve(Unit)
     }
 
     private fun frontInitPage_orderParams() {
@@ -229,6 +357,7 @@ object AlFrontPile {
 
     private fun initOrderParamsLikeControls() {
         val documentCategoryPicker = DocumentCategoryPicker()
+        AlFrontPile.documentCategoryPicker = documentCategoryPicker
         val button = byID(AlDomID.createOrderForm_submitButton)
 
         // TODO:vgrechka Remove event handlers
@@ -267,9 +396,12 @@ object AlFrontPile {
                 jerk(shitFromBack.replacement_beginMarker ?: wtf("3172e16b-1fd7-4774-b661-de17be1676dc"),
                      shitFromBack.replacement_endMarker ?: wtf("cc342050-d17f-4fb5-b316-b1f52c8371af"),
                      shitFromBack.replacement_id ?: wtf("40531be5-b7de-47e3-9f7e-6ff4b5f12c4c"))
-                val hasErrors = shitFromBack.hasErrors ?: wtf("b7b2b8ef-dd9c-4212-bbc7-842d6ef91af0")
-                if (!hasErrors) {
-                    modalJQ.modal("hide")
+
+                if (shitFromBack.pageID == AlPageID.orderParams) {
+                    val hasErrors = shitFromBack.hasErrors ?: wtf("b7b2b8ef-dd9c-4212-bbc7-842d6ef91af0")
+                    if (!hasErrors) {
+                        modalJQ.modal("hide")
+                    }
                 }
 
                 initShit()
