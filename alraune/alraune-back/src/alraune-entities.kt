@@ -56,7 +56,7 @@ interface AlUAOrderFile : GCommonEntityFields {
     @GManyToOne var order: AlUAOrder
 
     fun toForm() = OrderFileFormPostData(
-        orderUUID = null, fileUUID = uuid,
+        orderUUID = order.uuid, fileUUID = uuid,
         name = name, title = title, details = details)
 }
 

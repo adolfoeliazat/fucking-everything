@@ -17,7 +17,7 @@ fun handleGet_orderCreationForm() {
 }
 
 fun handlePost_createOrder() {
-    val fields = OrderParamsFields(readPostData(OrderCreationFormPostData::class))
+    val fields = OrderParamsFields(rctx.orderCreationFormPostData)
     fields.fieldCtx.validate()
     shitToFront("d2039b9e-7c7e-4487-b230-78203c35fdf7") {
         it.replacement_id = AlDomID.replaceableContent
@@ -26,7 +26,7 @@ fun handlePost_createOrder() {
         spitOrderCreationFormPage(fields)
     } else {
         validateOrderParamsFields(fields)
-        val order = alUAOrderRepo.save(newAlUAOrder(
+        rctx.createdOrder = alUAOrderRepo.save(newAlUAOrder(
             uuid = UUID.randomUUID().toString(), state = UAOrderState.CUSTOMER_DRAFT,
             email = fields.email.value, contactName = fields.contactName.value, phone = fields.phone.value,
             documentTitle = fields.documentTitle.value, documentDetails = fields.documentDetails.value,
@@ -35,9 +35,9 @@ fun handlePost_createOrder() {
 
         shitToFront("cce77e9c-e7f2-4f17-9554-0e27ee982ed2") {
             it.hasErrors = false
-            it.historyPushState = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))
+            it.historyPushState = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = rctx.order.uuid))
         }
-        spitOrderParamsPage(order, fields)
+        spitOrderParamsPage(fields)
     }
 }
 

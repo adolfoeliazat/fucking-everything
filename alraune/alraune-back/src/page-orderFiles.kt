@@ -5,11 +5,7 @@ import alraune.shared.*
 import vgrechka.*
 import java.util.*
 
-interface Ctx100 {
-    val order: AlUAOrder
-}
-
-private fun  _makeSpitOrderTabPagePedro(ctx: Ctx100, fields: OrderFileFields): SpitOrderTabPagePedro {
+private fun  _makeSpitOrderTabPagePedro(fields: OrderFileFields): SpitOrderTabPagePedro {
     return object : SpitOrderTabPagePedro {
         override val topRightButtonModalTitle = t("New File", "Новый файл")
         override val pageID = AlPageID.orderFiles
@@ -17,7 +13,6 @@ private fun  _makeSpitOrderTabPagePedro(ctx: Ctx100, fields: OrderFileFields): S
 
         override fun renderTopRightModalContent(): Renderable {
             return kdiv{o->
-                clog("aaaaaaaaaaaaaaaaaaa " + fields.fieldCtx.hasErrors)
                 o- renderForm(dfctx = fields.fieldCtx,
                               shitDataNecessaryForControlsToFront = {},
                               renderFormBody = {kdiv{o->
@@ -43,35 +38,35 @@ fun handleGet_orderFiles() {
     // TODO:vgrechka Algo1 one should get (Algo1) -> Algo1Pedro parameter
     Algo1(object : Algo1Pedro {
         override fun makeSpitOrderTabPagePedro(ctx: Algo1): SpitOrderTabPagePedro {
-            val fields = makeBlankFields(ctx)
-            return _makeSpitOrderTabPagePedro(ctx, fields)
+            val fields = makeBlankFields()
+            return _makeSpitOrderTabPagePedro(fields)
         }
     })
 }
 
-private fun makeBlankFields(ctx: Ctx100): OrderFileFields {
+private fun makeBlankFields(): OrderFileFields {
     val orderFileFields = OrderFileFields(newAlUAOrderFile(
         uuid = "boobs",
         state = UAOrderFileState.UNKNOWN,
         name = "",
         title = "",
         details = "",
-        order = ctx.order).toForm())
+        order = rctx.order).toForm())
     orderFileFields.fieldCtx.noValidation()
     return orderFileFields
 }
 
 fun handlePost_addOrderFile() {
     HandleOrderTabPagePost(
-        postDataClass = OrderFileFormPostData::class,
+        getPostData = {rctx.orderFileFormPostData},
         fieldsCtor = ::OrderFileFields,
         makePedro = {ctx-> object:HandleOrderTabPagePostPedro<OrderFileFormPostData, OrderFileFields> {
             override fun spitPage() {
                 val fields = when {
                     ctx.fields.fieldCtx.hasErrors -> ctx.fields
-                    else -> makeBlankFields(ctx)
+                    else -> makeBlankFields()
                 }
-                SpitOrderTabPage(ctx.order, _makeSpitOrderTabPagePedro(ctx, fields))
+                SpitOrderTabPage(_makeSpitOrderTabPagePedro(fields))
             }
 
             override fun validateDataAndUpdateDB() {
@@ -81,7 +76,7 @@ fun handlePost_addOrderFile() {
                     name = "todo",
                     title = ctx.fields.title.value,
                     details = ctx.fields.details.value,
-                    order = ctx.order
+                    order = rctx.order
                 ))
             }
 

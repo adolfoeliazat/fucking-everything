@@ -11,9 +11,9 @@ import kotlin.reflect.KClass
 fun handleGet_orderParams() {
     Algo1(object : Algo1Pedro {
         override fun makeSpitOrderTabPagePedro(ctx: Algo1): SpitOrderTabPagePedro {
-            val fields = OrderParamsFields(ctx.order.toForm())
+            val fields = OrderParamsFields(rctx.order.toForm())
             fields.fieldCtx.noValidation()
-            return makePedroForParamsTag(ctx.order, fields)
+            return makePedroForParamsTag(fields)
         }
     })
 }
@@ -25,50 +25,49 @@ interface Algo1Pedro {
 /**
  * This is, basically, a way to call SpitOrderTabPage, bringing order from database into context beforehand.
  */
-class Algo1(pedro: Algo1Pedro): Ctx100 {
-    val orderUUID = AlRequestContext.the.getParams.orderUUID ?: bitch("0fe1dd78-8afd-4511-b743-7fc3b5ac78ce")
-    override val order = alUAOrderRepo.findByUuid(orderUUID) ?: bitch("bcfc6c38-585c-43f9-8984-c26d9c113e4e")
-
+class Algo1(pedro: Algo1Pedro) {
     init {
         shitToFront("954a5058-5ae6-40c7-bb45-06b0eeae8bc7") {
             it.hasErrors = false
         }
-        SpitOrderTabPage(order, pedro.makeSpitOrderTabPagePedro(this))
+        SpitOrderTabPage(pedro.makeSpitOrderTabPagePedro(this))
     }
 }
 
 fun handlePost_setOrderParams() {
     HandleOrderTabPagePost(
-        postDataClass = OrderCreationFormPostData::class,
+        getPostData = {rctx.orderCreationFormPostData},
         fieldsCtor = ::OrderParamsFields,
         makePedro = {host-> object:HandleOrderTabPagePostPedro<OrderCreationFormPostData, OrderParamsFields> {
             override fun spitPage() {
-                spitOrderParamsPage(host.order, host.fields)
+                spitOrderParamsPage(host.fields)
             }
 
             override fun validateDataAndUpdateDB() {
                 validateOrderParamsFields(host.fields)
                 // TODO:vgrechka Show error to user instead of just dying
 
-                host.order.email = host.fields.email.value
-                host.order.contactName = host.fields.contactName.value
-                host.order.phone = host.fields.phone.value
-                host.order.documentTitle = host.fields.documentTitle.value
-                host.order.documentDetails = host.fields.documentDetails.value
-                host.order.documentTypeID = host.fields.data.documentTypeID
-                host.order.documentCategoryID = host.fields.data.documentCategoryID
-                host.order.numPages = host.fields.numPages.value.toInt()
-                host.order.numSources = host.fields.numSources.value.toInt()
+                rctx.order.let {
+                    it.email = host.fields.email.value
+                    it.contactName = host.fields.contactName.value
+                    it.phone = host.fields.phone.value
+                    it.documentTitle = host.fields.documentTitle.value
+                    it.documentDetails = host.fields.documentDetails.value
+                    it.documentTypeID = host.fields.data.documentTypeID
+                    it.documentCategoryID = host.fields.data.documentCategoryID
+                    it.numPages = host.fields.numPages.value.toInt()
+                    it.numSources = host.fields.numSources.value.toInt()
+                }
 
                 if (AlDebugServerFiddling.fuckDatabaseForPost.getAndReset() == true) {
                     bitch("Our database is fucked up, man. No fucking service today. Yeah, and fuck you too...")
                 } else {
-                    alUAOrderRepo.save(host.order)
+                    alUAOrderRepo.save(rctx.order)
                 }
             }
 
             override fun additionallyShitToFrontOnSuccess(shit: PieceOfShitFromBack) {
-                shit.historyPushState = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = host.order.uuid))
+                shit.historyPushState = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = rctx.order.uuid))
             }
         }}
     )
@@ -83,10 +82,9 @@ where PostData : WithMaybeOrderUUID, Fields : WithFieldContext
 }
 
 class HandleOrderTabPagePost<PostData, Fields>(
-    postDataClass: KClass<PostData>,
+    getPostData: () -> PostData,
     fieldsCtor: (PostData) -> Fields,
     makePedro: (HandleOrderTabPagePost<PostData, Fields>) -> HandleOrderTabPagePostPedro<PostData, Fields>)
-    : Ctx100
     where PostData : WithMaybeOrderUUID, Fields : WithFieldContext
 {
     init {
@@ -95,9 +93,8 @@ class HandleOrderTabPagePost<PostData, Fields>(
         }
     }
 
-    val data = readPostData(postDataClass)
+    val data = getPostData()
     val uuid = data.orderUUID ?: bitch("4c7f82b3-6347-4f25-8949-2f96e5af4713")
-    override val order = alUAOrderRepo.findByUuid(uuid) ?: bitch("0ef3a079-e1c6-41bf-bfa9-8540ae9d0082")
     val fields = fieldsCtor(data)
     val pedro = makePedro(this)
 
@@ -130,7 +127,7 @@ interface SpitOrderTabPagePedro {
     val topRightButtonModalTitle: String
 }
 
-class SpitOrderTabPage(order: AlUAOrder, pedro: SpitOrderTabPagePedro) {
+class SpitOrderTabPage(pedro: SpitOrderTabPagePedro) {
     var o by notNullOnce<Tag>()
     var canEdit by notNullOnce<Boolean>()
 
@@ -140,14 +137,14 @@ class SpitOrderTabPage(order: AlUAOrder, pedro: SpitOrderTabPagePedro) {
         shitToFront("054bb78d-238e-4313-9b75-820c5a37097c") {
             it.pageID = pedro.pageID
             it.postPath = pedro.postPath
-            it.orderUUID = order.uuid
+            it.orderUUID = rctx.order.uuid
         }
 
         spitUsualPage(replaceableContent(kdiv{o->
             this.o = o
-            canEdit = order.state == UAOrderState.CUSTOMER_DRAFT
+            canEdit = rctx.order.state == UAOrderState.CUSTOMER_DRAFT
 
-            o- renderOrderTitle(order)
+            o- renderOrderTitle(rctx.order)
 //            o- kdiv.className(AlCSS.successBanner).text(t("TOTE", "Все круто, заказ создан. Мы с тобой скоро свяжемся"))
             o- kdiv.className(AlCSS.submitForReviewBanner){o->
                 o- kdiv(Style(flexGrow = "1")).text(t("TOTE", "Убедись, что все верно. Подредактируй, если нужно. Возможно, добавь файлы. А затем..."))
@@ -159,11 +156,11 @@ class SpitOrderTabPage(order: AlUAOrder, pedro: SpitOrderTabPagePedro) {
                     fun maybeActive(tab: Tab) = if (pedro.activeTab == tab) "active" else ""
 
                     o- kli.className(maybeActive(Tab.PARAMS))
-                        .add(ka(Attrs(href = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))))
+                        .add(ka(Attrs(href = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = rctx.order.uuid))))
                                  .add(t("Parameters", "Параметры")))
 
                     o- kli.className(maybeActive(Tab.FILES))
-                        .add(ka(Attrs(href = makeURLPart(AlPagePath.orderFiles, AlGetParams(orderUUID = order.uuid))))
+                        .add(ka(Attrs(href = makeURLPart(AlPagePath.orderFiles, AlGetParams(orderUUID = rctx.order.uuid))))
                                  .add(t("Files", "Файлы")))
                 }
 
@@ -189,11 +186,11 @@ class SpitOrderTabPage(order: AlUAOrder, pedro: SpitOrderTabPagePedro) {
     }
 }
 
-fun spitOrderParamsPage(order: AlUAOrder, fields: OrderParamsFields) {
-    SpitOrderTabPage(order, makePedroForParamsTag(order, fields))
+fun spitOrderParamsPage(fields: OrderParamsFields) {
+    SpitOrderTabPage(makePedroForParamsTag(fields))
 }
 
-private fun makePedroForParamsTag(order: AlUAOrder, fields: OrderParamsFields): SpitOrderTabPagePedro {
+private fun makePedroForParamsTag(fields: OrderParamsFields): SpitOrderTabPagePedro {
     return object : SpitOrderTabPagePedro {
         override val topRightButtonModalTitle = t("Parameters", "Параметры")
         override val pageID = AlPageID.orderParams
@@ -204,7 +201,7 @@ private fun makePedroForParamsTag(order: AlUAOrder, fields: OrderParamsFields): 
         override val activeTab = SpitOrderTabPage.Tab.PARAMS
 
         override fun renderContent(): Renderable {
-            return AlRenderPile.renderOrderParams(order)
+            return AlRenderPile.renderOrderParams(rctx.order)
         }
     }
 }

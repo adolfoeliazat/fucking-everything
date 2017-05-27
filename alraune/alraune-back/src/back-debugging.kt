@@ -38,7 +38,7 @@ fun handlePost_debug_post_fuckDatabaseForNextPost() {
 }
 
 fun handlePost_debug_post_dumpStackByID() {
-    val data = readPostData(DumpStackByIDPostData::class)
+    val data = rctx.dumpStackByIDPostData
     val stack = AlBackPile.idToTagCreationStack[data.stackID] ?: bitch("5aaece41-c3f3-4eae-8c98-e7f69147ef3b")
     clog(stack
              .lines()
@@ -52,7 +52,7 @@ fun handlePost_debug_post_dumpStackByID() {
 }
 
 fun handlePost_debug_post_dumpBackCodePath() {
-    val data = readPostData(DumpBackCodePathPostData::class)
+    val data = rctx.dumpBackCodePathPostData
     clog("\n=============== requestContextID = ${data.requestContextID} ===================")
     val ctx = AlBackDebug.idToRequestContext[data.requestContextID] ?: bitch("data.requestID = ${data.requestContextID}    225159bd-f456-4cb2-9503-b8e6be6d6139")
     for ((index, codeStep) in ctx.codeSteps.withIndex()) {

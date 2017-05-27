@@ -15,15 +15,10 @@ import alraune.back.AlRenderPile.pageTitle
 import alraune.back.AlRenderPile.rawHTML
 import alraune.shared.*
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.sun.xml.internal.ws.developer.MemberSubmissionAddressing
 import org.eclipse.jetty.server.handler.HandlerCollection
 import org.eclipse.jetty.server.handler.ResourceHandler
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.properties.Delegates
-import kotlin.properties.Delegates.notNull
-import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberProperties
@@ -233,18 +228,40 @@ object AlCSS_Back {
         buf.toString()
     }
 }
-interface Should {
-    val should: Boolean
-}
 
 class AlRequestContext {
     val requestContextID = DebugPile.nextPUID().toString()
-    val log = AlBackPile0.log // TODO:vgrechka Make this log somehow specific to a perticular request
+    val log = AlBackPile0.log // TODO:vgrechka Make this log somehow specific to a particular request
     var req by notNullOnce<HttpServletRequest>()
     var res by notNullOnce<HttpServletResponse>()
     val shitPassedFromBackToFront = PieceOfShitFromBack()
-    var getParams by notNullOnce<AlGetParams>()
+    var getParams by notNullOnce<AlGetParams>() // TODO:vgrechka Rename
     val codeSteps = mutableListOf<CodeStep>()
+    var createdOrder: AlUAOrder? = null // TODO:vgrechka Enforce setting only once?
+
+    val orderCreationFormPostData by lazy {readPostData(OrderCreationFormPostData::class)}
+    val orderFileFormPostData by lazy {readPostData(OrderFileFormPostData::class)}
+    val dumpStackByIDPostData by lazy {readPostData(DumpStackByIDPostData::class)}
+    val dumpBackCodePathPostData by lazy {readPostData(DumpBackCodePathPostData::class)}
+
+    val orderUUID by lazy {
+        if (isPost) {
+            when (req.pathInfo) {
+                // TODO:vgrechka Separate (from order creation) data class?
+                AlPagePath.post_setOrderParams -> orderCreationFormPostData.orderUUID ?: bitch("11034025-8877-4d96-a17f-f5c3c2f0e16d")
+                AlPagePath.post_addOrderFile -> orderFileFormPostData.orderUUID
+                else -> bitch("6f76e7f3-6f92-48d4-91ff-95f89f6626ce")
+            }
+        } else {
+            getParams.orderUUID ?: bitch("7aa84c05-79c3-4c8f-bfd2-26250414305d")
+        }
+    }
+
+    val order by lazy {
+        createdOrder
+        ?: alUAOrderRepo.findByUuid(orderUUID)
+        ?: bitch("18755da5-0458-49a6-bfdc-9a4e611de4ed")
+    }
 
     companion object {
         private val threadLocal = ThreadLocal<AlRequestContext>()
@@ -255,6 +272,11 @@ class AlRequestContext {
     }
 
     val isPost get() = req.method == "POST"
+
+    private fun <T : Any> readPostData(klass: KClass<T>): T {
+        val dataString = AlRequestContext.the.req.reader.readText()
+        return ObjectMapper().readValue(dataString, klass.java)
+    }
 }
 
 fun spitLandingPage() {
@@ -287,10 +309,6 @@ fun shitToFront(shitterUID: String, block: (PieceOfShitFromBack) -> Unit) {
     block(shitForFront)
 }
 
-fun <T : Any> readPostData(klass: KClass<T>): T {
-    val dataString = AlRequestContext.the.req.reader.readText()
-    return ObjectMapper().readValue(dataString, klass.java)
-}
 
 
 

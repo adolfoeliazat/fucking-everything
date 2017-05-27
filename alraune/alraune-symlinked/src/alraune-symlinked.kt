@@ -205,7 +205,7 @@ object AlCSS {
 ) : WithMaybeOrderUUID
 
 @Ser data class OrderFileFormPostData(
-    override val orderUUID: String?,
+    override val orderUUID: String,
     val fileUUID: String?,
     val name: String,
     val title: String,
