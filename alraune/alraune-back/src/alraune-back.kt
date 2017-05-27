@@ -235,8 +235,8 @@ interface Should {
 }
 
 class AlRequestContext {
-    // TODO:vgrechka Introduce log specific to request, in addition to the global one in AlBackPile0
     val requestContextID = DebugPile.nextPUID().toString()
+    val log = AlBackPile0.log // TODO:vgrechka Make this log somehow specific to a perticular request
     var req by notNullOnce<HttpServletRequest>()
     var res by notNullOnce<HttpServletResponse>()
     val shitPassedFromBackToFront = PieceOfShitFromBack()
@@ -367,7 +367,11 @@ fun declareField(ctx: FieldContext,
                  prop: KProperty0<String>,
                  title: String, validator: (String?) -> ValidationResult,
                  fieldType: FieldType = FieldType.TEXT): FuckingField {
+    fun noise(x: String) = AlRequestContext.the.log.debug(x)
+    noise(::declareField.name + ": prop = ${prop.name}")
+
     val vr = validator(prop.get())
+    noise("    vr = $vr")
     val theError = when {
         AlRequestContext.the.isPost -> vr.error
         else -> null

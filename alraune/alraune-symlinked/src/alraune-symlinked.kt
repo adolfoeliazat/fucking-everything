@@ -4,6 +4,7 @@ import vgrechka.*
 import kotlin.properties.Delegates.notNull
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
+import kotlin.reflect.KProperty1
 
 object AlSharedPile {
 //    val beginContentMarker = "<!--4e2bb1ac-ec20-494c-8731-36d7c31e62ce-->"
@@ -39,6 +40,7 @@ object AlSharedPile {
     }
 
     fun fieldDOMID(prop: KProperty0<String>) = fieldDOMID(prop.name)
+    fun fieldDOMID(prop: KProperty1<*, String>) = fieldDOMID(prop.name)
 
     fun fieldDOMID(name: String): String {
         return "field-" + name

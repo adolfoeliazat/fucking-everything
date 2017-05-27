@@ -10,15 +10,15 @@ import kotlin.reflect.KClass
 
 fun handleGet_orderParams() {
     Algo1(object : Algo1Pedro {
-        override fun makeSpitOrderTabPagePedro(algo1: Algo1): SpitOrderTabPagePedro {
-            val fields = OrderParamsFields(algo1.order.toForm())
-            return makePedroForParamsTag(algo1.order, fields)
+        override fun makeSpitOrderTabPagePedro(ctx: Algo1): SpitOrderTabPagePedro {
+            val fields = OrderParamsFields(ctx.order.toForm())
+            return makePedroForParamsTag(ctx.order, fields)
         }
     })
 }
 
 interface Algo1Pedro {
-    fun makeSpitOrderTabPagePedro(algo1: Algo1): SpitOrderTabPagePedro
+    fun makeSpitOrderTabPagePedro(ctx: Algo1): SpitOrderTabPagePedro
 }
 
 /**
@@ -212,7 +212,10 @@ fun validateOrderParamsFields(fields: OrderParamsFields) {
     AlDocumentType.values().find {it.name == fields.data.documentTypeID} ?: bitch("e63b006c-3cda-4db8-b7e0-e2413e980dbc")
 }
 
-fun renderForm(dfctx: FieldContext, shitDataNecessaryForControlsToFront: () -> Unit, renderFormBody: () -> Renderable): Renderable {
+fun renderForm(dfctx: FieldContext,
+               shitDataNecessaryForControlsToFront: () -> Unit,
+               renderFormBody: () -> Renderable,
+               submitButtonTitle: String): Renderable {
     shitDataNecessaryForControlsToFront()
     return kdiv{o->
         o- kdiv.id(AlDomID.formBannerArea) {o->
@@ -227,7 +230,7 @@ fun renderForm(dfctx: FieldContext, shitDataNecessaryForControlsToFront: () -> U
         o- renderFormBody()
 
         o- kdiv.id(AlDomID.formFooterArea){o->
-            o- kbutton(Attrs(id = AlDomID.submitButton, className = "btn btn-primary"), t("TOTE", "Продолжить"))
+            o- kbutton(Attrs(id = AlDomID.submitButton, className = "btn btn-primary"), submitButtonTitle)
             o- kdiv.id(AlDomID.ticker){}
         }
     }
@@ -274,7 +277,8 @@ fun renderOrderParamsForm(fields: OrderParamsFields): Renderable {
                 o- fields.documentDetails.render()
                 o- kdiv(Attrs(id = AlDomID.filePickerContainer))
             }
-        }
+        },
+        submitButtonTitle = t("TOTE", "Продолжить")
     )
 }
 

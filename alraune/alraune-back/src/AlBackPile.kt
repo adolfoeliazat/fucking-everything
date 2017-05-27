@@ -224,7 +224,11 @@ data class Attrs(
     val tabIndex: Int? = null
 )
 
-class ValidationResult(val sanitizedString: String, val error: String?)
+class ValidationResult(val sanitizedString: String, val error: String?) {
+    override fun toString(): String {
+        return "ValidationResult(sanitizedString=`$sanitizedString`, error=$error)"
+    }
+}
 
 interface Titled {
     val title: String

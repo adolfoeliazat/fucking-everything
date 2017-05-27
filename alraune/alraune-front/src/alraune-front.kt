@@ -13,10 +13,7 @@ import kotlin.browser.window
 import kotlin.js.Promise
 import kotlin.properties.Delegates.notNull
 import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KClass
-import kotlin.reflect.KFunction0
-import kotlin.reflect.KProperty
-import kotlin.reflect.KProperty0
+import kotlin.reflect.*
 
 // TODO:vgrechka Smarter way of dealing of name mangling
 
@@ -30,9 +27,10 @@ fun main(args: Array<String>) {
         parseShitFromBack()
         AlFrontPile.initShit()
 
+        val maf = KJSPile.getURLParam("maf")
         @Suppress("UnsafeCastFromDynamic")
-        KJSPile.getURLParam("maf")?.let {
-            val f = AlFrontDebug.asDynamic()[it] ?: bitch("de7c46eb-7ad6-4c39-a605-81b21aa4d539")
+        maf?.let {
+            val f = AlFrontDebug.asDynamic()[it] ?: bitch("maf = $maf    de7c46eb-7ad6-4c39-a605-81b21aa4d539")
             f.call(AlFrontDebug)
         }
     }
@@ -254,7 +252,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
     @Suppress("unused")
     fun messAroundFront203() {
         async {
-            run { // Errors in order creation form
+            run { // Validation errors in order creation form
                 clickSubmitAndAwaitPageInit()
             }
 
@@ -327,7 +325,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
     }
 
     private fun populateOrderParamsForm(data: OrderCreationFormPostData, documentCategoryPath: List<String>) {
-        // TODO:vgrechka @improve d0fc960d-76be-4a0b-969c-7bbf94275e09
+        // TODO:vgrechka @unboilerplate
         val o = AlFrontPile::populateTextField
         o(data::email)
         o(data::name)
@@ -351,10 +349,30 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
         }
     }
 
+    @Suppress("unused")
     fun messAroundFront401() {
         async {
+            val p = this::populateTextField
             clickButtonAndAwaitModalShown(AlDomID.topRightButton)
+
+            run { // Validation errors
+                p(OrderFileFormPostData::details, "In general your default keyboard mapping comes from your X server setup. If this setup is insufficient and you are unwilling to go through the process of reconfiguration and/or you are not the superuser you'll need to use the xmodmap program. This is the utility's global configuration file.")
+                clickSubmitAndAwaitPageInit()
+                // AlFrontPile.sleepTillEndOfTime()
+            }
+
+            run { // OK
+                awaitModalHiddenAfterDoing {
+                    p(OrderFileFormPostData::title, "The Fucking Keyboard Mapping")
+                    clickSubmitAndAwaitPageInit()
+                }
+            }
         }
+    }
+
+    private fun populateTextField(prop: KProperty1<OrderFileFormPostData, String>, value: String) {
+        val fieldJQ = byIDSingle(AlSharedPile.fieldDOMID(prop), "2d2ed5b7-2a5d-4713-8ce0-10a4f050ce09")
+        fieldJQ.setVal(value)
     }
 
     fun dumpBackCodePath() {
