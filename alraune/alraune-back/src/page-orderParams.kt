@@ -6,6 +6,7 @@ import alraune.back.AlRenderPile.row
 import alraune.back.AlRenderPile.t
 import alraune.shared.*
 import vgrechka.*
+import kotlin.reflect.KClass
 
 fun handleGet_orderParams() {
     Algo1(object : Algo1Pedro {
@@ -20,9 +21,12 @@ interface Algo1Pedro {
     fun makeSpitOrderTabPagePedro(algo1: Algo1): SpitOrderTabPagePedro
 }
 
-class Algo1(pedro: Algo1Pedro) {
+/**
+ * This is, basically, a way to call SpitOrderTabPage, bringing order from database into context beforehand.
+ */
+class Algo1(pedro: Algo1Pedro): Ctx100 {
     val orderUUID = AlRequestContext.the.getParams.orderUUID ?: bitch("0fe1dd78-8afd-4511-b743-7fc3b5ac78ce")
-    val order = alUAOrderRepo.findByUuid(orderUUID) ?: bitch("bcfc6c38-585c-43f9-8984-c26d9c113e4e")
+    override val order = alUAOrderRepo.findByUuid(orderUUID) ?: bitch("bcfc6c38-585c-43f9-8984-c26d9c113e4e")
 
     init {
         shitToFront("954a5058-5ae6-40c7-bb45-06b0eeae8bc7") {
@@ -33,38 +37,79 @@ class Algo1(pedro: Algo1Pedro) {
 }
 
 fun handlePost_setOrderParams() {
-    shitToFront("b4e2fd47-3a65-41a2-be93-959118883938") {
-        it.hasErrors = true
+    HandleOrderTabPagePost(
+        postDataClass = OrderCreationFormPostData::class,
+        fieldsCtor = ::OrderParamsFields,
+        makePedro = {host-> object:HandleOrderTabPagePostPedro<OrderCreationFormPostData, OrderParamsFields> {
+            override fun spitPage() {
+                spitOrderParamsPage(host.order, host.fields)
+            }
+
+            override fun validateDataAndUpdateDB() {
+                validateOrderParamsFields(host.fields)
+                // TODO:vgrechka Show error to user instead of just dying
+
+                host.order.email = host.fields.email.value
+                host.order.contactName = host.fields.contactName.value
+                host.order.phone = host.fields.phone.value
+                host.order.documentTitle = host.fields.documentTitle.value
+                host.order.documentDetails = host.fields.documentDetails.value
+                host.order.documentTypeID = host.fields.data.documentTypeID
+                host.order.documentCategoryID = host.fields.data.documentCategoryID
+                host.order.numPages = host.fields.numPages.value.toInt()
+                host.order.numSources = host.fields.numSources.value.toInt()
+                alUAOrderRepo.save(host.order)
+            }
+
+            override fun additionallyShitToFrontOnSuccess(shit: PieceOfShitFromBack) {
+                shit.historyPushState = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = host.order.uuid))
+            }
+        }}
+    )
+}
+
+interface HandleOrderTabPagePostPedro<PostData, Fields>
+where PostData : WithMaybeOrderUUID, Fields : WithFieldContext
+{
+    fun spitPage()
+    fun validateDataAndUpdateDB()
+    fun additionallyShitToFrontOnSuccess(shit: PieceOfShitFromBack)
+}
+
+class HandleOrderTabPagePost<PostData, Fields>(
+    postDataClass: KClass<PostData>,
+    fieldsCtor: (PostData) -> Fields,
+    makePedro: (HandleOrderTabPagePost<PostData, Fields>) -> HandleOrderTabPagePostPedro<PostData, Fields>)
+    : Ctx100
+    where PostData : WithMaybeOrderUUID, Fields : WithFieldContext
+{
+    init {
+        shitToFront("b4e2fd47-3a65-41a2-be93-959118883938") {
+            it.hasErrors = true
+        }
     }
-    val data = readPostData(OrderCreationFormPostData::class)
+
+    val data = readPostData(postDataClass)
     val uuid = data.orderUUID ?: bitch("4c7f82b3-6347-4f25-8949-2f96e5af4713")
-    val order = alUAOrderRepo.findByUuid(uuid) ?: bitch("0ef3a079-e1c6-41bf-bfa9-8540ae9d0082")
-    val fields = OrderParamsFields(data)
-    if (fields.dfctx.hasErrors) {
-        shitToFront("030a3b7c-7f4d-4d69-8473-88396049630f") {
-            it.replacement_id = AlDomID.modalContent
-        }
-        spitOrderParamsPage(order, fields)
-    } else {
-        validateOrderParamsFields(fields)
+    override val order = alUAOrderRepo.findByUuid(uuid) ?: bitch("0ef3a079-e1c6-41bf-bfa9-8540ae9d0082")
+    val fields = fieldsCtor(data)
+    val pedro = makePedro(this)
 
-        order.email = fields.email.value
-        order.contactName = fields.contactName.value
-        order.phone = fields.phone.value
-        order.documentTitle = fields.documentTitle.value
-        order.documentDetails = fields.documentDetails.value
-        order.documentTypeID = fields.data.documentTypeID
-        order.documentCategoryID = fields.data.documentCategoryID
-        order.numPages = fields.numPages.value.toInt()
-        order.numSources = fields.numSources.value.toInt()
-        alUAOrderRepo.save(order)
-
-        shitToFront("9b4f1a3e-c2ca-4bfb-a567-4a612caa7fc9") {
-            it.historyPushState = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = order.uuid))
-            it.hasErrors = false
-            it.replacement_id = AlDomID.replaceableContent
+    init {
+        if (fields.fieldCtx.hasErrors) {
+            shitToFront("030a3b7c-7f4d-4d69-8473-88396049630f") {
+                it.replacement_id = AlDomID.modalContent
+            }
+            pedro.spitPage()
+        } else {
+            pedro.validateDataAndUpdateDB()
+            shitToFront("9b4f1a3e-c2ca-4bfb-a567-4a612caa7fc9") {
+                pedro.additionallyShitToFrontOnSuccess(it)
+                it.hasErrors = false
+                it.replacement_id = AlDomID.replaceableContent
+            }
+            pedro.spitPage()
         }
-        spitOrderParamsPage(order, fields)
     }
 }
 
@@ -162,7 +207,7 @@ fun validateOrderParamsFields(fields: OrderParamsFields) {
     AlDocumentType.values().find {it.name == fields.data.documentTypeID} ?: bitch("e63b006c-3cda-4db8-b7e0-e2413e980dbc")
 }
 
-fun renderForm(dfctx: DeclareFieldContext, shitDataNecessaryForControlsToFront: () -> Unit, renderFormBody: () -> Renderable): Renderable {
+fun renderForm(dfctx: FieldContext, shitDataNecessaryForControlsToFront: () -> Unit, renderFormBody: () -> Renderable): Renderable {
     shitDataNecessaryForControlsToFront()
     return kdiv{o->
         if (dfctx.hasErrors)
@@ -179,7 +224,7 @@ fun renderForm(dfctx: DeclareFieldContext, shitDataNecessaryForControlsToFront: 
 
 fun renderOrderParamsForm(fields: OrderParamsFields): Renderable {
     return renderForm(
-        dfctx = fields.dfctx,
+        dfctx = fields.fieldCtx,
         shitDataNecessaryForControlsToFront = {
             shitToFront("b822b894-0b67-4821-8aa5-d49dccab6e09") {
                 it.documentCategoryID = fields.data.documentCategoryID

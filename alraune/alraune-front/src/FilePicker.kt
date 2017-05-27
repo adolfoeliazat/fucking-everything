@@ -36,8 +36,8 @@ class FilePicker {
     }
 
     fun update() {
-        val container = byIDSingle(AlDomID.filePickerContainer)
-        container.html(buildString {
+        val containerJQ = byIDSingle(AlDomID.filePickerContainer, "b15e1df6-fbb7-4f2d-b559-a8c40b426191")
+        containerJQ.html(buildString {
             ln("""
                 <style>
                     .$fileItemClass {
@@ -57,7 +57,9 @@ class FilePicker {
             ln("<button id='$addButtonID' class='btn btn-default'><i class='fa fa-plus'></i></button>&nbsp;&nbsp;${t("TOTE", "Добавить файл")}")
             ln("</div>")
         })
-        byIDSingle(addButtonID).on("click") {
+
+        val addButtonJQ = byIDSingle(addButtonID, "f1762bf8-6f4f-4f95-b639-a3a23da1e10f")
+        addButtonJQ.on("click") {
             handleAddButtonClick()
         }
     }

@@ -13,9 +13,12 @@ import kotlin.browser.window
 import kotlin.js.Promise
 import kotlin.properties.Delegates.notNull
 import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KClass
 import kotlin.reflect.KFunction0
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
+
+// TODO:vgrechka Smarter way of dealing of name mangling
 
 fun main(args: Array<String>) {
     clog("I am alraune-front 4")
@@ -35,6 +38,14 @@ fun main(args: Array<String>) {
     }
 }
 
+fun serializeForPosting(obj: dynamic): String {
+    val unmangledObj = js("({})")
+    for (name in JSObject.getOwnPropertyNames(obj)) {
+        val unmangledName = name.substringBefore("_")
+        unmangledObj[unmangledName] = obj[name]
+    }
+    return JSON.stringify(unmangledObj)
+}
 
 private fun initDebugFacilities() {
     val body = document.body!!
@@ -46,7 +57,7 @@ private fun initDebugFacilities() {
             val el = e.target as HTMLElement
             val stackID = el.getAttribute(AlSharedPile.attribute.data_tagCreationStackID) ?: bitch("1a23fa57-0fd2-404a-82cf-b300294aa6cc")
             async {
-                AlFrontPile.post(AlPagePath.debug_post_dumpStackByID, JSON.stringify(DumpStackByIDPostData(stackID)))
+                AlFrontPile.post(AlPagePath.debug_post_dumpStackByID, serializeForPosting(DumpStackByIDPostData(stackID)))
                 clog("Sent request for dumping stackID $stackID")
             }
         }
@@ -200,14 +211,16 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
 
     suspend fun clickSubmitAndAwaitPageInit() {
         awaitPageInitAfterDoing {
-            byIDSingle(AlDomID.submitButton).click()
+            val submitButtonJQ = byIDSingle(AlDomID.submitButton, "769bbcd6-826b-4555-82cf-ee2224897be4")
+            submitButtonJQ.click()
         }
     }
 
     suspend fun clickButtonAndAwaitModalShown(buttonID: String) {
         val lock = AlFrontPile.modalShownLock
         lock.reset()
-        byIDSingle(buttonID).click()
+        val buttonJQ = byIDSingle(buttonID, "c3f00e84-e927-4c2b-b0c3-c1241607dde7")
+        buttonJQ.click()
         lock.pauseTestFromTest()
     }
 
@@ -267,7 +280,8 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
                 }
 
                 run { // OK
-                    byIDSingle(AlSharedPile.fieldDOMID(OrderCreationFormPostData::phone.name)).setVal("+38 (911) 4542823")
+                    val phoneJQ = byIDSingle(AlSharedPile.fieldDOMID(OrderCreationFormPostData::phone.name), "e06b92c1-099b-4d91-afa3-3dc3da36dc06")
+                    phoneJQ.setVal("+38 (911) 4542823")
                     awaitModalHiddenAfterDoing {
                         clickSubmitAndAwaitPageInit()
                     }
@@ -313,7 +327,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
 
     fun dumpBackCodePath() {
         async {
-            AlFrontPile.post(AlPagePath.debug_post_dumpBackCodePath, JSON.stringify(
+            AlFrontPile.post(AlPagePath.debug_post_dumpBackCodePath, serializeForPosting(
                 DumpBackCodePathPostData(requestContextID = AlFrontPile.shitFromBack.requestContextID)))
             clog("Sent debug request")
         }
@@ -360,8 +374,8 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
 
 private fun parseShitFromBack() {
     AlFrontPile.shitFromBack = run {
-        val j = byIDSingle(AlDomID.shitPassedFromBackToFront)
-        val dataShit = j.attr(AlSharedPile.attribute.data_shit)
+        val shitJQ = byIDSingle(AlDomID.shitPassedFromBackToFront, "12e47778-8369-4b1b-9817-c9a2a4b2200c")
+        val dataShit = shitJQ.attr(AlSharedPile.attribute.data_shit)
         // clog("dataShit =", dataShit)
         JSON.parse<PieceOfShitFromBack>(dataShit)
     }
@@ -464,11 +478,13 @@ object AlFrontPile {
     val security = AlFrontSecurity()
 
     fun showTicker() {
-        byIDSingle(AlDomID.ticker).css("display", "block")
+        val tickerJQ = byIDSingle(AlDomID.ticker, "34da400e-9e82-4318-956b-ecec1fa39bc3")
+        tickerJQ.css("display", "block")
     }
 
     fun populateTextField(prop: KProperty0<String>) {
-        byIDSingle(AlSharedPile.fieldDOMID(prop)).setVal(prop.get())
+        val fieldJQ = byIDSingle(AlSharedPile.fieldDOMID(prop), "b26f4a4f-b8a0-4573-8bde-a8eb6149280f")
+        fieldJQ.setVal(prop.get())
     }
 
     suspend fun post(path: String, rawData: Any?) = await(postPromise(path, rawData))
@@ -511,16 +527,26 @@ object AlFrontPile {
     }
 
     private fun frontInitPage_orderParams() {
-        pizda1(vagina = {initOrderParamsLikeControls()})
+        initModal(initFormControls = {initOrderParamsLikeControls()})
     }
 
     private fun frontInitPage_orderFiles() {
-        pizda1(vagina = {
-
+        initModal(initFormControls = {
+            initSubmitButton(
+                postDataClass = OrderFileFormPostData::class,
+                customPropNames = listOf(
+                    OrderFileFormPostData::orderUUID.name,
+                    OrderFileFormPostData::fileUUID.name,
+                    OrderFileFormPostData::name.name),
+                setCustomProps = {
+                    it[OrderCreationFormPostData::orderUUID.name] = shitFromBack.orderUUID
+                    // TODO:vgrechka fileUUID if edit
+                }
+            )
         })
     }
 
-    private fun pizda1(vagina: () -> Unit) {
+    private fun initModal(initFormControls: () -> Unit) {
         val hasErrors = shitFromBack.hasErrors ?: wtf("07ebdde7-3a73-48bc-992a-54aba4cfb986")
         if (!hasErrors) {
             pristineModalContentHTML = findShitBetweenMarkersForDOMID(
@@ -528,22 +554,26 @@ object AlFrontPile {
                 AlDomID.modalContent)
         }
 
-        vagina()
+        initFormControls()
 
-        val modalJQ = byIDSingle(AlDomID.orderParamsModal).asDynamic()
-        modalJQ.on("shown.bs.modal") {
+        val modalJQ = byIDSingle(AlDomID.orderParamsModal, "c33cb863-3d92-45ad-ad31-3c15afc59a28")
+        val modalJQDynamic = modalJQ.asDynamic()
+        modalJQDynamic.on("shown.bs.modal") {
             modalShownLock.resumeTestFromSut()
         }
-        modalJQ.on("hidden.bs.modal") {
+        modalJQDynamic.on("hidden.bs.modal") {
             modalHiddenLock.resumeTestFromSut()
         }
 
         fun handler() {
-            byIDSingle(AlDomID.modalContent)[0]!!.outerHTML = pristineModalContentHTML
-            vagina()
-            modalJQ.modal()
+            val modalContentJQ = byIDSingle(AlDomID.modalContent, "a5197d1b-eff7-4c1e-8715-19d231a0a5a1")
+            modalContentJQ[0]!!.outerHTML = pristineModalContentHTML
+            initFormControls()
+            modalJQDynamic.modal()
         }
-        byIDSingle(AlDomID.topRightButton).onClick {handler()}
+
+        val topRightButtonJQ = byIDSingle(AlDomID.topRightButton, "c40a46f8-fe29-42a3-87ef-4a9d8455d659")
+        topRightButtonJQ.onClick {handler()}
     }
 
     private fun frontInitPage_orderCreationForm() {
@@ -573,26 +603,49 @@ object AlFrontPile {
     private fun initOrderParamsLikeControls() {
         val documentCategoryPicker = DocumentCategoryPicker()
         AlFrontPile.documentCategoryPicker = documentCategoryPicker
+        initSubmitButton(
+            postDataClass = OrderCreationFormPostData::class,
+            customPropNames = listOf(
+                OrderCreationFormPostData::documentCategoryID.name,
+                OrderCreationFormPostData::orderUUID.name),
+            setCustomProps = {
+                setPossiblyMangledProperty(it, OrderCreationFormPostData::documentCategoryID.name, documentCategoryPicker.getSelectedCategoryID())
+                setPossiblyMangledProperty(it, OrderCreationFormPostData::orderUUID.name, shitFromBack.orderUUID)
+            }
+        )
+    }
+
+    fun setPossiblyMangledProperty(obj: dynamic, name: String, value: dynamic) {
+        val mangledPropertyName = JSObject.getOwnPropertyNames(obj).find {
+            it.contains("_")
+            && it.substringBefore("_") == name}
+        obj[mangledPropertyName ?: name] = value
+    }
+
+    fun pageHasModal() = shitFromBack.pageID in setOf(AlPageID.orderParams, AlPageID.orderFiles)
+
+    fun initSubmitButton(postDataClass: KClass<*>, customPropNames: List<String>, setCustomProps: (dynamic) -> Unit) {
         val buttonJQ = byID(AlDomID.submitButton)
 
-        // TODO:vgrechka Remove event handlers
         fun submitButtonHandler() {
             clog("i am the fucking submitButtonHandler")
             buttonJQ.attr("disabled", "true")
             showTicker()
 
             @Suppress("UNUSED_VARIABLE")
-            val clazz = window.asDynamic()["alraune-front"].alraune.shared[OrderCreationFormPostData::class.simpleName]
+            val clazz = window.asDynamic()["alraune-front"].alraune.shared[postDataClass.simpleName]
             val inst = js("new clazz()")
             val propNames = JSObject.getOwnPropertyNames(inst)
-            for (propName in propNames.toList() - listOf(OrderCreationFormPostData::documentCategoryID.name,
-                                                         OrderCreationFormPostData::orderUUID.name)) {
-                clog("propName", propName)
-                inst[propName] = byIDSingle(AlSharedPile.fieldDOMID(propName)).getVal()
+            for (propName in propNames.toList()) {
+                val unmangledPropName = propName.substringBefore("_")
+                if (unmangledPropName !in customPropNames) {
+                    clog("propName", propName)
+                    val fieldJQ = byIDSingle(AlSharedPile.fieldDOMID(unmangledPropName), "a7bc93b7-d01b-4a09-bd60-7a649b7289d6")
+                    inst[propName] = fieldJQ.getVal()
+                }
             }
-            inst[OrderCreationFormPostData::documentCategoryID.name] = documentCategoryPicker.getSelectedCategoryID()
-            inst[OrderCreationFormPostData::orderUUID.name] = shitFromBack.orderUUID
-            val data = JSON.stringify(inst)
+            setCustomProps(inst)
+            val data = serializeForPosting(inst)
             // clog("data", data)
             async {
                 sleep(debug_sleepBeforePost)
@@ -606,7 +659,8 @@ object AlFrontPile {
                 val modalJQ = byID(AlDomID.orderParamsModal).asDynamic()
                 replaceWithNewContent(shitFromBack.replacement_id ?: wtf("40531be5-b7de-47e3-9f7e-6ff4b5f12c4c"), html)
 
-                if (shitFromBack.pageID == AlPageID.orderParams) {
+
+                if (pageHasModal()) {
                     val hasErrors = shitFromBack.hasErrors ?: wtf("b7b2b8ef-dd9c-4212-bbc7-842d6ef91af0")
                     if (!hasErrors) {
                         modalJQ.modal("hide")
@@ -637,7 +691,8 @@ object AlFrontPile {
 
     fun replaceWithNewContent(domid: String, html: String) {
         val content = findShitBetweenMarkersForDOMID(html, domid)
-        byIDSingle(domid)[0]!!.outerHTML = content
+        val elementJQ = byIDSingle(domid, "b2218cc4-a1db-4647-b890-a2572dc25819")
+        elementJQ[0]!!.outerHTML = content
     }
 
     fun reload() {

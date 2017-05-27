@@ -39,7 +39,10 @@ object AlSharedPile {
     }
 
     fun fieldDOMID(prop: KProperty0<String>) = fieldDOMID(prop.name)
-    fun fieldDOMID(name: String) = "field-" + name
+
+    fun fieldDOMID(name: String): String {
+        return "field-" + name
+    }
 
     fun escapeHTML(s: String): String {
         return s
@@ -50,6 +53,10 @@ object AlSharedPile {
             .replace("\"", "&#34;")
     }
 
+}
+
+interface WithMaybeOrderUUID {
+    val orderUUID: String?
 }
 
 object AlDomID {
@@ -179,7 +186,7 @@ object AlCSS {
 
 
 @Ser data class OrderCreationFormPostData(
-    val orderUUID: String?,
+    override val orderUUID: String?,
     val email: String,
     val name: String,
     val phone: String,
@@ -189,15 +196,15 @@ object AlCSS {
     val documentCategoryID: String,
     val numPages: String,
     val numSources: String
-)
+) : WithMaybeOrderUUID
 
 @Ser data class OrderFileFormPostData(
-    val orderUUID: String?,
+    override val orderUUID: String?,
     val fileUUID: String?,
     val name: String,
     val title: String,
     val details: String
-)
+) : WithMaybeOrderUUID
 
 @Ser data class DumpStackByIDPostData(
     val stackID: String
@@ -213,7 +220,7 @@ class PieceOfShitFromBack {
     var baseURL = "boobs-baseURL"
     var logOfShitters = ""
     val debug_domElementStackTraces = true
-    var pageID: String = "boobs-pageID"
+    var pageID: String? = null
     var postPath: String = "boobs-postPath"
     var documentCategoryID = "boobs-documentCategoryID"
     var historyPushState: String? = null

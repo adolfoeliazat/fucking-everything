@@ -74,3 +74,17 @@ fun <T> List<T>.indexOfOrNull(element: T): Int? {
     }
 }
 
+// "Create parameter" refactoring aids
+fun <R> call(f: () -> R): R = f()
+fun <R, P0> call(f: (P0) -> R, p0: P0): R = f(p0)
+fun <R, P0, P1> call(f: (P0, P1) -> R, p0: P0, p1: P1): R = f(p0, p1)
+
+
+
+
+
+
+
+
+
+

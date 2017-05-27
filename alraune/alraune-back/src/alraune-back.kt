@@ -105,7 +105,13 @@ object StartAlrauneBack {
                             AlPagePath.orderParams -> handleGet_orderParams()
                             AlPagePath.post_setOrderParams -> handlePost_setOrderParams()
                             AlPagePath.orderFiles -> handleGet_orderFiles()
-                            else -> spitLandingPage()
+                            AlPagePath.post_setOrderParams -> handlePost_addOrderFile()
+                            else -> {
+                                when {
+                                    AlRequestContext.the.isPost -> bitch("pathInfo = ${req.pathInfo}    284bea9a-dc4f-4e62-8cc9-39508bb26c31")
+                                    else -> spitLandingPage()
+                                }
+                            }
                         }
                         res.status = HttpServletResponse.SC_OK
                     }
@@ -250,6 +256,7 @@ interface Should {
 }
 
 class AlRequestContext {
+    // TODO:vgrechka Introduce log specific to request, in addition to the global one in AlBackPile0
     val requestContextID = DebugPile.nextPUID().toString()
     var req by notNullOnce<HttpServletRequest>()
     var res by notNullOnce<HttpServletResponse>()
@@ -387,11 +394,11 @@ enum class AlDocumentType(val title: String) {
 
 class FuckingField(val value: String, val render: () -> Renderable)
 
-class DeclareFieldContext {
+class FieldContext {
     var hasErrors = false
 }
 
-fun declareField(ctx: DeclareFieldContext,
+fun declareField(ctx: FieldContext,
                  prop: KProperty0<String>,
                  title: String, validator: (String?) -> ValidationResult,
                  fieldType: FieldType = FieldType.TEXT): FuckingField {
@@ -430,21 +437,23 @@ fun declareField(ctx: DeclareFieldContext,
     )
 }
 
-
-class OrderParamsFields(val data: OrderCreationFormPostData) {
-    val f = AlFields.order
-    val v = AlBackPile
-    val dfctx = DeclareFieldContext()
-
-    val email = declareField(dfctx, data::email, f.email.title, v::validateEmail)
-    val contactName = declareField(dfctx, data::name, f.contactName.title, v::validateName)
-    val phone = declareField(dfctx, data::phone, f.phone.title, v::validatePhone)
-    val documentTitle = declareField(dfctx, data::documentTitle, f.documentTitle.title, v::validateDocumentTitle)
-    val documentDetails = declareField(dfctx, data::documentDetails, f.documentDetails.title, v::validateDocumentDetails, FieldType.TEXTAREA)
-    val numPages = declareField(dfctx, data::numPages, f.numPages.title, v::validateNumPages)
-    val numSources = declareField(dfctx, data::numSources, f.numSources.title, v::validateNumSources)
+interface WithFieldContext {
+    val fieldCtx: FieldContext
 }
 
+class OrderParamsFields(val data: OrderCreationFormPostData) : WithFieldContext {
+    val f = AlFields.order
+    val v = AlBackPile
+    override val fieldCtx = FieldContext()
+
+    val email = declareField(fieldCtx, data::email, f.email.title, v::validateEmail)
+    val contactName = declareField(fieldCtx, data::name, f.contactName.title, v::validateName)
+    val phone = declareField(fieldCtx, data::phone, f.phone.title, v::validatePhone)
+    val documentTitle = declareField(fieldCtx, data::documentTitle, f.documentTitle.title, v::validateDocumentTitle)
+    val documentDetails = declareField(fieldCtx, data::documentDetails, f.documentDetails.title, v::validateDocumentDetails, FieldType.TEXTAREA)
+    val numPages = declareField(fieldCtx, data::numPages, f.numPages.title, v::validateNumPages)
+    val numSources = declareField(fieldCtx, data::numSources, f.numSources.title, v::validateNumSources)
+}
 
 
 object AlBackDebug {

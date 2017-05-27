@@ -33,8 +33,8 @@ class DocumentCategoryPicker {
     }
 
     fun update() {
-        val container = byIDSingle(AlDomID.documentCategoryPickerContainer)
-        container.html(buildString {
+        val containerJQ = byIDSingle(AlDomID.documentCategoryPickerContainer, "fd904e81-ad28-4033-92fb-b5c719edb2f7")
+        containerJQ.html(buildString {
             val items = pathExceptLast.last().children
             ln("<div style='display: flex; align-items: center;'>")
             val pathToShow = pathExceptLast.drop(1)
@@ -58,7 +58,8 @@ class DocumentCategoryPicker {
             handleSelectChange()
         }
 
-        byIDNoneOrSingle(backButtonID)?.let {
+        val backButtonJQ = byIDNoneOrSingle(backButtonID, "0b9d1205-58c3-471f-a9ef-b301e8ebd5ba")
+        backButtonJQ?.let {
             it.on("click") {
                 handleBackButtonClick()
             }
@@ -93,7 +94,7 @@ class DocumentCategoryPicker {
         handleSelectChange()
     }
 
-    private fun selectJQ() = byIDSingle(selectID)
+    private fun selectJQ() = byIDSingle(selectID, "5500026b-2c3a-4bca-a88a-9a8e8b29df37")
 }
 
 

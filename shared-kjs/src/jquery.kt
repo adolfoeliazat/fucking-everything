@@ -113,19 +113,19 @@ fun JQuery.hide(): String = this.asDynamic().hide()
 fun JQuery.show(): String = this.asDynamic().show()
 
 object JQueryPile {
-    fun byIDSingle(id: String): JQuery {
+    fun byIDSingle(id: String, errorTag: String): JQuery {
         val j = byID(id)
         if (j.length != 1)
-            bitch("I want one element with ID `$id`, got ${j.length}")
+            bitch("I want one element with ID `$id`, got ${j.length}    $errorTag")
         return j
     }
 
-    fun byIDNoneOrSingle(id: String): JQuery? {
+    fun byIDNoneOrSingle(id: String, errorTag: String): JQuery? {
         val j = byID(id)
         return when(j.length) {
             0 -> null
             1 -> j
-            else -> bitch("I want either none or single element with ID `$id`, got ${j.length}")
+            else -> bitch("I want either none or single element with ID `$id`, got ${j.length}    $errorTag")
         }
     }
 

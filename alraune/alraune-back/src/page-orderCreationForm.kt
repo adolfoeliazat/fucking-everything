@@ -20,7 +20,7 @@ fun handlePost_createOrder() {
     shitToFront("d2039b9e-7c7e-4487-b230-78203c35fdf7") {
         it.replacement_id = AlDomID.replaceableContent
     }
-    if (fields.dfctx.hasErrors) {
+    if (fields.fieldCtx.hasErrors) {
         spitOrderCreationFormPage(fields)
     } else {
         validateOrderParamsFields(fields)
