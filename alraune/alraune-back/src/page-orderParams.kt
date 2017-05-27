@@ -12,6 +12,7 @@ fun handleGet_orderParams() {
     Algo1(object : Algo1Pedro {
         override fun makeSpitOrderTabPagePedro(ctx: Algo1): SpitOrderTabPagePedro {
             val fields = OrderParamsFields(ctx.order.toForm())
+            fields.fieldCtx.noValidation()
             return makePedroForParamsTag(ctx.order, fields)
         }
     })
@@ -101,6 +102,7 @@ class HandleOrderTabPagePost<PostData, Fields>(
     val pedro = makePedro(this)
 
     init {
+        fields.fieldCtx.validate()
         if (fields.fieldCtx.hasErrors) {
             shitToFront("030a3b7c-7f4d-4d69-8473-88396049630f") {
                 it.replacement_id = AlDomID.modalContent

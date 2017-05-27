@@ -2,6 +2,7 @@ package alraune.back
 
 import alraune.back.AlRenderPile.t
 import alraune.shared.*
+import vgrechka.*
 import java.util.*
 
 interface Ctx100 {
@@ -16,7 +17,7 @@ private fun  _makeSpitOrderTabPagePedro(ctx: Ctx100, fields: OrderFileFields): S
 
         override fun renderTopRightModalContent(): Renderable {
             return kdiv{o->
-
+                clog("aaaaaaaaaaaaaaaaaaa " + fields.fieldCtx.hasErrors)
                 o- renderForm(dfctx = fields.fieldCtx,
                               shitDataNecessaryForControlsToFront = {},
                               renderFormBody = {kdiv{o->
@@ -42,16 +43,22 @@ fun handleGet_orderFiles() {
     // TODO:vgrechka Algo1 one should get (Algo1) -> Algo1Pedro parameter
     Algo1(object : Algo1Pedro {
         override fun makeSpitOrderTabPagePedro(ctx: Algo1): SpitOrderTabPagePedro {
-            return _makeSpitOrderTabPagePedro(ctx, OrderFileFields(newAlUAOrderFile(
-                uuid = "boobs",
-                state = UAOrderFileState.UNKNOWN,
-                name = "",
-                title = "",
-                details = "",
-                order = ctx.order).toForm())
-            )
+            val fields = makeBlankFields(ctx)
+            return _makeSpitOrderTabPagePedro(ctx, fields)
         }
     })
+}
+
+private fun makeBlankFields(ctx: Ctx100): OrderFileFields {
+    val orderFileFields = OrderFileFields(newAlUAOrderFile(
+        uuid = "boobs",
+        state = UAOrderFileState.UNKNOWN,
+        name = "",
+        title = "",
+        details = "",
+        order = ctx.order).toForm())
+    orderFileFields.fieldCtx.noValidation()
+    return orderFileFields
 }
 
 fun handlePost_addOrderFile() {
@@ -60,7 +67,11 @@ fun handlePost_addOrderFile() {
         fieldsCtor = ::OrderFileFields,
         makePedro = {ctx-> object:HandleOrderTabPagePostPedro<OrderFileFormPostData, OrderFileFields> {
             override fun spitPage() {
-                SpitOrderTabPage(ctx.order, _makeSpitOrderTabPagePedro(ctx, ctx.fields))
+                val fields = when {
+                    ctx.fields.fieldCtx.hasErrors -> ctx.fields
+                    else -> makeBlankFields(ctx)
+                }
+                SpitOrderTabPage(ctx.order, _makeSpitOrderTabPagePedro(ctx, fields))
             }
 
             override fun validateDataAndUpdateDB() {

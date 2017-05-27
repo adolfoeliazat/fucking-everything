@@ -6,17 +6,19 @@ import alraune.shared.*
 import java.util.*
 
 fun handleGet_orderCreationForm() {
-    spitOrderCreationFormPage(
-        OrderParamsFields(
-            newAlUAOrder(
-                uuid = "boobs", state = UAOrderState.CUSTOMER_DRAFT, email = "",
-                contactName = "", phone = "", documentTypeID = AlDocumentType.ABSTRACT.name, documentTitle = "",
-                documentDetails = "", documentCategoryID = AlDocumentCategories.miscID, numPages = -1, numSources = -1)
-                .toForm()))
+    val fields = OrderParamsFields(
+        newAlUAOrder(
+            uuid = "boobs", state = UAOrderState.CUSTOMER_DRAFT, email = "",
+            contactName = "", phone = "", documentTypeID = AlDocumentType.ABSTRACT.name, documentTitle = "",
+            documentDetails = "", documentCategoryID = AlDocumentCategories.miscID, numPages = -1, numSources = -1)
+            .toForm())
+    fields.fieldCtx.noValidation()
+    spitOrderCreationFormPage(fields)
 }
 
 fun handlePost_createOrder() {
     val fields = OrderParamsFields(readPostData(OrderCreationFormPostData::class))
+    fields.fieldCtx.validate()
     shitToFront("d2039b9e-7c7e-4487-b230-78203c35fdf7") {
         it.replacement_id = AlDomID.replaceableContent
     }

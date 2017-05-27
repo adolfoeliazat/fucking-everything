@@ -15,9 +15,12 @@ import alraune.back.AlRenderPile.pageTitle
 import alraune.back.AlRenderPile.rawHTML
 import alraune.shared.*
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.sun.xml.internal.ws.developer.MemberSubmissionAddressing
 import org.eclipse.jetty.server.handler.HandlerCollection
 import org.eclipse.jetty.server.handler.ResourceHandler
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.properties.Delegates
+import kotlin.properties.Delegates.notNull
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -357,53 +360,82 @@ enum class AlDocumentType(val title: String) {
 }
 
 
-class FuckingField(val value: String, val render: () -> Renderable)
+interface FuckingField {
+    val value: String
+    fun validate()
+    fun render(): Renderable
+    fun noValidation()
+}
 
 class FieldContext {
+    val fields = mutableListOf<FuckingField>()
     var hasErrors = false
+
+    fun validate() {
+        for (field in fields)
+            field.validate()
+    }
+
+    fun noValidation() {
+        for (field in fields)
+            field.noValidation()
+    }
 }
 
 fun declareField(ctx: FieldContext,
                  prop: KProperty0<String>,
-                 title: String, validator: (String?) -> ValidationResult,
+                 title: String,
+                 validator: (String?) -> ValidationResult,
                  fieldType: FieldType = FieldType.TEXT): FuckingField {
-    fun noise(x: String) = AlRequestContext.the.log.debug(x)
-    noise(::declareField.name + ": prop = ${prop.name}")
+    val field = object : FuckingField {
+        private var vr by notNullOnce<ValidationResult>()
 
-    val vr = validator(prop.get())
-    noise("    vr = $vr")
-    val theError = when {
-        AlRequestContext.the.isPost -> vr.error
-        else -> null
-    }
-    if (theError != null)
-        ctx.hasErrors = true
+        override val value get() = vr.sanitizedString
 
-    return FuckingField(
-        value = vr.sanitizedString,
-        render = {
+        override fun noValidation() {
+            vr = ValidationResult(sanitizedString = prop.get(), error = null)
+        }
+
+        override fun validate() {
+            fun noise(x: String) = AlRequestContext.the.log.debug(x)
+            noise(::declareField.name + ": prop = ${prop.name}")
+
+            vr = validator(prop.get())
+            noise("    vr = $vr")
+            val theError = when {
+                AlRequestContext.the.isPost -> vr.error
+                else -> null
+            }
+            if (theError != null)
+                ctx.hasErrors = true
+        }
+
+        override fun render(): Renderable {
+            val theError = vr.error
             val id = AlSharedPile.fieldDOMID(name = prop.name)
-            kdiv.className("form-group") {o->
+            return kdiv.className("form-group") {o ->
                 if (theError != null)
                     o.amend(Style(marginBottom = "0"))
-                o- klabel(text = title)
+                o - klabel(text = title)
                 val control = when (fieldType) {
                     FieldType.TEXT -> kinput(Attrs(type = "text", id = id, value = vr.sanitizedString, className = "form-control")) {}
                     FieldType.TEXTAREA -> ktextarea(Attrs(id = id, rows = 5, className = "form-control"), text = vr.sanitizedString)
                 }
-                o- kdiv(Style(position = "relative")){o->
-                    o- control
+                o - kdiv(Style(position = "relative")) {o ->
+                    o - control
                     if (theError != null) {
-                        o- kdiv(Style(marginTop = "5px", marginRight = "9px", textAlign = "right", color = "${Color.RED_700}"))
+                        o - kdiv(Style(marginTop = "5px", marginRight = "9px", textAlign = "right", color = "${Color.RED_700}"))
                             .text(theError)
                         // TODO:vgrechka Shift red circle if control has scrollbar
-                        o- kdiv(Style(width = "15px", height = "15px", backgroundColor = "${Color.RED_300}",
-                                      borderRadius = "10px", position = "absolute", top = "10px", right = "8px"))
+                        o - kdiv(Style(width = "15px", height = "15px", backgroundColor = "${Color.RED_300}",
+                                       borderRadius = "10px", position = "absolute", top = "10px", right = "8px"))
                     }
                 }
             }
         }
-    )
+    }
+    ctx.fields += field
+    return field
 }
 
 interface WithFieldContext {

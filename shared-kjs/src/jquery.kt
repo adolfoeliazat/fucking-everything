@@ -8,7 +8,7 @@ import org.w3c.dom.events.MouseEvent
 import vgrechka.*
 import kotlin.browser.*
 
-external class JQuery() {
+external class JQuery {
     fun addClass(className: String): JQuery
 //    fun addClass(f: Element.(Int, String) -> String): JQuery
 
@@ -58,6 +58,8 @@ external class JQuery() {
 
     fun find(selector: String): JQuery
     fun children(selector: String = definedExternally): JQuery
+
+    fun modal()
 }
 
 fun JQuery.onClick(handler: (MouseEvent) -> Unit) {
