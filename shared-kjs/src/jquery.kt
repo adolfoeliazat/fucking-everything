@@ -13,7 +13,7 @@ external class JQuery() {
 //    fun addClass(f: Element.(Int, String) -> String): JQuery
 
     fun attr(attrName: String): String
-    fun attr(attrName: String, value: String): JQuery
+    fun attr(attrName: String, value: dynamic): JQuery
 
     fun html(): String
     fun html(s: String): JQuery
@@ -55,6 +55,9 @@ external class JQuery() {
 
     fun on(event: String, handler: (Event) -> Unit)
     fun off(event: String = definedExternally)
+
+    fun find(selector: String): JQuery
+    fun children(selector: String = definedExternally): JQuery
 }
 
 fun JQuery.onClick(handler: (MouseEvent) -> Unit) {

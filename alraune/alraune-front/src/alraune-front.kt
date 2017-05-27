@@ -31,7 +31,7 @@ fun main(args: Array<String>) {
         AlFrontPile.initShit()
 
         @Suppress("UnsafeCastFromDynamic")
-        KJSPile.getURLParam("frontMessAround")?.let {
+        KJSPile.getURLParam("maf")?.let {
             val f = AlFrontDebug.asDynamic()[it] ?: bitch("de7c46eb-7ad6-4c39-a605-81b21aa4d539")
             f.call(AlFrontDebug)
         }
@@ -57,7 +57,7 @@ private fun initDebugFacilities() {
             val el = e.target as HTMLElement
             val stackID = el.getAttribute(AlSharedPile.attribute.data_tagCreationStackID) ?: bitch("1a23fa57-0fd2-404a-82cf-b300294aa6cc")
             async {
-                AlFrontPile.post(AlPagePath.debug_post_dumpStackByID, serializeForPosting(DumpStackByIDPostData(stackID)))
+                serializeAndPost(AlPagePath.debug_post_dumpStackByID, DumpStackByIDPostData(stackID))
                 clog("Sent request for dumping stackID $stackID")
             }
         }
@@ -103,6 +103,10 @@ private fun initDebugFacilities() {
 
         addItem(AlFrontDebug::dumpBackCodePath)
     }
+}
+
+private suspend fun serializeAndPost(pagePath: String, data: dynamic) {
+    AlFrontPile.post(pagePath, serializeForPosting(data))
 }
 
 
@@ -209,10 +213,26 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
         AlFrontPile.pageInitSignal.wait()
     }
 
+    suspend fun awaitServiceFuckedUpBannerAfterDoing(block: () -> Unit) {
+        AlFrontPile.serviceFuckedUpBannerSignal.reset()
+        block()
+        AlFrontPile.serviceFuckedUpBannerSignal.wait()
+    }
+
     suspend fun clickSubmitAndAwaitPageInit() {
         awaitPageInitAfterDoing {
-            val submitButtonJQ = byIDSingle(AlDomID.submitButton, "769bbcd6-826b-4555-82cf-ee2224897be4")
-            submitButtonJQ.click()
+            clickSubmitButton()
+        }
+    }
+
+    private fun clickSubmitButton() {
+        val submitButtonJQ = byIDSingle(AlDomID.submitButton, "769bbcd6-826b-4555-82cf-ee2224897be4")
+        submitButtonJQ.click()
+    }
+
+    suspend fun clickSubmitAndAwaitServiceFuckedUpBanner() {
+        awaitServiceFuckedUpBannerAfterDoing {
+            clickSubmitButton()
         }
     }
 
@@ -231,6 +251,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
         lock.pauseTestFromTest()
     }
 
+    @Suppress("unused")
     fun messAroundFront203() {
         async {
             run { // Errors in order creation form
@@ -259,6 +280,12 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
             run { // Modal
                 clickButtonAndAwaitModalShown(AlDomID.topRightButton)
 
+                val fuckDatabase = true
+                if (fuckDatabase) {
+                    postDebugFuckDatabaseForNextPost()
+                    clickSubmitAndAwaitServiceFuckedUpBanner()
+                }
+
                 run { // Validation errors
                     AlFrontPile.documentCategoryPicker.debug_handleBackButtonClick()
                     populateOrderParamsForm(
@@ -282,6 +309,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
                 run { // OK
                     val phoneJQ = byIDSingle(AlSharedPile.fieldDOMID(OrderCreationFormPostData::phone.name), "e06b92c1-099b-4d91-afa3-3dc3da36dc06")
                     phoneJQ.setVal("+38 (911) 4542823")
+
                     awaitModalHiddenAfterDoing {
                         clickSubmitAndAwaitPageInit()
                     }
@@ -292,6 +320,10 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
 
             clog("We good... hopefully")
         }
+    }
+
+    private suspend fun postDebugFuckDatabaseForNextPost() {
+        serializeAndPost(AlPagePath.debug_post_fuckDatabaseForNextPost, "boobs")
     }
 
     private fun populateOrderParamsForm(data: OrderCreationFormPostData, documentCategoryPath: List<String>) {
@@ -327,8 +359,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
 
     fun dumpBackCodePath() {
         async {
-            AlFrontPile.post(AlPagePath.debug_post_dumpBackCodePath, serializeForPosting(
-                DumpBackCodePathPostData(requestContextID = AlFrontPile.shitFromBack.requestContextID)))
+            serializeAndPost(AlPagePath.debug_post_dumpBackCodePath, DumpBackCodePathPostData(requestContextID = AlFrontPile.shitFromBack.requestContextID))
             clog("Sent debug request")
         }
     }
@@ -466,6 +497,7 @@ object AlFrontPile {
     var shitFromBack by notNull<PieceOfShitFromBack>()
     var pristineModalContentHTML by notNull<String>()
     val pageInitSignal = ResolvableShit<Unit>()
+    val serviceFuckedUpBannerSignal = ResolvableShit<Unit>()
     var documentCategoryPicker by notNull<DocumentCategoryPicker>()
     val modalShownLock by notNullNamed(TestLock())
     val modalHiddenLock by notNullNamed(TestLock())
@@ -477,9 +509,9 @@ object AlFrontPile {
     val localStorage = AlLocalStorage(RealLocalStorage)
     val security = AlFrontSecurity()
 
-    fun showTicker() {
+    fun setTickerVisible(b: Boolean) {
         val tickerJQ = byIDSingle(AlDomID.ticker, "34da400e-9e82-4318-956b-ecec1fa39bc3")
-        tickerJQ.css("display", "block")
+        tickerJQ.css("display", if (b) "block" else "none")
     }
 
     fun populateTextField(prop: KProperty0<String>) {
@@ -523,7 +555,7 @@ object AlFrontPile {
             AlPageID.orderFiles -> frontInitPage_orderFiles()
         }
 
-        AlFrontPile.pageInitSignal.resolve(Unit)
+        AlFrontPile.pageInitSignal.resolve()
     }
 
     private fun frontInitPage_orderParams() {
@@ -539,8 +571,8 @@ object AlFrontPile {
                     OrderFileFormPostData::fileUUID.name,
                     OrderFileFormPostData::name.name),
                 setCustomProps = {
-                    it[OrderCreationFormPostData::orderUUID.name] = shitFromBack.orderUUID
-                    // TODO:vgrechka fileUUID if edit
+                    setPossiblyMangledProperty(it, OrderCreationFormPostData::orderUUID.name, shitFromBack.orderUUID)
+                    // TODO:vgrechka fileUUID if editing
                 }
             )
         })
@@ -630,7 +662,7 @@ object AlFrontPile {
         fun submitButtonHandler() {
             clog("i am the fucking submitButtonHandler")
             buttonJQ.attr("disabled", "true")
-            showTicker()
+            setTickerVisible(true)
 
             @Suppress("UNUSED_VARIABLE")
             val clazz = window.asDynamic()["alraune-front"].alraune.shared[postDataClass.simpleName]
@@ -653,7 +685,24 @@ object AlFrontPile {
 
                 // clog("html", html)
 
-                val html = post(shitFromBack.postPath, data)
+                val html = try {
+                    post(shitFromBack.postPath, data)
+                } catch (e: dynamic) {
+                    val formFooterAreaJQ = byIDSingle(AlDomID.formFooterArea, "7812f976-0fd3-4fdd-ade3-ebeefd2afe64")
+                    val buttonsJQ = formFooterAreaJQ.find("button")
+                    check(buttonJQ.length > 0) {"259e87e0-fddc-465b-86e7-2c2b0edafe74"}
+                    buttonsJQ.attr("disabled", false)
+                    setTickerVisible(false)
+
+                    val formBannerAreaJQ = byIDSingle(AlDomID.formBannerArea, "2aa01a8d-f16f-4a30-ac9a-f6a852d8733e")
+                    formBannerAreaJQ.children().css("display", "none")
+                    val serviceFuckedUpBannerJQ = byIDSingle(AlDomID.serviceFuckedUpBanner, "9ee9eea2-9280-4d78-8280-aef0dbd6448a")
+                    serviceFuckedUpBannerJQ.css("display", "block")
+
+                    AlFrontPile.serviceFuckedUpBannerSignal.resolve()
+                    return@async
+                }
+
                 replaceWithNewContent(AlDomID.shitPassedFromBackToFront, html)
                 parseShitFromBack()
                 val modalJQ = byID(AlDomID.orderParamsModal).asDynamic()

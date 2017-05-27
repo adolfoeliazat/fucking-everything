@@ -71,6 +71,9 @@ object AlDomID {
     val orderParamsModal by myName()
     val closeModalButton by myName()
     val modalContent by myName()
+    val formBannerArea by myName()
+    val formFooterArea by myName()
+    val serviceFuckedUpBanner by myName()
 }
 
 object AlPageID {
@@ -83,6 +86,7 @@ object AlPageID {
 object AlPagePath {
     val debug_post_dumpStackByID by slashMyName()
     val debug_post_dumpBackCodePath by slashMyName()
+    val debug_post_fuckDatabaseForNextPost by slashMyName()
     val orderCreationForm by slashMyName()
     val post_createOrder by slashMyName()
     val orderParams by slashMyName()

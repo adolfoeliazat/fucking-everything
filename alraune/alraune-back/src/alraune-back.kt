@@ -80,42 +80,51 @@ object StartAlrauneBack {
                             }
                         }
 
-                        shitToFront("c125ccc7-3bdc-499f-ab19-a12ecc826fa5") {shit->
-                            val requestContextID = AlRequestContext.the.requestContextID
-                            shit.requestContextID = requestContextID
-                            AlBackDebug.idToRequestContext[requestContextID] = AlRequestContext.the
+                        fun jerk() {
+                            shitToFront("c125ccc7-3bdc-499f-ab19-a12ecc826fa5") {shit->
+                                val requestContextID = AlRequestContext.the.requestContextID
+                                shit.requestContextID = requestContextID
+                                AlBackDebug.idToRequestContext[requestContextID] = AlRequestContext.the
 
-                            shit.baseURL = AlBackPile0.baseURL
-                        }
-
-                        log.debug("req.pathInfo = ${req.pathInfo}")
-                        req.characterEncoding = "UTF-8"
-                        res.contentType = "text/html; charset=utf-8"
-
-                        when (req.pathInfo) {
-                            "/alraune.css" -> {
-                                res.contentType = "text/css; charset=utf-8"
-                                res.writer.print(AlCSS_Back.sheet)
+                                shit.baseURL = AlBackPile0.baseURL
                             }
+
+                            log.debug("req.pathInfo = ${req.pathInfo}")
+                            req.characterEncoding = "UTF-8"
+                            res.contentType = "text/html; charset=utf-8"
+
+                            when (req.pathInfo) {
+                                "/alraune.css" -> {
+                                    res.contentType = "text/css; charset=utf-8"
+                                    res.writer.print(AlCSS_Back.sheet)
+                                }
                             // TODO:vgrechka @unboilerplate
-                            AlPagePath.debug_post_dumpStackByID -> handlePost_debug_post_dumpStackByID()
-                            AlPagePath.debug_post_dumpBackCodePath -> handlePost_debug_post_dumpBackCodePath()
-                            AlPagePath.orderCreationForm -> handleGet_orderCreationForm()
-                            AlPagePath.post_createOrder -> handlePost_createOrder()
-                            AlPagePath.orderParams -> handleGet_orderParams()
-                            AlPagePath.post_setOrderParams -> handlePost_setOrderParams()
-                            AlPagePath.orderFiles -> handleGet_orderFiles()
-                            AlPagePath.post_setOrderParams -> handlePost_addOrderFile()
-                            else -> {
-                                when {
-                                    AlRequestContext.the.isPost -> bitch("pathInfo = ${req.pathInfo}    284bea9a-dc4f-4e62-8cc9-39508bb26c31")
-                                    else -> spitLandingPage()
+                                AlPagePath.debug_post_dumpStackByID -> handlePost_debug_post_dumpStackByID()
+                                AlPagePath.debug_post_dumpBackCodePath -> handlePost_debug_post_dumpBackCodePath()
+                                AlPagePath.debug_post_fuckDatabaseForNextPost -> handlePost_debug_post_fuckDatabaseForNextPost()
+                                AlPagePath.orderCreationForm -> handleGet_orderCreationForm()
+                                AlPagePath.post_createOrder -> handlePost_createOrder()
+                                AlPagePath.orderParams -> handleGet_orderParams()
+                                AlPagePath.post_setOrderParams -> handlePost_setOrderParams()
+                                AlPagePath.orderFiles -> handleGet_orderFiles()
+                                AlPagePath.post_addOrderFile -> handlePost_addOrderFile()
+                                else -> {
+                                    when {
+                                        AlRequestContext.the.isPost -> bitch("pathInfo = ${req.pathInfo}    284bea9a-dc4f-4e62-8cc9-39508bb26c31")
+                                        else -> spitLandingPage()
+                                    }
                                 }
                             }
+                            res.status = HttpServletResponse.SC_OK
                         }
-                        res.status = HttpServletResponse.SC_OK
-                    }
 
+                        val needsTransaction = true
+                        if (needsTransaction) {
+                            backPlatform.tx {jerk()}
+                        } else {
+                            jerk()
+                        }
+                    }
                 }
                 o.addServletWithMapping(ServletHolder(servlet), "/*")
             }
@@ -162,36 +171,6 @@ object StartAlrauneBack {
 
 }
 
-private fun handlePost_debug_post_dumpStackByID() {
-    val data = readPostData(DumpStackByIDPostData::class)
-    val stack = AlBackPile.idToTagCreationStack[data.stackID] ?: bitch("5aaece41-c3f3-4eae-8c98-e7f69147ef3b")
-    clog(stack
-             .lines()
-             .filter {line ->
-                 !listOf(
-                     "Tag.<init>",
-                     "TagCtor.invoke")
-                     .any {line.contains(it)}
-             }
-             .joinToString("\n"))
-}
-
-class CodeStep(val title: String, val throwableForStack: Throwable, val stackStringLinesToDrop: Int)
-
-private fun handlePost_debug_post_dumpBackCodePath() {
-    val data = readPostData(DumpBackCodePathPostData::class)
-    clog("\n=============== requestContextID = ${data.requestContextID} ===================")
-    val ctx = AlBackDebug.idToRequestContext[data.requestContextID] ?: bitch("data.requestID = ${data.requestContextID}    225159bd-f456-4cb2-9503-b8e6be6d6139")
-    for ((index, codeStep) in ctx.codeSteps.withIndex()) {
-        clog()
-        clog("${index + 1}) ${codeStep.title}")
-        clog(codeStep.throwableForStack.stackTraceString
-                 .lines()
-                 .drop(codeStep.stackStringLinesToDrop)
-                 .map {"    $it"}
-                 .joinToString("\n"))
-    }
-}
 
 
 object AlCSS_Back {
@@ -273,20 +252,6 @@ class AlRequestContext {
     }
 
     val isPost get() = req.method == "POST"
-
-    val debug = _Debug()
-    inner class _Debug {
-        val messAroundBack201 by fuck()
-
-        fun fuck() = object : ReadOnlyProperty<Any?, Should> {
-            override fun getValue(thisRef: Any?, property: KProperty<*>): Should {
-                return object : Should {
-                    override val should: Boolean
-                        get() = req.getParameter("backMessAround")?.contains(property.name) == true
-                }
-            }
-        }
-    }
 }
 
 fun spitLandingPage() {
@@ -455,9 +420,28 @@ class OrderParamsFields(val data: OrderCreationFormPostData) : WithFieldContext 
     val numSources = declareField(fieldCtx, data::numSources, f.numSources.title, v::validateNumSources)
 }
 
+val rctx get() = AlRequestContext.the
 
 object AlBackDebug {
     val idToRequestContext = ConcurrentHashMap<String, AlRequestContext>()
+
+//    fun maybeMessAround() {
+//        rctx.req.getDateHeader(-)
+//    }
+//
+//    val debug = _Debug()
+//    inner class _Debug {
+//        val messAroundBack201 by fuck()
+//
+//        fun fuck() = object : ReadOnlyProperty<Any?, Should> {
+//            override fun getValue(thisRef: Any?, property: KProperty<*>): Should {
+//                return object : Should {
+//                    override val should: Boolean
+//                        get() = req.getParameter("mab")?.contains(property.name) == true
+//                }
+//            }
+//        }
+//    }
 }
 
 

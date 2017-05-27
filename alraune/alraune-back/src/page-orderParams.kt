@@ -58,7 +58,12 @@ fun handlePost_setOrderParams() {
                 host.order.documentCategoryID = host.fields.data.documentCategoryID
                 host.order.numPages = host.fields.numPages.value.toInt()
                 host.order.numSources = host.fields.numSources.value.toInt()
-                alUAOrderRepo.save(host.order)
+
+                if (AlDebugServerFiddling.fuckDatabaseForPost.getAndReset() == true) {
+                    bitch("Our database is fucked up, man. No fucking service today. Yeah, and fuck you too...")
+                } else {
+                    alUAOrderRepo.save(host.order)
+                }
             }
 
             override fun additionallyShitToFrontOnSuccess(shit: PieceOfShitFromBack) {
@@ -210,12 +215,18 @@ fun validateOrderParamsFields(fields: OrderParamsFields) {
 fun renderForm(dfctx: FieldContext, shitDataNecessaryForControlsToFront: () -> Unit, renderFormBody: () -> Renderable): Renderable {
     shitDataNecessaryForControlsToFront()
     return kdiv{o->
-        if (dfctx.hasErrors)
-            o- kdiv.className(AlCSS.errorBanner).text(t("TOTE", "Кое-что нужно исправить..."))
+        o- kdiv.id(AlDomID.formBannerArea) {o->
+            o- kdiv(Attrs(id = AlDomID.serviceFuckedUpBanner, className = AlCSS.errorBanner.className, style = Style(display = "none")))
+                .text(t("Service is temporarily fucked up, sorry...", "Сервис временно в жопе, просим прощения..."))
+
+            if (dfctx.hasErrors)
+                o- kdiv.className(AlCSS.errorBanner)
+                    .text(t("TOTE", "Кое-что нужно исправить..."))
+        }
 
         o- renderFormBody()
 
-        o- kdiv{o->
+        o- kdiv.id(AlDomID.formFooterArea){o->
             o- kbutton(Attrs(id = AlDomID.submitButton, className = "btn btn-primary"), t("TOTE", "Продолжить"))
             o- kdiv.id(AlDomID.ticker){}
         }
