@@ -27,7 +27,15 @@ private fun  _makeSpitOrderTabPagePedro(fields: OrderFileFields): SpitOrderTabPa
 
         override fun renderContent(): Renderable {
             return kdiv{o->
-                o- "piiiiiiiiiiiiiiiiiiizdaaaaaaaaaaa"
+                for (file in rctx.order.files) {
+                    val c = AlCSS.carla
+                    o- kdiv.className(c.pizda){o->
+                        o- file.title
+                    }
+                    o- kdiv.className(c.cunt){o->
+                        o- file.details
+                    }
+                }
             }
         }
     }
@@ -70,7 +78,7 @@ fun handlePost_addOrderFile() {
 
             override fun validateDataAndUpdateDB() {
                 alUAOrderFileRepo.save(newAlUAOrderFile(
-                    uuid = UUID.randomUUID().toString(),
+                    uuid = AlBackPile.uuid(),
                     state = UAOrderFileState.UNKNOWN,
                     name = "todo",
                     title = ctx.fields.title.value,

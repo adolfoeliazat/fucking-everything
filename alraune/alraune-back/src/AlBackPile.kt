@@ -2,12 +2,12 @@ package alraune.back
 
 import alraune.shared.AlSharedPile.escapeHTML
 import alraune.back.AlRenderPile.t
-import alraune.shared.AlCSS
 import alraune.shared.AlSharedPile
 import alraune.shared.Color
 import alraune.shared.Color.*
 import org.apache.commons.validator.routines.EmailValidator
 import vgrechka.*
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 object AlBackPile {
@@ -65,6 +65,8 @@ object AlBackPile {
     fun validateDocumentDetails(x: String?) = validateString(x, minLen = 5, maxLen = 1000)
     fun validateNumPages(x: String?) = validateInt(x, min = 3, max = 500)
     fun validateNumSources(x: String?) = validateInt(x, min = 0, max = 50)
+
+    fun uuid() = UUID.randomUUID().toString()
 }
 
 val kdiv = TagCtor("div")

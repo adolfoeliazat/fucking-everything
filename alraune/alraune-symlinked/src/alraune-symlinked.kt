@@ -98,97 +98,9 @@ object AlPagePath {
 }
 
 class AlGetParams(
-    val orderUUID: String? = null
+    val orderUUID: String? = null,
+    val mab: String? = null
 )
-
-object AlCSS {
-    val errorBanner by Pack("""
-        background-color: ${Color.RED_50};
-        border-left: 3px solid ${Color.RED_300};
-        margin-bottom: 1.5rem;
-        padding-left: 1rem;
-        padding-top: 1rem;
-        padding-bottom: 1rem;""")
-
-    val successBanner by Pack("""
-        background-color: ${Color.GREEN_50};
-        border-left: 3px solid ${Color.GREEN_300};
-        margin-bottom: 1.5rem;
-        padding-left: 1rem;
-        padding-top: 1rem;
-        padding-bottom: 1rem;""")
-
-    val submitForReviewBanner by Pack("""
-        background-color: #eceff1;
-        border-left: 3px solid #90a4ae;
-        margin-bottom: 1rem;
-        padding-left: 1rem;
-        padding-right: 0;
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-        display: flex;
-        align-items: center;""")
-
-    fun addShit(buf: StringBuilder) {
-        fun forID(id: String, pack: Pack) {
-            pack.default?.let {buf.ln("#$id {$it}")}
-            pack.link?.let {buf.ln("#$id:link {$it}")}
-            pack.visited?.let {buf.ln("#$id:visited {$it}")}
-            pack.hover?.let {buf.ln("#$id:hover {$it}")}
-            pack.active?.let {buf.ln("#$id:active {$it}")}
-            pack.focus?.let {buf.ln("#$id:focus {$it}")}
-            pack.hoverActive?.let {buf.ln("#$id:hover:active {$it}")}
-            pack.hoverFocus?.let {buf.ln("#$id:hover:focus {$it}")}
-            pack.firstChild?.let {buf.ln("#$id:first-child {$it}")}
-            pack.notFirstChild?.let {buf.ln("#$id:nth-child(1n+2) {$it}")}
-        }
-
-        buf.ln("""
-            #${AlDomID.ticker} {
-                display: none;
-                width: 14px;
-                background-color: ${Color.BLUE_GRAY_600};
-                height: 34px;
-                float: right;
-                animation-name: ${AlDomID.ticker};
-                animation-duration: 500ms;
-                animation-iteration-count: infinite;
-            }
-
-            @keyframes ${AlDomID.ticker} {
-                0% {
-                    opacity: 1;
-                }
-
-                100% {
-                    opacity: 0;
-                }
-            }
-        """)
-    }
-
-    data class Pack(
-        val default: String? = null,
-        val link: String? = null,
-        val visited: String? = null,
-        val hover: String? = null,
-        val active: String? = null,
-        val focus: String? = null,
-        val hoverActive: String? = null,
-        val hoverFocus: String? = null,
-        val firstChild: String? = null,
-        val notFirstChild: String? = null,
-        val className: String = "boobs"
-    ) {
-        var propertyName by notNull<String>()
-        val value by lazy {this.copy(className = propertyName)}
-
-        operator fun getValue(thisRef: Any?, property: KProperty<*>): Pack {
-            propertyName = property.name
-            return value
-        }
-    }
-}
 
 // TODO:vgrechka Separate OrderCreationFormPostData, without orderUUID. Here orderUUID should be non-nullable
 @Ser data class OrderParamsFormPostData(

@@ -1,5 +1,6 @@
 package vgrechka
 
+import kotlin.properties.Delegates
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -13,6 +14,8 @@ fun wtf(msg: String = "...WTF didn't you describe this WTF?"): Nothing = throw E
 fun die(msg: String = "You've just killed me, motherfucker!"): Nothing = throw Exception("Aarrgghh... $msg")
 fun imf(what: String = "me"): Nothing = throw Exception("Implement $what, please, fuck you")
 fun bitch(msg: String = "Just bitching..."): Nothing = throw Exception(msg)
+
+fun <T: Any> notNull(): ReadWriteProperty<Any?, T> = Delegates.notNull()
 
 class notNullOnce<T: Any> : ReadWriteProperty<Any?, T> {
     var _value: T? = null

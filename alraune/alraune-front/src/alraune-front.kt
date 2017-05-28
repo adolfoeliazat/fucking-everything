@@ -416,10 +416,8 @@ object AlFrontPile {
                 else -> wtf("14c54600-425f-4586-b0a9-e61f7f33d0f2")
             }
 
-            clog(1111111)
             clog(inst)
             val data = serializeForPosting(inst)
-            clog(2222222)
 
             // clog("data", data)
             async {

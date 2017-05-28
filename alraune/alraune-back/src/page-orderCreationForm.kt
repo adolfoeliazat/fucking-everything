@@ -27,7 +27,7 @@ fun handlePost_createOrder() {
     } else {
         validateOrderParamsFields(fields)
         rctx.createdOrder = alUAOrderRepo.save(newAlUAOrder(
-            uuid = UUID.randomUUID().toString(), state = UAOrderState.CUSTOMER_DRAFT,
+            uuid = AlBackPile.uuid(), state = UAOrderState.CUSTOMER_DRAFT,
             email = fields.email.value, contactName = fields.contactName.value, phone = fields.phone.value,
             documentTitle = fields.documentTitle.value, documentDetails = fields.documentDetails.value,
             documentTypeID = fields.data.documentTypeID, documentCategoryID = fields.data.documentCategoryID,

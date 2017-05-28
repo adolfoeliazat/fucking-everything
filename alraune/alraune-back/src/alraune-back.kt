@@ -25,8 +25,11 @@ import org.eclipse.jetty.server.handler.HandlerCollection
 import org.eclipse.jetty.server.handler.ResourceHandler
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
+import kotlin.reflect.KProperty1
 import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.valueParameters
 
@@ -85,6 +88,11 @@ object StartAlrauneBack {
                         }
 
                         fun jerk() {
+                            rctx.getParams.mab?.let {mab->
+                                val f = AlBackDebug::class.memberFunctions.find {it.name == mab} ?: bitch("mab = $mab    2be4e39e-6e40-4930-a5ad-4b5340705727")
+                                f.call(AlBackDebug)
+                            }
+
                             shitToFront("c125ccc7-3bdc-499f-ab19-a12ecc826fa5") {shit->
                                 val requestContextID = AlRequestContext.the.requestContextID
                                 shit.requestContextID = requestContextID
@@ -100,7 +108,7 @@ object StartAlrauneBack {
                             when (req.pathInfo) {
                                 "/alraune.css" -> {
                                     res.contentType = "text/css; charset=utf-8"
-                                    res.writer.print(AlCSS_Back.sheet)
+                                    res.writer.print(AlCSS.sheet)
                                 }
                             // TODO:vgrechka @unboilerplate
                                 AlPagePath.debug_post_dumpStackByID -> handlePost_debug_post_dumpStackByID()
@@ -175,12 +183,62 @@ object StartAlrauneBack {
 
 }
 
+object AlCSS {
+    data class Pack(
+        val default: String? = null,
+        val link: String? = null,
+        val visited: String? = null,
+        val hover: String? = null,
+        val active: String? = null,
+        val focus: String? = null,
+        val hoverActive: String? = null,
+        val hoverFocus: String? = null,
+        val firstChild: String? = null,
+        val notFirstChild: String? = null
+    ) {
+        var className by notNullOnce<String>()
+    }
 
 
-object AlCSS_Back {
-    val sheet by lazy {
+    object carla {
+        val pizda = Pack("""
+            background-color: ${Color.BLUE_300};
+        """)
+
+        val cunt = Pack("""
+            background-color: ${Color.BLUE_500};
+        """)
+    }
+
+    val errorBanner = Pack("""
+        background-color: ${Color.RED_50};
+        border-left: 3px solid ${Color.RED_300};
+        margin-bottom: 1.5rem;
+        padding-left: 1rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;""")
+
+    val successBanner = Pack("""
+        background-color: ${Color.GREEN_50};
+        border-left: 3px solid ${Color.GREEN_300};
+        margin-bottom: 1.5rem;
+        padding-left: 1rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;""")
+
+    val submitForReviewBanner = Pack("""
+        background-color: #eceff1;
+        border-left: 3px solid #90a4ae;
+        margin-bottom: 1rem;
+        padding-left: 1rem;
+        padding-right: 0;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        display: flex;
+        align-items: center;""")
+
+    val sheet = run {
         val buf = StringBuilder()
-        AlCSS.addShit(buf)
 
         buf.append("""
             body {overflow-x: hidden; padding-right: 0px !important;}
@@ -212,24 +270,57 @@ object AlCSS_Back {
                 background-color: #78909c;
                 border-color: #546e7a;
             }
+
+            #${AlDomID.ticker} {
+                display: none;
+                width: 14px;
+                background-color: ${Color.BLUE_GRAY_600};
+                height: 34px;
+                float: right;
+                animation-name: ${AlDomID.ticker};
+                animation-duration: 500ms;
+                animation-iteration-count: infinite;
+            }
+
+            @keyframes ${AlDomID.ticker} {
+                0% {
+                    opacity: 1;
+                }
+
+                100% {
+                    opacity: 0;
+                }
+            }
         """)
 
-        for (prop in AlCSS::class.memberProperties) {
-            if (prop.returnType.classifier == AlCSS.Pack::class) {
-                val pack = prop.get(AlCSS) as AlCSS.Pack
-                val selector = ".${prop.name}"
-                pack.default?.let {buf.ln("$selector {$it}")}
-                pack.link?.let {buf.ln("$selector:link {$it}")}
-                pack.visited?.let {buf.ln("$selector:visited {$it}")}
-                pack.hover?.let {buf.ln("$selector:hover {$it}")}
-                pack.active?.let {buf.ln("$selector:active {$it}")}
-                pack.focus?.let {buf.ln("$selector:focus {$it}")}
-                pack.hoverActive?.let {buf.ln("$selector:hover:active {$it}")}
-                pack.hoverFocus?.let {buf.ln("$selector:hover:focus {$it}")}
-                pack.firstChild?.let {buf.ln("$selector:first-child {$it}")}
-                pack.notFirstChild?.let {buf.ln("$selector:nth-child(1n+2) {$it}")}
+        fun fart(clazz: KClass<*>, selectorPrefix: String = "") {
+            for (prop in clazz.memberProperties) {
+                prop as KProperty1<Any?, Any?>
+                if (prop.returnType.classifier == Pack::class) {
+                    val pack = prop.get(clazz.objectInstance) as Pack
+                    pack.className = selectorPrefix + prop.name
+                    val selector = "." + pack.className
+                    pack.default?.let {buf.ln("$selector {$it}")}
+                    pack.link?.let {buf.ln("$selector:link {$it}")}
+                    pack.visited?.let {buf.ln("$selector:visited {$it}")}
+                    pack.hover?.let {buf.ln("$selector:hover {$it}")}
+                    pack.active?.let {buf.ln("$selector:active {$it}")}
+                    pack.focus?.let {buf.ln("$selector:focus {$it}")}
+                    pack.hoverActive?.let {buf.ln("$selector:hover:active {$it}")}
+                    pack.hoverFocus?.let {buf.ln("$selector:hover:focus {$it}")}
+                    pack.firstChild?.let {buf.ln("$selector:first-child {$it}")}
+                    pack.notFirstChild?.let {buf.ln("$selector:nth-child(1n+2) {$it}")}
+                }
+            }
+
+            for (nestedClass in clazz.nestedClasses) {
+                if (nestedClass.objectInstance != null) {
+                    fart(nestedClass, "${nestedClass.simpleName}-")
+                }
             }
         }
+
+        fart(AlCSS::class)
 
         buf.toString()
     }
@@ -507,23 +598,34 @@ val rctx get() = AlRequestContext.the
 object AlBackDebug {
     val idToRequestContext = ConcurrentHashMap<String, AlRequestContext>()
 
-//    fun maybeMessAround() {
-//        rctx.req.getDateHeader(-)
-//    }
-//
-//    val debug = _Debug()
-//    inner class _Debug {
-//        val messAroundBack201 by fuck()
-//
-//        fun fuck() = object : ReadOnlyProperty<Any?, Should> {
-//            override fun getValue(thisRef: Any?, property: KProperty<*>): Should {
-//                return object : Should {
-//                    override val should: Boolean
-//                        get() = req.getParameter("mab")?.contains(property.name) == true
-//                }
-//            }
-//        }
-//    }
+    fun messAroundBack401() {
+        val files = rctx.order.files
+        files.clear()
+        files.add(newAlUAOrderFile(uuid = AlBackPile.uuid(),
+                                   state = UAOrderFileState.UNKNOWN,
+                                   name = "lbxproxy.rtf",
+                                   title = "Low Bandwidth X (LBX) proxy server configuration file",
+                                   details = "Applications that would like to take advantage of the Low Bandwidth extension to X (LBX) must make their connections to an lbxproxy. These applications need know nothing about LBX, they simply connect to the lbxproxy as if it were a regular X server. The lbxproxy accepts client connections, multiplexes them over a single connection to the X server, and performs various optimizations on the X protocol to make it faster over low bandwidth and/or high latency connections. It should be noted that such compression will not increase the pace of rendering all that much. Its primary purpose is to reduce network load and thus increase overall network latency. A competing project called DXPC (Differential X Protocol Compression) has been found to be more efficient at this task. Studies have shown though that in almost all cases ssh tunneling of X will produce far better results than through any of these specialised pieces of software.",
+                                   order = rctx.order))
+        files.add(newAlUAOrderFile(uuid = AlBackPile.uuid(),
+                                   state = UAOrderFileState.UNKNOWN,
+                                   name = "xdm.rtf",
+                                   title = "X display manager",
+                                   details = "Manages a collection of X servers, which may be on the local host or remote machines. It provides services similar to those provided by init, getty, and login on character-based terminals: prompting for login name and password, authenticating the user, and running a session. xdm supports XDMCP (X Display Manager Control Protocol) and can also be used to run a chooser process which presents the user with a menu of possible hosts that offer XDMCP display management. If the xutils package is installed, xdm can use the sessreg utility to register login sessions to the system utmp file; this, however, is not necessary for xdm to function.",
+                                   order = rctx.order))
+        files.add(newAlUAOrderFile(uuid = AlBackPile.uuid(),
+                                   state = UAOrderFileState.UNKNOWN,
+                                   name = "gdm.rtf",
+                                   title = "GNOME Display Manager",
+                                   details = "Provides the equivalent of a \"login:\" prompt for X displays- it pops up a login window and starts an X session. It provides all the functionality of xdm, including XDMCP support for managing remote displays. The greeting window is written using the GNOME libraries and hence looks like a GNOME application- even to the extent of supporting themes! By default, the greeter is run as an unprivileged user for security.",
+                                   order = rctx.order))
+        files.add(newAlUAOrderFile(uuid = AlBackPile.uuid(),
+                                   state = UAOrderFileState.UNKNOWN,
+                                   name = "lilo.conf.rtf",
+                                   title = "Configuration file for the Linux boot loader",
+                                   details = "LILO is the original OS loader and can load Linux and others. The 'lilo' package normally contains lilo (the installer) and boot-record-images to install Linux, OS/2, DOS and generic Boot Sectors of other Oses. You can use Lilo to manage your Master Boot Record (with a simple text screen, text menu or colorful splash graphics) or call 'lilo' from other boot-loaders to jump-start the Linux kernel. ",
+                                   order = rctx.order))
+    }
 }
 
 
