@@ -10,7 +10,6 @@ import kotlin.browser.window
 import kotlin.js.Promise
 import kotlin.js.json
 import kotlin.properties.Delegates.notNull
-import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.*
 
 // TODO:vgrechka Smarter way of dealing of name mangling
@@ -52,91 +51,9 @@ class AlFrontSecurity {
     }
 }
 
-external class WeakMap<in K: Any, V: Any?> {
-    fun delete(key: K): Boolean
-    operator fun get(key: K): V?
-    fun has(key: K): Boolean
-    operator fun set(key: K, value: V): WeakMap<K, V>
-}
-
-inline fun <K: Any, V> WeakMap<K, V>.getOrPut(key: K, defaultValue: () -> V): V {
-    val value = get(key)
-    return if (value == null) {
-        val answer = defaultValue()
-        set(key, answer)
-        answer
-    } else {
-        value
-    }
-}
-
-object NamesOfThings {
-    private val thingToName = WeakMap<Any, String>()
-    private val sourceToSinks = WeakMap<Any, MutableList<Any>>()
-
-    operator fun set(thing: Any, name: String) {
-        thingToName[thing] = name
-        val sinks = sourceToSinks[thing]
-        sinks?.forEach {set(it, name)}
-    }
-
-    operator fun get(thing: Any): String? {
-        return thingToName[thing]
-    }
-
-    fun flow(from: Any, to: Any) {
-        val sinks = sourceToSinks.getOrPut(from) {mutableListOf()}
-        sinks += to
-
-        get(from)?.let {name->
-            sinks.forEach {set(it, name)}
-        }
-    }
-
-    fun unflow(from: Any, to: Any) {
-        sourceToSinks[from]?.let {sinks->
-            sinks -= to
-        }
-    }
-}
-
-class ResolvableShit<T> {
-    private var _resolve by notNull<(T) -> Unit>()
-    private var _reject by notNull<(Throwable) -> Unit>()
-    private var _promise by notNull<Promise<T>>()
-    private var hasPromise = false
-
-    init {
-        reset()
-    }
-
-    val promise: Promise<T> get() = _promise
-    fun resolve(value: T) = _resolve(value)
-    fun reject(e: Throwable) = _reject(e)
-
-    suspend fun get(): T = await(promise)
-    suspend fun wait(): T = await(promise)
-
-    fun reset() {
-        if (hasPromise) {
-            NamesOfThings.unflow(this, promise)
-        }
-
-        _promise = Promise<T> {resolve, reject ->
-            this._resolve = resolve
-            this._reject = reject
-        }
-        hasPromise = true
-        NamesOfThings.flow(this, promise)
-    }
-}
-
-fun ResolvableShit<Unit>.resolve() = this.resolve(Unit)
-
-
 private fun parseShitFromBack() {
     AlFrontPile.shitFromBack = run {
-        val shitJQ = byIDSingle(AlDomID.shitPassedFromBackToFront, "12e47778-8369-4b1b-9817-c9a2a4b2200c")
+        val shitJQ = byIDSingle(AlDomID.shitPassedFromBackToFront)
         val dataShit = shitJQ.attr(AlSharedPile.attribute.data_shit)
         // clog("dataShit =", dataShit)
         JSON.parse<PieceOfShitFromBack>(dataShit)
@@ -144,83 +61,6 @@ private fun parseShitFromBack() {
     clog("shitFromBack =", AlFrontPile.shitFromBack)
 }
 
-fun <T: Any> notNullNamed(initial: T, parentNamed: Any? = null): ReadWriteProperty<Any?, T> = NotNullNamedVar(initial, parentNamed)
-
-private class NotNullNamedVar<T: Any>(initial: T?, val parentNamed: Any? = null) : ReadWriteProperty<Any?, T> {
-    private var value: T? = initial
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): T {
-        val res = value ?: throw IllegalStateException("Property ${property.name} should be initialized before get.")
-        val namePrefix = parentNamed?.let {NamesOfThings[it]}?.let {"$it."} ?: ""
-        NamesOfThings[res] = namePrefix + property.name
-        return res
-    }
-
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-        this.value = value
-    }
-}
-
-fun timeoutSet(ms: Int, cb: () -> Unit) {
-    window.setTimeout(cb, ms)
-}
-
-fun <T> Promise<T>.orTestTimeout(ms: Int, getPromiseName: (() -> String?)? = null): Promise<T> {
-    val shit = ResolvableShit<T>()
-    val thePromiseName = getPromiseName?.invoke() ?: "shit"
-    timeoutSet(ms) {
-        val msg = "Sick of waiting for $thePromiseName"
-//        if (isTestPausedOnAssertion()) {
-//            // console.warn("--- $msg, but not dying because test is paused on assertion ---")
-//        } else {
-            shit.reject(Exception(msg))
-//        }
-    }
-    this.then({shit.resolve(it)})
-    return shit.promise
-}
-
-fun <T> Promise<T>.orTestTimeoutNamedAfter(ms: Int, getPromiseNameBearer: () -> Any): Promise<T> {
-    return this.orTestTimeout(ms, getPromiseName = {NamesOfThings[getPromiseNameBearer()]})
-}
-
-class TestLock(
-    virgin: Boolean = false,
-    val testPauseTimeout: Int = 10000,
-    val sutPauseTimeout: Int = 10000
-) {
-    private val testPause by notNullNamed(ResolvableShit<Unit>(), parentNamed = this)
-    private val sutPause by notNullNamed(ResolvableShit<Unit>(), parentNamed = this)
-
-    init {
-        if (!virgin) { // Initially everything is resolved, so if not in test, shit just works
-            testPause.resolve()
-            sutPause.resolve()
-        }
-    }
-
-    fun reset() {
-        testPause.reset()
-        sutPause.reset()
-    }
-
-    suspend fun pauseTestFromTest() {
-        await(testPause.promise.orTestTimeoutNamedAfter(testPauseTimeout, {testPause}))
-    }
-
-    fun resumeSutFromTest() {
-        sutPause.resolve()
-    }
-
-    fun resumeTestFromSut() {
-        testPause.resolve()
-    }
-
-    suspend fun resumeTestAndPauseSutFromSut() {
-        testPause.resolve()
-        await(sutPause.promise.orTestTimeoutNamedAfter(sutPauseTimeout, {sutPause}))
-    }
-}
 
 object AlFrontPile {
     val isDebugMode = true
@@ -230,8 +70,7 @@ object AlFrontPile {
     val pageInitSignal = ResolvableShit<Unit>()
     val serviceFuckedUpBannerSignal = ResolvableShit<Unit>()
     var documentCategoryPicker by notNull<DocumentCategoryPicker>()
-    val modalShownLock by notNullNamed(TestLock())
-    val modalHiddenLock by notNullNamed(TestLock())
+    val topRightButtonModalTestLocks = ModalTestLocks()
 
 //    object google {
 //        var auth2 by notNullOnce<gapi.auth2.GoogleAuth>()
@@ -241,24 +80,23 @@ object AlFrontPile {
     val security = AlFrontSecurity()
 
     fun setTickerVisible(b: Boolean) {
-        val tickerJQ = byIDSingle(AlDomID.ticker, "34da400e-9e82-4318-956b-ecec1fa39bc3")
+        val tickerJQ = byIDSingle(AlDomID.ticker)
         tickerJQ.css("display", if (b) "block" else "none")
     }
 
     fun populateTextField2(prop: KProperty1<OrderFileFormPostData, String>, value: String) {
-        val fieldJQ = byIDSingle(AlSharedPile.fieldDOMID(prop), "2d2ed5b7-2a5d-4713-8ce0-10a4f050ce09")
+        val fieldJQ = byIDSingle(AlSharedPile.fieldDOMID(prop))
         fieldJQ.setVal(value)
     }
 
     fun populateTextField(prop: KProperty0<String>) {
-        val fieldJQ = byIDSingle(AlSharedPile.fieldDOMID(prop), "b26f4a4f-b8a0-4573-8bde-a8eb6149280f")
+        val fieldJQ = byIDSingle(AlSharedPile.fieldDOMID(prop))
         fieldJQ.setVal(prop.get())
     }
 
     suspend fun postRaw(path: String, rawData: Any?) = await(postRawPromise(path, rawData))
 
     fun postRawPromise(path: String, rawData: Any?): Promise<String> {
-//        val stackBeforeXHR: String = CaptureStackException().stack
         return Promise {resolve, reject ->
             val xhr = js("new XMLHttpRequest()")
             xhr.open("POST", shitFromBack.baseURL + path)
@@ -280,6 +118,46 @@ object AlFrontPile {
         }
     }
 
+    class CandyPoop<T : Any>(val isCandy: Boolean) {
+        var candy by notNullOnce<T>()
+        var poop by notNullOnce<Throwable>()
+
+        val isPoop = !isCandy
+
+        companion object {
+            fun <T : Any> candy(candy: T): CandyPoop<T> {
+                val res = CandyPoop<T>(isCandy = true)
+                res.candy = candy
+                return res
+            }
+
+            fun <T : Any> poop(poop: Throwable): CandyPoop<T> {
+                val res = CandyPoop<T>(isCandy = false)
+                res.poop = poop
+                return res
+            }
+        }
+    }
+
+    fun postRawCB(path: String, rawData: Any?, cb: (CandyPoop<String>) -> Unit) {
+        val xhr = js("new XMLHttpRequest()")
+        xhr.open("POST", shitFromBack.baseURL + path)
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+
+        xhr.onreadystatechange = {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    val response: String = xhr.responseText
+                    cb(CandyPoop.candy(response))
+                } else {
+                    cb(CandyPoop.poop(Exception("Got shitty backend response from $path: status = ${xhr.status}")))
+                }
+            }
+        }
+
+        xhr.send(rawData)
+    }
+
     fun initShit() {
         AlFrontPile.shitFromBack.historyPushState?.let {
             window.history.pushState(null, "", it)
@@ -295,37 +173,100 @@ object AlFrontPile {
     }
 
     private fun frontInitPage_orderParams() {
-        initModal(initFormControls = {initOrderParamsLikeControls()})
+        initTopRightButtonModal(initFormControls = {initOrderParamsLikeControls()})
     }
 
     private fun frontInitPage_orderFiles() {
-        initModal(initFormControls = {initSubmitButton()})
+        initTopRightButtonModal(initFormControls = {initSubmitButton()})
+        initDeleteItemModals()
     }
 
-    private fun initModal(initFormControls: () -> Unit) {
+    fun initDeleteItemModals() {
+        val postPath = AlPagePath.post_deleteOrderFile
+
+        val jIcons = jq("i[id|='${AlDomID.deleteItemIcon}']")
+        for (i in 0 until jIcons.length) {
+            val jIcon = jIcons.eq(i)
+            val jIconID = jIcon.attr("id")
+            val hyphen = jIconID.indexOfOrNull("-") ?: wtf("15ac565f-8b61-451e-a6c3-aeea08ee8fdf")
+            val itemUUID = jIconID.substring(hyphen + 1)
+
+            val jModal = byIDSingle("${AlDomID.deleteItemModal}-$itemUUID")
+            val locks = ModalTestLocks()
+            jIcon.setModalTestLocks(locks)
+            tieTestModalLock(jModal, locks)
+            jIcon.onClick {
+                jModal.modal()
+            }
+
+            val jSubmitButton = byIDSingle("${AlDomID.deleteItemSubmitButton}-$itemUUID")
+            val jCancelButton = byIDSingle("${AlDomID.deleteItemCancelButton}-$itemUUID")
+            jSubmitButton.onClick {
+                val jTicker = byIDSingle("${AlDomID.deleteItemTicker}-$itemUUID")
+                jSubmitButton.attr("disabled", "true")
+                jCancelButton.attr("disabled", "true")
+                jTicker.css("display", "block")
+
+                timeoutSet(debug_sleepBeforePost) {
+                    postRawCB(postPath, serializeForPosting(DeleteItemPostData(itemUUID)), fun(res) {
+                        if (res.isPoop) {
+                            jSubmitButton.attr("disabled", null)
+                            jCancelButton.attr("disabled", null)
+                            jTicker.css("display", "none")
+
+                            val jFormBannerArea = byIDSingle("${AlDomID.formBannerArea}-$itemUUID")
+                            jFormBannerArea.children().css("display", "none")
+                            val jServiceFuckedUpBanner = byIDSingle("${AlDomID.serviceFuckedUpBanner}-$itemUUID")
+                            jServiceFuckedUpBanner.css("display", "block")
+
+                            AlFrontPile.serviceFuckedUpBannerSignal.resolve()
+                            return
+                        }
+
+                        val html = res.candy
+                        replaceWithNewContent(AlDomID.shitPassedFromBackToFront, html)
+                        parseShitFromBack()
+
+                        val hasErrors = shitFromBack.hasErrors ?: wtf("b7b2b8ef-dd9c-4212-bbc7-842d6ef91af0")
+                        if (hasErrors) {
+                            replaceWithNewContent(AlDomID.deleteItemModalContent, html)
+                        } else {
+                            jModal.modal("hide")
+                        }
+                    })
+                }
+            }
+        }
+    }
+
+    private fun initTopRightButtonModal(initFormControls: () -> Unit) {
         val hasErrors = shitFromBack.hasErrors ?: wtf("07ebdde7-3a73-48bc-992a-54aba4cfb986")
         if (!hasErrors) {
-            pristineModalContentHTML = findShitBetweenMarkersForDOMID(
+            pristineModalContentHTML = findShitBetweenMarkersForDomid(
                 document.body!!.innerHTML,
                 AlDomID.modalContent)
         }
 
         initFormControls()
 
-        val modalJQ = byIDSingle(AlDomID.orderParamsModal, "c33cb863-3d92-45ad-ad31-3c15afc59a28")
-        modalJQ.on("shown.bs.modal") {
-            modalShownLock.resumeTestFromSut()
-        }
-        modalJQ.on("hidden.bs.modal") {
-            modalHiddenLock.resumeTestFromSut()
-        }
+        val jModal = byIDSingle(AlDomID.orderParamsModal)
+        tieTestModalLock(jModal, topRightButtonModalTestLocks)
 
-        val topRightButtonJQ = byIDSingle(AlDomID.topRightButton, "c40a46f8-fe29-42a3-87ef-4a9d8455d659")
+        val topRightButtonJQ = byIDSingle(AlDomID.topRightButton)
         topRightButtonJQ.onClick {
-            val modalContentJQ = byIDSingle(AlDomID.modalContent, "a5197d1b-eff7-4c1e-8715-19d231a0a5a1")
+            val modalContentJQ = byIDSingle(AlDomID.modalContent)
             modalContentJQ[0]!!.outerHTML = pristineModalContentHTML
             initFormControls()
-            modalJQ.modal()
+            jModal.modal()
+        }
+    }
+
+    private fun tieTestModalLock(jModal: JQuery, locks: ModalTestLocks) {
+        jModal.on("shown.bs.modal") {
+            locks.shown.resumeTestFromSut()
+        }
+        jModal.on("hidden.bs.modal") {
+            locks.hidden.resumeTestFromSut()
         }
     }
 
@@ -333,7 +274,7 @@ object AlFrontPile {
         initOrderParamsLikeControls()
     }
 
-    fun findShitBetweenMarkersForDOMID(haystack: String, id: String): String {
+    fun findShitBetweenMarkersForDomid(haystack: String, id: String): String {
         val beginMarker = AlSharedPile.beginContentMarkerForDOMID(id)
         val endMarker = AlSharedPile.endContentMarkerForDOMID(id)
         val i1 = indexOfOrBitchNoisily(haystack, beginMarker, "abe97b2e-f40a-4f3a-9b8f-38642695b22a")
@@ -377,7 +318,7 @@ object AlFrontPile {
             setTickerVisible(true)
 
             fun getTextField(propName: String): String {
-                val fieldJQ = byIDSingle(AlSharedPile.fieldDOMID(propName), "a7bc93b7-d01b-4a09-bd60-7a649b7289d6")
+                val fieldJQ = byIDSingle(AlSharedPile.fieldDOMID(propName))
                 return fieldJQ.getVal() ?: bitch("4f9a730a-8636-4b36-b4fd-ec57cfdc4af8")
             }
 
@@ -429,15 +370,15 @@ object AlFrontPile {
                 val html = try {
                     postRaw(shitFromBack.postPath, data)
                 } catch (e: dynamic) {
-                    val formFooterAreaJQ = byIDSingle(AlDomID.formFooterArea, "7812f976-0fd3-4fdd-ade3-ebeefd2afe64")
+                    val formFooterAreaJQ = byIDSingle(AlDomID.formFooterArea)
                     val buttonsJQ = formFooterAreaJQ.find("button")
                     check(buttonJQ.length > 0) {"259e87e0-fddc-465b-86e7-2c2b0edafe74"}
                     buttonsJQ.attr("disabled", false)
                     setTickerVisible(false)
 
-                    val formBannerAreaJQ = byIDSingle(AlDomID.formBannerArea, "2aa01a8d-f16f-4a30-ac9a-f6a852d8733e")
+                    val formBannerAreaJQ = byIDSingle(AlDomID.formBannerArea)
                     formBannerAreaJQ.children().css("display", "none")
-                    val serviceFuckedUpBannerJQ = byIDSingle(AlDomID.serviceFuckedUpBanner, "9ee9eea2-9280-4d78-8280-aef0dbd6448a")
+                    val serviceFuckedUpBannerJQ = byIDSingle(AlDomID.serviceFuckedUpBanner)
                     serviceFuckedUpBannerJQ.css("display", "block")
 
                     AlFrontPile.serviceFuckedUpBannerSignal.resolve()
@@ -482,7 +423,7 @@ object AlFrontPile {
                 val unmangledPropName = propName.substringBefore("_")
                 if (unmangledPropName !in customPropNames) {
                     clog("propName", propName)
-                    val fieldJQ = byIDSingle(AlSharedPile.fieldDOMID(unmangledPropName), "a7bc93b7-d01b-4a09-bd60-7a649b7289d6")
+                    val fieldJQ = byIDSingle(AlSharedPile.fieldDOMID(unmangledPropName))
                     inst[propName] = fieldJQ.getVal()
                 }
             }
@@ -498,15 +439,15 @@ object AlFrontPile {
                 val html = try {
                     postRaw(shitFromBack.postPath, data)
                 } catch (e: dynamic) {
-                    val formFooterAreaJQ = byIDSingle(AlDomID.formFooterArea, "7812f976-0fd3-4fdd-ade3-ebeefd2afe64")
+                    val formFooterAreaJQ = byIDSingle(AlDomID.formFooterArea)
                     val buttonsJQ = formFooterAreaJQ.find("button")
                     check(buttonJQ.length > 0) {"259e87e0-fddc-465b-86e7-2c2b0edafe74"}
                     buttonsJQ.attr("disabled", false)
                     setTickerVisible(false)
 
-                    val formBannerAreaJQ = byIDSingle(AlDomID.formBannerArea, "2aa01a8d-f16f-4a30-ac9a-f6a852d8733e")
+                    val formBannerAreaJQ = byIDSingle(AlDomID.formBannerArea)
                     formBannerAreaJQ.children().css("display", "none")
-                    val serviceFuckedUpBannerJQ = byIDSingle(AlDomID.serviceFuckedUpBanner, "9ee9eea2-9280-4d78-8280-aef0dbd6448a")
+                    val serviceFuckedUpBannerJQ = byIDSingle(AlDomID.serviceFuckedUpBanner)
                     serviceFuckedUpBannerJQ.css("display", "block")
 
                     AlFrontPile.serviceFuckedUpBannerSignal.resolve()
@@ -549,8 +490,8 @@ object AlFrontPile {
     }
 
     fun replaceWithNewContent(domid: String, html: String) {
-        val content = findShitBetweenMarkersForDOMID(html, domid)
-        val elementJQ = byIDSingle(domid, "b2218cc4-a1db-4647-b890-a2572dc25819")
+        val content = findShitBetweenMarkersForDomid(html, domid)
+        val elementJQ = byIDSingle(domid)
         elementJQ[0]!!.outerHTML = content
     }
 
@@ -618,6 +559,7 @@ object AlFrontPile {
     }
 
 }
+
 
 
 

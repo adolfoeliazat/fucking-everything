@@ -5,14 +5,9 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.MouseEvent
 import vgrechka.*
 import vgrechka.kjs.*
-import vgrechka.kjs.JQueryPile.byID
 import vgrechka.kjs.JQueryPile.byIDSingle
 import vgrechka.kjs.JQueryPile.jqbody
 import kotlin.browser.document
-import kotlin.browser.window
-import kotlin.js.Promise
-import kotlin.properties.Delegates.notNull
-import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.*
 
 object AlFrontDebug {
@@ -102,7 +97,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
     }
 
     private fun clickSubmitButton() {
-        val submitButtonJQ = byIDSingle(AlDomID.submitButton, "769bbcd6-826b-4555-82cf-ee2224897be4")
+        val submitButtonJQ = byIDSingle(AlDomID.submitButton)
         submitButtonJQ.click()
     }
 
@@ -112,16 +107,15 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
         }
     }
 
-    suspend fun clickButtonAndAwaitModalShown(buttonID: String) {
-        val lock = AlFrontPile.modalShownLock
+    suspend fun clickElementAndAwaitModalShown(j: JQuery, modalTestLocks: ModalTestLocks) {
+        val lock = modalTestLocks.shown
         lock.reset()
-        val buttonJQ = byIDSingle(buttonID, "c3f00e84-e927-4c2b-b0c3-c1241607dde7")
-        buttonJQ.click()
+        j.click()
         lock.pauseTestFromTest()
     }
 
     suspend fun awaitModalHiddenAfterDoing(block: suspend () -> Unit) {
-        val lock = AlFrontPile.modalHiddenLock
+        val lock = AlFrontPile.topRightButtonModalTestLocks.hidden
         lock.reset()
         block()
         lock.pauseTestFromTest()
@@ -154,7 +148,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
             }
 
             run { // Modal
-                clickButtonAndAwaitModalShown(AlDomID.topRightButton)
+                clickElementByIDAndAwaitModalShown(AlDomID.topRightButton, AlFrontPile.topRightButtonModalTestLocks)
 
                 val fuckDatabase = true
                 if (fuckDatabase) {
@@ -183,7 +177,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
                 }
 
                 run { // OK
-                    val phoneJQ = byIDSingle(AlSharedPile.fieldDOMID(OrderParamsFormPostData::phone.name), "e06b92c1-099b-4d91-afa3-3dc3da36dc06")
+                    val phoneJQ = byIDSingle(AlSharedPile.fieldDOMID(OrderParamsFormPostData::phone.name))
                     phoneJQ.setVal("+38 (911) 4542823")
 
                     awaitModalHiddenAfterDoing {
@@ -223,8 +217,12 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
 
     fun messAroundFront301() {
         async {
-            clickButtonAndAwaitModalShown(AlDomID.topRightButton)
+            clickElementByIDAndAwaitModalShown(AlDomID.topRightButton, AlFrontPile.topRightButtonModalTestLocks)
         }
+    }
+
+    private suspend fun clickElementByIDAndAwaitModalShown(domid: String, modalTestLocks: ModalTestLocks) {
+        clickElementAndAwaitModalShown(byIDSingle(domid), modalTestLocks)
     }
 
     @Suppress("unused")
@@ -232,7 +230,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
         async {
             val p = AlFrontPile::populateTextField2
 
-            clickButtonAndAwaitModalShown(AlDomID.topRightButton)
+            clickElementByIDAndAwaitModalShown(AlDomID.topRightButton, AlFrontPile.topRightButtonModalTestLocks)
 
             run { // Validation errors
                 p(OrderFileFormPostData::details, "In general your default keyboard mapping comes from your X server setup. If this setup is insufficient and you are unwilling to go through the process of reconfiguration and/or you are not the superuser you'll need to use the xmodmap program. This is the utility's global configuration file.")
@@ -245,6 +243,24 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
                     p(OrderFileFormPostData::title, "The Fucking Keyboard Mapping")
                     clickSubmitAndAwaitPageInit()
                 }
+            }
+        }
+    }
+
+    @Suppress("unused")
+    fun messAroundFront402() {
+        async {
+            val itemUUID = "9968705b-8879-46b1-99b9-26da1429501a"
+
+            run {
+                val j = byIDSingle("${AlDomID.deleteItemIcon}-$itemUUID")
+                val modalTestLocks = j.getModalTestLocks()
+                clickElementAndAwaitModalShown(j, modalTestLocks)
+            }
+
+            awaitPageInitAfterDoing {
+                val j = byIDSingle("${AlDomID.deleteItemSubmitButton}-$itemUUID")
+                j.click()
             }
         }
     }

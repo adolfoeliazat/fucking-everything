@@ -25,12 +25,9 @@ import org.eclipse.jetty.server.handler.HandlerCollection
 import org.eclipse.jetty.server.handler.ResourceHandler
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
-import kotlin.reflect.KProperty1
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberFunctions
-import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.valueParameters
 
 // TODO:vgrechka Backend dies on exception?
@@ -120,6 +117,7 @@ object StartAlrauneBack {
                                 AlPagePath.post_setOrderParams -> handlePost_setOrderParams()
                                 AlPagePath.orderFiles -> handleGet_orderFiles()
                                 AlPagePath.post_addOrderFile -> handlePost_addOrderFile()
+                                AlPagePath.post_deleteOrderFile -> handlePost_deleteOrderFile()
                                 else -> {
                                     when {
                                         AlRequestContext.the.isPost -> bitch("pathInfo = ${req.pathInfo}    284bea9a-dc4f-4e62-8cc9-39508bb26c31")
@@ -220,6 +218,7 @@ class AlRequestContext {
         val orderFile get() = data as OrderFileFormPostData
         val dumpStackByID get() = data as DumpStackByIDPostData
         val dumpBackCodePath get() = data as DumpBackCodePathPostData
+        val deleteItemPostData get() = data as DeleteItemPostData
     }
 
     val orderUUID by lazy {
@@ -459,25 +458,31 @@ object AlBackDebug {
     fun messAroundBack401() {
         val files = rctx.order.files
         files.clear()
-        files.add(newAlUAOrderFile(uuid = AlBackPile.uuid(),
-                                   state = UAOrderFileState.UNKNOWN,
-                                   name = "lbxproxy.rtf",
-                                   title = "Low Bandwidth X (LBX) proxy server configuration file",
-                                   details = "Applications that would like to take advantage of the Low Bandwidth extension to X (LBX) must make their connections to an lbxproxy. These applications need know nothing about LBX, they simply connect to the lbxproxy as if it were a regular X server. The lbxproxy accepts client connections, multiplexes them over a single connection to the X server, and performs various optimizations on the X protocol to make it faster over low bandwidth and/or high latency connections. It should be noted that such compression will not increase the pace of rendering all that much. Its primary purpose is to reduce network load and thus increase overall network latency. A competing project called DXPC (Differential X Protocol Compression) has been found to be more efficient at this task. Studies have shown though that in almost all cases ssh tunneling of X will produce far better results than through any of these specialised pieces of software.",
-                                   order = rctx.order))
-        files.add(newAlUAOrderFile(uuid = AlBackPile.uuid(),
+
+        fun jerk(file: AlUAOrderFile) {
+            files.add(file)
+            alUAOrderFileRepo.save(file) // Save now to create ID
+        }
+
+        jerk(newAlUAOrderFile(uuid = "f1cdbb11-f7a0-4a63-9c63-12920df5bfee",
+                              state = UAOrderFileState.UNKNOWN,
+                              name = "lbxproxy.rtf",
+                              title = "Low Bandwidth X (LBX) proxy server configuration file",
+                              details = "Applications that would like to take advantage of the Low Bandwidth extension to X (LBX) must make their connections to an lbxproxy. These applications need know nothing about LBX, they simply connect to the lbxproxy as if it were a regular X server. The lbxproxy accepts client connections, multiplexes them over a single connection to the X server, and performs various optimizations on the X protocol to make it faster over low bandwidth and/or high latency connections. It should be noted that such compression will not increase the pace of rendering all that much. Its primary purpose is to reduce network load and thus increase overall network latency. A competing project called DXPC (Differential X Protocol Compression) has been found to be more efficient at this task. Studies have shown though that in almost all cases ssh tunneling of X will produce far better results than through any of these specialised pieces of software.",
+                              order = rctx.order))
+        jerk(newAlUAOrderFile(uuid = "9968705b-8879-46b1-99b9-26da1429501a",
                                    state = UAOrderFileState.UNKNOWN,
                                    name = "xdm.rtf",
                                    title = "X display manager" + ". I am very long title".repeat(10),
                                    details = "Manages a collection of X servers, which may be on the local host or remote machines. It provides services similar to those provided by init, getty, and login on character-based terminals: prompting for login name and password, authenticating the user, and running a session. xdm supports XDMCP (X Display Manager Control Protocol) and can also be used to run a chooser process which presents the user with a menu of possible hosts that offer XDMCP display management. If the xutils package is installed, xdm can use the sessreg utility to register login sessions to the system utmp file; this, however, is not necessary for xdm to function.",
                                    order = rctx.order))
-        files.add(newAlUAOrderFile(uuid = AlBackPile.uuid(),
+        jerk(newAlUAOrderFile(uuid = "b169d1b4-8b0f-4ace-a5cb-f765e46fb9a6",
                                    state = UAOrderFileState.UNKNOWN,
                                    name = "gdm.rtf",
                                    title = "GNOME Display Manager",
                                    details = "Provides the equivalent of a \"login:\" prompt for X displays- it pops up a login window and starts an X session. It provides all the functionality of xdm, including XDMCP support for managing remote displays. The greeting window is written using the GNOME libraries and hence looks like a GNOME application- even to the extent of supporting themes! By default, the greeter is run as an unprivileged user for security.",
                                    order = rctx.order))
-        files.add(newAlUAOrderFile(uuid = AlBackPile.uuid(),
+        jerk(newAlUAOrderFile(uuid = "9b3e9d1d-cddc-40aa-a785-b62e8020e983",
                                    state = UAOrderFileState.UNKNOWN,
                                    name = "lilo.conf.rtf",
                                    title = "Configuration file for the Linux boot loader",

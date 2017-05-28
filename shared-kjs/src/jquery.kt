@@ -59,7 +59,10 @@ external class JQuery {
     fun find(selector: String): JQuery
     fun children(selector: String = definedExternally): JQuery
 
-    fun modal()
+    fun modal(arg: String = definedExternally)
+
+    fun data(key: String, value: Any?)
+    fun data(key: String): Any?
 }
 
 fun JQuery.onClick(handler: (MouseEvent) -> Unit) {
@@ -102,6 +105,7 @@ external interface JQueryPosition {
 }
 
 operator fun JQuery.get(index: Int): HTMLElement? = this.asDynamic()[index]
+fun JQuery.eq(index: Int): JQuery = this.asDynamic().eq(index)
 fun JQuery.scrollTop(value: Double): Unit = this.asDynamic().scrollTop(value)
 fun JQuery.scrollTop(value: Int): Unit = this.asDynamic().scrollTop(value)
 fun JQuery.scrollTop(): Double = this.asDynamic().scrollTop()
@@ -118,19 +122,19 @@ fun JQuery.hide(): String = this.asDynamic().hide()
 fun JQuery.show(): String = this.asDynamic().show()
 
 object JQueryPile {
-    fun byIDSingle(id: String, errorTag: String): JQuery {
+    fun byIDSingle(id: String): JQuery {
         val j = byID(id)
         if (j.length != 1)
-            bitch("I want one element with ID `$id`, got ${j.length}    $errorTag")
+            bitch("I want one element with ID `$id`, got ${j.length}")
         return j
     }
 
-    fun byIDNoneOrSingle(id: String, errorTag: String): JQuery? {
+    fun byIDNoneOrSingle(id: String): JQuery? {
         val j = byID(id)
         return when(j.length) {
             0 -> null
             1 -> j
-            else -> bitch("I want either none or single element with ID `$id`, got ${j.length}    $errorTag")
+            else -> bitch("I want either none or single element with ID `$id`, got ${j.length}")
         }
     }
 
@@ -158,6 +162,13 @@ fun JQuery.not(selector: String): JQuery = this.asDynamic().not(selector)
 
 fun HTMLElement.hasScrollbar() = scrollHeight > clientHeight
 
+fun JQuery.getModalTestLocks(): ModalTestLocks {
+    return (this.data("modalTestLocks") ?: bitch("34ad39b5-f3c2-4526-8e66-ecf2339fe165")) as ModalTestLocks
+}
+
+fun JQuery.setModalTestLocks(locks: ModalTestLocks) {
+    this.data("modalTestLocks", locks)
+}
 
 
 

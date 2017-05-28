@@ -16,10 +16,13 @@ object AlSharedPile {
     val scrollbarWidth = 17
 
     object attribute {
-        val data_tagCreationStackID = "data-tagCreationStackID"
-        val data_shit = "data-shit"
-        val data_itemUUID = "data-itemUUID"
-        val data_action = "data-action"
+        val data_tagCreationStackID by myDataName()
+        val data_shit by myDataName()
+
+        fun myDataName() = named {
+            check(it.startsWith("data_")) {"c3e41eea-f94b-4f48-bc5e-f92024a57f20"}
+            it.replaceFirst("_", "-")
+        }
     }
 
     object text {
@@ -84,6 +87,14 @@ object AlDomID {
     val formBannerArea by myName()
     val formFooterArea by myName()
     val serviceFuckedUpBanner by myName()
+    val deleteItemModal by myName()
+    val deleteItemTicker by myName()
+    val deleteItemSubmitButton by myName()
+    val deleteItemCancelButton by myName()
+    val downloadItemIcon by myName()
+    val editItemIcon by myName()
+    val deleteItemIcon by myName()
+    val deleteItemModalContent by myName()
 }
 
 object AlPageID {
@@ -103,6 +114,7 @@ object AlPagePath {
     val orderFiles by slashMyName()
     val post_setOrderParams by slashMyName()
     val post_addOrderFile by slashMyName()
+    val post_deleteOrderFile by slashMyName()
 }
 
 class AlGetParams(
@@ -122,7 +134,7 @@ class AlGetParams(
     val documentCategoryID: String,
     val numPages: String,
     val numSources: String
-) // : WithMaybeOrderUUID
+)
 
 @Ser data class OrderFileFormPostData(
     val orderUUID: String,
@@ -130,7 +142,11 @@ class AlGetParams(
     val name: String,
     val title: String,
     val details: String
-) // : WithMaybeOrderUUID
+)
+
+@Ser data class DeleteItemPostData(
+    val itemUUID: String
+)
 
 @Ser data class DumpStackByIDPostData(
     val stackID: String

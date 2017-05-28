@@ -36,7 +36,7 @@ class FilePicker {
     }
 
     fun update() {
-        val containerJQ = byIDSingle(AlDomID.filePickerContainer, "b15e1df6-fbb7-4f2d-b559-a8c40b426191")
+        val containerJQ = byIDSingle(AlDomID.filePickerContainer)
         containerJQ.html(buildString {
             ln("""
                 <style>
@@ -58,7 +58,7 @@ class FilePicker {
             ln("</div>")
         })
 
-        val addButtonJQ = byIDSingle(addButtonID, "f1762bf8-6f4f-4f95-b639-a3a23da1e10f")
+        val addButtonJQ = byIDSingle(addButtonID)
         addButtonJQ.on("click") {
             handleAddButtonClick()
         }

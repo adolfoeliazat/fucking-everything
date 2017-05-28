@@ -62,6 +62,13 @@ color: #90a4ae;
         color: #546e7a;
         cursor: pointer;
             """)
+
+        val tinySubtitle = Pack("""
+            font-size: 75%;
+            color: #757575;
+            margin-left: 1rem;
+"""
+        )
     }
 
     val errorBanner = Pack("""
@@ -90,6 +97,22 @@ color: #90a4ae;
         padding-bottom: 0.5rem;
         display: flex;
         align-items: center;""")
+
+    val deleteItemModalBodySubtitle = Pack("""
+margin-bottom: 1rem;
+    font-weight: bold;
+    """)
+
+    val ticker = Pack("""
+            display: none;
+            width: 14px;
+            background-color: ${Color.BLUE_GRAY_600};
+            height: 34px;
+            float: right;
+            animation-name: ticker;
+            animation-duration: 500ms;
+            animation-iteration-count: infinite;
+    """)
 
     val sheet = run {
         val buf = StringBuilder()
@@ -125,18 +148,7 @@ color: #90a4ae;
                 border-color: #546e7a;
             }
 
-            #${AlDomID.ticker} {
-                display: none;
-                width: 14px;
-                background-color: ${Color.BLUE_GRAY_600};
-                height: 34px;
-                float: right;
-                animation-name: ${AlDomID.ticker};
-                animation-duration: 500ms;
-                animation-iteration-count: infinite;
-            }
-
-            @keyframes ${AlDomID.ticker} {
+            @keyframes ticker {
                 0% {
                     opacity: 1;
                 }

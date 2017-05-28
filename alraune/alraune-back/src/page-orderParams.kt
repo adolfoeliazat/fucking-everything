@@ -1,6 +1,7 @@
 package alraune.back
 
 import alraune.back.AlRenderPile.col
+import alraune.back.AlRenderPile.renderFormBannerArea
 import alraune.back.AlRenderPile.renderOrderTitle
 import alraune.back.AlRenderPile.row
 import alraune.back.AlRenderPile.t
@@ -172,7 +173,7 @@ class SpitOrderTabPage(pedro: SpitOrderTabPagePedro) {
             o- pedro.renderContent()
 
             if (canEdit) {
-                o- AlRenderPile.renderModal(ModalParams(
+                o- AlRenderPile.renderModal(AlDomID.orderParamsModal, ModalParams(
                     width = "80rem",
                     leftMarginColor = Color.BLUE_GRAY_300,
                     title = pedro.topRightButtonModalTitle,
@@ -215,20 +216,13 @@ fun renderForm(dfctx: FieldContext,
                submitButtonTitle: String): Renderable {
     shitDataNecessaryForControlsToFront()
     return kdiv{o->
-        o- kdiv.id(AlDomID.formBannerArea) {o->
-            o- kdiv(Attrs(id = AlDomID.serviceFuckedUpBanner, className = AlCSS.errorBanner.className, style = Style(display = "none")))
-                .text(t("Service is temporarily fucked up, sorry...", "Сервис временно в жопе, просим прощения..."))
-
-            if (dfctx.hasErrors)
-                o- kdiv.className(AlCSS.errorBanner)
-                    .text(t("TOTE", "Кое-что нужно исправить..."))
-        }
+        o- renderFormBannerArea(dfctx.hasErrors)
 
         o- renderFormBody()
 
         o- kdiv.id(AlDomID.formFooterArea){o->
             o- kbutton(Attrs(id = AlDomID.submitButton, className = "btn btn-primary"), submitButtonTitle)
-            o- kdiv.id(AlDomID.ticker){}
+            o- kdiv.id(AlDomID.ticker).className(AlCSS.ticker)
         }
     }
 }

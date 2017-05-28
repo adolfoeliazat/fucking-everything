@@ -3,7 +3,6 @@ package alraune.back
 import alraune.shared.AlSharedPile.escapeHTML
 import alraune.back.AlRenderPile.t
 import alraune.shared.AlSharedPile
-import alraune.shared.Color
 import alraune.shared.Color.*
 import org.apache.commons.validator.routines.EmailValidator
 import vgrechka.*
@@ -122,8 +121,6 @@ class Tag(val tag: String, var attrs: Attrs) : Renderable {
             if (attrs.selected) append(" selected")
             val attr = AlSharedPile.attribute
             attrs.dataShit?.let {append(" ${attr.data_shit}='${escapeHTML(it)}'")}
-            attrs.dataItemUUID?.let {append(" ${attr.data_itemUUID}='${escapeHTML(it)}'")}
-            attrs.dataAction?.let {append(" ${attr.data_action}='${escapeHTML(it)}'")}
             attrs.dataDismiss?.let {append(" data-dismiss='${escapeHTML(it)}'")}
             tagCreationStackID?.let {append(" ${attr.data_tagCreationStackID}='$it'")}
 
@@ -159,6 +156,11 @@ class Tag(val tag: String, var attrs: Attrs) : Renderable {
 
     fun amend(style: Style): Tag {
         attrs = attrs.copy(style = style)
+        return this
+    }
+
+    fun className(clazz: AlCSS.Pack): Tag {
+        attrs = attrs.copy(className = clazz.className)
         return this
     }
 }
@@ -226,8 +228,6 @@ data class Attrs(
     val name: String? = null,
     val rows: Int? = null,
     val dataShit: String? = null,
-    val dataItemUUID: String? = null,
-    val dataAction: String? = null,
     val dataDismiss: String? = null,
     val selected: Boolean = false,
     val href: String? = null,

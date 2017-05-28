@@ -221,6 +221,18 @@ object AlRenderPile {
         }
     }
 
+    fun renderFormBannerArea(hasErrors: Boolean, idSuffix: String = ""): Tag {
+        return kdiv.id(AlDomID.formBannerArea + idSuffix) {o ->
+            o - kdiv(Attrs(id = AlDomID.serviceFuckedUpBanner + idSuffix, className = AlCSS.errorBanner.className, style = Style(display = "none")))
+                .text(t("Service is temporarily fucked up, sorry...", "Сервис временно в жопе, просим прощения..."))
+
+            if (hasErrors)
+                o - kdiv.className(AlCSS.errorBanner)
+                    .text(t("TOTE", "Кое-что нужно исправить..."))
+        }
+    }
+
+
 }
 
 
