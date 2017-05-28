@@ -255,7 +255,7 @@ object IDEAPile {
             // We don't want accidental infinite loop due to some bug in return logic, as that will render whole IDE hosed.
             // Approximate timeout is OK
             val numIterations = timeout / pollInterval
-            check(numIterations in 1..100) {"fe6fbc28-db08-4754-a4b9-26b39cb7c5f2"}
+            check(numIterations in 1..300) {"fe6fbc28-db08-4754-a4b9-26b39cb7c5f2"}
             for (i in 1..numIterations) {
                 Thread.sleep(pollInterval)
                 if (test())

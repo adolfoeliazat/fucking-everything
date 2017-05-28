@@ -18,11 +18,19 @@ object AlSharedPile {
     object attribute {
         val data_tagCreationStackID = "data-tagCreationStackID"
         val data_shit = "data-shit"
+        val data_itemUUID = "data-itemUUID"
+        val data_action = "data-action"
     }
 
     object text {
         val rightAngleQuote = "»"
         val times = "×"
+    }
+
+    object action {
+        val download by myName()
+        val edit by myName()
+        val delete by myName()
     }
 
     fun beginContentMarkerForDOMID(id: String) =

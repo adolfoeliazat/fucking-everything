@@ -122,6 +122,8 @@ class Tag(val tag: String, var attrs: Attrs) : Renderable {
             if (attrs.selected) append(" selected")
             val attr = AlSharedPile.attribute
             attrs.dataShit?.let {append(" ${attr.data_shit}='${escapeHTML(it)}'")}
+            attrs.dataItemUUID?.let {append(" ${attr.data_itemUUID}='${escapeHTML(it)}'")}
+            attrs.dataAction?.let {append(" ${attr.data_action}='${escapeHTML(it)}'")}
             attrs.dataDismiss?.let {append(" data-dismiss='${escapeHTML(it)}'")}
             tagCreationStackID?.let {append(" ${attr.data_tagCreationStackID}='$it'")}
 
@@ -188,6 +190,10 @@ class TagCtor(val tag: String) {
         return this(Attrs(className = x.className), block)
     }
 
+    fun className(x: IconClass, pack: AlCSS.Pack, block: (Tag) -> Unit = {}): Tag {
+        return this(Attrs(className = "${x.className} ${pack.className}"), block)
+    }
+
     fun id(id: String, block: (Tag) -> Unit = {}): Tag {
         return this(Attrs(id = id), block)
     }
@@ -220,6 +226,8 @@ data class Attrs(
     val name: String? = null,
     val rows: Int? = null,
     val dataShit: String? = null,
+    val dataItemUUID: String? = null,
+    val dataAction: String? = null,
     val dataDismiss: String? = null,
     val selected: Boolean = false,
     val href: String? = null,
