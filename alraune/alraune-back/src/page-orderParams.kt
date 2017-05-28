@@ -6,7 +6,6 @@ import alraune.back.AlRenderPile.row
 import alraune.back.AlRenderPile.t
 import alraune.shared.*
 import vgrechka.*
-import kotlin.reflect.KClass
 
 fun handleGet_orderParams() {
     Algo1(object : Algo1Pedro {
@@ -36,9 +35,9 @@ class Algo1(pedro: Algo1Pedro) {
 
 fun handlePost_setOrderParams() {
     HandleOrderTabPagePost(
-        getPostData = {rctx.orderCreationFormPostData},
+        getPostData = {rctx.postData.orderParams},
         fieldsCtor = ::OrderParamsFields,
-        makePedro = {host-> object:HandleOrderTabPagePostPedro<OrderCreationFormPostData, OrderParamsFields> {
+        makePedro = {host-> object:HandleOrderTabPagePostPedro<OrderParamsFormPostData, OrderParamsFields> {
             override fun spitPage() {
                 spitOrderParamsPage(host.fields)
             }
@@ -74,7 +73,7 @@ fun handlePost_setOrderParams() {
 }
 
 interface HandleOrderTabPagePostPedro<PostData, Fields>
-where PostData : WithMaybeOrderUUID, Fields : WithFieldContext
+where PostData : Any, Fields : WithFieldContext
 {
     fun spitPage()
     fun validateDataAndUpdateDB()
@@ -85,7 +84,7 @@ class HandleOrderTabPagePost<PostData, Fields>(
     getPostData: () -> PostData,
     fieldsCtor: (PostData) -> Fields,
     makePedro: (HandleOrderTabPagePost<PostData, Fields>) -> HandleOrderTabPagePostPedro<PostData, Fields>)
-    where PostData : WithMaybeOrderUUID, Fields : WithFieldContext
+    where PostData : Any, Fields : WithFieldContext
 {
     init {
         shitToFront("b4e2fd47-3a65-41a2-be93-959118883938") {
@@ -94,7 +93,6 @@ class HandleOrderTabPagePost<PostData, Fields>(
     }
 
     val data = getPostData()
-    val uuid = data.orderUUID ?: bitch("4c7f82b3-6347-4f25-8949-2f96e5af4713")
     val fields = fieldsCtor(data)
     val pedro = makePedro(this)
 
@@ -254,7 +252,7 @@ fun renderOrderParamsForm(fields: OrderParamsFields): Renderable {
                 o- row(marginBottom = null){o->
                     o- col(4, kdiv.className("form-group"){o->
                         o- klabel(text = f.documentType.title)
-                        o- kselect(Attrs(id = AlSharedPile.fieldDOMID(name = OrderCreationFormPostData::documentTypeID.name),
+                        o- kselect(Attrs(id = AlSharedPile.fieldDOMID(name = OrderParamsFormPostData::documentTypeID.name),
                                          className = "form-control")) {o->
                             for (value in AlDocumentType.values()) {
                                 o- koption(Attrs(value = value.name,

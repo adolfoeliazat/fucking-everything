@@ -4,7 +4,7 @@
 
 package alraune.back
 
-import alraune.shared.OrderCreationFormPostData
+import alraune.shared.OrderParamsFormPostData
 import alraune.shared.OrderFileFormPostData
 import vgrechka.spew.*
 
@@ -25,7 +25,7 @@ interface AlUAOrder : GCommonEntityFields {
     @GOneToMany(mappedBy = "order")
     var files: MutableList<AlUAOrderFile>
 
-    fun toForm() = OrderCreationFormPostData(
+    fun toForm() = OrderParamsFormPostData(
         orderUUID = null,
         email = email, name = contactName, phone = phone, documentTypeID = documentTypeID, documentTitle = documentTitle,
         documentDetails = documentDetails, documentCategoryID = documentCategoryID,

@@ -8,6 +8,7 @@ import vgrechka.kjs.JQueryPile.byIDSingle
 import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.js.Promise
+import kotlin.js.json
 import kotlin.properties.Delegates.notNull
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.*
@@ -33,13 +34,14 @@ fun main(args: Array<String>) {
     }
 }
 
-fun serializeForPosting(obj: dynamic): String {
-    val unmangledObj = js("({})")
-    for (name in JSObject.getOwnPropertyNames(obj)) {
-        val unmangledName = name.substringBefore("_")
-        unmangledObj[unmangledName] = obj[name]
-    }
-    return JSON.stringify(unmangledObj)
+fun serializeForPosting(obj: Any?): String {
+    return AlFrontPile.jsonize2(obj)
+//    val unmangledObj = js("({})")
+//    for (name in JSObject.getOwnPropertyNames(obj)) {
+//        val unmangledName = name.substringBefore("_")
+//        unmangledObj[unmangledName] = obj[name]
+//    }
+//    return JSON.stringify(unmangledObj)
 }
 
 
@@ -253,9 +255,9 @@ object AlFrontPile {
         fieldJQ.setVal(prop.get())
     }
 
-    suspend fun post(path: String, rawData: Any?) = await(postPromise(path, rawData))
+    suspend fun postRaw(path: String, rawData: Any?) = await(postRawPromise(path, rawData))
 
-    fun postPromise(path: String, rawData: Any?): Promise<String> {
+    fun postRawPromise(path: String, rawData: Any?): Promise<String> {
 //        val stackBeforeXHR: String = CaptureStackException().stack
         return Promise {resolve, reject ->
             val xhr = js("new XMLHttpRequest()")
@@ -297,21 +299,7 @@ object AlFrontPile {
     }
 
     private fun frontInitPage_orderFiles() {
-        initModal(
-            initFormControls = {
-                initSubmitButton(
-                    postDataClass = OrderFileFormPostData::class,
-                    customPropNames = listOf(
-                        OrderFileFormPostData::orderUUID.name,
-                        OrderFileFormPostData::fileUUID.name,
-                        OrderFileFormPostData::name.name),
-                    setCustomProps = {
-                        setPossiblyMangledProperty(it, OrderCreationFormPostData::orderUUID.name, shitFromBack.orderUUID)
-                        // TODO:vgrechka fileUUID if editing
-                    }
-                )
-            }
-        )
+        initModal(initFormControls = {initSubmitButton()})
     }
 
     private fun initModal(initFormControls: () -> Unit) {
@@ -368,16 +356,7 @@ object AlFrontPile {
     private fun initOrderParamsLikeControls() {
         val documentCategoryPicker = DocumentCategoryPicker()
         AlFrontPile.documentCategoryPicker = documentCategoryPicker
-        initSubmitButton(
-            postDataClass = OrderCreationFormPostData::class,
-            customPropNames = listOf(
-                OrderCreationFormPostData::documentCategoryID.name,
-                OrderCreationFormPostData::orderUUID.name),
-            setCustomProps = {
-                setPossiblyMangledProperty(it, OrderCreationFormPostData::documentCategoryID.name, documentCategoryPicker.getSelectedCategoryID())
-                setPossiblyMangledProperty(it, OrderCreationFormPostData::orderUUID.name, shitFromBack.orderUUID)
-            }
-        )
+        initSubmitButton()
     }
 
     fun setPossiblyMangledProperty(obj: dynamic, name: String, value: dynamic) {
@@ -389,7 +368,107 @@ object AlFrontPile {
 
     fun pageHasModal() = shitFromBack.pageID in setOf(AlPageID.orderParams, AlPageID.orderFiles)
 
-    fun initSubmitButton(postDataClass: KClass<*>, customPropNames: List<String>, setCustomProps: (dynamic) -> Unit) {
+    fun initSubmitButton() {
+        val buttonJQ = byID(AlDomID.submitButton)
+
+        fun submitButtonHandler() {
+            clog("i am the fucking submitButtonHandler")
+            buttonJQ.attr("disabled", "true")
+            setTickerVisible(true)
+
+            fun getTextField(propName: String): String {
+                val fieldJQ = byIDSingle(AlSharedPile.fieldDOMID(propName), "a7bc93b7-d01b-4a09-bd60-7a649b7289d6")
+                return fieldJQ.getVal() ?: bitch("4f9a730a-8636-4b36-b4fd-ec57cfdc4af8")
+            }
+
+            val inst: Any = when (AlFrontPile.shitFromBack.pageID) {
+                AlPageID.orderCreationForm -> OrderParamsFormPostData(
+                    orderUUID = null,
+                    documentCategoryID = documentCategoryPicker.getSelectedCategoryID(),
+                    email = getTextField(OrderParamsFormPostData::email.name),
+                    name = getTextField(OrderParamsFormPostData::name.name),
+                    phone = getTextField(OrderParamsFormPostData::phone.name),
+                    documentTypeID = getTextField(OrderParamsFormPostData::documentTypeID.name),
+                    documentTitle = getTextField(OrderParamsFormPostData::documentTitle.name),
+                    documentDetails = getTextField(OrderParamsFormPostData::documentDetails.name),
+                    numPages = getTextField(OrderParamsFormPostData::numPages.name),
+                    numSources = getTextField(OrderParamsFormPostData::numSources.name))
+
+                AlPageID.orderParams -> OrderParamsFormPostData(
+                    orderUUID = shitFromBack.orderUUID,
+                    documentCategoryID = documentCategoryPicker.getSelectedCategoryID(),
+                    email = getTextField(OrderParamsFormPostData::email.name),
+                    name = getTextField(OrderParamsFormPostData::name.name),
+                    phone = getTextField(OrderParamsFormPostData::phone.name),
+                    documentTypeID = getTextField(OrderParamsFormPostData::documentTypeID.name),
+                    documentTitle = getTextField(OrderParamsFormPostData::documentTitle.name),
+                    documentDetails = getTextField(OrderParamsFormPostData::documentDetails.name),
+                    numPages = getTextField(OrderParamsFormPostData::numPages.name),
+                    numSources = getTextField(OrderParamsFormPostData::numSources.name))
+
+                AlPageID.orderFiles -> OrderFileFormPostData(
+                    orderUUID = shitFromBack.orderUUID,
+                    fileUUID = null,
+                    title = getTextField(OrderFileFormPostData::title.name),
+                    details = getTextField(OrderFileFormPostData::details.name),
+                    name = "pizda")
+
+                else -> wtf("14c54600-425f-4586-b0a9-e61f7f33d0f2")
+            }
+
+            clog(1111111)
+            clog(inst)
+            val data = serializeForPosting(inst)
+            clog(2222222)
+
+            // clog("data", data)
+            async {
+                sleep(debug_sleepBeforePost)
+                // AlFrontPile.sleepTillEndOfTime()
+
+                // clog("html", html)
+
+                val html = try {
+                    postRaw(shitFromBack.postPath, data)
+                } catch (e: dynamic) {
+                    val formFooterAreaJQ = byIDSingle(AlDomID.formFooterArea, "7812f976-0fd3-4fdd-ade3-ebeefd2afe64")
+                    val buttonsJQ = formFooterAreaJQ.find("button")
+                    check(buttonJQ.length > 0) {"259e87e0-fddc-465b-86e7-2c2b0edafe74"}
+                    buttonsJQ.attr("disabled", false)
+                    setTickerVisible(false)
+
+                    val formBannerAreaJQ = byIDSingle(AlDomID.formBannerArea, "2aa01a8d-f16f-4a30-ac9a-f6a852d8733e")
+                    formBannerAreaJQ.children().css("display", "none")
+                    val serviceFuckedUpBannerJQ = byIDSingle(AlDomID.serviceFuckedUpBanner, "9ee9eea2-9280-4d78-8280-aef0dbd6448a")
+                    serviceFuckedUpBannerJQ.css("display", "block")
+
+                    AlFrontPile.serviceFuckedUpBannerSignal.resolve()
+                    return@async
+                }
+
+                replaceWithNewContent(AlDomID.shitPassedFromBackToFront, html)
+                parseShitFromBack()
+                val modalJQ = byID(AlDomID.orderParamsModal).asDynamic()
+                replaceWithNewContent(shitFromBack.replacement_id ?: wtf("40531be5-b7de-47e3-9f7e-6ff4b5f12c4c"), html)
+
+
+                if (pageHasModal()) {
+                    val hasErrors = shitFromBack.hasErrors ?: wtf("b7b2b8ef-dd9c-4212-bbc7-842d6ef91af0")
+                    if (!hasErrors) {
+                        modalJQ.modal("hide")
+                    }
+                }
+
+                initShit()
+            }
+        }
+
+        buttonJQ.onClick {
+            submitButtonHandler()
+        }
+    }
+
+    fun killme_initSubmitButton(postDataClass: KClass<*>, customPropNames: List<String>, setCustomProps: (dynamic) -> Unit) {
         val buttonJQ = byID(AlDomID.submitButton)
 
         fun submitButtonHandler() {
@@ -419,7 +498,7 @@ object AlFrontPile {
                 // clog("html", html)
 
                 val html = try {
-                    post(shitFromBack.postPath, data)
+                    postRaw(shitFromBack.postPath, data)
                 } catch (e: dynamic) {
                     val formFooterAreaJQ = byIDSingle(AlDomID.formFooterArea, "7812f976-0fd3-4fdd-ade3-ebeefd2afe64")
                     val buttonsJQ = formFooterAreaJQ.find("button")
@@ -482,7 +561,62 @@ object AlFrontPile {
     }
 
     suspend fun serializeAndPost(pagePath: String, data: dynamic) {
-        AlFrontPile.post(pagePath, serializeForPosting(data))
+        AlFrontPile.postRaw(pagePath, serializeForPosting(data))
+    }
+
+    val gloshit: dynamic = window.asDynamic()
+
+    // TODO:vgrechka @revisit
+    fun jsonize2(shit: Any?): String {
+        val out = jsonizeToObject2(shit)
+        val json = js("JSON").stringify(out)
+        return json
+    }
+
+    // TODO:vgrechka @revisit
+    fun jsonizeToObject2(shit: Any?): Any? {
+        fun noise(vararg xs: Any?) {
+            if (true) clog("jsonizeToObject2", *xs)
+        }
+
+        gloshit.gloshit_jsonizeToObject2 = shit
+        if (shit == null) return null
+        val jsType = jsTypeOf(shit)
+        if (jsType in setOf("string", "number", "boolean")) return shit
+        if (jsType != "object") wtf("jsType: $jsType")
+
+        when (shit) {
+            is List<*> -> {
+                return Array(shit.size) {i->
+                    jsonizeToObject2(shit[i])
+                }
+            }
+            is Long -> {
+                return shit.toString()
+            }
+            is KClass<*> -> {
+                return json("@class" to "kotlin.reflect.KClass",
+                            "simpleName" to shit.simpleName)
+            }
+            else -> {
+                val out = json()
+                val className = shit::class.simpleName
+                noise("className", className)
+                out["@class"] = "alraune.shared." + className
+
+                val props = JSObject.getOwnPropertyNames(shit.asDynamic())
+                val protoProps = JSObject.getOwnPropertyNames(shit.asDynamic().__proto__).toSet() - setOf("constructor")
+                for (prop in protoProps + props) {
+                    if (!prop.startsWith("component") && !prop.startsWith("copy_") && prop != "toString" && prop != "hashCode" && prop != "equals") {
+                        val value = shit.asDynamic()[prop]
+                        noise("prop", prop, value)
+                        out[prop] = jsonizeToObject2(value)
+                    }
+                }
+
+                return out
+            }
+        }
     }
 
 }

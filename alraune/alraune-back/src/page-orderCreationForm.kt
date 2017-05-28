@@ -17,7 +17,7 @@ fun handleGet_orderCreationForm() {
 }
 
 fun handlePost_createOrder() {
-    val fields = OrderParamsFields(rctx.orderCreationFormPostData)
+    val fields = OrderParamsFields(rctx.postData.orderParams)
     fields.fieldCtx.validate()
     shitToFront("d2039b9e-7c7e-4487-b230-78203c35fdf7") {
         it.replacement_id = AlDomID.replaceableContent

@@ -136,7 +136,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
 
             run { // Create order
                 populateOrderParamsForm(
-                    data = OrderCreationFormPostData(
+                    data = OrderParamsFormPostData(
                         orderUUID = "boobs",
                         email = "iperdonde@mail.com",
                         name = "Иммануил Пердондэ",
@@ -165,7 +165,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
                 run { // Validation errors
                     AlFrontPile.documentCategoryPicker.debug_handleBackButtonClick()
                     populateOrderParamsForm(
-                        data = OrderCreationFormPostData(
+                        data = OrderParamsFormPostData(
                             orderUUID = "boobs",
                             email = "fart@mail.com",
                             name = "Иммануил Пердондэ III",
@@ -183,7 +183,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
                 }
 
                 run { // OK
-                    val phoneJQ = byIDSingle(AlSharedPile.fieldDOMID(OrderCreationFormPostData::phone.name), "e06b92c1-099b-4d91-afa3-3dc3da36dc06")
+                    val phoneJQ = byIDSingle(AlSharedPile.fieldDOMID(OrderParamsFormPostData::phone.name), "e06b92c1-099b-4d91-afa3-3dc3da36dc06")
                     phoneJQ.setVal("+38 (911) 4542823")
 
                     awaitModalHiddenAfterDoing {
@@ -202,7 +202,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
         AlFrontPile.serializeAndPost(AlPagePath.debug_post_fuckDatabaseForNextPost, "boobs")
     }
 
-    private fun populateOrderParamsForm(data: OrderCreationFormPostData, documentCategoryPath: List<String>) {
+    private fun populateOrderParamsForm(data: OrderParamsFormPostData, documentCategoryPath: List<String>) {
         // TODO:vgrechka @unboilerplate
         val p = AlFrontPile::populateTextField
         p(data::email)
@@ -256,10 +256,10 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
         }
     }
 
-    fun make2xx(tamperWith: (OrderCreationFormPostData) -> OrderCreationFormPostData): () -> Unit {
+    fun make2xx(tamperWith: (OrderParamsFormPostData) -> OrderParamsFormPostData): () -> Unit {
         return {
             async {
-                val data = tamperWith(OrderCreationFormPostData(
+                val data = tamperWith(OrderParamsFormPostData(
                     orderUUID = "boobs",
                     email = "iperdonde@mail.com",
                     name = "Иммануил Пердондэ",

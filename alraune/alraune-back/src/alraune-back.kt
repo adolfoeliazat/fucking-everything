@@ -14,7 +14,13 @@ import alraune.back.AlBackPile0.log
 import alraune.back.AlRenderPile.pageTitle
 import alraune.back.AlRenderPile.rawHTML
 import alraune.shared.*
+import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer
+import com.fasterxml.jackson.databind.module.SimpleModule
 import org.eclipse.jetty.server.handler.HandlerCollection
 import org.eclipse.jetty.server.handler.ResourceHandler
 import java.util.concurrent.ConcurrentHashMap
@@ -237,19 +243,41 @@ class AlRequestContext {
     val shitPassedFromBackToFront = PieceOfShitFromBack()
     var getParams by notNullOnce<AlGetParams>() // TODO:vgrechka Rename
     val codeSteps = mutableListOf<CodeStep>()
-    var createdOrder: AlUAOrder? = null // TODO:vgrechka Enforce setting only once?
+    var createdOrder: AlUAOrder? = null
 
-    val orderCreationFormPostData by lazy {readPostData(OrderCreationFormPostData::class)}
-    val orderFileFormPostData by lazy {readPostData(OrderFileFormPostData::class)}
-    val dumpStackByIDPostData by lazy {readPostData(DumpStackByIDPostData::class)}
-    val dumpBackCodePathPostData by lazy {readPostData(DumpBackCodePathPostData::class)}
+    val objectMapper by lazy {ObjectMapper().also {mapper->
+        val typer = ObjectMapper.DefaultTypeResolverBuilder(ObjectMapper.DefaultTyping.NON_FINAL)
+            .init(JsonTypeInfo.Id.CLASS, null)
+            .inclusion(JsonTypeInfo.As.PROPERTY)
+            .typeProperty("@class")
+        mapper.setDefaultTyping(typer)
+        mapper.registerModule(SimpleModule().also {module->
+            module.addDeserializer(KClass::class.java, object : StdDeserializer<KClass<*>>(null as Class<*>?) {
+                override fun deserialize(jp: JsonParser, ctx: DeserializationContext): KClass<*> {
+                    val node = jp.codec.readTree<JsonNode>(jp)
+                    val simpleName = node.get("simpleName").asText()
+                    return Class.forName("alraune.shared.$simpleName").kotlin
+                }
+            })
+        })
+    }}
+
+    val postData by lazy {_postData()}; inner class _postData {
+        val data = run {
+            val text = req.reader.readText()
+            objectMapper.readValue(text, Object::class.java)!!
+        }
+        val orderParams get() = data as OrderParamsFormPostData
+        val orderFile get() = data as OrderFileFormPostData
+        val dumpStackByID get() = data as DumpStackByIDPostData
+        val dumpBackCodePath get() = data as DumpBackCodePathPostData
+    }
 
     val orderUUID by lazy {
         if (isPost) {
             when (req.pathInfo) {
-                // TODO:vgrechka Separate (from order creation) data class?
-                AlPagePath.post_setOrderParams -> orderCreationFormPostData.orderUUID ?: bitch("11034025-8877-4d96-a17f-f5c3c2f0e16d")
-                AlPagePath.post_addOrderFile -> orderFileFormPostData.orderUUID
+                AlPagePath.post_setOrderParams -> postData.orderParams.orderUUID ?: bitch("11034025-8877-4d96-a17f-f5c3c2f0e16d")
+                AlPagePath.post_addOrderFile -> postData.orderFile.orderUUID
                 else -> bitch("6f76e7f3-6f92-48d4-91ff-95f89f6626ce")
             }
         } else {
@@ -460,7 +488,7 @@ interface WithFieldContext {
     val fieldCtx: FieldContext
 }
 
-class OrderParamsFields(val data: OrderCreationFormPostData) : WithFieldContext {
+class OrderParamsFields(val data: OrderParamsFormPostData) : WithFieldContext {
     val f = AlFields.order
     val v = AlBackPile
     override val fieldCtx = FieldContext()

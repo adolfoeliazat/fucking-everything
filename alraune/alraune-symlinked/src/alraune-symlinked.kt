@@ -57,9 +57,9 @@ object AlSharedPile {
 
 }
 
-interface WithMaybeOrderUUID {
-    val orderUUID: String?
-}
+//interface WithMaybeOrderUUID {
+//    val orderUUID: String?
+//}
 
 object AlDomID {
     val shitPassedFromBackToFront by myName()
@@ -190,9 +190,9 @@ object AlCSS {
     }
 }
 
-
-@Ser data class OrderCreationFormPostData(
-    override val orderUUID: String?,
+// TODO:vgrechka Separate OrderCreationFormPostData, without orderUUID. Here orderUUID should be non-nullable
+@Ser data class OrderParamsFormPostData(
+    val orderUUID: String?,
     val email: String,
     val name: String,
     val phone: String,
@@ -202,15 +202,15 @@ object AlCSS {
     val documentCategoryID: String,
     val numPages: String,
     val numSources: String
-) : WithMaybeOrderUUID
+) // : WithMaybeOrderUUID
 
 @Ser data class OrderFileFormPostData(
-    override val orderUUID: String,
+    val orderUUID: String,
     val fileUUID: String?,
     val name: String,
     val title: String,
     val details: String
-) : WithMaybeOrderUUID
+) // : WithMaybeOrderUUID
 
 @Ser data class DumpStackByIDPostData(
     val stackID: String

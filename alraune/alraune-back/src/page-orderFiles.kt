@@ -2,7 +2,6 @@ package alraune.back
 
 import alraune.back.AlRenderPile.t
 import alraune.shared.*
-import vgrechka.*
 import java.util.*
 
 private fun  _makeSpitOrderTabPagePedro(fields: OrderFileFields): SpitOrderTabPagePedro {
@@ -58,7 +57,7 @@ private fun makeBlankFields(): OrderFileFields {
 
 fun handlePost_addOrderFile() {
     HandleOrderTabPagePost(
-        getPostData = {rctx.orderFileFormPostData},
+        getPostData = {rctx.postData.orderFile},
         fieldsCtor = ::OrderFileFields,
         makePedro = {ctx-> object:HandleOrderTabPagePostPedro<OrderFileFormPostData, OrderFileFields> {
             override fun spitPage() {
