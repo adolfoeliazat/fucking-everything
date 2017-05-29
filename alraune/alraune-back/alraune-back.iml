@@ -189,5 +189,6 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="shared-kjs" />
   </component>
 </module>

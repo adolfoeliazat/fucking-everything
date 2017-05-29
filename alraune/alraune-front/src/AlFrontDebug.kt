@@ -6,7 +6,7 @@ import org.w3c.dom.events.MouseEvent
 import vgrechka.*
 import vgrechka.kjs.*
 import vgrechka.kjs.JQueryPile.byIDSingle
-import vgrechka.kjs.JQueryPile.jqbody
+import vgrechka.kjs.JQueryPile.jBody
 import kotlin.browser.document
 import kotlin.reflect.*
 
@@ -40,7 +40,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
             val drawerClass = "c-5ccefe3e-7cbf-4a0f-8d8e-3883f8dda8e3"
             val linkClass = "c-dc1eb630-2231-4eaf-b9a7-44b425badf7d"
             val linkStyle = "{display: block; color: white; padding: 2px;}"
-            jqbody.append("""
+            jBody.append("""
             <style>
                 .$drawerClass {
                     background: gray;
@@ -63,7 +63,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
             </style>
         """)
             val drawerJQ = jq("<div class='$drawerClass'></div>")
-            jqbody.append(drawerJQ)
+            jBody.append(drawerJQ)
 
             fun addItem(f: KFunction0<Unit>) {
                 val itemJQ = jq("<a class='$linkClass' href='#'>${f.name}</a>")

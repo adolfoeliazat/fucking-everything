@@ -27,6 +27,7 @@ object AlSharedPile {
 
     object className {
         val fuckAway by myName()
+        val paddingRightScrollbarWidthImportant by myName()
     }
 
     object text {

@@ -131,7 +131,25 @@ margin-bottom: 1rem;
         val buf = StringBuilder()
 
         buf.append("""
-            body {overflow-x: hidden; padding-right: 0px !important;}
+            body {overflow-x: hidden; overflow-y: scroll; padding-right: 0px !important;}
+
+            .modal-open .modal {
+                overflow-x: hidden;
+                overflow-y: scroll;
+            }
+
+            .modal-backdrop {
+                overflow-x: hidden;
+                overflow-y: scroll;
+            }
+
+            .modal-footer .btn+.btn {
+                margin-left: 8px;
+            }
+
+            .${AlSharedPile.className.paddingRightScrollbarWidthImportant} {
+                padding-right: ${AlSharedPile.scrollbarWidth}px !important;
+            }
 
             button:disabled {cursor: default !important;}
             input:disabled {cursor: default !important;}
@@ -180,6 +198,10 @@ margin-bottom: 1rem;
                     opacity: 0;
                 }
             }
+
+            .btn-default:focus {border-color: #ccc; outline-color: transparent;}
+            .btn-default:active {border-color: #ccc; outline-color: transparent;}
+            .btn-default:focus:active {border-color: #8c8c8c; outline-color: transparent;}
         """)
 
         fun fart(clazz: KClass<*>, selectorPrefix: String = "") {

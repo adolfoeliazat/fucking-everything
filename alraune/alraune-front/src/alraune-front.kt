@@ -194,13 +194,14 @@ object AlFrontPile {
             val jModal = byIDSingle("${AlDomID.deleteItemModal}-$itemUUID")
             val locks = ModalTestLocks()
             jIcon.setModalTestLocks(locks)
-            tieTestModalLock(jModal, locks)
+            initModal(jModal, locks)
             jIcon.onClick {
                 jModal.modal()
             }
 
             val jSubmitButton = byIDSingle("${AlDomID.deleteItemSubmitButton}-$itemUUID")
             val jCancelButton = byIDSingle("${AlDomID.deleteItemCancelButton}-$itemUUID")
+
             jSubmitButton.onClick {
                 val jTicker = byIDSingle("${AlDomID.deleteItemTicker}-$itemUUID")
                 jSubmitButton.attr("disabled", "true")
@@ -231,13 +232,17 @@ object AlFrontPile {
                         if (hasErrors) {
                             replaceWithNewContent(AlDomID.deleteItemModalContent, html)
                         } else {
-                            timeoutSet(500) {
+                            timeoutSet(250) {
                                 fuckElementAwayAndRemove("${AlDomID.itemShit}-$itemUUID")
                             }
                             jModal.modal("hide")
                         }
                     })
                 }
+            }
+
+            jCancelButton.onClick {
+                jModal.modal("hide")
             }
         }
     }
@@ -253,7 +258,7 @@ object AlFrontPile {
         initFormControls()
 
         val jModal = byIDSingle(AlDomID.orderParamsModal)
-        tieTestModalLock(jModal, topRightButtonModalTestLocks)
+        initModal(jModal, topRightButtonModalTestLocks)
 
         val topRightButtonJQ = byIDSingle(AlDomID.topRightButton)
         topRightButtonJQ.onClick {
@@ -261,15 +266,6 @@ object AlFrontPile {
             modalContentJQ[0]!!.outerHTML = pristineModalContentHTML
             initFormControls()
             jModal.modal()
-        }
-    }
-
-    private fun tieTestModalLock(jModal: JQuery, locks: ModalTestLocks) {
-        jModal.on("shown.bs.modal") {
-            locks.shown.resumeTestFromSut()
-        }
-        jModal.on("hidden.bs.modal") {
-            locks.hidden.resumeTestFromSut()
         }
     }
 
@@ -569,6 +565,27 @@ object AlFrontPile {
         }
         j.addClass(AlSharedPile.className.fuckAway)
     }
+
+    fun initModal(jModal: JQuery, locks: ModalTestLocks) {
+        jModal.on("show.bs.modal") {
+            JQueryPile.jBody.css("overflow-y", "hidden")
+            JQueryPile.jBody.addClass(AlSharedPile.className.paddingRightScrollbarWidthImportant)
+        }
+
+        jModal.on("shown.bs.modal") {
+            locks.shown.resumeTestFromSut()
+        }
+
+        jModal.on("hide.bs.modal") {
+        }
+
+        jModal.on("hidden.bs.modal") {
+            JQueryPile.jBody.css("overflow-y", "scroll")
+            JQueryPile.jBody.removeClass(AlSharedPile.className.paddingRightScrollbarWidthImportant)
+            locks.hidden.resumeTestFromSut()
+        }
+    }
+
 }
 
 

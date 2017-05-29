@@ -139,7 +139,7 @@ object JQueryPile {
     }
 
 
-    val jqbody: JQuery get() = jq(document.body!!)
+    val jBody: JQuery get() = jq(document.body!!)
     val jqwindow: JQuery get() = js("$(window)")
 
     fun byID(id: String): JQuery {
