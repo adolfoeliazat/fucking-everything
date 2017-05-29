@@ -231,6 +231,9 @@ object AlFrontPile {
                         if (hasErrors) {
                             replaceWithNewContent(AlDomID.deleteItemModalContent, html)
                         } else {
+                            timeoutSet(500) {
+                                fuckElementAwayAndRemove("${AlDomID.itemShit}-$itemUUID")
+                            }
                             jModal.modal("hide")
                         }
                     })
@@ -558,6 +561,14 @@ object AlFrontPile {
         }
     }
 
+    fun fuckElementAwayAndRemove(id: String, cb: () -> Unit = {}) {
+        val j = byIDSingle(id)
+        j.on("animationend") {
+            j.remove()
+            cb()
+        }
+        j.addClass(AlSharedPile.className.fuckAway)
+    }
 }
 
 

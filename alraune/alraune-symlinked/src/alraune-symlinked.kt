@@ -25,6 +25,10 @@ object AlSharedPile {
         }
     }
 
+    object className {
+        val fuckAway by myName()
+    }
+
     object text {
         val rightAngleQuote = "»"
         val times = "×"
@@ -95,6 +99,7 @@ object AlDomID {
     val editItemIcon by myName()
     val deleteItemIcon by myName()
     val deleteItemModalContent by myName()
+    val itemShit by myName()
 }
 
 object AlPageID {

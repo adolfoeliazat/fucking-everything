@@ -44,6 +44,7 @@ imap <c-=> <c-right>
 
 nmap gb :action AceAction<CR>
 
+nmap g<cr> hi<cr>
 
 
 

@@ -76,6 +76,17 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
 
             addItem(AlFrontDebug::dumpBackCodePath)
         }
+
+        putSomeShitIntoGlobal()
+    }
+
+    private fun putSomeShitIntoGlobal() {
+        AlFrontPile.gloshit.fuck1 = byIDSingle("itemShit-b169d1b4-8b0f-4ace-a5cb-f765e46fb9a6")
+        AlFrontPile.gloshit.fuck2 = {
+            AlFrontPile.fuckElementAwayAndRemove("itemShit-b169d1b4-8b0f-4ace-a5cb-f765e46fb9a6") {
+                clog("Done")
+            }
+        }
     }
 
     suspend fun awaitPageInitAfterDoing(block: () -> Unit) {

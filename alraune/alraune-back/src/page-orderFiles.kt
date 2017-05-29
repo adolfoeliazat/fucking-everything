@@ -28,46 +28,48 @@ private fun  _makeSpitOrderTabPagePedro(fields: OrderFileFields): SpitOrderTabPa
         override fun renderContent(): Renderable {
             return kdiv{o->
                 for (item in rctx.order.files) {
-                    val canDelete = true
-                    val c = AlCSS.carla
-                    o- kdiv.className(c.title){o->
-                        o- ki.className(fa.file, c.titleIcon)
-                        o- item.title
-                        o- kspan.className(c.tinySubtitle).text(t("TOTE", "№${item.id}"))
-                        o- kdiv.className(c.titleRightIcons){o->
-                            fun rightIcon(icon: IconClass, hint: String, style: Style = Style(), action: String, idBase: String) =
-                                ki(Attrs(id = "$idBase-${item.uuid}",
-                                         className = "$icon ${c.titleRightIcon}",
-                                         style = style))
+                    o- kdiv.id("${AlDomID.itemShit}-${item.uuid}"){o->
+                        val canDelete = true
+                        val c = AlCSS.carla
+                        o- kdiv.className(c.title){o->
+                            o- ki.className(fa.file, c.titleIcon)
+                            o- item.title
+                            o- kspan.className(c.tinySubtitle).text(t("TOTE", "№${item.id}"))
+                            o- kdiv.className(c.titleRightIcons){o->
+                                fun rightIcon(icon: IconClass, hint: String, style: Style = Style(), action: String, idBase: String) =
+                                    ki(Attrs(id = "$idBase-${item.uuid}",
+                                             className = "$icon ${c.titleRightIcon}",
+                                             style = style))
 
-                            o- rightIcon(fa.cloudDownload, t("Download", "Скачать"), Style(marginTop = "3px", marginRight = "1px"), action = AlSharedPile.action.download, idBase = AlDomID.downloadItemIcon)
-                            o- rightIcon(fa.pencil, t("Edit", "Изменить"), action = AlSharedPile.action.edit, idBase = AlDomID.editItemIcon)
-                            if (canDelete)
-                                o- rightIcon(fa.trash, t("Delete", "Удалить"), action = AlSharedPile.action.delete, idBase = AlDomID.deleteItemIcon)
-                        }
-                    }
-                    o- kdiv.className(c.body){o->
-                        o- item.details
-                    }
-
-                    if (canDelete) {
-                        o- AlRenderPile.renderModal("${AlDomID.deleteItemModal}-${item.uuid}", ModalParams(
-                            width = "80rem",
-                            leftMarginColor = Color.RED_300,
-                            title = t("TOTE", "Удалить файл №${item.id}?"),
-                            body = insideMarkers(
-                                id = "${AlDomID.deleteItemModal}-content-${item.uuid}",
-                                content = kdiv{o->
-                                    o- AlRenderPile.renderFormBannerArea(hasErrors = false, idSuffix = "-${item.uuid}")
-                                    o- kdiv.className(AlCSS.deleteItemModalBodySubtitle).add(item.title)
-                                    o- t("TOTE", "Без приколов, последний раз спрашиваю...")
-                                }),
-                            footer = kdiv{o->
-                                o- kbutton(Attrs(id = "${AlDomID.deleteItemSubmitButton}-${item.uuid}", className = "btn btn-danger"), t("TOTE", "Мочи!"))
-                                o- kbutton(Attrs(id = "${AlDomID.deleteItemCancelButton}-${item.uuid}", className = "btn btn-default"), t("TOTE", "Я очкую"))
-                                o- kdiv.id("${AlDomID.deleteItemTicker}-${item.uuid}").className(AlCSS.ticker).amend(Style(float = "left"))
+                                o- rightIcon(fa.cloudDownload, t("Download", "Скачать"), Style(marginTop = "3px", marginRight = "1px"), action = AlSharedPile.action.download, idBase = AlDomID.downloadItemIcon)
+                                o- rightIcon(fa.pencil, t("Edit", "Изменить"), action = AlSharedPile.action.edit, idBase = AlDomID.editItemIcon)
+                                if (canDelete)
+                                    o- rightIcon(fa.trash, t("Delete", "Удалить"), action = AlSharedPile.action.delete, idBase = AlDomID.deleteItemIcon)
                             }
-                        ))
+                        }
+                        o- kdiv.className(c.body){o->
+                            o- item.details
+                        }
+
+                        if (canDelete) {
+                            o- AlRenderPile.renderModal("${AlDomID.deleteItemModal}-${item.uuid}", ModalParams(
+                                width = "80rem",
+                                leftMarginColor = Color.RED_300,
+                                title = t("TOTE", "Удалить файл №${item.id}?"),
+                                body = insideMarkers(
+                                    id = "${AlDomID.deleteItemModal}-content-${item.uuid}",
+                                    content = kdiv{o->
+                                        o- AlRenderPile.renderFormBannerArea(hasErrors = false, idSuffix = "-${item.uuid}")
+                                        o- kdiv.className(AlCSS.deleteItemModalBodySubtitle).add(item.title)
+                                        o- t("TOTE", "Без приколов, последний раз спрашиваю...")
+                                    }),
+                                footer = kdiv{o->
+                                    o- kbutton(Attrs(id = "${AlDomID.deleteItemSubmitButton}-${item.uuid}", className = "btn btn-danger"), t("TOTE", "Мочи!"))
+                                    o- kbutton(Attrs(id = "${AlDomID.deleteItemCancelButton}-${item.uuid}", className = "btn btn-default"), t("TOTE", "Я очкую"))
+                                    o- kdiv.id("${AlDomID.deleteItemTicker}-${item.uuid}").className(AlCSS.ticker).amend(Style(float = "left"))
+                                }
+                            ))
+                        }
                     }
                 }
             }

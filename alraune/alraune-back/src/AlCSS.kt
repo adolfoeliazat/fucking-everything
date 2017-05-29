@@ -1,6 +1,6 @@
 package alraune.back
 
-import alraune.shared.AlDomID
+import alraune.shared.AlSharedPile
 import alraune.shared.Color
 import vgrechka.*
 import kotlin.reflect.KClass
@@ -18,9 +18,16 @@ object AlCSS {
         val hoverActive: String? = null,
         val hoverFocus: String? = null,
         val firstChild: String? = null,
-        val notFirstChild: String? = null
+        val notFirstChild: String? = null,
+        val forcedClassName: String? = null
     ) {
-        var className by notNullOnce<String>()
+        var autoClassName: String? = null
+
+        val className get() =
+            forcedClassName
+            ?: autoClassName
+            ?: wtf("41ff0be5-119a-4a7f-b46e-151980db3b67")
+
         override fun toString() = className
     }
 
@@ -114,6 +121,12 @@ margin-bottom: 1rem;
             animation-iteration-count: infinite;
     """)
 
+    val fuckAway = Pack("""
+            animation-name: fuckAway;
+            animation-duration: 500ms;
+            animation-iteration-count: 1;
+    """, forcedClassName = AlSharedPile.className.fuckAway)
+
     val sheet = run {
         val buf = StringBuilder()
 
@@ -157,6 +170,16 @@ margin-bottom: 1rem;
                     opacity: 0;
                 }
             }
+
+            @keyframes fuckAway {
+                0% {
+                    opacity: 1;
+                }
+
+                100% {
+                    opacity: 0;
+                }
+            }
         """)
 
         fun fart(clazz: KClass<*>, selectorPrefix: String = "") {
@@ -164,7 +187,7 @@ margin-bottom: 1rem;
                 prop as KProperty1<Any?, Any?>
                 if (prop.returnType.classifier == Pack::class) {
                     val pack = prop.get(clazz.objectInstance) as Pack
-                    pack.className = selectorPrefix + prop.name
+                    pack.autoClassName = selectorPrefix + prop.name
                     val selector = "." + pack.className
                     pack.default?.let {buf.ln("$selector {$it}")}
                     pack.link?.let {buf.ln("$selector:link {$it}")}
