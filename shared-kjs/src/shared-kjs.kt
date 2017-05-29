@@ -1,5 +1,6 @@
 package vgrechka.kjs
 
+import org.w3c.dom.Location
 import org.w3c.dom.events.Event
 import vgrechka.*
 import kotlin.browser.window
@@ -23,6 +24,24 @@ object KJSPile {
         }
         return null
     }
+
+    fun amendHref(loc: Location, paramName: String, paramValue: String): String {
+        class Param(val name: String, val value: String)
+
+        val params = loc.search
+            .substring(1)
+            .split("&")
+            .map {
+                val xs = it.split("=")
+                Param(xs[0], xs[1])
+            }
+            .filter {it.name != paramName}
+        val newParams = params + Param(paramName, paramValue)
+        val newHref = (loc.protocol + "//" + loc.host + loc.pathname
+            + "?" + newParams.map {"${it.name}=${it.value}"}.joinToString("&"))
+        return newHref
+    }
+
 }
 
 fun clog(vararg xs: Any?) {

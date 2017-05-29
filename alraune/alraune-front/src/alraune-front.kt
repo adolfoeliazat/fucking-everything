@@ -12,24 +12,21 @@ import kotlin.js.json
 import kotlin.properties.Delegates.notNull
 import kotlin.reflect.*
 
-// TODO:vgrechka Smarter way of dealing of name mangling
-
 fun main(args: Array<String>) {
     clog("I am alraune-front 4")
     window.asDynamic()[AlFrontDebug::class.simpleName] = AlFrontDebug
 
     jqDocumentReady {
-        AlFrontDebug.initDebugFacilities()
-
         parseShitFromBack()
         AlFrontPile.initShit()
+        AlFrontDebug.initDebugFacilities()
 
-        val maf = KJSPile.getURLParam("maf")
-        @Suppress("UnsafeCastFromDynamic")
-        maf?.let {
-            val f = AlFrontDebug.asDynamic()[it] ?: bitch("maf = $maf    de7c46eb-7ad6-4c39-a605-81b21aa4d539")
-            f.call(AlFrontDebug)
-        }
+//        val maf = KJSPile.getURLParam("maf")
+//        @Suppress("UnsafeCastFromDynamic")
+//        maf?.let {
+//            val f = AlFrontDebug.asDynamic()[it] ?: bitch("maf = $maf    de7c46eb-7ad6-4c39-a605-81b21aa4d539")
+//            f.call(AlFrontDebug)
+//        }
     }
 }
 

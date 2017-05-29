@@ -179,10 +179,6 @@ val Throwable.stackTraceString: String get() {
 @Ser data class FileLine(val file: String, val line: Int)
 data class FileLineColumn(val file: String, val line: Int, val column: Int = 1)
 
-operator fun StringBuilder.plusAssign(x: Any?) {
-    this.append(x)
-}
-
 object TestPile {
     object existingPizdaFile {
         fun big(): File {

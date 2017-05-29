@@ -41,6 +41,10 @@ object AlSharedPile {
         val delete by myName()
     }
 
+    object httpGetParam {
+        val maf by myName()
+    }
+
     fun beginContentMarkerForDOMID(id: String) =
         "<!--beginContent--$id--38a770eb-8115-4dce-a9f5-be77da11b8ed-->"
 

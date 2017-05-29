@@ -8,6 +8,7 @@ import vgrechka.kjs.*
 import vgrechka.kjs.JQueryPile.byIDSingle
 import vgrechka.kjs.JQueryPile.jBody
 import kotlin.browser.document
+import kotlin.browser.window
 import kotlin.reflect.*
 
 object AlFrontDebug {
@@ -41,47 +42,99 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
             val linkClass = "c-dc1eb630-2231-4eaf-b9a7-44b425badf7d"
             val linkStyle = "{display: block; color: white; padding: 2px;}"
             jBody.append("""
-            <style>
-                .$drawerClass {
-                    background: gray;
-                    width: 3px;
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    bottom: 0;
-                    overflow-x: hidden;
-                    opacity: 0.75;
-                }
-                .$drawerClass:hover {
-                    width: 150px;
-                }
-                .$linkClass $linkStyle
-                .$linkClass:hover $linkStyle
-                .$linkClass:visited $linkStyle
-                .$linkClass:active $linkStyle
-                .$linkClass:focus $linkStyle
-            </style>
-        """)
-            val drawerJQ = jq("<div class='$drawerClass'></div>")
-            jBody.append(drawerJQ)
+                <style>
+                    .$drawerClass {
+                        background: gray;
+                        width: 3px;
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        bottom: 0;
+                        overflow-x: hidden;
+                        opacity: 0.9;
+                    }
+                    .$drawerClass:hover {
+                        width: 300px;
+                    }
+                    .$linkClass $linkStyle
+                    .$linkClass:hover $linkStyle
+                    .$linkClass:visited $linkStyle
+                    .$linkClass:active $linkStyle
+                    .$linkClass:focus $linkStyle
+                </style>
+            """)
+            val jDrawer = jq("<div class='$drawerClass'></div>")
+            jBody.append(jDrawer)
 
-            fun addItem(f: KFunction0<Unit>) {
-                val itemJQ = jq("<a class='$linkClass' href='#'>${f.name}</a>")
-                drawerJQ.append(itemJQ)
-                itemJQ.on("click") {
+            fun addItem(name: String, block: () -> Unit) {
+                val jItem = jq("<div><a class='$linkClass' href='#'>$name</a></div>")
+                jDrawer.append(jItem)
+                jItem.on("click") {
                     it.preventAndStop()
-                    f()
+                    block()
                 }
             }
 
+            fun addItem(f: KFunction0<Unit>) {
+                addItem(f.name, f)
+            }
+
             addItem(AlFrontDebug::dumpBackCodePath)
+
+            val currentMafValue = KJSPile.getURLParam(AlSharedPile.httpGetParam.maf)
+
+            run {
+                val itemName = "messAroundFront401_createFile"
+
+                if (window.location.href.startsWith("https://alraune.local/orderFiles?")) {
+                    addItem(itemName) {
+                        val newHref = KJSPile.amendHref(window.location, AlSharedPile.httpGetParam.maf, itemName)
+                        clog("newHref =", newHref)
+                        window.location.href = newHref
+                    }
+                }
+
+                if (currentMafValue == itemName) {
+                    async {
+                        val p = AlFrontPile::populateTextField2
+
+                        clickElementByIDAndAwaitModalShown(AlDomID.topRightButton, AlFrontPile.topRightButtonModalTestLocks)
+
+                        run { // Validation errors
+                            p(OrderFileFormPostData::details, "In general your default keyboard mapping comes from your X server setup. If this setup is insufficient and you are unwilling to go through the process of reconfiguration and/or you are not the superuser you'll need to use the xmodmap program. This is the utility's global configuration file.")
+                            clickSubmitAndAwaitPageInit()
+                            // AlFrontPile.sleepTillEndOfTime()
+                        }
+
+                        run { // OK
+                            awaitModalHiddenAfterDoing {
+                                p(OrderFileFormPostData::title, "The Fucking Keyboard Mapping")
+                                clickSubmitAndAwaitPageInit()
+                            }
+                        }
+                    }
+                }
+            }
+
+//            val thiz = this.asDynamic()
+//            for (name in JSObject.getOwnPropertyNames(thiz.__proto__)) {
+//                val value = thiz[name]
+//                if (name.startsWith("messAroundFront") && jsTypeOf(value) == "function") {
+//                    addItem(name) {
+//
+//                    }
+//                }
+//            }
         }
 
         putSomeShitIntoGlobal()
     }
 
+
     private fun putSomeShitIntoGlobal() {
-        AlFrontPile.gloshit.fuck1 = byIDSingle("itemShit-b169d1b4-8b0f-4ace-a5cb-f765e46fb9a6")
+        AlFrontPile.gloshit.fuck1 = {
+            byIDSingle("itemShit-b169d1b4-8b0f-4ace-a5cb-f765e46fb9a6")
+        }
         AlFrontPile.gloshit.fuck2 = {
             AlFrontPile.fuckElementAwayAndRemove("itemShit-b169d1b4-8b0f-4ace-a5cb-f765e46fb9a6") {
                 clog("Done")
@@ -236,27 +289,6 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
         clickElementAndAwaitModalShown(byIDSingle(domid), modalTestLocks)
     }
 
-    @Suppress("unused")
-    fun messAroundFront401() {
-        async {
-            val p = AlFrontPile::populateTextField2
-
-            clickElementByIDAndAwaitModalShown(AlDomID.topRightButton, AlFrontPile.topRightButtonModalTestLocks)
-
-            run { // Validation errors
-                p(OrderFileFormPostData::details, "In general your default keyboard mapping comes from your X server setup. If this setup is insufficient and you are unwilling to go through the process of reconfiguration and/or you are not the superuser you'll need to use the xmodmap program. This is the utility's global configuration file.")
-                clickSubmitAndAwaitPageInit()
-                // AlFrontPile.sleepTillEndOfTime()
-            }
-
-            run { // OK
-                awaitModalHiddenAfterDoing {
-                    p(OrderFileFormPostData::title, "The Fucking Keyboard Mapping")
-                    clickSubmitAndAwaitPageInit()
-                }
-            }
-        }
-    }
 
     @Suppress("unused")
     fun messAroundFront402() {
@@ -317,7 +349,4 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
             }
         }
     }
-
-    val messAroundFront201 = make2xx {it}
-    val messAroundFront202 = make2xx {it.copy(email = "", phone = "bullshit", documentDetails = "")}
 }

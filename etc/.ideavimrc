@@ -46,6 +46,9 @@ nmap gb :action AceAction<CR>
 
 nmap g<cr> hi<cr>
 
+nmap vil _v$
+
+
 
 
 
