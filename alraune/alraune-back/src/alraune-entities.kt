@@ -27,8 +27,8 @@ interface AlUAOrder : GCommonEntityFields {
 
     fun toForm() = OrderParamsFormPostData(
         orderUUID = null,
-        email = email, name = contactName, phone = phone, documentTypeID = documentTypeID, documentTitle = documentTitle,
-        documentDetails = documentDetails, documentCategoryID = documentCategoryID,
+        email = email, name = contactName, phone = phone, documentType = documentTypeID, documentTitle = documentTitle,
+        documentDetails = documentDetails, documentCategory = documentCategoryID,
         numPages = when (numPages) {
             -1 -> ""
             else -> numPages.toString()

@@ -13,6 +13,7 @@ import kotlin.properties.Delegates.notNull
 import kotlin.reflect.*
 
 fun main(args: Array<String>) {
+    return
     clog("I am alraune-front 4")
     window.asDynamic()[AlFrontDebug::class.simpleName] = AlFrontDebug
 
@@ -160,11 +161,27 @@ object AlFrontPile {
             window.history.pushState(null, "", it)
         }
 
-        when (AlFrontPile.shitFromBack.pageID) {
-            AlPageID.orderCreationForm -> frontInitPage_orderCreationForm()
-            AlPageID.orderParams -> frontInitPage_orderParams()
-            AlPageID.orderFiles -> frontInitPage_orderFiles()
+        val pageID = shitFromBack.pageID
+
+        if (pageID == AlPageID.orderParams) {
+
+            val jTopRightButton = byIDSingle(AlDomID.topRightButton)
+            jTopRightButton.onClick {
+                val jModal = jq(shitFromBack.topRightButtonModalHtml!!)
+                initModal(jModal, topRightButtonModalTestLocks)
+
+//                val modalContentJQ = byIDSingle(AlDomID.modalContent)
+//                modalContentJQ[0]!!.outerHTML = pristineModalContentHTML
+//                initFormControls()
+                jModal.modal()
+            }
         }
+
+//        when (AlFrontPile.shitFromBack.pageID) {
+//            AlPageID.orderCreationForm -> frontInitPage_orderCreationForm()
+//            AlPageID.orderParams -> frontInitPage_orderParams()
+//            AlPageID.orderFiles -> frontInitPage_orderFiles()
+//        }
 
         AlFrontPile.pageInitSignal.resolve()
     }
@@ -321,11 +338,11 @@ object AlFrontPile {
             val inst: Any = when (AlFrontPile.shitFromBack.pageID) {
                 AlPageID.orderCreationForm -> OrderParamsFormPostData(
                     orderUUID = null,
-                    documentCategoryID = documentCategoryPicker.getSelectedCategoryID(),
+                    documentCategory = documentCategoryPicker.getSelectedCategoryID(),
                     email = getTextField(OrderParamsFormPostData::email.name),
                     name = getTextField(OrderParamsFormPostData::name.name),
                     phone = getTextField(OrderParamsFormPostData::phone.name),
-                    documentTypeID = getTextField(OrderParamsFormPostData::documentTypeID.name),
+                    documentType = getTextField(OrderParamsFormPostData::documentType.name),
                     documentTitle = getTextField(OrderParamsFormPostData::documentTitle.name),
                     documentDetails = getTextField(OrderParamsFormPostData::documentDetails.name),
                     numPages = getTextField(OrderParamsFormPostData::numPages.name),
@@ -333,11 +350,11 @@ object AlFrontPile {
 
                 AlPageID.orderParams -> OrderParamsFormPostData(
                     orderUUID = shitFromBack.orderUUID,
-                    documentCategoryID = documentCategoryPicker.getSelectedCategoryID(),
+                    documentCategory = documentCategoryPicker.getSelectedCategoryID(),
                     email = getTextField(OrderParamsFormPostData::email.name),
                     name = getTextField(OrderParamsFormPostData::name.name),
                     phone = getTextField(OrderParamsFormPostData::phone.name),
-                    documentTypeID = getTextField(OrderParamsFormPostData::documentTypeID.name),
+                    documentType = getTextField(OrderParamsFormPostData::documentType.name),
                     documentTitle = getTextField(OrderParamsFormPostData::documentTitle.name),
                     documentDetails = getTextField(OrderParamsFormPostData::documentDetails.name),
                     numPages = getTextField(OrderParamsFormPostData::numPages.name),

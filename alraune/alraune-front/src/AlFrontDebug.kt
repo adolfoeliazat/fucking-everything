@@ -83,48 +83,42 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
 
             val currentMafValue = KJSPile.getURLParam(AlSharedPile.httpGetParam.maf)
 
-            run {
-                val itemName = "messAroundFront401_createFile"
-
-                if (window.location.href.startsWith("https://alraune.local/orderFiles?")) {
+            fun declareMaf(itemName: String, activeWhenPath: String, block: () -> Unit) {
+                if (window.location.href.startsWith("https://alraune.local$activeWhenPath?")) {
                     addItem(itemName) {
                         val newHref = KJSPile.amendHref(window.location, AlSharedPile.httpGetParam.maf, itemName)
                         clog("newHref =", newHref)
                         window.location.href = newHref
                     }
                 }
-
                 if (currentMafValue == itemName) {
-                    async {
-                        val p = AlFrontPile::populateTextField2
-
-                        clickElementByIDAndAwaitModalShown(AlDomID.topRightButton, AlFrontPile.topRightButtonModalTestLocks)
-
-                        run { // Validation errors
-                            p(OrderFileFormPostData::details, "In general your default keyboard mapping comes from your X server setup. If this setup is insufficient and you are unwilling to go through the process of reconfiguration and/or you are not the superuser you'll need to use the xmodmap program. This is the utility's global configuration file.")
-                            clickSubmitAndAwaitPageInit()
-                            // AlFrontPile.sleepTillEndOfTime()
-                        }
-
-                        run { // OK
-                            awaitModalHiddenAfterDoing {
-                                p(OrderFileFormPostData::title, "The Fucking Keyboard Mapping")
-                                clickSubmitAndAwaitPageInit()
-                            }
-                        }
-                    }
+                    block()
                 }
             }
 
-//            val thiz = this.asDynamic()
-//            for (name in JSObject.getOwnPropertyNames(thiz.__proto__)) {
-//                val value = thiz[name]
-//                if (name.startsWith("messAroundFront") && jsTypeOf(value) == "function") {
-//                    addItem(name) {
-//
-//                    }
-//                }
-//            }
+            declareMaf("maf401_createFile", "/orderFiles") {async{
+                val p = AlFrontPile::populateTextField2
+                clickElementByIDAndAwaitModalShown(AlDomID.topRightButton, AlFrontPile.topRightButtonModalTestLocks)
+
+                run {
+                    // Validation errors
+                    p(OrderFileFormPostData::details, "In general your default keyboard mapping comes from your X server setup. If this setup is insufficient and you are unwilling to go through the process of reconfiguration and/or you are not the superuser you'll need to use the xmodmap program. This is the utility's global configuration file.")
+                    clickSubmitAndAwaitPageInit()
+                    // AlFrontPile.sleepTillEndOfTime()
+                }
+
+                run {
+                    // OK
+                    awaitModalHiddenAfterDoing {
+                        p(OrderFileFormPostData::title, "The Fucking Keyboard Mapping")
+                        clickSubmitAndAwaitPageInit()
+                    }
+                }
+            }}
+
+            declareMaf("maf101", "/orderParams") {async{
+                byIDSingle(AlDomID.topRightButton).click()
+            }}
         }
 
         putSomeShitIntoGlobal()
@@ -199,10 +193,10 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
                         email = "iperdonde@mail.com",
                         name = "Иммануил Пердондэ",
                         phone = "+38 (068) 4542823",
-                        documentTypeID = "PRACTICE",
+                        documentType = "PRACTICE",
                         documentTitle = "Как я пинал хуи на практике",
                         documentDetails = "Детали? Я ебу, какие там детали...",
-                        documentCategoryID = "boobs",
+                        documentCategory = "boobs",
                         numPages = "35",
                         numSources = "7"),
                     documentCategoryPath = listOf(
@@ -228,10 +222,10 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
                             email = "fart@mail.com",
                             name = "Иммануил Пердондэ III",
                             phone = "bullshit",
-                            documentTypeID = "ESSAY",
+                            documentType = "ESSAY",
                             documentTitle = "Как я пинал большие хуи на практике",
                             documentDetails = "Детали? Я ебу, какие там детали... Да, ебу. И не ебет",
-                            documentCategoryID = "boobs",
+                            documentCategory = "boobs",
                             numPages = "55",
                             numSources = "3"),
                         documentCategoryPath = listOf(
@@ -270,7 +264,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
         p(data::documentDetails)
         p(data::numPages)
         p(data::numSources)
-        p(data::documentTypeID)
+        p(data::documentType)
 
         AlFrontPile.documentCategoryPicker.let {
             val categoryIDs = documentCategoryPath
@@ -323,10 +317,10 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
                     email = "iperdonde@mail.com",
                     name = "Иммануил Пердондэ",
                     phone = "+38 (068) 4542823",
-                    documentTypeID = "PRACTICE",
+                    documentType = "PRACTICE",
                     documentTitle = "Как я пинал хуи на практике",
                     documentDetails = "Детали? Я ебу, какие там детали...",
-                    documentCategoryID = "boobs",
+                    documentCategory = "boobs",
                     numPages = "35",
                     numSources = "7"))
                 // TODO:vgrechka @improve d0fc960d-76be-4a0b-969c-7bbf94275e09
@@ -338,7 +332,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
                 o(data::documentDetails)
                 o(data::numPages)
                 o(data::numSources)
-                o(data::documentTypeID)
+                o(data::documentType)
 
                 AlFrontPile.documentCategoryPicker.let {
                     it.debug_setSelectValue(AlDocumentCategories.humanitiesID)

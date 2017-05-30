@@ -13,6 +13,7 @@ object AlBackPile0 {
     val frontOutDirParent = "E:/fegh/out/production"
     val sharedKJSOutDirParent = "E:/fegh/out/production"
     val tmpDirPath = "c:/tmp"
+    val generatedTSFile = "E:/fegh/alraune/alraune-back/ts/src/generated--by-backend.ts"
     val log = LoggerFactory.getLogger(this.javaClass)
     val baseURL = "https://alraune.local"
 

@@ -8,6 +8,7 @@
       <sourceFolder url="file://$MODULE_DIR$/symlink--alraune-symlinked-src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/symlink--spew-symlinked-src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
+      <excludeFolder url="file://$MODULE_DIR$/ts/out" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -123,7 +123,7 @@ object AlPagePath {
     val orderParams by slashMyName()
     val orderFiles by slashMyName()
     val post_setOrderParams by slashMyName()
-    val post_addOrderFile by slashMyName()
+    val post_createOrderFile by slashMyName()
     val post_deleteOrderFile by slashMyName()
 }
 
@@ -138,10 +138,10 @@ class AlGetParams(
     val email: String,
     val name: String,
     val phone: String,
-    val documentTypeID: String,
+    val documentType: String,
     val documentTitle: String,
     val documentDetails: String,
-    val documentCategoryID: String,
+    val documentCategory: String,
     val numPages: String,
     val numSources: String
 )
@@ -179,6 +179,7 @@ class PieceOfShitFromBack {
     var replacement_id: String? = null
     var orderUUID = "boobs-orderUUID"
     var hasErrors: Boolean? = null
+    val topRightButtonModalHtml: String? = null
 }
 
 
