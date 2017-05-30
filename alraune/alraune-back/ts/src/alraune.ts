@@ -20,9 +20,7 @@ function exhausted(x: never): never {
 }
 
 function initShit() {
-    parseShitFromBack()
-
-    executeBackCommands(state.backCommands)
+    parseShitFromBackAndExecuteCommands()
 
     // onClick(byIDSingle(AlDomid.topRightButton), () => {
     //     clog("yeeeeeeeeaaaaaaaahhhhhhhhhh")
@@ -48,13 +46,12 @@ function executeBackCommands(cmds: AlBackToFrontCommand.Type[]) {
     }
 }
 
-function parseShitFromBack() {
-    // const j = byIDSingle(AlDomid.shitPassedFromBackToFront)
-    // const dataShit = j.attr(Pile.attribute.data_shit)
-    // state.backShit = JSON.parse(dataShit)
-    // console.log("backShit", state.backShit)
+function parseShitFromBackAndExecuteCommands() {
+    const j = byIDSingle("shitPassedFromBackToFront2")
+    state.backShit = JSON.parse(j.attr("data-shit"))
+    console.log("backShit", JSON.stringify(state.backShit))
 
-    state.backCommands = []
+    executeBackCommands(state.backShit.commands)
 }
 
 

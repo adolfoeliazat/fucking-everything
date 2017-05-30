@@ -1,5 +1,6 @@
 package alraune.back
 
+import alraune.back.AlBackToFrontCommandList.Companion.commands
 import alraune.back.AlRenderPile.col
 import alraune.back.AlRenderPile.renderOrderParams
 import alraune.back.AlRenderPile.renderOrderTitle
@@ -11,10 +12,10 @@ import kotlin.reflect.KProperty1
 
 fun handleGet_orderParams() {
     shitToFront2("298dca01-eee5-49e4-8234-1002676f67ba") {
-        it.commands += listOf(
-            AlBackToFrontCommand.SayWarmFuckYou("dear customer"),
-            AlBackToFrontCommand.SayWarmFuckYou("dear all others")
-        )
+        it.commands += SetClickHandler(AlDomid.topRightButton, commands(
+            SayWarmFuckYou("dear customer"),
+            SayWarmFuckYou("all others")
+        ))
     }
     SpitOrderTabPage(OrderTab.PARAMS)
 }
@@ -38,7 +39,7 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
             o- renderOrderTitle(rctx.order)
             o- kdiv.className(AlCSS.submitForReviewBanner){o->
                 o- kdiv(Style(flexGrow = "1")).text(t("TOTE", "Убедись, что все верно. Подредактируй, если нужно. Возможно, добавь файлы. А затем..."))
-                o- kbutton(Attrs(id = AlDomID.submitOrderForReviewButton, className = "btn btn-primary"), t("TOTE", "Отправить на проверку"))
+                o- kbutton(Attrs(id = AlDomid.submitOrderForReviewButton, className = "btn btn-primary"), t("TOTE", "Отправить на проверку"))
             }
 
             o- kdiv(Style(position = "relative")){o->
@@ -59,7 +60,7 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
                         OrderTab.PARAMS -> fa.pencil
                         OrderTab.FILES -> fa.plus
                     }
-                    o- kbutton(Attrs(id = AlDomID.topRightButton, className = "btn btn-default",
+                    o- kbutton(Attrs(id = AlDomid.topRightButton, className = "btn btn-default",
                                      style = Style(position = "absolute", right = "0", top = "0")))
                         .add(ki.className(topRightButtonIcon))
                 }
@@ -77,12 +78,12 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
             if (canEdit) {
                 exhaustive=when (activeTab) {
                     OrderTab.PARAMS -> {
-                        o- AlRenderPile.renderModal(AlDomID.orderParamsModal, ModalParams(
+                        o- AlRenderPile.renderModal(AlDomid.orderParamsModal, ModalParams(
                             width = "80rem",
                             leftMarginColor = Color.BLUE_GRAY_300,
                             title = t("TOTE", "Параметры"),
                             body = insideMarkers(
-                                id = AlDomID.modalContent,
+                                id = AlDomid.modalContent,
                                 content = kdiv{o->
                                     fun renderField(validateFromPostData: () -> ValidationResult, prop: KProperty1<*, String>, title: String, fieldType: FieldType): Renderable {
                                         val vr = when {
@@ -153,7 +154,7 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
                                         })
                                         o- col(8, kdiv.className("form-group"){o->
                                             o- klabel(text = t("TOTE", "Категория"))
-                                            o- kdiv(Attrs(id = AlDomID.documentCategoryPickerContainer))
+                                            o- kdiv(Attrs(id = AlDomid.documentCategoryPickerContainer))
                                         })
                                     }
 //                                    o- fields.documentTitle.render()

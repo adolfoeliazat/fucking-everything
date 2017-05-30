@@ -1,7 +1,7 @@
 package alraune.front
 
 import alraune.shared.AlDocumentCategories
-import alraune.shared.AlDomID
+import alraune.shared.AlDomid
 import vgrechka.*
 import vgrechka.kjs.JQueryPile.byIDNoneOrSingle
 import vgrechka.kjs.JQueryPile.byIDSingle
@@ -33,7 +33,7 @@ class DocumentCategoryPicker {
     }
 
     fun update() {
-        val containerJQ = byIDSingle(AlDomID.documentCategoryPickerContainer)
+        val containerJQ = byIDSingle(AlDomid.documentCategoryPickerContainer)
         containerJQ.html(buildString {
             val items = pathExceptLast.last().children
             ln("<div style='display: flex; align-items: center;'>")

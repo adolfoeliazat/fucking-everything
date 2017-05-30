@@ -31,7 +31,6 @@ import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.valueParameters
-import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.jvmErasure
 
 // TODO:vgrechka Backend dies on exception?
@@ -198,11 +197,28 @@ object StartAlrauneBack {
 
             ln("namespace AlBackToFrontCommand {")
 
+            // Fuck Reflections...
+            val klasses = mutableListOf<KClass<*>>()
+            val baseClass = AlBackToFrontCommand::class.java
+            val re = Regex("class\\s+(\\w+)")
+            val src = File(AlBackPile0.backToFrontCommandsKtSourceFile).readText()
+            var start = 0
+            while (true) {
+                val mr = re.find(src, start) ?: break
+                val name = mr.groupValues[1]
+                try {
+                    val clazz = Class.forName("alraune.back.$name")
+                    if (baseClass.isAssignableFrom(clazz) && clazz != baseClass)
+                        klasses += clazz.kotlin
+                } catch (e: ClassNotFoundException) {}
+                start = mr.range.start + 1
+            }
+
             val typeNames = mutableListOf<String>()
-            val clazz = AlBackToFrontCommand::class
-            for (nestedClass in clazz.nestedClasses) {
+            for (nestedClass in klasses) {
                 val name = nestedClass.simpleName!!
                 typeNames += name
+                ln("")
                 ln("    export interface $name {")
                 ln("        opcode: \"$name\"")
                 for (prop in nestedClass.memberProperties) {
@@ -316,7 +332,7 @@ val shitForFront get() = AlRequestContext.the.shitPassedFromBackToFront
 val shitForFront2 get() = AlRequestContext.the.shitPassedFromBackToFront2
 
 fun replaceableContent(content: Renderable) =
-    insideMarkers(id = AlDomID.replaceableContent, content = content)
+    insideMarkers(id = AlDomid.replaceableContent, content = content)
 
 fun insideMarkers(id: String, content: Renderable? = null, tamperWithAttrs: (Attrs) -> Attrs = {it}): Tag {
     val beginMarker = AlSharedPile.beginContentMarkerForDOMID(id)
@@ -372,8 +388,11 @@ fun spitUsualPage(pipiska: Renderable) {
     val ctx = AlRequestContext.the
     val html = kdiv.className("container"){o->
         o- pipiska
-        o- insideMarkers(AlDomID.shitPassedFromBackToFront, tamperWithAttrs = {
+        o- insideMarkers(AlDomid.shitPassedFromBackToFront, tamperWithAttrs = {
             it.copy(dataShit = ObjectMapper().writeValueAsString(ctx.shitPassedFromBackToFront))
+        })
+        o- insideMarkers(AlDomid.shitPassedFromBackToFront2, tamperWithAttrs = {
+            it.copy(dataShit = ObjectMapper().writeValueAsString(ctx.shitPassedFromBackToFront2))
         })
     }.render()
 

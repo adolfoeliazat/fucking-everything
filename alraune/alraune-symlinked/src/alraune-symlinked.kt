@@ -81,8 +81,9 @@ object AlSharedPile {
 //    val orderUUID: String?
 //}
 
-object AlDomID {
+object AlDomid {
     val shitPassedFromBackToFront by myName()
+    val shitPassedFromBackToFront2 by myName()
     val submitButton by myName()
     val ticker by myName()
     val replaceableContent by myName()

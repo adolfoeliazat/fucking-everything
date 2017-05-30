@@ -51,7 +51,7 @@ class AlFrontSecurity {
 
 private fun parseShitFromBack() {
     AlFrontPile.shitFromBack = run {
-        val shitJQ = byIDSingle(AlDomID.shitPassedFromBackToFront)
+        val shitJQ = byIDSingle(AlDomid.shitPassedFromBackToFront)
         val dataShit = shitJQ.attr(AlSharedPile.attribute.data_shit)
         // clog("dataShit =", dataShit)
         JSON.parse<PieceOfShitFromBack>(dataShit)
@@ -78,7 +78,7 @@ object AlFrontPile {
     val security = AlFrontSecurity()
 
     fun setTickerVisible(b: Boolean) {
-        val tickerJQ = byIDSingle(AlDomID.ticker)
+        val tickerJQ = byIDSingle(AlDomid.ticker)
         tickerJQ.css("display", if (b) "block" else "none")
     }
 
@@ -165,7 +165,7 @@ object AlFrontPile {
 
         if (pageID == AlPageID.orderParams) {
 
-            val jTopRightButton = byIDSingle(AlDomID.topRightButton)
+            val jTopRightButton = byIDSingle(AlDomid.topRightButton)
             jTopRightButton.onClick {
                 val jModal = jq(shitFromBack.topRightButtonModalHtml!!)
                 initModal(jModal, topRightButtonModalTestLocks)
@@ -198,14 +198,14 @@ object AlFrontPile {
     fun initDeleteItemModals() {
         val postPath = AlPagePath.post_deleteOrderFile
 
-        val jIcons = jq("i[id|='${AlDomID.deleteItemIcon}']")
+        val jIcons = jq("i[id|='${AlDomid.deleteItemIcon}']")
         for (i in 0 until jIcons.length) {
             val jIcon = jIcons.eq(i)
             val jIconID = jIcon.attr("id")
             val hyphen = jIconID.indexOfOrNull("-") ?: wtf("15ac565f-8b61-451e-a6c3-aeea08ee8fdf")
             val itemUUID = jIconID.substring(hyphen + 1)
 
-            val jModal = byIDSingle("${AlDomID.deleteItemModal}-$itemUUID")
+            val jModal = byIDSingle("${AlDomid.deleteItemModal}-$itemUUID")
             val locks = ModalTestLocks()
             jIcon.setModalTestLocks(locks)
             initModal(jModal, locks)
@@ -213,11 +213,11 @@ object AlFrontPile {
                 jModal.modal()
             }
 
-            val jSubmitButton = byIDSingle("${AlDomID.deleteItemSubmitButton}-$itemUUID")
-            val jCancelButton = byIDSingle("${AlDomID.deleteItemCancelButton}-$itemUUID")
+            val jSubmitButton = byIDSingle("${AlDomid.deleteItemSubmitButton}-$itemUUID")
+            val jCancelButton = byIDSingle("${AlDomid.deleteItemCancelButton}-$itemUUID")
 
             jSubmitButton.onClick {
-                val jTicker = byIDSingle("${AlDomID.deleteItemTicker}-$itemUUID")
+                val jTicker = byIDSingle("${AlDomid.deleteItemTicker}-$itemUUID")
                 jSubmitButton.attr("disabled", "true")
                 jCancelButton.attr("disabled", "true")
                 jTicker.css("display", "block")
@@ -229,9 +229,9 @@ object AlFrontPile {
                             jCancelButton.attr("disabled", null)
                             jTicker.css("display", "none")
 
-                            val jFormBannerArea = byIDSingle("${AlDomID.formBannerArea}-$itemUUID")
+                            val jFormBannerArea = byIDSingle("${AlDomid.formBannerArea}-$itemUUID")
                             jFormBannerArea.children().css("display", "none")
-                            val jServiceFuckedUpBanner = byIDSingle("${AlDomID.serviceFuckedUpBanner}-$itemUUID")
+                            val jServiceFuckedUpBanner = byIDSingle("${AlDomid.serviceFuckedUpBanner}-$itemUUID")
                             jServiceFuckedUpBanner.css("display", "block")
 
                             AlFrontPile.serviceFuckedUpBannerSignal.resolve()
@@ -239,15 +239,15 @@ object AlFrontPile {
                         }
 
                         val html = res.candy
-                        replaceWithNewContent(AlDomID.shitPassedFromBackToFront, html)
+                        replaceWithNewContent(AlDomid.shitPassedFromBackToFront, html)
                         parseShitFromBack()
 
                         val hasErrors = shitFromBack.hasErrors ?: wtf("b7b2b8ef-dd9c-4212-bbc7-842d6ef91af0")
                         if (hasErrors) {
-                            replaceWithNewContent(AlDomID.deleteItemModalContent, html)
+                            replaceWithNewContent(AlDomid.deleteItemModalContent, html)
                         } else {
                             timeoutSet(250) {
-                                fuckElementAwayAndRemove("${AlDomID.itemShit}-$itemUUID")
+                                fuckElementAwayAndRemove("${AlDomid.itemShit}-$itemUUID")
                             }
                             jModal.modal("hide")
                         }
@@ -266,17 +266,17 @@ object AlFrontPile {
         if (!hasErrors) {
             pristineModalContentHTML = findShitBetweenMarkersForDomid(
                 document.body!!.innerHTML,
-                AlDomID.modalContent)
+                AlDomid.modalContent)
         }
 
         initFormControls()
 
-        val jModal = byIDSingle(AlDomID.orderParamsModal)
+        val jModal = byIDSingle(AlDomid.orderParamsModal)
         initModal(jModal, topRightButtonModalTestLocks)
 
-        val topRightButtonJQ = byIDSingle(AlDomID.topRightButton)
+        val topRightButtonJQ = byIDSingle(AlDomid.topRightButton)
         topRightButtonJQ.onClick {
-            val modalContentJQ = byIDSingle(AlDomID.modalContent)
+            val modalContentJQ = byIDSingle(AlDomid.modalContent)
             modalContentJQ[0]!!.outerHTML = pristineModalContentHTML
             initFormControls()
             jModal.modal()
@@ -323,7 +323,7 @@ object AlFrontPile {
     fun pageHasModal() = shitFromBack.pageID in setOf(AlPageID.orderParams, AlPageID.orderFiles)
 
     fun initSubmitButton() {
-        val buttonJQ = byID(AlDomID.submitButton)
+        val buttonJQ = byID(AlDomid.submitButton)
 
         fun submitButtonHandler() {
             clog("i am the fucking submitButtonHandler")
@@ -383,24 +383,24 @@ object AlFrontPile {
                 val html = try {
                     postRaw(shitFromBack.postPath, data)
                 } catch (e: dynamic) {
-                    val formFooterAreaJQ = byIDSingle(AlDomID.formFooterArea)
+                    val formFooterAreaJQ = byIDSingle(AlDomid.formFooterArea)
                     val buttonsJQ = formFooterAreaJQ.find("button")
                     check(buttonJQ.length > 0) {"259e87e0-fddc-465b-86e7-2c2b0edafe74"}
                     buttonsJQ.attr("disabled", false)
                     setTickerVisible(false)
 
-                    val formBannerAreaJQ = byIDSingle(AlDomID.formBannerArea)
+                    val formBannerAreaJQ = byIDSingle(AlDomid.formBannerArea)
                     formBannerAreaJQ.children().css("display", "none")
-                    val serviceFuckedUpBannerJQ = byIDSingle(AlDomID.serviceFuckedUpBanner)
+                    val serviceFuckedUpBannerJQ = byIDSingle(AlDomid.serviceFuckedUpBanner)
                     serviceFuckedUpBannerJQ.css("display", "block")
 
                     AlFrontPile.serviceFuckedUpBannerSignal.resolve()
                     return@async
                 }
 
-                replaceWithNewContent(AlDomID.shitPassedFromBackToFront, html)
+                replaceWithNewContent(AlDomid.shitPassedFromBackToFront, html)
                 parseShitFromBack()
-                val modalJQ = byID(AlDomID.orderParamsModal).asDynamic()
+                val modalJQ = byID(AlDomid.orderParamsModal).asDynamic()
                 replaceWithNewContent(shitFromBack.replacement_id ?: wtf("40531be5-b7de-47e3-9f7e-6ff4b5f12c4c"), html)
 
 
@@ -421,7 +421,7 @@ object AlFrontPile {
     }
 
     fun killme_initSubmitButton(postDataClass: KClass<*>, customPropNames: List<String>, setCustomProps: (dynamic) -> Unit) {
-        val buttonJQ = byID(AlDomID.submitButton)
+        val buttonJQ = byID(AlDomid.submitButton)
 
         fun submitButtonHandler() {
             clog("i am the fucking submitButtonHandler")
@@ -452,24 +452,24 @@ object AlFrontPile {
                 val html = try {
                     postRaw(shitFromBack.postPath, data)
                 } catch (e: dynamic) {
-                    val formFooterAreaJQ = byIDSingle(AlDomID.formFooterArea)
+                    val formFooterAreaJQ = byIDSingle(AlDomid.formFooterArea)
                     val buttonsJQ = formFooterAreaJQ.find("button")
                     check(buttonJQ.length > 0) {"259e87e0-fddc-465b-86e7-2c2b0edafe74"}
                     buttonsJQ.attr("disabled", false)
                     setTickerVisible(false)
 
-                    val formBannerAreaJQ = byIDSingle(AlDomID.formBannerArea)
+                    val formBannerAreaJQ = byIDSingle(AlDomid.formBannerArea)
                     formBannerAreaJQ.children().css("display", "none")
-                    val serviceFuckedUpBannerJQ = byIDSingle(AlDomID.serviceFuckedUpBanner)
+                    val serviceFuckedUpBannerJQ = byIDSingle(AlDomid.serviceFuckedUpBanner)
                     serviceFuckedUpBannerJQ.css("display", "block")
 
                     AlFrontPile.serviceFuckedUpBannerSignal.resolve()
                     return@async
                 }
 
-                replaceWithNewContent(AlDomID.shitPassedFromBackToFront, html)
+                replaceWithNewContent(AlDomid.shitPassedFromBackToFront, html)
                 parseShitFromBack()
-                val modalJQ = byID(AlDomID.orderParamsModal).asDynamic()
+                val modalJQ = byID(AlDomid.orderParamsModal).asDynamic()
                 replaceWithNewContent(shitFromBack.replacement_id ?: wtf("40531be5-b7de-47e3-9f7e-6ff4b5f12c4c"), html)
 
 

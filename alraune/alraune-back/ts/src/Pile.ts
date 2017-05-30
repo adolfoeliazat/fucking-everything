@@ -3,7 +3,6 @@
 namespace Pile {
     export const state = {
         backShit: {} as BackShit,
-        backCommands: [] as AlBackToFrontCommand.Type[]
     }
 
     export const httpGetParam = {
@@ -81,7 +80,7 @@ enum AlPageID {
 }
 
 interface BackShit {
-    pageID: AlPageID
+    commands: AlBackToFrontCommand.Type[]
 }
 
 

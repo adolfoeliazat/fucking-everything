@@ -5,14 +5,16 @@
  */
 
 //
-// Generated on Tue May 30 03:25:32 GMT 2017
+// Generated on Tue May 30 05:30:58 GMT 2017
 //
 
 namespace AlBackToFrontCommand {
+
     export interface SayWarmFuckYou {
         opcode: "SayWarmFuckYou"
         toWhom: string
     }
+
     export interface SetClickHandler {
         opcode: "SetClickHandler"
         actions: Type[]

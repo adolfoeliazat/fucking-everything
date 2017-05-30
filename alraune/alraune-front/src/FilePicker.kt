@@ -36,7 +36,7 @@ class FilePicker {
     }
 
     fun update() {
-        val containerJQ = byIDSingle(AlDomID.filePickerContainer)
+        val containerJQ = byIDSingle(AlDomid.filePickerContainer)
         containerJQ.html(buildString {
             ln("""
                 <style>

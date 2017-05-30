@@ -98,7 +98,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
 
             declareMaf("maf401_createFile", "/orderFiles") {async{
                 val p = AlFrontPile::populateTextField2
-                clickElementByIDAndAwaitModalShown(AlDomID.topRightButton, AlFrontPile.topRightButtonModalTestLocks)
+                clickElementByIDAndAwaitModalShown(AlDomid.topRightButton, AlFrontPile.topRightButtonModalTestLocks)
 
                 run {
                     // Validation errors
@@ -117,7 +117,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
             }}
 
             declareMaf("maf101", "/orderParams") {async{
-                byIDSingle(AlDomID.topRightButton).click()
+                byIDSingle(AlDomid.topRightButton).click()
             }}
         }
 
@@ -155,7 +155,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
     }
 
     private fun clickSubmitButton() {
-        val submitButtonJQ = byIDSingle(AlDomID.submitButton)
+        val submitButtonJQ = byIDSingle(AlDomid.submitButton)
         submitButtonJQ.click()
     }
 
@@ -206,7 +206,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
             }
 
             run { // Modal
-                clickElementByIDAndAwaitModalShown(AlDomID.topRightButton, AlFrontPile.topRightButtonModalTestLocks)
+                clickElementByIDAndAwaitModalShown(AlDomid.topRightButton, AlFrontPile.topRightButtonModalTestLocks)
 
                 val fuckDatabase = true
                 if (fuckDatabase) {
@@ -275,7 +275,7 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
 
     fun messAroundFront301() {
         async {
-            clickElementByIDAndAwaitModalShown(AlDomID.topRightButton, AlFrontPile.topRightButtonModalTestLocks)
+            clickElementByIDAndAwaitModalShown(AlDomid.topRightButton, AlFrontPile.topRightButtonModalTestLocks)
         }
     }
 
@@ -290,13 +290,13 @@ https://alraune.local/orderParams?orderUUID=fdfea4aa-1e1c-48f8-a341-a92d7e348961
             val itemUUID = "9968705b-8879-46b1-99b9-26da1429501a"
 
             run {
-                val j = byIDSingle("${AlDomID.deleteItemIcon}-$itemUUID")
+                val j = byIDSingle("${AlDomid.deleteItemIcon}-$itemUUID")
                 val modalTestLocks = j.getModalTestLocks()
                 clickElementAndAwaitModalShown(j, modalTestLocks)
             }
 
             awaitPageInitAfterDoing {
-                val j = byIDSingle("${AlDomID.deleteItemSubmitButton}-$itemUUID")
+                val j = byIDSingle("${AlDomid.deleteItemSubmitButton}-$itemUUID")
                 j.click()
             }
         }
