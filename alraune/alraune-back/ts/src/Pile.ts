@@ -1,16 +1,90 @@
 /// <reference path="generated--by-backend.ts"/>
 
 namespace Pile {
+
+    class ResolvableShit<T> {
+        private _resolve: (value?: (PromiseLike<T> | T)) => void
+        private _reject: (reason?: any) => void
+        promise: Promise<T>
+
+        constructor() {
+            this.reset()
+        }
+
+        reset() {
+            this.promise = new Promise<T>((resolve, reject) => {
+                this._resolve = resolve
+                this._reject = reject
+            })
+        }
+
+        resolveWith(x: T) {
+            this._resolve(x)
+        }
+
+        resolve() {
+            this.resolveWith(undefined as any)
+        }
+
+        reject(x: any) {
+            this._reject(x)
+        }
+    }
+
+    class TestLock {
+        private readonly testPauseTimeout = 10000
+        private readonly sutPauseTimeout = 10000
+
+        private testPause = new ResolvableShit()
+        private sutPause = new ResolvableShit()
+
+        constructor(virgin: boolean = false) {
+            if (!virgin) { // Initially everything is resolved, so if not in test, shit just works
+                this.testPause.resolve()
+                this.sutPause.resolve()
+            }
+        }
+
+        reset() {
+            this.testPause.reset()
+            this.sutPause.reset()
+        }
+
+        async pauseTestFromTest(): Promise<void> {
+            await orTestTimeout({promise: this.testPause.promise, ms: this.testPauseTimeout})
+        }
+
+        resumeTestFromSut() {
+            this.testPause.resolve()
+        }
+    }
+
+    function orTestTimeout<T>({promise, ms} : {promise: Promise<T>, ms: number}): Promise<T> {
+        const shit = new ResolvableShit<T>()
+        const thePromiseName = (promise as any).name || "shit"
+        setTimeout(() => {
+            const msg = `Sick of waiting for ${thePromiseName}`
+            shit.reject(new Error(msg))
+        }, ms)
+        promise.then(res => {
+            shit.resolveWith(res)
+        })
+        return shit.promise
+    }
+
+    export async function modalShownAfterDoing(f: () => void): Promise<void> {
+        state.modalShown.reset()
+        f()
+        await state.modalShown.pauseTestFromTest()
+    }
+
     export const state = {
         backShit: {} as BackShit,
+        modalShown: new TestLock()
     }
 
     export const httpGetParam = {
         maf: "maf"
-    }
-
-    export const attribute = {
-        data_shit: "data-shit"
     }
 
     export function clog(message?: any, ...optionalParams: any[]) {
@@ -70,13 +144,6 @@ namespace Pile {
         e.preventDefault()
         e.stopPropagation()
     }
-}
-
-enum AlPageID {
-    landing,
-    orderCreationForm,
-    orderParams,
-    orderFiles,
 }
 
 interface BackShit {

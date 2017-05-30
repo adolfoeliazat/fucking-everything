@@ -6,7 +6,6 @@ fun renderTextControl(onShowCommands: MutableList<AlBackToFrontCommand>, propNam
     val placeholderDomid = UUID.randomUUID().toString()
     onShowCommands += CreateTextControlCommand(placeholderDomid, propName, value)
     return kdiv(Attrs(id = placeholderDomid))
-//    return kinput(Attrs(type = "text", id = placeholderDomid, value = vr.sanitizedString, className = "form-control"))
 }
 
 

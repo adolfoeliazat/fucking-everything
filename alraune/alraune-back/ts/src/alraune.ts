@@ -9,6 +9,7 @@ import bitch = Pile.bitch
 import setOnClick = Pile.setOnClick
 import preventAndStop = Pile.preventAndStop
 import state = Pile.state
+import modalShownAfterDoing = Pile.modalShownAfterDoing
 
 $(() => {
     initShit()
@@ -55,7 +56,7 @@ function executeBackCommands(cmds: AlBackToFrontCommand.Type[]) {
                     })
 
                     jModal.on("shown.bs.modal", () => {
-                        // locks.shown.resumeTestFromSut()
+                        state.modalShown.resumeTestFromSut()
                     })
 
                     jModal.on("hide.bs.modal", () => {})
@@ -76,7 +77,9 @@ function executeBackCommands(cmds: AlBackToFrontCommand.Type[]) {
             }break
 
             case "CreateTextControl": {
-                byIDSingle(cmd.placeHolderDomid).replaceWith($(`<div>pizda ${cmd.propName}</div>`))
+                const jInput = $(`<input type="text" class="form-control">`)
+                jInput.val(cmd.value)
+                byIDSingle(cmd.placeHolderDomid).replaceWith(jInput)
             }break
 
             default: exhausted(cmd)
@@ -146,8 +149,11 @@ function initDebugShit() {
     // })
 
     declareMaf("/orderParams", async function maf101() {
-        clog("mmmaaaaaaaaaaaaaaffffffffff")
-        byIDSingle(AlDomid.topRightButton).click()
+        clog(maf101.name)
+        await modalShownAfterDoing(() => {
+            byIDSingle(AlDomid.topRightButton).click()
+        })
+        clog("mooooodaaaaal shown")
     })
 
     function declareMaf(activeWhenPath: string, f: () => void) {
@@ -174,15 +180,6 @@ function initDebugShit() {
     }
 }
 
-
-
-//
-//
-// !function constantize() {
-//     for (const name of Object.getOwnPropertyNames(AlDomid)) {
-//         (AlDomid as any)[name] = name
-//     }
-// }()
 
 
 
