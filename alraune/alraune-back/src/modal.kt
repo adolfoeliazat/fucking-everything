@@ -2,8 +2,8 @@ package alraune.back
 
 import alraune.shared.*
 
-fun AlRenderPile.renderModal(domid: String, p: ModalParams): Renderable {
-    return kdiv(Attrs(className = "modal fade", id = domid, tabIndex = -1)){o->
+fun AlRenderPile.renderModal(p: ModalParams): Renderable {
+    return kdiv(Attrs(className = "modal fade", id = p.domid, tabIndex = -1)){o->
         o- kdiv(Attrs(className = "modal-dialog", style = Style(width = p.width))){o->
             val borderLeft = p.leftMarginColor?.let {"0.5em solid $it"}
             o- kdiv(Attrs(className = "modal-content", style = Style(borderLeft = borderLeft))){o->
@@ -33,6 +33,7 @@ fun AlRenderPile.renderModal(domid: String, p: ModalParams): Renderable {
 }
 
 class ModalParams(
+    val domid: String? = null,
     val leftMarginColor: Color? = null,
     val title: String,
     val body: Renderable,

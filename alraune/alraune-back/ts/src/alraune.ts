@@ -29,6 +29,7 @@ function initShit() {
 
 function executeBackCommands(cmds: AlBackToFrontCommand.Type[]) {
     for (const cmd of cmds) {
+        clog(`cmd: ${cmd.opcode}`)
         switch (cmd.opcode) {
             case "SayWarmFuckYou": {
                 clog(`Fuck you, ${cmd.toWhom}`)
@@ -41,30 +42,41 @@ function executeBackCommands(cmds: AlBackToFrontCommand.Type[]) {
                 })
             }break
 
-            case "OpenModalCommand": {
-                clog("cmd: OpenModalCommand")
-                const jModal = byIDSingle(cmd.domid)
-                const jBody = $("body")
-                const bodyUnderModalClass = "paddingRightScrollbarWidthImportant"
+            case "OpenModalOnElementClick": {
+                const jTriggerElement = byIDSingle(cmd.triggerElementDomid)
+                setOnClick(jTriggerElement, () => {
+                    const jModal = $(cmd.modalHtml)
+                    const jBody = $("body")
+                    const bodyUnderModalClass = "paddingRightScrollbarWidthImportant"
 
-                jModal.on("show.bs.modal", () => {
-                    jBody.css("overflow-y", "hidden")
-                    jBody.addClass(bodyUnderModalClass)
+                    jModal.on("show.bs.modal", () => {
+                        jBody.css("overflow-y", "hidden")
+                        jBody.addClass(bodyUnderModalClass)
+                    })
+
+                    jModal.on("shown.bs.modal", () => {
+                        // locks.shown.resumeTestFromSut()
+                    })
+
+                    jModal.on("hide.bs.modal", () => {})
+
+                    jModal.on("hidden.bs.modal", () => {
+                        jBody.css("overflow-y", "scroll")
+                        jBody.removeClass(bodyUnderModalClass)
+                        // locks.hidden.resumeTestFromSut()
+
+                        jModal.data("bs.modal", null)
+                        jModal.remove()
+                    })
+
+                    jBody.append(jModal)
+                    executeBackCommands(cmd.initCommands)
+                    ;(jModal as any).modal()
                 })
+            }break
 
-                jModal.on("shown.bs.modal", () => {
-                    // locks.shown.resumeTestFromSut()
-                })
-
-                jModal.on("hide.bs.modal", () => {})
-
-                jModal.on("hidden.bs.modal", () => {
-                    jBody.css("overflow-y", "scroll")
-                    jBody.removeClass(bodyUnderModalClass)
-                    // locks.hidden.resumeTestFromSut()
-                })
-
-                ;(jModal as any).modal()
+            case "CreateTextControl": {
+                byIDSingle(cmd.placeHolderDomid).replaceWith($(`<div>pizda ${cmd.propName}</div>`))
             }break
 
             default: exhausted(cmd)
@@ -75,7 +87,7 @@ function executeBackCommands(cmds: AlBackToFrontCommand.Type[]) {
 function parseShitFromBackAndExecuteCommands() {
     const j = byIDSingle("shitPassedFromBackToFront2")
     state.backShit = JSON.parse(j.attr("data-shit"))
-    console.log("backShit", JSON.stringify(state.backShit))
+    // clog("backShit", JSON.stringify(state.backShit))
 
     executeBackCommands(state.backShit.commands)
 }
@@ -163,17 +175,14 @@ function initDebugShit() {
 }
 
 
-const AlDomid = {
-    topRightButton: "",
-    shitPassedFromBackToFront: "",
-}
 
-
-!function constantize() {
-    for (const name of Object.getOwnPropertyNames(AlDomid)) {
-        (AlDomid as any)[name] = name
-    }
-}()
+//
+//
+// !function constantize() {
+//     for (const name of Object.getOwnPropertyNames(AlDomid)) {
+//         (AlDomid as any)[name] = name
+//     }
+// }()
 
 
 

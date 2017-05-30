@@ -5,8 +5,35 @@
  */
 
 //
-// Generated on Tue May 30 07:31:19 GMT 2017
+// Generated on Tue May 30 09:31:46 GMT 2017
 //
+
+const AlDomid = {
+    closeModalButton: "closeModalButton",
+    deleteItemCancelButton: "deleteItemCancelButton",
+    deleteItemIcon: "deleteItemIcon",
+    deleteItemModal: "deleteItemModal",
+    deleteItemModalContent: "deleteItemModalContent",
+    deleteItemSubmitButton: "deleteItemSubmitButton",
+    deleteItemTicker: "deleteItemTicker",
+    documentCategoryPickerContainer: "documentCategoryPickerContainer",
+    downloadItemIcon: "downloadItemIcon",
+    editItemIcon: "editItemIcon",
+    filePickerContainer: "filePickerContainer",
+    formBannerArea: "formBannerArea",
+    formFooterArea: "formFooterArea",
+    itemShit: "itemShit",
+    modalContent: "modalContent",
+    orderParamsModal: "orderParamsModal",
+    replaceableContent: "replaceableContent",
+    serviceFuckedUpBanner: "serviceFuckedUpBanner",
+    shitPassedFromBackToFront: "shitPassedFromBackToFront",
+    shitPassedFromBackToFront2: "shitPassedFromBackToFront2",
+    submitButton: "submitButton",
+    submitOrderForReviewButton: "submitOrderForReviewButton",
+    ticker: "ticker",
+    topRightButton: "topRightButton",
+}
 
 namespace AlBackToFrontCommand {
 
@@ -21,10 +48,19 @@ namespace AlBackToFrontCommand {
         actions: Type[]
     }
 
-    export interface OpenModalCommand {
-        opcode: "OpenModalCommand"
-        domid: string
+    export interface OpenModalOnElementClick {
+        opcode: "OpenModalOnElementClick"
+        triggerElementDomid: string
+        modalHtml: string
+        initCommands: Type[]
     }
 
-    export type Type = SayWarmFuckYou | SetClickHandler | OpenModalCommand
+    export interface CreateTextControl {
+        opcode: "CreateTextControl"
+        placeHolderDomid: string
+        propName: string
+        value: string
+    }
+
+    export type Type = SayWarmFuckYou | SetClickHandler | OpenModalOnElementClick | CreateTextControl
 }

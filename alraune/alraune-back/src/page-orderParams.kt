@@ -72,14 +72,8 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
             if (canEdit) {
                 exhaustive=when (activeTab) {
                     OrderTab.PARAMS -> {
-                        val modalDomid = UUID.randomUUID().toString()
-
-                        shitToFront2("298dca01-eee5-49e4-8234-1002676f67ba") {
-                            it.commands += OpenModalCommand(
-                                domid = modalDomid
-                            )
-                        }
-                        o- AlRenderPile.renderModal(modalDomid, ModalParams(
+                        val onShowCommands = mutableListOf<AlBackToFrontCommand>()
+                        val modalHtml = AlRenderPile.renderModal(ModalParams(
                             width = "80rem",
                             leftMarginColor = Color.BLUE_GRAY_300,
                             title = t("TOTE", "Параметры"),
@@ -93,21 +87,21 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
                                         }
 
                                         val domid = AlSharedPile.fieldDOMID(name = prop.name)
-                                        return kdiv.className("form-group") {o ->
+                                        return kdiv.className("form-group"){o->
                                             if (vr.error != null)
                                                 o.amend(Style(marginBottom = "0"))
-                                            o - klabel(text = title)
+                                            o- klabel(text = title)
                                             val control = when (fieldType) {
-                                                FieldType.TEXT -> kinput(Attrs(type = "text", id = domid, value = vr.sanitizedString, className = "form-control")) {}
+                                                FieldType.TEXT -> renderTextControl(onShowCommands, propName = prop.name, value = vr.sanitizedString)
                                                 FieldType.TEXTAREA -> ktextarea(Attrs(id = domid, rows = 5, className = "form-control"), text = vr.sanitizedString)
                                             }
-                                            o - kdiv(Style(position = "relative")) {o ->
-                                                o - control
+                                            o- kdiv(Style(position = "relative")){o->
+                                                o- control
                                                 if (vr.error != null) {
-                                                    o - kdiv(Style(marginTop = "5px", marginRight = "9px", textAlign = "right", color = "${Color.RED_700}"))
+                                                    o- kdiv(Style(marginTop = "5px", marginRight = "9px", textAlign = "right", color = "${Color.RED_700}"))
                                                         .text(vr.error)
                                                     // TODO:vgrechka Shift red circle if control has scrollbar
-                                                    o - kdiv(Style(width = "15px", height = "15px", backgroundColor = "${Color.RED_300}",
+                                                    o- kdiv(Style(width = "15px", height = "15px", backgroundColor = "${Color.RED_300}",
                                                                    borderRadius = "10px", position = "absolute", top = "10px", right = "8px"))
                                                 }
                                             }
@@ -165,7 +159,15 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
 //                                    }
 //                                    o- fields.documentDetails.render()
                                 })
-                        ))
+                        )).render()
+
+
+                        shitToFront2("298dca01-eee5-49e4-8234-1002676f67ba") {
+                            it.commands += OpenModalOnElementClickCommand(
+                                triggerElementDomid = AlDomid.topRightButton,
+                                modalHtml = modalHtml,
+                                initCommands = onShowCommands)
+                        }
                     }
                     OrderTab.FILES -> {
                         imf("f04ee25a-881d-4ca5-90e8-124cc42645ac")

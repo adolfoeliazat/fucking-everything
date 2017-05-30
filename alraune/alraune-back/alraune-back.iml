@@ -14,7 +14,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="kotlin-jvm" level="project" />
     <orderEntry type="module" module-name="shared-jvm" />
-    <orderEntry type="module" module-name="alraune-front" scope="PROVIDED" />
     <orderEntry type="module" module-name="spew-jvm-0" />
     <orderEntry type="module" module-name="alraune-back-0" />
     <orderEntry type="module" module-name="db-stuff" />

@@ -23,15 +23,12 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.module.SimpleModule
 import org.eclipse.jetty.server.handler.HandlerCollection
 import org.eclipse.jetty.server.handler.ResourceHandler
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty0
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberFunctions
-import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.valueParameters
-import kotlin.reflect.jvm.jvmErasure
 
 // TODO:vgrechka Backend dies on exception?
 
@@ -39,7 +36,7 @@ object StartAlrauneBack {
     @JvmStatic
     fun main(args: Array<String>) {
         System.setProperty("user.timezone", "GMT")
-        generateSomeTS()
+        TSPile.spitOutSomeTS()
         backPlatform.springctx = AnnotationConfigApplicationContext(AlrauneTestAppConfig::class.java)
 
         // val httpPort = 80
@@ -355,9 +352,9 @@ fun spitUsualPage(pipiska: Renderable) {
         ln("    <script src='/node_modules/jquery/dist/jquery.min.js'></script>")
         ln("    <script src='/node_modules/bootstrap/dist/js/bootstrap.min.js'></script>")
         ln("    <script src='/ts/out/alraune.js?${System.currentTimeMillis()}'></script>")
-        ln("    <script src='/alraune-front/lib/kotlin.js'></script>")
-        ln("    <script src='/shared-kjs/shared-kjs.js?${System.currentTimeMillis()}'></script>")
-        ln("    <script src='/alraune-front/alraune-front.js?${System.currentTimeMillis()}'></script>")
+        // ln("    <script src='/alraune-front/lib/kotlin.js'></script>")
+        // ln("    <script src='/shared-kjs/shared-kjs.js?${System.currentTimeMillis()}'></script>")
+        // ln("    <script src='/alraune-front/alraune-front.js?${System.currentTimeMillis()}'></script>")
         ln("</body>")
         ln("</html>")
     })

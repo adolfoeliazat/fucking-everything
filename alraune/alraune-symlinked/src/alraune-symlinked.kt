@@ -81,6 +81,7 @@ object AlSharedPile {
 //    val orderUUID: String?
 //}
 
+// TODO:vgrechka Maybe just use freaking enum instead of all these `myName`?..
 object AlDomid {
     val shitPassedFromBackToFront by myName()
     val shitPassedFromBackToFront2 by myName()
