@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Tue May 30 05:30:58 GMT 2017
+// Generated on Tue May 30 07:31:19 GMT 2017
 //
 
 namespace AlBackToFrontCommand {
@@ -17,9 +17,14 @@ namespace AlBackToFrontCommand {
 
     export interface SetClickHandler {
         opcode: "SetClickHandler"
-        actions: Type[]
         targetDomid: string
+        actions: Type[]
     }
 
-    export type Type = SayWarmFuckYou | SetClickHandler
+    export interface OpenModalCommand {
+        opcode: "OpenModalCommand"
+        domid: string
+    }
+
+    export type Type = SayWarmFuckYou | SetClickHandler | OpenModalCommand
 }

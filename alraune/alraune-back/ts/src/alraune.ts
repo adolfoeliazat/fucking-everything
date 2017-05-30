@@ -41,6 +41,32 @@ function executeBackCommands(cmds: AlBackToFrontCommand.Type[]) {
                 })
             }break
 
+            case "OpenModalCommand": {
+                clog("cmd: OpenModalCommand")
+                const jModal = byIDSingle(cmd.domid)
+                const jBody = $("body")
+                const bodyUnderModalClass = "paddingRightScrollbarWidthImportant"
+
+                jModal.on("show.bs.modal", () => {
+                    jBody.css("overflow-y", "hidden")
+                    jBody.addClass(bodyUnderModalClass)
+                })
+
+                jModal.on("shown.bs.modal", () => {
+                    // locks.shown.resumeTestFromSut()
+                })
+
+                jModal.on("hide.bs.modal", () => {})
+
+                jModal.on("hidden.bs.modal", () => {
+                    jBody.css("overflow-y", "scroll")
+                    jBody.removeClass(bodyUnderModalClass)
+                    // locks.hidden.resumeTestFromSut()
+                })
+
+                ;(jModal as any).modal()
+            }break
+
             default: exhausted(cmd)
         }
     }

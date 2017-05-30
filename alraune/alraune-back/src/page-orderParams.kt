@@ -1,6 +1,5 @@
 package alraune.back
 
-import alraune.back.AlBackToFrontCommandList.Companion.commands
 import alraune.back.AlRenderPile.col
 import alraune.back.AlRenderPile.renderOrderParams
 import alraune.back.AlRenderPile.renderOrderTitle
@@ -8,15 +7,10 @@ import alraune.back.AlRenderPile.row
 import alraune.back.AlRenderPile.t
 import alraune.shared.*
 import vgrechka.*
+import java.util.*
 import kotlin.reflect.KProperty1
 
 fun handleGet_orderParams() {
-    shitToFront2("298dca01-eee5-49e4-8234-1002676f67ba") {
-        it.commands += SetClickHandler(AlDomid.topRightButton, commands(
-            SayWarmFuckYou("dear customer"),
-            SayWarmFuckYou("all others")
-        ))
-    }
     SpitOrderTabPage(OrderTab.PARAMS)
 }
 
@@ -78,7 +72,14 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
             if (canEdit) {
                 exhaustive=when (activeTab) {
                     OrderTab.PARAMS -> {
-                        o- AlRenderPile.renderModal(AlDomid.orderParamsModal, ModalParams(
+                        val modalDomid = UUID.randomUUID().toString()
+
+                        shitToFront2("298dca01-eee5-49e4-8234-1002676f67ba") {
+                            it.commands += OpenModalCommand(
+                                domid = modalDomid
+                            )
+                        }
+                        o- AlRenderPile.renderModal(modalDomid, ModalParams(
                             width = "80rem",
                             leftMarginColor = Color.BLUE_GRAY_300,
                             title = t("TOTE", "Параметры"),
