@@ -2,6 +2,7 @@
 /// <reference path="Pile.ts"/>
 /// <reference path="generated--by-backend.ts"/>
 
+import p = Pile
 import clog = Pile.clog
 import byIDSingle = Pile.byIDSingle
 import getURLParam = Pile.getURLParam
@@ -77,9 +78,8 @@ function executeBackCommands(cmds: AlBackToFrontCommand.Type[]) {
             }break
 
             case "CreateTextControl": {
-                const jInput = $(`<input type="text" class="form-control">`)
-                jInput.val(cmd.value)
-                byIDSingle(cmd.placeHolderDomid).replaceWith(jInput)
+                const ctrl = new p.TextControl(cmd)
+                state.debug.propNameToTextControl[cmd.propName] = ctrl
             }break
 
             default: exhausted(cmd)
@@ -154,6 +154,12 @@ function initDebugShit() {
             byIDSingle(AlDomid.topRightButton).click()
         })
         clog("mooooodaaaaal shown")
+
+        const p = AlFormPropNames.OrderParams
+        const o = state.debug.propNameToTextControl
+        o[p.name].setValue("Fuckita Boobisto")
+        o[p.email].setValue("fuckita@mail.com")
+        o[p.phone].setValue("+38 (911) 4542877")
     })
 
     function declareMaf(activeWhenPath: string, f: () => void) {

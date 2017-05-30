@@ -19,70 +19,137 @@ object TSPile {
             ln("// Generated on ${Date()}")
             ln("//")
 
-            spitDomids()
-            spitCommandTypes()
+            spitDomids(this)
+            spitFormPropNames(this)
+            spitCommandTypes(this)
         })
     }
 
-    private fun StringBuilder.spitCommandTypes() {
-        ln("")
-        ln("namespace AlBackToFrontCommand {")
+    private fun spitFormPropNames(buf: StringBuilder) {
+        buf.apply {
+            ln("")
+            ln("const AlFormPropNames = {")
 
-        val typeNames = mutableListOf<String>()
-        val re = Regex("class\\s+(\\w+)\\s*\\(((.|\n)*?)\\)\\s*:\\s*AlBackToFrontCommand\\s*\\(\\)")
-        val src = File(AlBackPile0.backToFrontCommandsKtSourceFile).readText()
+            val re = Regex("class\\s+(\\w+)FormPostData\\s*\\(((.|\n)*?)\\)")
+            doShitWithClasses(re, AlBackPile0.formPostDataKtSourceFile, {className -> object : DoShitWithClassesPedro {
+                override fun shouldGenerateSomething() = true
+
+                override fun beforeIteratingProps() {
+                    val typeName = className.replace(Regex("FormPostData$"), "")
+                    clog("${this@TSPile::spitFormPropNames.name}: typeName = $typeName")
+                    ln("")
+                    ln("    $typeName: {")
+                }
+
+                override fun onProperty(propName: String, propType: String) {
+                    ln("        $propName: \"$propName\",")
+                }
+
+                override fun afterIteratingProps() {
+                    ln("    },")
+                }
+            }})
+
+            ln("}")
+        }
+    }
+
+    interface DoShitWithClassesPedro {
+        fun shouldGenerateSomething(): Boolean
+        fun beforeIteratingProps()
+        fun onProperty(propName: String, propType: String)
+        fun afterIteratingProps()
+
+    }
+
+    fun doShitWithClasses(re: Regex, srcFileName: String, makePedro: (className: String) -> DoShitWithClassesPedro) {
+        val src = File(srcFileName).readText()
         var start = 0
         while (true) {
             val mr = re.find(src, start) ?: break
+
             val className = mr.groupValues[1]
-            val typeName = commandClassNameToTSTypeName(className)
-            typeNames += typeName
-            clog("typeName = $typeName")
-            ln("")
-            ln("    export interface $typeName {")
-            ln("        opcode: \"$typeName\"")
-            val propsCode = mr.groupValues[2]
-            for (propCode in propsCode.split(",")) {
-                val pieces = propCode.split(":")
-                check(pieces.size == 2)
-                val lhs = pieces[0].trim()
-                check(lhs.startsWith("val "))
-                val propName = lhs.substring("val ".length).trim()
-                val propType = pieces[1].trim()
-                clog("    propName = $propName; propType = $propType")
-                val tsType = when {
-                    propType == "String" -> "string"
-                    propType.startsWith("List<") -> {
-                        val closing = propType.lastIndexOfOrNull(">") ?: wtf("358761c8-e7b9-41b2-ac23-7b629bce5137")
-                        val elementType = propType.subSequence("List<".length, closing)
-                        val tsElementType = when (elementType) {
-                            "AlBackToFrontCommand" -> "Type"
-                            else -> elementType
-                        }
-                        "$tsElementType[]"
-                    }
-                    else -> wtf("propType = $propType    e0a20284-a8ab-44e8-8f17-4a28b1509f4a")
+            val pedro = makePedro(className)
+            if (pedro.shouldGenerateSomething()) {
+                pedro.beforeIteratingProps()
+                val propsCode = mr.groupValues[2]
+                for (propCode in propsCode.split(",")) {
+                    val pieces = propCode.split(":")
+                    check(pieces.size == 2)
+                    val lhs = pieces[0].trim()
+                    check(lhs.startsWith("val "))
+                    val propName = lhs.substring("val ".length).trim()
+                    val propType = pieces[1].trim()
+                    clog("    propName = $propName; propType = $propType")
+                    pedro.onProperty(propName, propType)
                 }
-                ln("        $propName: $tsType")
+                pedro.afterIteratingProps()
             }
-            ln("    }")
+
             start = mr.range.start + 1
         }
-
-        ln("")
-        ln("    export type Type = ${typeNames.joinToString(" | ")}")
-
-        ln("}")
     }
 
-    private fun StringBuilder.spitDomids() {
-        ln("")
-        ln("const AlDomid = {")
-        for (prop in AlDomid::class.memberProperties) {
-            val domid = prop.get(AlDomid)
-            ln("    $domid: \"$domid\",")
+    private fun spitCommandTypes(buf: StringBuilder) {
+        buf.apply {
+            ln("")
+            ln("namespace AlBackToFrontCommand {")
+
+            val typeNames = mutableListOf<String>()
+            val re = Regex("class\\s+(\\w+)\\s*\\(((.|\n)*?)\\)\\s*:\\s*AlBackToFrontCommand\\s*\\(\\)")
+            doShitWithClasses(re, AlBackPile0.backToFrontCommandsKtSourceFile, {className ->
+                object : DoShitWithClassesPedro {
+                    override fun shouldGenerateSomething() = true
+
+                    override fun beforeIteratingProps() {
+                        val typeName = commandClassNameToTSTypeName(className)
+                        typeNames += typeName
+                        clog("${this@TSPile::spitCommandTypes.name}: typeName = $typeName")
+                        ln("")
+                        ln("    export interface $typeName {")
+                        ln("        opcode: \"$typeName\"")
+                    }
+
+                    override fun onProperty(propName: String, propType: String) {
+                        val tsType = when {
+                            propType == "String" -> "string"
+                            propType.startsWith("List<") -> {
+                                val closing = propType.lastIndexOfOrNull(">") ?: wtf("358761c8-e7b9-41b2-ac23-7b629bce5137")
+                                val elementType = propType.subSequence("List<".length, closing)
+                                val tsElementType = when (elementType) {
+                                    "AlBackToFrontCommand" -> "Type"
+                                    else -> elementType
+                                }
+                                "$tsElementType[]"
+                            }
+                            else -> wtf("propType = $propType    e0a20284-a8ab-44e8-8f17-4a28b1509f4a")
+                        }
+                        ln("        $propName: $tsType")
+                    }
+
+                    override fun afterIteratingProps() {
+                        ln("    }")
+                    }
+                }
+            })
+
+            ln("")
+            ln("    export type Type = ${typeNames.joinToString(" | ")}")
+
+            ln("}")
         }
-        ln("}")
+    }
+
+    private fun spitDomids(buf: StringBuilder) {
+        buf.apply {
+            ln("")
+            ln("const AlDomid = {")
+            for (prop in AlDomid::class.memberProperties) {
+                val domid = prop.get(AlDomid)
+                ln("    $domid: \"$domid\",")
+            }
+            ln("}")
+        }
     }
 
     fun commandClassNameToTSTypeName(className: String) = className.replace(Regex("Command$"), "")

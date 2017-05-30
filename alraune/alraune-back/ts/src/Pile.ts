@@ -80,7 +80,10 @@ namespace Pile {
 
     export const state = {
         backShit: {} as BackShit,
-        modalShown: new TestLock()
+        modalShown: new TestLock(),
+        debug: {
+            propNameToTextControl: {} as {[key: string]: TextControl}
+        }
     }
 
     export const httpGetParam = {
@@ -143,6 +146,23 @@ namespace Pile {
     export function preventAndStop(e: JQueryEventObject) {
         e.preventDefault()
         e.stopPropagation()
+    }
+
+    export class TextControl {
+        private jInput = $(`<input type="text" class="form-control">`)
+        private cmd: AlBackToFrontCommand.CreateTextControl
+
+        constructor(cmd: AlBackToFrontCommand.CreateTextControl) {
+            state.debug.propNameToTextControl[cmd.propName] = this
+            this.cmd = cmd
+            this.setValue(cmd.value)
+            byIDSingle(cmd.placeHolderDomid).replaceWith(this.jInput)
+        }
+
+        setValue(value: string) {
+            this.jInput.val(value)
+        }
+
     }
 }
 

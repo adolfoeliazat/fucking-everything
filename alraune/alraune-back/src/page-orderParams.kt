@@ -72,7 +72,7 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
             if (canEdit) {
                 exhaustive=when (activeTab) {
                     OrderTab.PARAMS -> {
-                        val onShowCommands = mutableListOf<AlBackToFrontCommand>()
+                        val initCommands = mutableListOf<AlBackToFrontCommand>()
                         val modalHtml = AlRenderPile.renderModal(ModalParams(
                             width = "80rem",
                             leftMarginColor = Color.BLUE_GRAY_300,
@@ -80,10 +80,12 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
                             body = insideMarkers(
                                 id = AlDomid.modalContent,
                                 content = kdiv{o->
-                                    fun renderField(validateFromPostData: () -> ValidationResult, prop: KProperty1<*, String>, title: String, fieldType: FieldType): Renderable {
+                                    fun myPostData() = rctx.postData.orderParams
+
+                                    fun renderField(validateFromPostData: () -> ValidationResult, prop: KProperty1<*, String>, title: String, fieldType: FieldType, initialValue: String): Renderable {
                                         val vr = when {
                                             rctx.isPost -> validateFromPostData()
-                                            else -> ValidationResult(sanitizedString = "", error = null)
+                                            else -> ValidationResult(sanitizedString = initialValue, error = null)
                                         }
 
                                         val domid = AlSharedPile.fieldDOMID(name = prop.name)
@@ -92,7 +94,7 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
                                                 o.amend(Style(marginBottom = "0"))
                                             o- klabel(text = title)
                                             val control = when (fieldType) {
-                                                FieldType.TEXT -> renderTextControl(onShowCommands, propName = prop.name, value = vr.sanitizedString)
+                                                FieldType.TEXT -> renderTextControl(initCommands, propName = prop.name, value = vr.sanitizedString)
                                                 FieldType.TEXTAREA -> ktextarea(Attrs(id = domid, rows = 5, className = "form-control"), text = vr.sanitizedString)
                                             }
                                             o- kdiv(Style(position = "relative")){o->
@@ -109,24 +111,26 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
                                     }
 
 
-                                    fun myPostData() = rctx.postData.orderParams
 
                                     o- row(marginBottom = null){o->
                                         o- col(4, renderField(
                                             validateFromPostData = {AlBackPile.validateName(myPostData().name)},
                                             prop = OrderParamsFormPostData::name,
+                                            initialValue = rctx.order.contactName,
                                             title = t("TOTE", "Контактное имя"),
                                             fieldType = FieldType.TEXT))
 
                                         o- col(4, renderField(
                                             validateFromPostData = {AlBackPile.validateEmail(myPostData().email)},
                                             prop = OrderParamsFormPostData::email,
+                                            initialValue = rctx.order.email,
                                             title = t("TOTE", "Почта"),
                                             fieldType = FieldType.TEXT))
 
                                         o- col(4, renderField(
                                             validateFromPostData = {AlBackPile.validatePhone(myPostData().phone)},
                                             prop = OrderParamsFormPostData::phone,
+                                            initialValue = rctx.order.phone,
                                             title = t("TOTE", "Телефон"),
                                             fieldType = FieldType.TEXT))
                                     }
@@ -166,7 +170,7 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
                             it.commands += OpenModalOnElementClickCommand(
                                 triggerElementDomid = AlDomid.topRightButton,
                                 modalHtml = modalHtml,
-                                initCommands = onShowCommands)
+                                initCommands = initCommands)
                         }
                     }
                     OrderTab.FILES -> {

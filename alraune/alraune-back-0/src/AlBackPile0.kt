@@ -14,6 +14,7 @@ object AlBackPile0 {
     val sharedKJSOutDirParent = "E:/fegh/out/production"
     val tmpDirPath = "c:/tmp"
     val backToFrontCommandsKtSourceFile = "E:/fegh/alraune/alraune-back/src/AlBackToFrontCommand.kt"
+    val formPostDataKtSourceFile = "E:/fegh/alraune/alraune-back/symlink--alraune-symlinked-src/alraune-symlinked.kt"
     val generatedTSFile = "E:/fegh/alraune/alraune-back/ts/src/generated--by-backend.ts"
     val log = LoggerFactory.getLogger(this.javaClass)
     val baseURL = "https://alraune.local"

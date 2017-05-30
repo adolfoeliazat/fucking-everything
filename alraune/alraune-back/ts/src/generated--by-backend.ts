@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Tue May 30 09:31:46 GMT 2017
+// Generated on Tue May 30 12:50:53 GMT 2017
 //
 
 const AlDomid = {
@@ -33,6 +33,30 @@ const AlDomid = {
     submitOrderForReviewButton: "submitOrderForReviewButton",
     ticker: "ticker",
     topRightButton: "topRightButton",
+}
+
+const AlFormPropNames = {
+
+    OrderParams: {
+        orderUUID: "orderUUID",
+        email: "email",
+        name: "name",
+        phone: "phone",
+        documentType: "documentType",
+        documentTitle: "documentTitle",
+        documentDetails: "documentDetails",
+        documentCategory: "documentCategory",
+        numPages: "numPages",
+        numSources: "numSources",
+    },
+
+    OrderFile: {
+        orderUUID: "orderUUID",
+        fileUUID: "fileUUID",
+        name: "name",
+        title: "title",
+        details: "details",
+    },
 }
 
 namespace AlBackToFrontCommand {
