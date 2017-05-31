@@ -65,6 +65,15 @@ object SpewAlrauneEntities {
     }
 }
 
+object SpewAlrauneTSInterop {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val res = spewForInputFiles(listOf("%FE%/alraune/alraune-back/src/ts-interop.kt"))
+        clog(res.ddl)
+        clog("OK")
+    }
+}
+
 object SpewAlrauneEntities_recreateTestDBSchema {
     @JvmStatic
     fun main(args: Array<String>) {

@@ -36,7 +36,7 @@ object StartAlrauneBack {
     @JvmStatic
     fun main(args: Array<String>) {
         System.setProperty("user.timezone", "GMT")
-        TSPile.spitOutSomeTS()
+//        TSPile.spitOutSomeTS()
         backPlatform.springctx = AnnotationConfigApplicationContext(AlrauneTestAppConfig::class.java)
 
         // val httpPort = 80
@@ -109,8 +109,8 @@ object StartAlrauneBack {
                                     res.writer.print(AlCSS.sheet)
                                 }
                             // TODO:vgrechka @unboilerplate
-                                AlPagePath.debug_post_dumpStackByID -> handlePost_debug_post_dumpStackByID()
-                                AlPagePath.debug_post_dumpBackCodePath -> handlePost_debug_post_dumpBackCodePath()
+//                                AlPagePath.debug_post_dumpStackByID -> handlePost_debug_post_dumpStackByID()
+//                                AlPagePath.debug_post_dumpBackCodePath -> handlePost_debug_post_dumpBackCodePath()
                                 AlPagePath.debug_post_fuckDatabaseForNextPost -> handlePost_debug_post_fuckDatabaseForNextPost()
                                 AlPagePath.orderCreationForm -> handleGet_orderCreationForm()
                                 AlPagePath.post_createOrder -> handlePost_createOrder()
@@ -183,7 +183,7 @@ object StartAlrauneBack {
 }
 
 class PieceOfShitFromBack2 {
-    val commands = mutableListOf<AlBackToFrontCommand>()
+    val commands = mutableListOf<AlBackToFrontCommandPile>()
 }
 
 
@@ -217,28 +217,21 @@ class AlRequestContext {
     }}
 
     val postData by lazy {_postData()}; inner class _postData {
-        val data = run {
+        val pile = run {
             val text = req.reader.readText()
-            objectMapper.readValue(text, Object::class.java)!!
+            objectMapper.readValue(text, AlFrontToBackCommandPile::class.java)!!
         }
-        val orderParams get() = data as OrderParamsFormPostData
-        val orderFile get() = data as OrderFileFormPostData
-        val dumpStackByID get() = data as DumpStackByIDPostData
-        val dumpBackCodePath get() = data as DumpBackCodePathPostData
-        val deleteItemPostData get() = data as DeleteItemPostData
+//        val orderParams get() = data as OrderParamsFormPostData
+//        val orderFile get() = data as OrderFileFormPostData
+//        val dumpStackByID get() = data as DumpStackByIDPostData
+//        val dumpBackCodePath get() = data as DumpBackCodePathPostData
+//        val deleteItemPostData get() = data as DeleteItemPostData
     }
 
-    val orderUUID by lazy {
-        if (isPost) {
-            when (req.pathInfo) {
-                AlPagePath.post_setOrderParams -> postData.orderParams.orderUUID ?: bitch("11034025-8877-4d96-a17f-f5c3c2f0e16d")
-                AlPagePath.post_createOrderFile -> postData.orderFile.orderUUID
-                else -> bitch("6f76e7f3-6f92-48d4-91ff-95f89f6626ce")
-            }
-        } else {
-            getParams.orderUUID ?: bitch("7aa84c05-79c3-4c8f-bfd2-26250414305d")
-        }
-    }
+    val orderUUID by lazy {when{
+        isPost -> postData.pile.orderUUID
+        else -> getParams.orderUUID ?: bitch("7aa84c05-79c3-4c8f-bfd2-26250414305d")
+    }}
 
     val order by lazy {
         createdOrder
@@ -272,12 +265,12 @@ val shitForFront2 get() = AlRequestContext.the.shitPassedFromBackToFront2
 fun replaceableContent(content: Renderable) =
     insideMarkers(id = AlDomid.replaceableContent, content = content)
 
-fun insideMarkers(id: String, content: Renderable? = null, tamperWithAttrs: (Attrs) -> Attrs = {it}): Tag {
+fun insideMarkers(id: AlDomid, content: Renderable? = null, tamperWithAttrs: (Attrs) -> Attrs = {it}): Tag {
     val beginMarker = AlSharedPile.beginContentMarkerForDOMID(id)
     val endMarker = AlSharedPile.endContentMarkerForDOMID(id)
     return kdiv{o->
         o- rawHTML(beginMarker)
-        o- kdiv(tamperWithAttrs(Attrs(id = id))){o->
+        o- kdiv(tamperWithAttrs(Attrs(domid = id))){o->
             o- content
         }
         o- rawHTML(endMarker)
@@ -457,19 +450,19 @@ interface WithFieldContext {
     val fieldCtx: FieldContext
 }
 
-class OrderParamsFields(val data: OrderParamsFormPostData) : WithFieldContext {
-    val f = AlFields.order
-    val v = AlBackPile
-    override val fieldCtx = FieldContext()
-
-    val email = declareField(fieldCtx, data::email, f.email.title, v::validateEmail)
-    val contactName = declareField(fieldCtx, data::name, f.contactName.title, v::validateName)
-    val phone = declareField(fieldCtx, data::phone, f.phone.title, v::validatePhone)
-    val documentTitle = declareField(fieldCtx, data::documentTitle, f.documentTitle.title, v::validateDocumentTitle)
-    val documentDetails = declareField(fieldCtx, data::documentDetails, f.documentDetails.title, v::validateDocumentDetails, FieldType.TEXTAREA)
-    val numPages = declareField(fieldCtx, data::numPages, f.numPages.title, v::validateNumPages)
-    val numSources = declareField(fieldCtx, data::numSources, f.numSources.title, v::validateNumSources)
-}
+//class OrderParamsFields(val data: OrderParamsFormPostData) : WithFieldContext {
+//    val f = AlFields.order
+//    val v = AlBackPile
+//    override val fieldCtx = FieldContext()
+//
+//    val email = declareField(fieldCtx, data::email, f.email.title, v::validateEmail)
+//    val contactName = declareField(fieldCtx, data::name, f.contactName.title, v::validateName)
+//    val phone = declareField(fieldCtx, data::phone, f.phone.title, v::validatePhone)
+//    val documentTitle = declareField(fieldCtx, data::documentTitle, f.documentTitle.title, v::validateDocumentTitle)
+//    val documentDetails = declareField(fieldCtx, data::documentDetails, f.documentDetails.title, v::validateDocumentDetails, FieldType.TEXTAREA)
+//    val numPages = declareField(fieldCtx, data::numPages, f.numPages.title, v::validateNumPages)
+//    val numSources = declareField(fieldCtx, data::numSources, f.numSources.title, v::validateNumSources)
+//}
 
 val rctx get() = AlRequestContext.the
 

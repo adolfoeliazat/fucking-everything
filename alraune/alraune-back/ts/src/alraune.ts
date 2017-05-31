@@ -1,16 +1,15 @@
 /// <reference path="../../node_modules/@types/jquery/index.d.ts"/>
 /// <reference path="Pile.ts"/>
-/// <reference path="generated--by-backend.ts"/>
+/// <reference path="generated--ts-interop.ts"/>
 
-import p = Pile
-import clog = Pile.clog
-import byIDSingle = Pile.byIDSingle
-import getURLParam = Pile.getURLParam
-import bitch = Pile.bitch
-import setOnClick = Pile.setOnClick
-import preventAndStop = Pile.preventAndStop
-import state = Pile.state
-import modalShownAfterDoing = Pile.modalShownAfterDoing
+import a = alraune
+import clog = a.clog
+import byIDSingle = a.byRawIDSingle
+import getURLParam = a.getURLParam
+import bitch = a.bitch
+import preventAndStop = a.preventAndStop
+import state = a.state
+import modalShownAfterDoing = a.modalShownAfterDoing
 
 $(() => {
     initShit()
@@ -23,67 +22,11 @@ function exhausted(x: never): never {
 
 function initShit() {
     parseShitFromBackAndExecuteCommands()
-
-    // onClick(byIDSingle(AlDomid.topRightButton), () => {
-    //     clog("yeeeeeeeeaaaaaaaahhhhhhhhhh")
-    // })
 }
 
-function executeBackCommands(cmds: AlBackToFrontCommand.Type[]) {
+function executeBackCommands(cmds: a.AlBackToFrontCommandPile[]) {
     for (const cmd of cmds) {
-        clog(`cmd: ${cmd.opcode}`)
-        switch (cmd.opcode) {
-            case "SayWarmFuckYou": {
-                clog(`Fuck you, ${cmd.toWhom}`)
-            }break
-
-            case "SetClickHandler": {
-                const j = byIDSingle(cmd.targetDomid)
-                setOnClick(j, () => {
-                    executeBackCommands(cmd.actions)
-                })
-            }break
-
-            case "OpenModalOnElementClick": {
-                const jTriggerElement = byIDSingle(cmd.triggerElementDomid)
-                setOnClick(jTriggerElement, () => {
-                    const jModal = $(cmd.modalHtml)
-                    const jBody = $("body")
-                    const bodyUnderModalClass = "paddingRightScrollbarWidthImportant"
-
-                    jModal.on("show.bs.modal", () => {
-                        jBody.css("overflow-y", "hidden")
-                        jBody.addClass(bodyUnderModalClass)
-                    })
-
-                    jModal.on("shown.bs.modal", () => {
-                        state.modalShown.resumeTestFromSut()
-                    })
-
-                    jModal.on("hide.bs.modal", () => {})
-
-                    jModal.on("hidden.bs.modal", () => {
-                        jBody.css("overflow-y", "scroll")
-                        jBody.removeClass(bodyUnderModalClass)
-                        // locks.hidden.resumeTestFromSut()
-
-                        jModal.data("bs.modal", null)
-                        jModal.remove()
-                    })
-
-                    jBody.append(jModal)
-                    executeBackCommands(cmd.initCommands)
-                    ;(jModal as any).modal()
-                })
-            }break
-
-            case "CreateTextControl": {
-                const ctrl = new p.TextControl(cmd)
-                state.debug.propNameToTextControl[cmd.propName] = ctrl
-            }break
-
-            default: exhausted(cmd)
-        }
+        a.executeBackToFrontCommand(cmd)
     }
 }
 
@@ -126,7 +69,7 @@ function initDebugShit() {
     const jDrawer = $(`<div class="${drawerClass}"></div>`)
     jBody.append(jDrawer)
 
-    const currentMafValue = getURLParam(Pile.httpGetParam.maf)
+    const currentMafValue = getURLParam("maf")
 
     // declareMaf("maf401_createFile", "/orderFiles", async () => {
     //     clog("pizda")
@@ -151,22 +94,22 @@ function initDebugShit() {
     declareMaf("/orderParams", async function maf101() {
         clog(maf101.name)
         await modalShownAfterDoing(() => {
-            byIDSingle(AlDomid.topRightButton).click()
+            a.byDomidSingle("topRightButton").click()
         })
         clog("mooooodaaaaal shown")
 
-        const p = AlFormPropNames.OrderParams
-        const o = state.debug.propNameToTextControl
-        o[p.name].setValue("Fuckita Boobisto")
-        o[p.email].setValue("fuckita@mail.com")
-        o[p.phone].setValue("+38 (911) 4542877")
+        const entropy = a.nextIndexForTest()
+        const o = state.debug.nameToStringValueControl
+        o.name.setValue(`Fuckita Boobisto ${entropy}`)
+        o.email.setValue(`fuckita-${entropy}@mail.com`)
+        o.phone.setValue(`+38 (911) 4542877-${entropy}`)
     })
 
     function declareMaf(activeWhenPath: string, f: () => void) {
         const itemName = f.name
         if (window.location.href.startsWith(`https://alraune.local${activeWhenPath}?`)) {
             addItem(itemName, () => {
-                const newHref = Pile.amendHref(window.location, Pile.httpGetParam.maf, itemName)
+                const newHref = a.amendHref(window.location, "maf", itemName)
                 console.log("newHref =", newHref)
                 window.location.href = newHref
             })

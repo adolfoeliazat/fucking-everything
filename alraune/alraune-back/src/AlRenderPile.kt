@@ -3,7 +3,6 @@ package alraune.back
 import alraune.back.AlBackPile0.log
 import alraune.back.AlRenderPile.t
 import alraune.shared.AlDocumentCategories
-import alraune.shared.AlDomid
 import alraune.shared.AlSharedPile
 import alraune.shared.Color
 import vgrechka.*
@@ -221,16 +220,16 @@ object AlRenderPile {
         }
     }
 
-    fun renderFormBannerArea(hasErrors: Boolean, idSuffix: String = ""): Tag {
-        return kdiv.id(AlDomid.formBannerArea + idSuffix) {o ->
-            o - kdiv(Attrs(id = AlDomid.serviceFuckedUpBanner + idSuffix, className = AlCSS.errorBanner.className, style = Style(display = "none")))
-                .text(t("Service is temporarily fucked up, sorry...", "Сервис временно в жопе, просим прощения..."))
-
-            if (hasErrors)
-                o - kdiv.className(AlCSS.errorBanner)
-                    .text(t("TOTE", "Кое-что нужно исправить..."))
-        }
-    }
+//    fun renderFormBannerArea(hasErrors: Boolean, idSuffix: String = ""): Tag {
+//        return kdiv.id(AlDomid.formBannerArea + idSuffix) {o ->
+//            o - kdiv(Attrs(id = AlDomid.serviceFuckedUpBanner + idSuffix, className = AlCSS.errorBanner.className, style = Style(display = "none")))
+//                .text(t("Service is temporarily fucked up, sorry...", "Сервис временно в жопе, просим прощения..."))
+//
+//            if (hasErrors)
+//                o - kdiv.className(AlCSS.errorBanner)
+//                    .text(t("TOTE", "Кое-что нужно исправить..."))
+//        }
+//    }
 
 
 }

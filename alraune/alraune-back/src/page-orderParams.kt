@@ -7,8 +7,6 @@ import alraune.back.AlRenderPile.row
 import alraune.back.AlRenderPile.t
 import alraune.shared.*
 import vgrechka.*
-import java.util.*
-import kotlin.reflect.KProperty1
 
 fun handleGet_orderParams() {
     SpitOrderTabPage(OrderTab.PARAMS)
@@ -33,7 +31,7 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
             o- renderOrderTitle(rctx.order)
             o- kdiv.className(AlCSS.submitForReviewBanner){o->
                 o- kdiv(Style(flexGrow = "1")).text(t("TOTE", "Убедись, что все верно. Подредактируй, если нужно. Возможно, добавь файлы. А затем..."))
-                o- kbutton(Attrs(id = AlDomid.submitOrderForReviewButton, className = "btn btn-primary"), t("TOTE", "Отправить на проверку"))
+                o- kbutton(Attrs(domid = AlDomid.submitOrderForReviewButton, className = "btn btn-primary"), t("TOTE", "Отправить на проверку"))
             }
 
             o- kdiv(Style(position = "relative")){o->
@@ -54,7 +52,7 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
                         OrderTab.PARAMS -> fa.pencil
                         OrderTab.FILES -> fa.plus
                     }
-                    o- kbutton(Attrs(id = AlDomid.topRightButton, className = "btn btn-default",
+                    o- kbutton(Attrs(domid = AlDomid.topRightButton, className = "btn btn-default",
                                      style = Style(position = "absolute", right = "0", top = "0")))
                         .add(ki.className(topRightButtonIcon))
                 }
@@ -72,7 +70,7 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
             if (canEdit) {
                 exhaustive=when (activeTab) {
                     OrderTab.PARAMS -> {
-                        val initCommands = mutableListOf<AlBackToFrontCommand>()
+                        val initCommands = mutableListOf<AlBackToFrontCommandPile>()
                         val modalHtml = AlRenderPile.renderModal(ModalParams(
                             width = "80rem",
                             leftMarginColor = Color.BLUE_GRAY_300,
@@ -80,81 +78,44 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
                             body = insideMarkers(
                                 id = AlDomid.modalContent,
                                 content = kdiv{o->
-                                    fun myPostData() = rctx.postData.orderParams
-
-                                    fun renderField(validateFromPostData: () -> ValidationResult, prop: KProperty1<*, String>, title: String, fieldType: FieldType, initialValue: String): Renderable {
-                                        val vr = when {
-                                            rctx.isPost -> validateFromPostData()
-                                            else -> ValidationResult(sanitizedString = initialValue, error = null)
-                                        }
-
-                                        val domid = AlSharedPile.fieldDOMID(name = prop.name)
-                                        return kdiv.className("form-group"){o->
-                                            if (vr.error != null)
-                                                o.amend(Style(marginBottom = "0"))
-                                            o- klabel(text = title)
-                                            val control = when (fieldType) {
-                                                FieldType.TEXT -> renderTextControl(initCommands, propName = prop.name, value = vr.sanitizedString)
-                                                FieldType.TEXTAREA -> ktextarea(Attrs(id = domid, rows = 5, className = "form-control"), text = vr.sanitizedString)
-                                            }
-                                            o- kdiv(Style(position = "relative")){o->
-                                                o- control
-                                                if (vr.error != null) {
-                                                    o- kdiv(Style(marginTop = "5px", marginRight = "9px", textAlign = "right", color = "${Color.RED_700}"))
-                                                        .text(vr.error)
-                                                    // TODO:vgrechka Shift red circle if control has scrollbar
-                                                    o- kdiv(Style(width = "15px", height = "15px", backgroundColor = "${Color.RED_300}",
-                                                                   borderRadius = "10px", position = "absolute", top = "10px", right = "8px"))
-                                                }
-                                            }
-                                        }
-                                    }
-
-
+                                    val cf = ControlFucker(initCommands = initCommands)
 
                                     o- row(marginBottom = null){o->
-                                        o- col(4, renderField(
-                                            validateFromPostData = {AlBackPile.validateName(myPostData().name)},
-                                            prop = OrderParamsFormPostData::name,
-                                            initialValue = rctx.order.contactName,
+                                        o- col(4, cf.begin(
                                             title = t("TOTE", "Контактное имя"),
-                                            fieldType = FieldType.TEXT))
+                                            prop = AlFrontToBackCommandPile::name,
+                                            validate = AlBackPile::validateName,
+                                            virginValue = {rctx.order.contactName})
+                                            .text())
 
-                                        o- col(4, renderField(
-                                            validateFromPostData = {AlBackPile.validateEmail(myPostData().email)},
-                                            prop = OrderParamsFormPostData::email,
-                                            initialValue = rctx.order.email,
+                                        o- col(4, cf.begin(
                                             title = t("TOTE", "Почта"),
-                                            fieldType = FieldType.TEXT))
+                                            prop = AlFrontToBackCommandPile::email,
+                                            validate = AlBackPile::validateEmail,
+                                            virginValue = {rctx.order.email})
+                                            .text())
 
-                                        o- col(4, renderField(
-                                            validateFromPostData = {AlBackPile.validatePhone(myPostData().phone)},
-                                            prop = OrderParamsFormPostData::phone,
-                                            initialValue = rctx.order.phone,
+                                        o- col(4, cf.begin(
                                             title = t("TOTE", "Телефон"),
-                                            fieldType = FieldType.TEXT))
+                                            prop = AlFrontToBackCommandPile::phone,
+                                            validate = AlBackPile::validatePhone,
+                                            virginValue = {rctx.order.phone})
+                                            .text())
                                     }
 
                                     o- row(marginBottom = null){o->
-                                        o- col(4, kdiv.className("form-group"){o->
-                                            o- klabel(text = t("TOTE", "Тип документа"))
-                                            o- kselect(Attrs(id = AlSharedPile.fieldDOMID(name = OrderParamsFormPostData::documentType.name),
-                                                             className = "form-control")) {o->
-                                                val selectedDocumentType = when {
-                                                    rctx.isPost -> myPostData().documentType
-                                                    else -> AlDocumentType.ABSTRACT.name
-                                                }
-                                                for (value in AlDocumentType.values()) {
-                                                    o- koption(Attrs(value = value.name,
-                                                                     selected = selectedDocumentType == value.name),
-                                                               value.title)
-                                                }
-                                            }
-                                        })
-                                        o- col(8, kdiv.className("form-group"){o->
-                                            o- klabel(text = t("TOTE", "Категория"))
-                                            o- kdiv(Attrs(id = AlDomid.documentCategoryPickerContainer))
-                                        })
+//                                        o- col(4, cf.begin(
+//                                            title = t("TOTE", "Тип документа"),
+//                                            prop = OrderParamsFormPostData::documentType,
+//                                            validate = {imf("d6996f06-3773-48c8-9ab8-652a34bdc3dd")},
+//                                            virginValue = {rctx.order.documentTypeID})
+//                                            .select(values = AlDocumentType.values().map {
+//                                                SelectControlItem(value = it.name, title = it.title)
+//                                            }))
+//                                        o- col(8, kdiv.className("form-group"){o->
+//                                            o- klabel(text = t("TOTE", "Категория"))
+//                                            o- kdiv(Attrs(id = AlDomid.documentCategoryPickerContainer))
+//                                        })
                                     }
 //                                    o- fields.documentTitle.render()
 //                                    o- row(marginBottom = null){o->
@@ -167,10 +128,12 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
 
 
                         shitToFront2("298dca01-eee5-49e4-8234-1002676f67ba") {
-                            it.commands += OpenModalOnElementClickCommand(
-                                triggerElementDomid = AlDomid.topRightButton,
-                                modalHtml = modalHtml,
-                                initCommands = initCommands)
+                            it.commands += AlBackToFrontCommandPile().also {
+                                it.opcode = AlBackToFrontCommandOpcode.OpenModalOnElementClick
+                                it.domid = AlDomid.topRightButton
+                                it.html = modalHtml
+                                it.initCommands = initCommands
+                            }
                         }
                     }
                     OrderTab.FILES -> {
@@ -178,7 +141,6 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
                     }
                 }
             }
-
         }))
     }
 }
@@ -437,6 +399,11 @@ fun handlePost_setOrderParams() {
 //        submitButtonTitle = t("TOTE", "Продолжить")
 //    )
 //}
+
+
+
+
+
 
 
 

@@ -108,8 +108,27 @@ class Tag(val tag: String, var attrs: Attrs) : Renderable {
 
     override fun render(): String {
         return buildString {
+            val attrs = attrs
             append("<$tag")
-            attrs.id?.let {append(" id='$it'")}
+
+            var id = when {
+                attrs.id != null -> {
+                    check(attrs.domid == null)
+                    attrs.id
+                }
+                attrs.domid != null -> {
+                    check(attrs.id == null)
+                    attrs.domid.name
+                }
+                else -> null
+            }
+            if (id != null) {
+                attrs.idSuffix?.let {
+                    id += "-$it"
+                }
+            }
+            id?.let {append(" id='$it'")}
+
             attrs.className?.let {append(" class='$it'")}
             attrs.style?.let {append(" style='${it.render()}'")}
             attrs.type?.let {append(" type='$it'")}
@@ -221,6 +240,8 @@ class Text(val value: String) : Renderable {
 
 data class Attrs(
     val id: String? = null,
+    val domid: AlDomid? = null,
+    val idSuffix: String? = null,
     val className: String? = null,
     val style: Style? = null,
     val type: String? = null,

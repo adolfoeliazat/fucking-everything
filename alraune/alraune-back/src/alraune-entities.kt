@@ -4,8 +4,6 @@
 
 package alraune.back
 
-import alraune.shared.OrderParamsFormPostData
-import alraune.shared.OrderFileFormPostData
 import vgrechka.spew.*
 
 @GEntity(table = "ua_orders")
@@ -25,19 +23,19 @@ interface AlUAOrder : GCommonEntityFields {
     @GOneToMany(mappedBy = "order")
     var files: MutableList<AlUAOrderFile>
 
-    fun toForm() = OrderParamsFormPostData(
-        orderUUID = null,
-        email = email, name = contactName, phone = phone, documentType = documentTypeID, documentTitle = documentTitle,
-        documentDetails = documentDetails, documentCategory = documentCategoryID,
-        numPages = when (numPages) {
-            -1 -> ""
-            else -> numPages.toString()
-        },
-        numSources = when (numSources) {
-            -1 -> ""
-            else -> numSources.toString()
-        }
-    )
+//    fun toForm() = OrderParamsFormPostData(
+//        orderUUID = null,
+//        email = email, name = contactName, phone = phone, documentType = documentTypeID, documentTitle = documentTitle,
+//        documentDetails = documentDetails, documentCategory = documentCategoryID,
+//        numPages = when (numPages) {
+//            -1 -> ""
+//            else -> numPages.toString()
+//        },
+//        numSources = when (numSources) {
+//            -1 -> ""
+//            else -> numSources.toString()
+//        }
+//    )
 }
 
 interface AlUAOrderRepository : GRepository<AlUAOrder> {
@@ -55,9 +53,9 @@ interface AlUAOrderFile : GCommonEntityFields {
     var details: String
     @GManyToOne var order: AlUAOrder
 
-    fun toForm() = OrderFileFormPostData(
-        orderUUID = order.uuid, fileUUID = uuid,
-        name = name, title = title, details = details)
+//    fun toForm() = OrderFileFormPostData(
+//        orderUUID = order.uuid, fileUUID = uuid,
+//        name = name, title = title, details = details)
 }
 
 interface AlUAOrderFileRepository : GRepository<AlUAOrderFile> {

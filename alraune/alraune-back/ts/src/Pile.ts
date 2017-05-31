@@ -1,6 +1,75 @@
-/// <reference path="generated--by-backend.ts"/>
+/// <reference path="generated--ts-interop.ts"/>
 
-namespace Pile {
+namespace alraune {
+
+    export function unpileDomid(p: AlBackToFrontCommandPile): string {
+        let res
+        if (p.rawDomid)
+            res = p.rawDomid
+        else if (p.domid)
+            res = p.domid
+        else
+            throw new Error("I want a domid    6c8b79a1-d481-4842-9970-129b38a7eded")
+
+        if (p.domidSuffix)
+            res += `-${p.domidSuffix}`
+
+        return res
+    }
+
+    export function executeBackToFrontCommand(pile: AlBackToFrontCommandPile) {
+        clog(`cmd: ${pile.opcode}`)
+
+        if (pile.opcode === "CreateTextControl") {
+            // TODO:vgrechka Display error
+            const jInput = $(`<input type="text" class="form-control">`)
+            const me = {
+                setValue(value: string) {
+                    jInput.val(value)
+                }
+            }
+            ;(state.debug.nameToStringValueControl as any)[pile.name] = me
+            me.setValue(pile.stringValue)
+            byRawIDSingle(unpileDomid(pile)).replaceWith(jInput)
+            return
+        }
+
+        if (pile.opcode === "OpenModalOnElementClick") {
+            const jTriggerElement = byRawIDSingle(pile.domid)
+            setOnClick(jTriggerElement, () => {
+                const jModal = $(pile.html)
+                const jBody = $("body")
+                const bodyUnderModalClass = "paddingRightScrollbarWidthImportant"
+
+                jModal.on("show.bs.modal", () => {
+                    jBody.css("overflow-y", "hidden")
+                    jBody.addClass(bodyUnderModalClass)
+                })
+
+                jModal.on("shown.bs.modal", () => {
+                    state.modalShown.resumeTestFromSut()
+                })
+
+                jModal.on("hide.bs.modal", () => {})
+
+                jModal.on("hidden.bs.modal", () => {
+                    jBody.css("overflow-y", "scroll")
+                    jBody.removeClass(bodyUnderModalClass)
+                    // locks.hidden.resumeTestFromSut()
+
+                    jModal.data("bs.modal", null)
+                    jModal.remove()
+                })
+
+                jBody.append(jModal)
+                executeBackCommands(pile.initCommands)
+                ;(jModal as any).modal()
+            })
+            return
+        }
+
+        wtf(`opcode = ${pile.opcode}    184e8001-a4eb-49fc-accb-ad17dabc052f`)
+    }
 
     class ResolvableShit<T> {
         private _resolve: (value?: (PromiseLike<T> | T)) => void
@@ -82,8 +151,12 @@ namespace Pile {
         backShit: {} as BackShit,
         modalShown: new TestLock(),
         debug: {
-            propNameToTextControl: {} as {[key: string]: TextControl}
+            nameToStringValueControl: {} as {[key in AlFrontToBackCommandPileProp]: StringValueControl}
         }
+    }
+
+    export interface StringValueControl {
+        setValue(value: string): void
     }
 
     export const httpGetParam = {
@@ -119,11 +192,15 @@ namespace Pile {
         }
     }
 
-    export function byIDSingle(id: string): JQuery {
+    export function byRawIDSingle(id: string): JQuery {
         const j = byID(id)
         if (j.length != 1)
             bitch(`I want one element with ID [${id}], got ${j.length}`)
         return j
+    }
+
+    export function byDomidSingle(domid: AlDomid): JQuery {
+        return byRawIDSingle(domid)
     }
 
     export function byID(id: string): JQuery {
@@ -132,6 +209,10 @@ namespace Pile {
     }
 
     export function bitch(msg: string): never {
+        throw new Error(msg)
+    }
+
+    export function wtf(msg: string): never {
         throw new Error(msg)
     }
 
@@ -148,27 +229,19 @@ namespace Pile {
         e.stopPropagation()
     }
 
-    export class TextControl {
-        private jInput = $(`<input type="text" class="form-control">`)
-        private cmd: AlBackToFrontCommand.CreateTextControl
 
-        constructor(cmd: AlBackToFrontCommand.CreateTextControl) {
-            state.debug.propNameToTextControl[cmd.propName] = this
-            this.cmd = cmd
-            this.setValue(cmd.value)
-            byIDSingle(cmd.placeHolderDomid).replaceWith(this.jInput)
-        }
+    export function nextIndexForTest(): number {
+        let key = nextIndexForTest.name + ":value"
+        let res = parseInt(localStorage.getItem(key) || "1", 10)
+        localStorage.setItem(key, (res + 1).toString())
+        return res
+    }
 
-        setValue(value: string) {
-            this.jInput.val(value)
-        }
-
+    interface BackShit {
+        commands: AlBackToFrontCommandPile[]
     }
 }
 
-interface BackShit {
-    commands: AlBackToFrontCommand.Type[]
-}
 
 
 

@@ -1,5 +1,6 @@
 package alraune.shared
 
+import alraune.back.AlDomid
 import vgrechka.*
 import kotlin.properties.Delegates.notNull
 import kotlin.reflect.KProperty
@@ -45,10 +46,10 @@ object AlSharedPile {
         val maf by myName()
     }
 
-    fun beginContentMarkerForDOMID(id: String) =
+    fun beginContentMarkerForDOMID(id: AlDomid) =
         "<!--beginContent--$id--38a770eb-8115-4dce-a9f5-be77da11b8ed-->"
 
-    fun endContentMarkerForDOMID(id: String) =
+    fun endContentMarkerForDOMID(id: AlDomid) =
         "<!--endContent--$id--bae5759c-4e98-41e7-9b02-c32dea4939c2-->"
 
     enum class GetParam {
@@ -77,45 +78,15 @@ object AlSharedPile {
 
 }
 
-//interface WithMaybeOrderUUID {
-//    val orderUUID: String?
-//}
 
-// TODO:vgrechka Maybe just use freaking enum instead of all these `myName`?..
-object AlDomid {
-    val shitPassedFromBackToFront by myName()
-    val shitPassedFromBackToFront2 by myName()
-    val submitButton by myName()
-    val ticker by myName()
-    val replaceableContent by myName()
-    val documentCategoryPickerContainer by myName()
-    val filePickerContainer by myName()
-    val submitOrderForReviewButton by myName()
-    val topRightButton by myName()
-    val orderParamsModal by myName()
-    val closeModalButton by myName()
-    val modalContent by myName()
-    val formBannerArea by myName()
-    val formFooterArea by myName()
-    val serviceFuckedUpBanner by myName()
-    val deleteItemModal by myName()
-    val deleteItemTicker by myName()
-    val deleteItemSubmitButton by myName()
-    val deleteItemCancelButton by myName()
-    val downloadItemIcon by myName()
-    val editItemIcon by myName()
-    val deleteItemIcon by myName()
-    val deleteItemModalContent by myName()
-    val itemShit by myName()
+enum class AlPageID {
+    landing,
+    orderCreationForm,
+    orderParams,
+    orderFiles
 }
 
-object AlPageID {
-    val landing by myName()
-    val orderCreationForm by myName()
-    val orderParams by myName()
-    val orderFiles by myName()
-}
-
+// TODO:vgrechka Turn into enum
 object AlPagePath {
     val debug_post_dumpStackByID by slashMyName()
     val debug_post_dumpBackCodePath by slashMyName()
@@ -134,31 +105,6 @@ class AlGetParams(
     val mab: String? = null
 )
 
-// TODO:vgrechka Separate OrderCreationFormPostData, without orderUUID. Here orderUUID should be non-nullable
-@Ser data class OrderParamsFormPostData(
-    val orderUUID: String?,
-    val email: String,
-    val name: String,
-    val phone: String,
-    val documentType: String,
-    val documentTitle: String,
-    val documentDetails: String,
-    val documentCategory: String,
-    val numPages: String,
-    val numSources: String
-)
-
-@Ser data class OrderFileFormPostData(
-    val orderUUID: String,
-    val fileUUID: String?,
-    val name: String,
-    val title: String,
-    val details: String
-)
-
-@Ser data class DeleteItemPostData(
-    val itemUUID: String
-)
 
 @Ser data class DumpStackByIDPostData(
     val stackID: String
@@ -174,7 +120,7 @@ class PieceOfShitFromBack {
     var baseURL = "boobs-baseURL"
     var logOfShitters = ""
     val debug_domElementStackTraces = true
-    var pageID: String? = null
+    var pageID: AlPageID? = null
     var postPath: String = "boobs-postPath"
     var documentCategoryID = "boobs-documentCategoryID"
     var historyPushState: String? = null
