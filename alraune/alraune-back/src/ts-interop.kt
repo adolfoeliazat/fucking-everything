@@ -8,6 +8,7 @@ import vgrechka.spew.*
 class AlBackToFrontCommandPile {
     lateinit var opcode: AlBackToFrontCommandOpcode
     var name: String? = null
+    var title: String? = null
     var stringValue: String? = null
     var error: String? = null
     var titledValues: MutableList<TitledValue>? = null
@@ -16,6 +17,7 @@ class AlBackToFrontCommandPile {
     var domidSuffix: String? = null
     var html: String? = null
     var initCommands: MutableList<AlBackToFrontCommandPile>? = null
+    var putInFormGroup: Boolean? = null
 }
 
 enum class AlBackToFrontCommandOpcode {

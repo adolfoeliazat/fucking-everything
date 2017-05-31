@@ -78,6 +78,10 @@ class AlrauneTSInteropSpew : Spew {
                     text = text.dropLast(1)
                 if (text == "String")
                     return "string"
+                if (text == "Boolean")
+                    return "boolean"
+                if (text == "Int")
+                    return "number"
                 run {
                     val re = Regex("(?:Mutable)?List<(.*?)>")
                     re.matchEntire(text)?.let {

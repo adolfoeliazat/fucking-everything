@@ -22,7 +22,23 @@ namespace alraune {
 
         if (pile.opcode === "CreateTextControl") {
             // TODO:vgrechka Display error
-            const jInput = $(`<input type="text" class="form-control">`)
+
+            let html = ""
+            if (pile.putInFormGroup) {
+                let formGroupStyle = ""
+                if (pile.error)
+                    formGroupStyle += "margin-bottom: 0;"
+                html += `<div class="form-group" style="${formGroupStyle}">`
+                html += `<label>${pile.title}</label>`
+            }
+
+            html += `<input type="text" class="form-control">`
+
+            if (pile.putInFormGroup)
+                html += `</div>`
+
+            const jShit = $(html)
+            const jInput = JQPile.ensureSingle(jShit.find("input"))
             const me = {
                 setValue(value: string) {
                     jInput.val(value)
@@ -30,7 +46,7 @@ namespace alraune {
             }
             ;(state.debug.nameToStringValueControl as any)[pile.name] = me
             me.setValue(pile.stringValue)
-            byRawIDSingle(unpileDomid(pile)).replaceWith(jInput)
+            byRawIDSingle(unpileDomid(pile)).replaceWith(jShit)
             return
         }
 
@@ -229,7 +245,6 @@ namespace alraune {
         e.stopPropagation()
     }
 
-
     export function nextIndexForTest(): number {
         let key = nextIndexForTest.name + ":value"
         let res = parseInt(localStorage.getItem(key) || "1", 10)
@@ -239,6 +254,14 @@ namespace alraune {
 
     interface BackShit {
         commands: AlBackToFrontCommandPile[]
+    }
+
+    export namespace JQPile {
+        export function ensureSingle(j: JQuery): JQuery {
+            if (j.length != 1)
+                bitch(`I want one and only one element, got ${j.length}`)
+            return j
+        }
     }
 }
 

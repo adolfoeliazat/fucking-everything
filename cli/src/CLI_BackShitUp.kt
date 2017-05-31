@@ -28,18 +28,20 @@ object CLI_BackShitUp {
     @JvmStatic
     fun main(args: Array<String>) {
         BackShitUpStuff {
-            it.recreateTFVCOutDir()
-            it.recreateReducedOutDir()
-            it.copyIDEASettings()
-            it.dumpPostgres()
-            it.zipFuckingEverything()
-            it.zipAPS()
-            it.zipFuckingPrivateEverything()
-            it.hashShit()
+            Pieces.cleanPrepareArchives(it)
             it.uploadShitToDropbox()
             it.uploadShitToGoogleDrive()
             it.uploadShitToOneDrive()
             it.checkInToTFVC()
+        }
+    }
+}
+
+object CLI_BackShitUp_DontUpload {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        BackShitUpStuff {
+            Pieces.cleanPrepareArchives(it)
         }
     }
 }
@@ -51,6 +53,19 @@ object CLI_BackShitUp_Partial {
             it.uploadShitToOneDrive()
             it.checkInToTFVC()
         }
+    }
+}
+
+private object Pieces {
+    fun cleanPrepareArchives(it: BackShitUpStuff) {
+        it.recreateTFVCOutDir()
+        it.recreateReducedOutDir()
+        it.copyIDEASettings()
+        it.dumpPostgres()
+        it.zipFuckingEverything()
+        it.zipAPS()
+        it.zipFuckingPrivateEverything()
+        it.hashShit()
     }
 }
 

@@ -16,10 +16,14 @@ class ControlFucker(val initCommands: MutableList<AlBackToFrontCommandPile>) {
             rctx.isPost -> validate(prop.get(rctx.postData.pile))
             else -> ValidationResult(virginValue(), null)
         }
+
         init {
             initCommands += cmd
             cmd.rawDomid = UUID.randomUUID().toString()
             cmd.name = prop.name
+            cmd.error = vr.error
+            cmd.putInFormGroup = true
+            cmd.title = title
         }
 
         fun text(): Renderable {
