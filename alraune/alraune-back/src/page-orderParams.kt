@@ -112,6 +112,12 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
                                             .select(values = AlDocumentType.values().map {
                                                 TitledValue(value = it.name, title = it.title)
                                             }))
+                                        o- col(4, cf.begin(
+                                            title = t("TOTE", "Категория"),
+                                            prop = AlFrontToBackCommandPile::documentCategory,
+                                            validate = {imf("a60d0581-9eb1-4bcc-bcb7-aad9de55cd62")},
+                                            virginValue = {rctx.order.documentCategoryID})
+                                            .documentCategoryPicker())
 //                                        o- col(8, kdiv.className("form-group"){o->
 //                                            o- klabel(text = t("TOTE", "Категория"))
 //                                            o- kdiv(Attrs(id = AlDomid.documentCategoryPickerContainer))

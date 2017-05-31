@@ -15,6 +15,7 @@
         <pathelement location="out/production/3rd-party-web-apis"/>
         <pathelement location="out/production/spew-run-configs"/>
         <pathelement location="out/production/alraune-back-0"/>
+        <pathelement location="out/production/alraune-back-1"/>
         <fileset dir="lib" includes="*.jar"/>
         <fileset dir="lib-gradle" includes="*.jar" excludes="*-sources.jar"/>
     </path>

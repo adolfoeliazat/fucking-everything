@@ -2,6 +2,7 @@
 
 namespace alraune {
 
+
     export function unpileDomid(p: AlBackToFrontCommandPile): string {
         let res
         if (p.rawDomid)
@@ -20,7 +21,14 @@ namespace alraune {
     export function executeBackToFrontCommand(pile: AlBackToFrontCommandPile) {
         clog(`cmd: ${pile.opcode}`)
 
+        function mywtf(msg: string): never {
+            console.warn("pile", pile)
+            return wtf(msg)
+        }
+
         if (pile.opcode === "CreateControl") {
+            let control: any
+
             let html = ""
             html += `<div style="position: relative;">`
 
@@ -35,9 +43,13 @@ namespace alraune {
                 }
                 html += `</select>`
             }
-            else {
-                wtf(`pile.controlType = ${pile.controlType}    23b6c33d-f7ab-491f-a761-9b47d24cbdb3`)
+            else if (pile.controlType === "DocumentCategoryPicker") {
+                html += `pizdaaaaaaaa`
+                control = {
+
+                }
             }
+            else mywtf(`23b6c33d-f7ab-491f-a761-9b47d24cbdb3`)
 
             if (pile.error) {
                 html += `<div style="margin-top: 5px;
@@ -67,21 +79,30 @@ namespace alraune {
             }
 
             const jShit = $(html)
-            let jControl: JQuery
-            if (pile.controlType === "Text")
-                jControl = JQPile.ensureSingle(jShit.find("input"))
-            else if (pile.controlType === "Select")
-                jControl = JQPile.ensureSingle(jShit.find("select"))
-            else
-                wtf(`f090486c-fb4e-4da7-889a-f44fbfc5faa9`)
 
-            const me = {
-                setValue(value: string) {
-                    jControl.val(value)
+            if (!control) {
+                if (pile.controlType === "Text" || pile.controlType === "Select") {
+                    let selector: string; {
+                        if (pile.controlType === "Text")
+                            selector = "input"
+                        else if (pile.controlType === "Select")
+                            selector = "select"
+                        else
+                            selector = mywtf(`f090486c-fb4e-4da7-889a-f44fbfc5faa9`)
+                    }
+                    const jControl = JQPile.ensureSingle(jShit.find(selector))
+
+                    control = {
+                        __isStringValueControl: true,
+                        setValue(value: string) {jControl.val(value)}
+                    }
+
+                    control.setValue(pile.stringValue)
                 }
+                else mywtf(`adf4ab63-23c2-40bc-b059-c0232cabcdb2`)
             }
-            ;(state.debug.nameToStringValueControl as any)[pile.name] = me
-            me.setValue(pile.stringValue)
+
+            ;(state.debug.nameToControl as any)[pile.name] = control
             byRawIDSingle(unpileDomid(pile)).replaceWith(jShit)
             return
         }
@@ -180,6 +201,14 @@ namespace alraune {
         }
     }
 
+    export const state = {
+        backShit: {} as BackShit,
+        modalShown: new TestLock(),
+        debug: {
+            nameToControl: {} as {[Key in AlFrontToBackCommandPileProp]?: any}
+        }
+    }
+
     function orTestTimeout<T>({promise, ms} : {promise: Promise<T>, ms: number}): Promise<T> {
         const shit = new ResolvableShit<T>()
         const thePromiseName = (promise as any).name || "shit"
@@ -199,16 +228,15 @@ namespace alraune {
         await state.modalShown.pauseTestFromTest()
     }
 
-    export const state = {
-        backShit: {} as BackShit,
-        modalShown: new TestLock(),
-        debug: {
-            nameToStringValueControl: {} as {[key in AlFrontToBackCommandPileProp]: StringValueControl}
-        }
-    }
-
     export interface StringValueControl {
         setValue(value: string): void
+    }
+
+    export function asStringValueControl(x: any): StringValueControl {
+        if (x && x.__isStringValueControl)
+            return x as StringValueControl
+        else
+            return wtf("Not as StringValueControl", {x})
     }
 
     export const httpGetParam = {
@@ -264,7 +292,9 @@ namespace alraune {
         throw new Error(msg)
     }
 
-    export function wtf(msg: string): never {
+    export function wtf(msg: string, ctx: any = undefined): never {
+        if (ctx !== undefined)
+            console.warn("ctx", ctx)
         throw new Error(msg)
     }
 
@@ -309,6 +339,16 @@ namespace alraune {
             .replace("\"", "&#34;")
     }
 
+    export const debug = {
+        setControlValue(name: AlFrontToBackCommandPileProp, value: any) {
+            const ctrl = state.debug.nameToControl[name]
+            if (typeof value === "string") {
+                asStringValueControl(ctrl).setValue(value)
+            }
+            else wtf("54da9c71-2b48-40dc-b265-17d5809ee013")
+        }
+    }
+
     const Color = {
         // https://www.google.com/design/spec/style/color.html#color-color-palette
         BLACK: "#000000", BLACK_BOOT: "#333333", WHITE: "#ffffff",
@@ -333,6 +373,7 @@ namespace alraune {
         BLUE_GRAY_50: "#eceff1", BLUE_GRAY_100: "#cfd8dc", BLUE_GRAY_200: "#b0bec5", BLUE_GRAY_300: "#90a4ae", BLUE_GRAY_400: "#78909c", BLUE_GRAY_500: "#607d8b", BLUE_GRAY_600: "#546e7a", BLUE_GRAY_700: "#455a64", BLUE_GRAY_800: "#37474f", BLUE_GRAY_900: "#263238",
         RED: "red", GREEN: "green", BLUE: "blue", ROSYBROWN: "rosybrown"
     }
+
 }
 
 

@@ -99,10 +99,11 @@ function initDebugShit() {
         clog("mooooodaaaaal shown")
 
         const entropy = a.nextIndexForTest()
-        const o = state.debug.nameToStringValueControl
-        o.name.setValue(`Fuckita Boobisto ${entropy}`)
-        o.email.setValue(`fuckita-${entropy}@mail.com`)
-        o.phone.setValue(`+38 (911) 4542877-${entropy}`)
+        const s = a.debug.setControlValue; {
+            s("name", `Fuckita Boobisto ${entropy}`)
+            s("email", `fuckita-${entropy}@mail.com`)
+            s("phone", `+38 (911) 4542877-${entropy}`)
+        }
     })
 
     function declareMaf(activeWhenPath: string, f: () => void) {

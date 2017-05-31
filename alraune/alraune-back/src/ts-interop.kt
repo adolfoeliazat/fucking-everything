@@ -27,9 +27,7 @@ enum class AlBackToFrontCommandOpcode {
 }
 
 enum class AlControlType {
-    Text,
-    TextArea,
-    Select
+    Text, TextArea, Select, DocumentCategoryPicker
 }
 
 class TitledValue(val value: String, val title: String)

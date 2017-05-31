@@ -120,5 +120,6 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="alraune-back-1" />
   </component>
 </module>

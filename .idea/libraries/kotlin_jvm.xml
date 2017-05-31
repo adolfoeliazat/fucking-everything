@@ -3,11 +3,16 @@
     <CLASSES>
       <root url="jar://E:/febig/lib/kotlin/current/kotlin-reflect.jar!/" />
       <root url="jar://E:/febig/lib/kotlin/current/kotlin-stdlib.jar!/" />
+      <root url="jar://$KOTLIN_BUNDLED$/lib/kotlin-test.jar!/" />
+      <root url="jar://$KOTLIN_BUNDLED$/lib/kotlin-stdlib-jre7.jar!/" />
+      <root url="jar://$KOTLIN_BUNDLED$/lib/kotlin-stdlib-jre8.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://E:/febig/lib/kotlin/current/kotlin-stdlib-sources.jar!/" />
       <root url="jar://E:/febig/lib/kotlin/current/kotlin-stdlib-sources.jar!/" />
+      <root url="jar://$KOTLIN_BUNDLED$/lib/kotlin-stdlib-jre7-sources.jar!/" />
+      <root url="jar://$KOTLIN_BUNDLED$/lib/kotlin-stdlib-jre8-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

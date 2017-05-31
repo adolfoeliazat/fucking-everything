@@ -1,5 +1,6 @@
 package vgrechka.spew
 
+import alraune.shared.AlUADocumentCategories
 import org.jetbrains.kotlin.psi.KtClass
 import org.jetbrains.kotlin.psi.KtEnumEntry
 import org.jetbrains.kotlin.psi.KtFile
@@ -62,6 +63,41 @@ class AlrauneTSInteropSpew : Spew {
                     for (param in params) {
                         gen.member(param.name!!)
                     }
+                }
+
+                run {
+                    ln("")
+                    ln("    export interface AlUADocumentCategory {")
+                    ln("        id: string")
+                    ln("        title: string")
+                    ln("        children: AlUADocumentCategory[]")
+                    ln("    }")
+                    ln("")
+
+                    ln("    export class AlUADocumentCategories {")
+                    ln("        static miscID = \"102\"")
+                    ln("        static humanitiesID = \"226\"")
+                    ln("        static linguisticsID = \"238\"")
+                    ln("        static technicalID = \"174\"")
+                    ln("        static programmingID = \"186\"")
+                    ln("")
+                    ln("        static root: AlUADocumentCategory = ")
+                    fun descend(cat: AlUADocumentCategories.Category, indent: Int) {
+                        out.append(" ".repeat(indent))
+                        out.append("{id: \"${cat.id}\", title: \"${cat.title}\", children: [")
+                        if (cat.children.isNotEmpty())
+                            ln("")
+                        for (child in cat.children) {
+                            descend(child, indent + 4)
+                        }
+                        if (cat.children.isNotEmpty())
+                            out.append(" ".repeat(indent))
+                        ln("]},")
+                    }
+                    descend(AlUADocumentCategories.root, indent = 12)
+                    out.deleteLastCommaBeforeNewLine()
+                    ln("    }")
+
                 }
 
                 ln("}")

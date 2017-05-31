@@ -2,7 +2,7 @@ package alraune.back
 
 import alraune.back.AlBackPile0.log
 import alraune.back.AlRenderPile.t
-import alraune.shared.AlDocumentCategories
+import alraune.shared.AlUADocumentCategories
 import alraune.shared.AlSharedPile
 import alraune.shared.Color
 import vgrechka.*
@@ -107,9 +107,9 @@ object AlRenderPile {
             o- row{o->
                 o- col(3, f.documentType.title, AlDocumentType.valueOf(order.documentTypeID).title)
                 o- col(6, f.documentCategory.title, run {
-                    var cat = AlDocumentCategories.findByIDOrBitch(order.documentCategoryID)
+                    var cat = AlUADocumentCategories.findByIDOrBitch(order.documentCategoryID)
                     val steps = mutableListOf<String>()
-                    while (cat.id != AlDocumentCategories.root.id) {
+                    while (cat.id != AlUADocumentCategories.root.id) {
                         steps += cat.title
                         cat = cat.parent!!
                     }

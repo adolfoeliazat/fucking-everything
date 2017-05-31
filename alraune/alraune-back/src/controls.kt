@@ -28,17 +28,18 @@ class ControlFucker(val initCommands: MutableList<AlBackToFrontCommandPile>) {
             cmd.title = title
         }
 
-        fun text(): Renderable {
-            cmd.controlType = AlControlType.Text
+        private fun simple(type: AlControlType): Renderable {
+            cmd.controlType = type
             cmd.stringValue = vr.sanitizedString
             return render()
         }
 
+        fun text() = simple(AlControlType.Text)
+        fun documentCategoryPicker() = simple(AlControlType.DocumentCategoryPicker)
+
         fun select(values: List<TitledValue>): Renderable {
-            cmd.controlType = AlControlType.Select
-            cmd.stringValue = vr.sanitizedString
             cmd.titledValues = values
-            return render()
+            return simple(AlControlType.Select)
         }
 
         private fun render(): Renderable {
