@@ -20,10 +20,25 @@ namespace alraune {
     export function executeBackToFrontCommand(pile: AlBackToFrontCommandPile) {
         clog(`cmd: ${pile.opcode}`)
 
-        if (pile.opcode === "CreateTextControl") {
+        if (pile.opcode === "CreateControl") {
             let html = ""
             html += `<div style="position: relative;">`
-            html += `<input type="text" class="form-control">`
+
+            if (pile.controlType === "Text") {
+                html += `<input type="text" class="form-control">`
+            }
+            else if (pile.controlType === "Select") {
+                html += `<select class="form-control">`
+                for (const item of pile.titledValues) {
+                    const selected = item.value === pile.stringValue ? "selected" : ""
+                    html += `<option value="${escapeHTML(item.value)}" ${selected}>${escapeHTML(item.title)}</option>`
+                }
+                html += `</select>`
+            }
+            else {
+                wtf(`pile.controlType = ${pile.controlType}    23b6c33d-f7ab-491f-a761-9b47d24cbdb3`)
+            }
+
             if (pile.error) {
                 html += `<div style="margin-top: 5px;
                                      margin-right: 9px;
@@ -52,10 +67,17 @@ namespace alraune {
             }
 
             const jShit = $(html)
-            const jInput = JQPile.ensureSingle(jShit.find("input"))
+            let jControl: JQuery
+            if (pile.controlType === "Text")
+                jControl = JQPile.ensureSingle(jShit.find("input"))
+            else if (pile.controlType === "Select")
+                jControl = JQPile.ensureSingle(jShit.find("select"))
+            else
+                wtf(`f090486c-fb4e-4da7-889a-f44fbfc5faa9`)
+
             const me = {
                 setValue(value: string) {
-                    jInput.val(value)
+                    jControl.val(value)
                 }
             }
             ;(state.debug.nameToStringValueControl as any)[pile.name] = me

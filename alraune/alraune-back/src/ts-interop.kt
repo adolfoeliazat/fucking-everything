@@ -11,20 +11,25 @@ class AlBackToFrontCommandPile {
     var title: String? = null
     var stringValue: String? = null
     var error: String? = null
-    var titledValues: MutableList<TitledValue>? = null
+    var titledValues: List<TitledValue>? = null
     var rawDomid: String? = null
     var domid: AlDomid? = null
     var domidSuffix: String? = null
     var html: String? = null
     var initCommands: MutableList<AlBackToFrontCommandPile>? = null
     var putInFormGroup: Boolean? = null
+    var controlType: AlControlType? = null
 }
 
 enum class AlBackToFrontCommandOpcode {
-    CreateTextControl,
-    CreateTextAreaControl,
-    CreateSelectControl,
+    CreateControl,
     OpenModalOnElementClick
+}
+
+enum class AlControlType {
+    Text,
+    TextArea,
+    Select
 }
 
 class TitledValue(val value: String, val title: String)

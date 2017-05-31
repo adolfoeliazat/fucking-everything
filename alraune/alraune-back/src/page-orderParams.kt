@@ -104,14 +104,14 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
                                     }
 
                                     o- row(marginBottom = null){o->
-//                                        o- col(4, cf.begin(
-//                                            title = t("TOTE", "Тип документа"),
-//                                            prop = OrderParamsFormPostData::documentType,
-//                                            validate = {imf("d6996f06-3773-48c8-9ab8-652a34bdc3dd")},
-//                                            virginValue = {rctx.order.documentTypeID})
-//                                            .select(values = AlDocumentType.values().map {
-//                                                SelectControlItem(value = it.name, title = it.title)
-//                                            }))
+                                        o- col(4, cf.begin(
+                                            title = t("TOTE", "Тип документа"),
+                                            prop = AlFrontToBackCommandPile::documentType,
+                                            validate = {imf("d6996f06-3773-48c8-9ab8-652a34bdc3dd")},
+                                            virginValue = {rctx.order.documentTypeID})
+                                            .select(values = AlDocumentType.values().map {
+                                                TitledValue(value = it.name, title = it.title)
+                                            }))
 //                                        o- col(8, kdiv.className("form-group"){o->
 //                                            o- klabel(text = t("TOTE", "Категория"))
 //                                            o- kdiv(Attrs(id = AlDomid.documentCategoryPickerContainer))

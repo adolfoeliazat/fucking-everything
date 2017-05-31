@@ -19,23 +19,27 @@ class ControlFucker(val initCommands: MutableList<AlBackToFrontCommandPile>) {
 
         init {
             initCommands += cmd
+            cmd.opcode = AlBackToFrontCommandOpcode.CreateControl
             cmd.rawDomid = UUID.randomUUID().toString()
             cmd.name = prop.name
             cmd.error = vr.error
-            cmd.error = "pizdets"
+//            cmd.error = "pizdets"
             cmd.putInFormGroup = true
             cmd.title = title
         }
 
         fun text(): Renderable {
-            cmd.opcode = AlBackToFrontCommandOpcode.CreateTextControl
+            cmd.controlType = AlControlType.Text
             cmd.stringValue = vr.sanitizedString
             return render()
         }
 
-//        fun select(values: List<SelectControlItem>): Renderable {
-//
-//        }
+        fun select(values: List<TitledValue>): Renderable {
+            cmd.controlType = AlControlType.Select
+            cmd.stringValue = vr.sanitizedString
+            cmd.titledValues = values
+            return render()
+        }
 
         private fun render(): Renderable {
             return kdiv(Attrs(id = cmd.rawDomid))
