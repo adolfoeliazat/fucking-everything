@@ -71,6 +71,7 @@ class AlrauneTSInteropSpew : Spew {
                     ln("        id: string")
                     ln("        title: string")
                     ln("        children: AlUADocumentCategory[]")
+                    ln("        parent?: AlUADocumentCategory")
                     ln("    }")
                     ln("")
 
@@ -96,8 +97,19 @@ class AlrauneTSInteropSpew : Spew {
                     }
                     descend(AlUADocumentCategories.root, indent = 12)
                     out.deleteLastCommaBeforeNewLine()
-                    ln("    }")
 
+                    ln("        static init() {")
+                    ln("            descend(this.root)")
+                    ln("                function descend(cat: AlUADocumentCategory) {")
+                    ln("                    for (const child of cat.children) {")
+                    ln("                        child.parent = cat")
+                    ln("                        descend(child)")
+                    ln("                    }")
+                    ln("                }")
+                    ln("            }")
+                    ln("        }")
+
+                    ln("        AlUADocumentCategories.init()")
                 }
 
                 ln("}")
