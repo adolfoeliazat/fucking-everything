@@ -22,6 +22,7 @@ class ControlFucker(val initCommands: MutableList<AlBackToFrontCommandPile>) {
             cmd.rawDomid = UUID.randomUUID().toString()
             cmd.name = prop.name
             cmd.error = vr.error
+            cmd.error = "pizdets"
             cmd.putInFormGroup = true
             cmd.title = title
         }
