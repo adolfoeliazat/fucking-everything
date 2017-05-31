@@ -2,6 +2,9 @@
 
 namespace alraune {
 
+    function run<T>(f: () => T): T {
+        return f()
+    }
 
     export function unpileDomid(p: AlBackToFrontCommandPile): string {
         let res
@@ -21,13 +24,9 @@ namespace alraune {
     export function executeBackToFrontCommand(pile: AlBackToFrontCommandPile) {
         clog(`cmd: ${pile.opcode}`)
 
-        function mywtf(msg: string): never {
-            console.warn("pile", pile)
-            return wtf(msg)
-        }
-
         if (pile.opcode === "CreateControl") {
-            let control: any
+            let control: object | undefined
+            let afterControlDOMCreated = () => {}
 
             let html = ""
             html += `<div style="position: relative;">`
@@ -44,12 +43,115 @@ namespace alraune {
                 html += `</select>`
             }
             else if (pile.controlType === "DocumentCategoryPicker") {
-                html += `pizdaaaaaaaa`
-                control = {
+                const containerDomid = nextUID()
+                const selectID = nextUID()
+                const backButtonID = nextUID()
+                const pathExceptLast = <AlUADocumentCategory[]>[]
 
+                html += `<div id="${containerDomid}"></div>`
+                control = new class implements StringValueControl {
+                    setValue(value: string): void {
+                        imf("a319021a-b377-4128-86ce-f2d217f872e5")
+                    }
+                }
+
+                afterControlDOMCreated = () => {
+                    let category = findCategoryOrBitch(pile.stringValue)
+                    while (true) {
+                        pathExceptLast.push(category)
+                        const parent = category.parent
+                        if (parent == null)
+                            break
+                        else
+                            category = parent
+                    }
+                    pathExceptLast.reverse()
+                    const last = pathExceptLast[pathExceptLast.length - 1]
+                    pathExceptLast.pop()
+
+                    updateDocumentCategoryPicker()
+
+                    selectJQ().val(last.id)
+                }
+
+                function selectJQ(): JQuery {
+                    return byIDSingle(selectID)
+                }
+
+                function updateDocumentCategoryPicker() {
+                    const containerJQ = byIDSingle(containerDomid)
+                    containerJQ.html(run(() => {
+                        let res = ""
+                        function ln(x: string) {res += `${x}\n`}
+
+                        const items = pathExceptLast[pathExceptLast.length - 1].children
+                        ln(`<div style='display: flex; align-items: center;'>`)
+                        const pathToShow = pathExceptLast.slice(1)
+                        for (const step of pathToShow) {
+                            ln(`<div style='margin-right: 0.5rem;'>${step.title}</div>`)
+                        }
+                        if (pathToShow.length > 0) {
+                            ln(`<button class='btn btn-default' style='margin-right: 0.5rem;' id='${backButtonID}'>`)
+                            ln(`<i class='fa fa-arrow-left'></i></button>`)
+                        }
+                        if (items.length > 0) {
+                            ln(`<select class='form-control' id='${selectID}'>`)
+                            for (const item of items) {
+                                ln(`<option value='${item.id}'>${item.title}</option>`)
+                            }
+                            ln(`</select>`)
+                        }
+                        return res
+                    }))
+
+                    selectJQ().on("change", () => {
+                        handleSelectChange()
+                    })
+
+                    const backButtonJQ = byIDNoneOrSingle(backButtonID)
+                    if (backButtonJQ !== undefined) {
+                        backButtonJQ.on("click", () => {
+                            handleBackButtonClick()
+                        })
+                    }
+                }
+
+                function handleBackButtonClick() {
+                    pathExceptLast.pop()
+                    updateDocumentCategoryPicker()
+                }
+
+                function handleSelectChange() {
+                    const categoryID = getSelectedCategoryID()
+                    const item = pathExceptLast[pathExceptLast.length - 1].children
+                        .find(x => x.id == categoryID)
+                        || wtf("5162f6ed-31bc-4e89-8088-5528b9ea43d5")
+                    if (item.children.length > 0) {
+                        pathExceptLast.push(item)
+                        updateDocumentCategoryPicker()
+                    }
+                }
+
+                function getSelectedCategoryID(): string {
+                    return selectJQ().val() || wtf("975e6a00-5798-44dd-a704-5e9f47e1e678")
+                }
+
+                function findCategoryOrBitch(id: string): AlUADocumentCategory {
+                    return maybeFindByID(id, AlUADocumentCategories.root) || bitch("id = $id    c6606a3c-c677-4f8d-8a0b-b1336efbd3fb")
+
+                    function maybeFindByID(id: string, parent: AlUADocumentCategory): AlUADocumentCategory | undefined {
+                        for (const child of parent.children) {
+                            if (child.id === id)
+                                return child
+                            else {
+                                let x = maybeFindByID(id, child)
+                                if (x) return x
+                            }
+                        }
+                    }
                 }
             }
-            else mywtf(`23b6c33d-f7ab-491f-a761-9b47d24cbdb3`)
+            else wtf(`23b6c33d-f7ab-491f-a761-9b47d24cbdb3`, pile)
 
             if (pile.error) {
                 html += `<div style="margin-top: 5px;
@@ -82,50 +184,51 @@ namespace alraune {
 
             if (!control) {
                 if (pile.controlType === "Text" || pile.controlType === "Select") {
-                    let selector: string; {
+                    const selector = run(()=>{
                         if (pile.controlType === "Text")
-                            selector = "input"
+                            return "input"
                         else if (pile.controlType === "Select")
-                            selector = "select"
+                            return "select"
                         else
-                            selector = mywtf(`f090486c-fb4e-4da7-889a-f44fbfc5faa9`)
-                    }
+                            return wtf(`f090486c-fb4e-4da7-889a-f44fbfc5faa9`, pile)
+                    })
                     const jControl = JQPile.ensureSingle(jShit.find(selector))
 
-                    control = {
-                        __isStringValueControl: true,
+                    const co = new class implements StringValueControl {
+                        __isStringValueControl = true
                         setValue(value: string) {jControl.val(value)}
                     }
-
-                    control.setValue(pile.stringValue)
+                    control = co
+                    co.setValue(pile.stringValue)
                 }
-                else mywtf(`adf4ab63-23c2-40bc-b059-c0232cabcdb2`)
+                else wtf(`adf4ab63-23c2-40bc-b059-c0232cabcdb2`, pile)
             }
 
             ;(state.debug.nameToControl as any)[pile.name] = control
-            byRawIDSingle(unpileDomid(pile)).replaceWith(jShit)
+            byIDSingle(unpileDomid(pile)).replaceWith(jShit)
+            afterControlDOMCreated()
             return
         }
 
         if (pile.opcode === "OpenModalOnElementClick") {
-            const jTriggerElement = byRawIDSingle(pile.domid)
-            setOnClick(jTriggerElement, () => {
+            const jTriggerElement = byIDSingle(pile.domid)
+            setOnClick(jTriggerElement, ()=>{
                 const jModal = $(pile.html)
                 const jBody = $("body")
                 const bodyUnderModalClass = "paddingRightScrollbarWidthImportant"
 
-                jModal.on("show.bs.modal", () => {
+                jModal.on("show.bs.modal", ()=>{
                     jBody.css("overflow-y", "hidden")
                     jBody.addClass(bodyUnderModalClass)
                 })
 
-                jModal.on("shown.bs.modal", () => {
+                jModal.on("shown.bs.modal", ()=>{
                     state.modalShown.resumeTestFromSut()
                 })
 
-                jModal.on("hide.bs.modal", () => {})
+                jModal.on("hide.bs.modal", ()=>{})
 
-                jModal.on("hidden.bs.modal", () => {
+                jModal.on("hidden.bs.modal", ()=>{
                     jBody.css("overflow-y", "scroll")
                     jBody.removeClass(bodyUnderModalClass)
                     // locks.hidden.resumeTestFromSut()
@@ -212,7 +315,7 @@ namespace alraune {
     function orTestTimeout<T>({promise, ms} : {promise: Promise<T>, ms: number}): Promise<T> {
         const shit = new ResolvableShit<T>()
         const thePromiseName = (promise as any).name || "shit"
-        setTimeout(() => {
+        setTimeout(()=>{
             const msg = `Sick of waiting for ${thePromiseName}`
             shit.reject(new Error(msg))
         }, ms)
@@ -272,15 +375,25 @@ namespace alraune {
         }
     }
 
-    export function byRawIDSingle(id: string): JQuery {
+    export function byIDSingle(id: string): JQuery {
         const j = byID(id)
         if (j.length != 1)
             bitch(`I want one element with ID [${id}], got ${j.length}`)
         return j
     }
 
+    export function byIDNoneOrSingle(id: string): JQuery | undefined {
+        const j = byID(id)
+        if (j.length === 0)
+            return undefined
+        else if (j.length === 1)
+            return j
+        else
+            bitch(`I want either none or single element with ID [${id}], got ${j.length}`)
+    }
+
     export function byDomidSingle(domid: AlDomid): JQuery {
-        return byRawIDSingle(domid)
+        return byIDSingle(domid)
     }
 
     export function byID(id: string): JQuery {
@@ -296,6 +409,12 @@ namespace alraune {
         if (ctx !== undefined)
             console.warn("ctx", ctx)
         throw new Error(msg)
+    }
+
+    export function imf(msg: string, ctx: any = undefined): never {
+        if (ctx !== undefined)
+            console.warn("ctx", ctx)
+        throw new Error("Implement me, please, fuck you... " + msg)
     }
 
     export function setOnClick(j: JQuery, f: (e: JQueryEventObject) => void) {
@@ -347,6 +466,11 @@ namespace alraune {
             }
             else wtf("54da9c71-2b48-40dc-b265-17d5809ee013")
         }
+    }
+
+    let _nextUID = 1
+    export function nextUID(): string {
+        return "uid" + _nextUID++
     }
 
     const Color = {

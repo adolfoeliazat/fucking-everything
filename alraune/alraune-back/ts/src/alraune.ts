@@ -4,12 +4,12 @@
 
 import a = alraune
 import clog = a.clog
-import byIDSingle = a.byRawIDSingle
 import getURLParam = a.getURLParam
 import bitch = a.bitch
 import preventAndStop = a.preventAndStop
 import state = a.state
 import modalShownAfterDoing = a.modalShownAfterDoing
+import AlUADocumentCategories = alraune.AlUADocumentCategories
 
 $(() => {
     initShit()
@@ -31,7 +31,7 @@ function executeBackCommands(cmds: a.AlBackToFrontCommandPile[]) {
 }
 
 function parseShitFromBackAndExecuteCommands() {
-    const j = byIDSingle("shitPassedFromBackToFront2")
+    const j = a.byIDSingle("shitPassedFromBackToFront2")
     state.backShit = JSON.parse(j.attr("data-shit"))
     // clog("backShit", JSON.stringify(state.backShit))
 
@@ -99,10 +99,11 @@ function initDebugShit() {
         clog("mooooodaaaaal shown")
 
         const entropy = a.nextIndexForTest()
-        const s = a.debug.setControlValue; {
+        {const s = a.debug.setControlValue
             s("name", `Fuckita Boobisto ${entropy}`)
             s("email", `fuckita-${entropy}@mail.com`)
             s("phone", `+38 (911) 4542877-${entropy}`)
+            // s("documentCategory", AlUADocumentCategories.linguisticsID)
         }
     })
 

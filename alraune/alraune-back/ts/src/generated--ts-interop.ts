@@ -110,6 +110,7 @@
 /*104*/        id: string
 /*105*/        title: string
 /*106*/        children: AlUADocumentCategory[]
+               parent?: AlUADocumentCategory
 /*107*/    }
 /*108*/
 /*109*/    export class AlUADocumentCategories {
@@ -285,7 +286,20 @@
 /*599*/                    /*600*/{id: "259", title: "Французский язык", children: [/*601*/]},
 /*602*/                /*603*/]},
 /*604*/            /*605*/]}
+
+                static init() {
+                    descend(this.root)
+                    function descend(cat: AlUADocumentCategory) {
+                        for (const child of cat.children) {
+                            child.parent = cat
+                            descend(child)
+                        }
+                    }
+                }
+
 /*606*/    }
+            AlUADocumentCategories.init()
+
 /*607*/}
 
 
