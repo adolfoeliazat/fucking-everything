@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import org.eclipse.jetty.server.handler.HandlerCollection
 import org.eclipse.jetty.server.handler.ResourceHandler
+import sun.misc.Regexp
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty0
@@ -112,6 +113,17 @@ object StartAlrauneBack {
                                     res.contentType = "text/css; charset=utf-8"
                                     res.writer.print(AlCSS.sheet)
                                 }
+
+                                "/alraune.js" -> {
+                                    res.contentType = "application/javascript; charset=utf-8"
+                                    res.writer.print(hackTSJS())
+                                }
+
+                                "/alraune.js.map" -> {
+                                    res.contentType = "text/plain; charset=utf-8"
+                                    res.writer.print(File(AlBackPile0.tsMapOutputFile).readText())
+                                }
+
                             // TODO:vgrechka @unboilerplate
 //                                AlPagePath.debug_post_dumpStackByID -> handlePost_debug_post_dumpStackByID()
 //                                AlPagePath.debug_post_dumpBackCodePath -> handlePost_debug_post_dumpBackCodePath()
@@ -350,7 +362,8 @@ fun spitUsualPage(pipiska: Renderable) {
         ln(html)
         ln("    <script src='/node_modules/jquery/dist/jquery.min.js'></script>")
         ln("    <script src='/node_modules/bootstrap/dist/js/bootstrap.min.js'></script>")
-        ln("    <script src='/ts/out/alraune.js?${System.currentTimeMillis()}'></script>")
+        ln("    <script src='/alraune.js?${System.currentTimeMillis()}'></script>")
+//        ln("    <script src='/ts/out/alraune.js?${System.currentTimeMillis()}'></script>")
         // ln("    <script src='/alraune-front/lib/kotlin.js'></script>")
         // ln("    <script src='/shared-kjs/shared-kjs.js?${System.currentTimeMillis()}'></script>")
         // ln("    <script src='/alraune-front/alraune-front.js?${System.currentTimeMillis()}'></script>")

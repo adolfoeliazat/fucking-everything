@@ -3,10 +3,12 @@
     "target": "es2015",
     "module": "none",
     "noImplicitAny": true,
-    "removeComments": true,
+    "removeComments": false,
     "preserveConstEnums": true,
     "strictNullChecks": true,
     "noFallthroughCasesInSwitch": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "outFile": "out/alraune.js",
     "sourceMap": true
   },

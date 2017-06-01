@@ -15,7 +15,10 @@ object AlBackPile0 {
     val tmpDirPath = "c:/tmp"
     val backToFrontCommandsKtSourceFile = "E:/fegh/alraune/alraune-back/src/AlBackToFrontCommand.kt"
     val formPostDataKtSourceFile = "E:/fegh/alraune/alraune-back/symlink--alraune-symlinked-src/alraune-symlinked.kt"
+    val tsSrcRoot = "E:/fegh/alraune/alraune-back/ts/src"
     val generatedTSFile = "E:/fegh/alraune/alraune-back/ts/src/generated--by-backend.ts"
+    val tsJSOutputFile = "E:/fegh/alraune/alraune-back/ts/out/alraune.js"
+    val tsMapOutputFile = "E:/fegh/alraune/alraune-back/ts/out/alraune.js.map"
     val log = LoggerFactory.getLogger(this.javaClass)
     val baseURL = "https://alraune.local"
 

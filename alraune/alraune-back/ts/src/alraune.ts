@@ -92,7 +92,7 @@ namespace alraune {
 
             if (!control) {
                 if (pile.controlType === "Text" || pile.controlType === "TextArea" || pile.controlType === "Select") {
-                    const selector = run(()=>{
+                    const selector = run(() => {
                         if (pile.controlType === "Text") return "input"
                         if (pile.controlType === "TextArea") return "textarea"
                         else if (pile.controlType === "Select") return "select"
@@ -101,10 +101,7 @@ namespace alraune {
                     const jControl = JQPile.ensureSingle(jShit.find(selector))
 
                     const co = new class implements StringValueControl, Focusable {
-                        readonly __isStringValueControl = true
-                        readonly __isFocusable = true
-                        readonly __stackAtCreation = new Error("Capturing stack")
-
+                        /// @augment 662e6426-5c73-49d5-b876-fe1ace1230b1
                         setValue(value: string) {jControl.val(value)}
                         focus() {jControl.focus()}
                     }
