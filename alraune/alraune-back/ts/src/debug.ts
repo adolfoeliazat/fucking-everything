@@ -30,30 +30,9 @@ namespace alraune {
         const jDrawer = $(`<div class="${drawerClass}"></div>`)
         jBody.append(jDrawer)
 
-        const currentMafValue = getURLParam("maf")
-
-        // declareMaf("maf401_createFile", "/orderFiles", async () => {
-        //     clog("pizda")
-        //     // clickElementByIDAndAwaitModalShown(AlDomID.topRightButton, AlFrontPile.topRightButtonModalTestLocks)
-        //     //
-        //     // run {
-        //     //     // Validation errors
-        //     //     p(OrderFileFormPostData::details, "In general your default keyboard mapping comes from your X server setup. If this setup is insufficient and you are unwilling to go through the process of reconfiguration and/or you are not the superuser you'll need to use the xmodmap program. This is the utility's global configuration file.")
-        //     //     clickSubmitAndAwaitPageInit()
-        //     //     // AlFrontPile.sleepTillEndOfTime()
-        //     // }
-        //     //
-        //     // run {
-        //     //     // OK
-        //     //     awaitModalHiddenAfterDoing {
-        //     //         p(OrderFileFormPostData::title, "The Fucking Keyboard Mapping")
-        //     //         clickSubmitAndAwaitPageInit()
-        //     //     }
-        //     // }
-        // })
+        const currentMafValue = getURLParam(AlURLParams.maf)
 
         declareMaf("/orderParams", async function maf101() {
-            clog(maf101.name)
             await modalShownAfterDoing(() => {
                 byDomidSingle("topRightButton").click()
             })
@@ -65,23 +44,47 @@ namespace alraune {
                 s("email", `fuckita-${entropy}@mail.com`)
                 s("phone", `+38 (911) 4542877-${entropy}`)
             }
-            {const p = cast(state.debug.nameToControl.documentCategory, isDocumentCategoryPicker)
+            {const p = getDocumentCategoryPickerControl()
                 p.debug_handleBackButtonClick()
                 p.debug_setSelectValue(AlUADocumentCategories.humanitiesID)
                 p.debug_setSelectValue(AlUADocumentCategories.linguisticsID)
             }
         })
 
+        declareMaf("/orderCreationForm", async function maf201() {
+            {const s = debug.setControlValue
+                s("name", `Иммануил Пердондэ`)
+                s("email", `iperdonde@mail.com`)
+                s("phone", `+38 (068) 4542823`)
+                s("documentType", "PRACTICE")
+                s("documentTitle", "Как я пинал хуи на практике")
+                s("documentDetails", "Детали? Я ебу, какие там детали...")
+                s("numPages", "35")
+                s("numSources", "7")
+            }
+            {const p = getDocumentCategoryPickerControl()
+                p.debug_setSelectValue(AlUADocumentCategories.technicalID)
+                p.debug_setSelectValue(AlUADocumentCategories.programmingID)
+            }
+        })
+
+        function getDocumentCategoryPickerControl(): DocumentCategoryPicker {
+            return cast(state.debug.nameToControl.documentCategory, isDocumentCategoryPicker)
+        }
+
         function declareMaf(activeWhenPath: string, f: () => void) {
             const itemName = f.name
-            if (window.location.href.startsWith(`https://alraune.local${activeWhenPath}?`)) {
+            const fuck = `https://alraune.local${activeWhenPath}`
+            const href = window.location.href
+            if (href === fuck || href.startsWith(fuck + "?")) {
                 addItem(itemName, () => {
-                    const newHref = amendHref(window.location, "maf", itemName)
+                    const newHref = amendHref(window.location, AlURLParams.maf, itemName)
                     console.log("newHref =", newHref)
                     window.location.href = newHref
                 })
             }
             if (currentMafValue == itemName) {
+                clog("Executing MAF:", itemName)
                 f()
             }
         }

@@ -1,9 +1,7 @@
 namespace alraune {
 
     export class DocumentCategoryPicker {
-        readonly __isDocumentCategoryPicker = true
-        readonly __stackAtCreation = new Error("Capturing stack")
-
+        /// @augment 9086702e-f236-465b-b689-8a57da9d55a6
         private readonly containerDomid = nextUID()
         private readonly selectID = nextUID()
         private readonly backButtonID = nextUID()

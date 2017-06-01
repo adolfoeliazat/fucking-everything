@@ -15,7 +15,7 @@ fun handleGet_orderCreationForm() {
                                  contactNameVirginValue = {""},
                                  emailVirginValue = {""},
                                  phoneVirginValue = {""},
-                                 documentTypeVirginValue = {""},
+                                 documentTypeVirginValue = {AlDocumentType.ABSTRACT.name},
                                  documentCategoryVirginValue = {AlUADocumentCategories.miscID},
                                  documentTitleVirginValue = {""},
                                  numPagesVirginValue = {""},
