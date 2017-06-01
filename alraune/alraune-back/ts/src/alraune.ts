@@ -53,13 +53,17 @@ namespace alraune {
                 }
                 html += `</select>`
             }
-            else if (pile.controlType === "DocumentCategoryPicker") {
-                const co = new DocumentCategoryPicker(pile)
-                control = co
-                html += co.placeholderHTML()
-                afterControlDOMCreated = ()=>{co.init()}
-            }
+            else if (pile.controlType === "DocumentCategoryPicker") usualCrappyControl(DocumentCategoryPicker)
+            else if (pile.controlType === "ButtonBarWithTicker") usualCrappyControl(ButtonBarWithTicker)
             else wtf(`23b6c33d-f7ab-491f-a761-9b47d24cbdb3`, pile)
+
+            function usualCrappyControl(ctor: new() => Alice10) {
+                const co = new ctor()
+                co.bob.backPile = pile
+                control = co
+                html += co.bob.placeholderHTML()
+                afterControlDOMCreated = () => {co.init()}
+            }
 
             if (pile.error) {
                 html += `<div style="margin-top: 5px;

@@ -1,16 +1,62 @@
 namespace alraune {
 
-    export class DocumentCategoryPicker {
-        /// @augment 9086702e-f236-465b-b689-8a57da9d55a6
-        private readonly containerDomid = nextUID()
-        private readonly selectID = nextUID()
-        private readonly backButtonID = nextUID()
-        private readonly pathExceptLast = <AlUADocumentCategory[]>[]
+    export class StringBuilder {
+        buf = ""
+        ln(x: string) {this.buf += `${x}\n`}
+    }
 
-        constructor(private backPile: AlBackToFrontCommandPile) {}
+    export function buildString(f: (x: StringBuilder) => void): string {
+        const sb = new StringBuilder()
+        f(sb)
+        return sb.buf
+    }
+
+    export interface Alice10 {
+        bob: Bob10
+        init(): void
+    }
+
+    export class Bob10 {
+        readonly containerDomid = nextUID()
+        backPile: AlBackToFrontCommandPile
+
+        placeholderHTML() {
+            return `<div id="${this.containerDomid}"></div>`
+        }
+
+        jContainer(): JQuery {
+            return byIDSingle(this.containerDomid)
+        }
+
+        setHTML(s: string) {
+            this.jContainer().html(s)
+        }
+    }
+
+    export class ButtonBarWithTicker implements Alice10 {
+        /// @augment 64460c12-3bcf-4e37-bdeb-9e5c264df8c2
+        readonly bob = new Bob10()
 
         init() {
-            let category = this.findCategoryOrBitch(this.backPile.stringValue)
+            this.update()
+        }
+
+        update() {
+            this.bob.setHTML(buildString(s => {
+                s.ln("pizdarde")
+            }))
+        }
+    }
+
+    export class DocumentCategoryPicker implements Alice10 {
+        /// @augment 9086702e-f236-465b-b689-8a57da9d55a6
+        readonly bob = new Bob10()
+        readonly selectID = nextUID()
+        readonly backButtonID = nextUID()
+        readonly pathExceptLast = <AlUADocumentCategory[]>[]
+
+        init() {
+            let category = this.findCategoryOrBitch(this.bob.backPile.stringValue)
             while (true) {
                 this.pathExceptLast.push(category)
                 const parent = category.parent
@@ -23,7 +69,7 @@ namespace alraune {
             const last = this.pathExceptLast[this.pathExceptLast.length - 1]
             this.pathExceptLast.pop()
 
-            this.updateDocumentCategoryPicker()
+            this.update()
 
             this.selectJQ().val(last.id)
         }
@@ -54,33 +100,28 @@ namespace alraune {
 
         private handleBackButtonClick() {
             this.pathExceptLast.pop()
-            this.updateDocumentCategoryPicker()
+            this.update()
         }
 
-        private updateDocumentCategoryPicker() {
-            const containerJQ = byIDSingle(this.containerDomid)
-            containerJQ.html(run(() => {
-                let res = ""
-                function ln(x: string) {res += `${x}\n`}
-
+        private update() {
+            this.bob.setHTML(buildString(s => {
                 const items = this.pathExceptLast[this.pathExceptLast.length - 1].children
-                ln(`<div style='display: flex; align-items: center;'>`)
+                s.ln(`<div style='display: flex; align-items: center;'>`)
                 const pathToShow = this.pathExceptLast.slice(1)
                 for (const step of pathToShow) {
-                    ln(`<div style='margin-right: 0.5rem;'>${step.title}</div>`)
+                    s.ln(`<div style='margin-right: 0.5rem;'>${step.title}</div>`)
                 }
                 if (pathToShow.length > 0) {
-                    ln(`<button class='btn btn-default' style='margin-right: 0.5rem;' id='${this.backButtonID}'>`)
-                    ln(`<i class='fa fa-arrow-left'></i></button>`)
+                    s.ln(`<button class='btn btn-default' style='margin-right: 0.5rem;' id='${this.backButtonID}'>`)
+                    s.ln(`<i class='fa fa-arrow-left'></i></button>`)
                 }
                 if (items.length > 0) {
-                    ln(`<select class='form-control' id='${this.selectID}'>`)
+                    s.ln(`<select class='form-control' id='${this.selectID}'>`)
                     for (const item of items) {
-                        ln(`<option value='${item.id}'>${item.title}</option>`)
+                        s.ln(`<option value='${item.id}'>${item.title}</option>`)
                     }
-                    ln(`</select>`)
+                    s.ln(`</select>`)
                 }
-                return res
             }))
 
             this.selectJQ().on("change", () => {
@@ -106,16 +147,12 @@ namespace alraune {
                 || wtf("5162f6ed-31bc-4e89-8088-5528b9ea43d5")
             if (item.children.length > 0) {
                 this.pathExceptLast.push(item)
-                this.updateDocumentCategoryPicker()
+                this.update()
             }
         }
 
         private getSelectedCategoryID(): string {
             return this.selectJQ().val() || wtf("975e6a00-5798-44dd-a704-5e9f47e1e678")
-        }
-
-        placeholderHTML(): string {
-            return `<div id="${this.containerDomid}"></div>`
         }
     }
 

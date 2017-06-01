@@ -21,6 +21,21 @@ fun handleGet_orderCreationForm() {
                                  numPagesVirginValue = {""},
                                  numSourcesVirginValue = {""},
                                  detailsVirginValue = {""})
+
+        o- run {
+            val domid = AlBackPile.uuid()
+            initCommands += AlBackToFrontCommandPile()-{o->
+                o.opcode = AlBackToFrontCommandOpcode.CreateControl
+                o.controlType = AlControlType.ButtonBarWithTicker
+                o.rawDomid = domid
+                o.buttons = listOf(
+                    AlButtonParams(title = t("TOTE", "Продолжить"), level = AlButtonLevel.Primary, onClick = AlBackToFrontCommandPile()-{o->
+                        o.opcode = AlBackToFrontCommandOpcode.SayFuckYou
+                    })
+                )
+            }
+            kdiv(Attrs(id = domid))
+        }
         shitToFront2("b690958f-f5d8-40c6-997d-39f5f4debf49") {
             it.commands += initCommands
         }

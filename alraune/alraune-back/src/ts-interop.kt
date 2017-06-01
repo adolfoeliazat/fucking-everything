@@ -21,17 +21,28 @@ class AlBackToFrontCommandPile {
     var initCommands: MutableList<AlBackToFrontCommandPile>? = null
     var putInFormGroup: Boolean? = null
     var controlType: AlControlType? = null
+    var buttons: List<AlButtonParams>? = null
 
     @JsonSerialize(using = PropertyNameSerializer::class)
     var ftbProp: KProperty1<AlFrontToBackCommandPile, *>? = null
 }
 
+class AlButtonParams(
+    val title: String,
+    val level: AlButtonLevel,
+    val onClick: AlBackToFrontCommandPile
+)
+
+enum class AlButtonLevel {
+    Default, Primary, Success, Info, Warning, Danger
+}
+
 enum class AlBackToFrontCommandOpcode {
-    CreateControl, OpenModalOnElementClick, FocusControl
+    CreateControl, OpenModalOnElementClick, FocusControl, SayFuckYou
 }
 
 enum class AlControlType {
-    Text, TextArea, Select, DocumentCategoryPicker
+    Text, TextArea, Select, DocumentCategoryPicker, ButtonBarWithTicker
 }
 
 class TitledValue(val value: String, val title: String)
