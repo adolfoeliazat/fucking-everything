@@ -2,8 +2,10 @@
 @file:Suppress("unused")
 package alraune.back
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import vgrechka.*
 import vgrechka.spew.*
+import kotlin.reflect.KProperty1
 
 class AlBackToFrontCommandPile {
     lateinit var opcode: AlBackToFrontCommandOpcode
@@ -19,11 +21,13 @@ class AlBackToFrontCommandPile {
     var initCommands: MutableList<AlBackToFrontCommandPile>? = null
     var putInFormGroup: Boolean? = null
     var controlType: AlControlType? = null
+
+    @JsonSerialize(using = PropertyNameSerializer::class)
+    var ftbProp: KProperty1<AlFrontToBackCommandPile, *>? = null
 }
 
 enum class AlBackToFrontCommandOpcode {
-    CreateControl,
-    OpenModalOnElementClick
+    CreateControl, OpenModalOnElementClick, FocusControl
 }
 
 enum class AlControlType {

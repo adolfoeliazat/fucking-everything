@@ -35,6 +35,7 @@ class ControlFucker(val initCommands: MutableList<AlBackToFrontCommandPile>) {
         }
 
         fun text() = simple(AlControlType.Text)
+        fun textArea() = simple(AlControlType.TextArea)
         fun documentCategoryPicker() = simple(AlControlType.DocumentCategoryPicker)
 
         fun select(values: List<TitledValue>): Renderable {

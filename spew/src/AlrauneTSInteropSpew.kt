@@ -124,12 +124,10 @@ class AlrauneTSInteropSpew : Spew {
                 var text = _text
                 if (text.endsWith("?"))
                     text = text.dropLast(1)
-                if (text == "String")
-                    return "string"
-                if (text == "Boolean")
-                    return "boolean"
-                if (text == "Int")
-                    return "number"
+                if (text == "String") return "string"
+                if (text == "Boolean") return "boolean"
+                if (text == "Int") return "number"
+                if (text == "KProperty1<AlFrontToBackCommandPile, *>") return "AlFrontToBackCommandPileProp"
                 run {
                     val re = Regex("(?:Mutable)?List<(.*?)>")
                     re.matchEntire(text)?.let {

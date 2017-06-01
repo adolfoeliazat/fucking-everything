@@ -15,17 +15,21 @@ import alraune.back.AlRenderPile.pageTitle
 import alraune.back.AlRenderPile.rawHTML
 import alraune.shared.*
 import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import org.eclipse.jetty.server.handler.HandlerCollection
 import org.eclipse.jetty.server.handler.ResourceHandler
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty0
+import kotlin.reflect.KProperty1
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.valueParameters
@@ -319,11 +323,13 @@ fun spitUsualPage(pipiska: Renderable) {
     val ctx = AlRequestContext.the
     val html = kdiv.className("container"){o->
         o- pipiska
+
+        val om = ObjectMapper()
         o- insideMarkers(AlDomid.shitPassedFromBackToFront, tamperWithAttrs = {
-            it.copy(dataShit = ObjectMapper().writeValueAsString(ctx.shitPassedFromBackToFront))
+            it.copy(dataShit = om.writeValueAsString(ctx.shitPassedFromBackToFront))
         })
         o- insideMarkers(AlDomid.shitPassedFromBackToFront2, tamperWithAttrs = {
-            it.copy(dataShit = ObjectMapper().writeValueAsString(ctx.shitPassedFromBackToFront2))
+            it.copy(dataShit = om.writeValueAsString(ctx.shitPassedFromBackToFront2))
         })
     }.render()
 
@@ -505,7 +511,11 @@ object AlBackDebug {
     }
 }
 
-
+class PropertyNameSerializer : StdSerializer<KProperty1<*, *>>(KProperty1::class.java, true) {
+    override fun serialize(value: KProperty1<*, *>, gen: JsonGenerator, provider: SerializerProvider) {
+        gen.writeString(value.name)
+    }
+}
 
 
 

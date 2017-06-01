@@ -1,13 +1,30 @@
 package alraune.back
 
-import alraune.back.AlRenderPile.pageTitle
+import alraune.back.AlRenderPile.pageHeader
+import alraune.back.AlRenderPile.renderOrderParamsForm
 import alraune.back.AlRenderPile.t
-import alraune.shared.*
+import alraune.shared.AlUADocumentCategories
 import vgrechka.*
-import java.util.*
 
 fun handleGet_orderCreationForm() {
-    imf("900d9bee-bab5-46ab-a002-519a445829d6")
+    spitUsualPage(replaceableContent(kdiv{o->
+        o- pageHeader(t("TOTE", "Йобаный Заказ"))
+
+        val initCommands = mutableListOf<AlBackToFrontCommandPile>()
+        o- renderOrderParamsForm(initCommands = initCommands,
+                                 contactNameVirginValue = {""},
+                                 emailVirginValue = {""},
+                                 phoneVirginValue = {""},
+                                 documentTypeVirginValue = {""},
+                                 documentCategoryVirginValue = {AlUADocumentCategories.miscID},
+                                 documentTitleVirginValue = {""},
+                                 numPagesVirginValue = {""},
+                                 numSourcesVirginValue = {""},
+                                 detailsVirginValue = {""})
+        shitToFront2("b690958f-f5d8-40c6-997d-39f5f4debf49") {
+            it.commands += initCommands
+        }
+    }))
 //    val fields = OrderParamsFields(
 //        newAlUAOrder(
 //            uuid = "boobs", state = UAOrderState.CUSTOMER_DRAFT, email = "",

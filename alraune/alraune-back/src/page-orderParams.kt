@@ -1,9 +1,7 @@
 package alraune.back
 
-import alraune.back.AlRenderPile.col
 import alraune.back.AlRenderPile.renderOrderParams
 import alraune.back.AlRenderPile.renderOrderTitle
-import alraune.back.AlRenderPile.row
 import alraune.back.AlRenderPile.t
 import alraune.shared.*
 import vgrechka.*
@@ -75,57 +73,7 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
                             width = "80rem",
                             leftMarginColor = Color.BLUE_GRAY_300,
                             title = t("TOTE", "Параметры"),
-                            body = insideMarkers(
-                                id = AlDomid.modalContent,
-                                content = kdiv{o->
-                                    val cf = ControlFucker(initCommands = initCommands)
-
-                                    o- row(marginBottom = null){o->
-                                        o- col(4, cf.begin(
-                                            title = t("TOTE", "Контактное имя"),
-                                            prop = AlFrontToBackCommandPile::name,
-                                            validate = AlBackPile::validateName,
-                                            virginValue = {rctx.order.contactName})
-                                            .text())
-
-                                        o- col(4, cf.begin(
-                                            title = t("TOTE", "Почта"),
-                                            prop = AlFrontToBackCommandPile::email,
-                                            validate = AlBackPile::validateEmail,
-                                            virginValue = {rctx.order.email})
-                                            .text())
-
-                                        o- col(4, cf.begin(
-                                            title = t("TOTE", "Телефон"),
-                                            prop = AlFrontToBackCommandPile::phone,
-                                            validate = AlBackPile::validatePhone,
-                                            virginValue = {rctx.order.phone})
-                                            .text())
-                                    }
-
-                                    o- row(marginBottom = null){o->
-                                        o- col(4, cf.begin(
-                                            title = t("TOTE", "Тип документа"),
-                                            prop = AlFrontToBackCommandPile::documentType,
-                                            validate = {imf("d6996f06-3773-48c8-9ab8-652a34bdc3dd")},
-                                            virginValue = {rctx.order.documentTypeID})
-                                            .select(values = AlDocumentType.values().map {
-                                                TitledValue(value = it.name, title = it.title)
-                                            }))
-                                        o- col(8, cf.begin(
-                                            title = t("TOTE", "Категория"),
-                                            prop = AlFrontToBackCommandPile::documentCategory,
-                                            validate = {imf("a60d0581-9eb1-4bcc-bcb7-aad9de55cd62")},
-                                            virginValue = {rctx.order.documentCategoryID})
-                                            .documentCategoryPicker())
-                                    }
-//                                    o- fields.documentTitle.render()
-//                                    o- row(marginBottom = null){o->
-//                                        o- col(6, fields.numPages.render())
-//                                        o- col(6, fields.numSources.render())
-//                                    }
-//                                    o- fields.documentDetails.render()
-                                })
+                            body = AlRenderPile.renderOrderParamsForm(initCommands, {rctx.order.contactName}, {rctx.order.email}, {rctx.order.phone}, {rctx.order.documentTypeID}, {rctx.order.documentCategoryID}, {rctx.order.documentTitle}, {rctx.order.numPages.toString()}, {rctx.order.numSources.toString()}) {rctx.order.documentDetails}
                         )).render()
 
 
@@ -145,6 +93,7 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
             }
         }))
     }
+
 }
 
 fun killme_handleGet_orderParams() {

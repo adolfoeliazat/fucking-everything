@@ -8,6 +8,8 @@ namespace alraune {
         if (check(shit))
             return shit
         else
+            if (shit.__stackAtCreation)
+                console.warn("shit.__stackAtCreation", shit.__stackAtCreation)
             return wtf(`One does not simply cast shit via ${check.name}`, {shit, check})
     }
 
@@ -36,8 +38,12 @@ namespace alraune {
             let html = ""
             html += `<div style="position: relative;">`
 
+
             if (pile.controlType === "Text") {
                 html += `<input type="text" class="form-control">`
+            }
+            else if (pile.controlType === "TextArea") {
+                html += `<textarea class="form-control" rows="5"></textarea>`
             }
             else if (pile.controlType === "Select") {
                 html += `<select class="form-control">`
@@ -85,20 +91,22 @@ namespace alraune {
             const jShit = $(html)
 
             if (!control) {
-                if (pile.controlType === "Text" || pile.controlType === "Select") {
+                if (pile.controlType === "Text" || pile.controlType === "TextArea" || pile.controlType === "Select") {
                     const selector = run(()=>{
-                        if (pile.controlType === "Text")
-                            return "input"
-                        else if (pile.controlType === "Select")
-                            return "select"
-                        else
-                            return wtf(`f090486c-fb4e-4da7-889a-f44fbfc5faa9`, pile)
+                        if (pile.controlType === "Text") return "input"
+                        if (pile.controlType === "TextArea") return "textarea"
+                        else if (pile.controlType === "Select") return "select"
+                        else return wtf(`f090486c-fb4e-4da7-889a-f44fbfc5faa9`, pile)
                     })
                     const jControl = JQPile.ensureSingle(jShit.find(selector))
 
-                    const co = new class implements StringValueControl {
-                        __isStringValueControl = true
+                    const co = new class implements StringValueControl, Focusable {
+                        readonly __isStringValueControl = true
+                        readonly __isFocusable = true
+                        readonly __stackAtCreation = new Error("Capturing stack")
+
                         setValue(value: string) {jControl.val(value)}
+                        focus() {jControl.focus()}
                     }
                     control = co
                     co.setValue(pile.stringValue)
@@ -109,10 +117,9 @@ namespace alraune {
             ;(state.debug.nameToControl as any)[pile.name] = control
             byIDSingle(unpileDomid(pile)).replaceWith(jShit)
             afterControlDOMCreated()
-            return
         }
 
-        if (pile.opcode === "OpenModalOnElementClick") {
+        else if (pile.opcode === "OpenModalOnElementClick") {
             const jTriggerElement = byIDSingle(pile.domid)
             setOnClick(jTriggerElement, ()=>{
                 const jModal = $(pile.html)
@@ -143,10 +150,30 @@ namespace alraune {
                 executeBackCommands(pile.initCommands)
                 ;(jModal as any).modal()
             })
-            return
         }
 
-        wtf(`opcode = ${pile.opcode}    184e8001-a4eb-49fc-accb-ad17dabc052f`)
+        else if (pile.opcode === "FocusControl") {
+            controlByProp(pile.ftbProp).which(isFocusable).focus()
+        }
+
+        else wtf(`184e8001-a4eb-49fc-accb-ad17dabc052f`, {pile})
+    }
+
+    export function controlByProp(name: AlFrontToBackCommandPileProp) {
+        const shit = state.debug.nameToControl[name]
+        return {
+            which<T>(check: (x: any) => x is T): T {
+                return cast(shit, check)
+            }
+        }
+    }
+
+    export interface Focusable {
+        focus(): void
+    }
+
+    export function isFocusable(x: any): x is Focusable {
+        return x && x.__isFocusable
     }
 
     class ResolvableShit<T> {
@@ -300,7 +327,9 @@ namespace alraune {
         return $(selector)
     }
 
-    export function bitch(msg: string): never {
+    export function bitch(msg: string, ctx: any = undefined): never {
+        if (ctx !== undefined)
+            console.warn("ctx", ctx)
         throw new Error(msg)
     }
 
@@ -396,101 +425,6 @@ namespace alraune {
     }
 
 
-    function initDebugShit() {
-        const drawerClass = "c-5ccefe3e-7cbf-4a0f-8d8e-3883f8dda8e3"
-        const linkClass = "c-dc1eb630-2231-4eaf-b9a7-44b425badf7d"
-        const linkStyle = "{display: block; color: white; padding: 2px;}"
-        let jBody = $("body")
-        jBody.append(`
-        ${"<style>"}
-        .${drawerClass} {
-            background: gray;
-            width: 3px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            overflow-x: hidden;
-            opacity: 0.9;
-        }
-        .${drawerClass}:hover {
-            width: 300px;
-        }
-        .${linkClass} ${linkStyle}
-        .${linkClass}:hover ${linkStyle}
-        .${linkClass}:visited ${linkStyle}
-        .${linkClass}:active ${linkStyle}
-        .${linkClass}:focus ${linkStyle}
-        ${"</style>"}
-    `)
-        const jDrawer = $(`<div class="${drawerClass}"></div>`)
-        jBody.append(jDrawer)
-
-        const currentMafValue = getURLParam("maf")
-
-        // declareMaf("maf401_createFile", "/orderFiles", async () => {
-        //     clog("pizda")
-        //     // clickElementByIDAndAwaitModalShown(AlDomID.topRightButton, AlFrontPile.topRightButtonModalTestLocks)
-        //     //
-        //     // run {
-        //     //     // Validation errors
-        //     //     p(OrderFileFormPostData::details, "In general your default keyboard mapping comes from your X server setup. If this setup is insufficient and you are unwilling to go through the process of reconfiguration and/or you are not the superuser you'll need to use the xmodmap program. This is the utility's global configuration file.")
-        //     //     clickSubmitAndAwaitPageInit()
-        //     //     // AlFrontPile.sleepTillEndOfTime()
-        //     // }
-        //     //
-        //     // run {
-        //     //     // OK
-        //     //     awaitModalHiddenAfterDoing {
-        //     //         p(OrderFileFormPostData::title, "The Fucking Keyboard Mapping")
-        //     //         clickSubmitAndAwaitPageInit()
-        //     //     }
-        //     // }
-        // })
-
-        declareMaf("/orderParams", async function maf101() {
-            clog(maf101.name)
-            await modalShownAfterDoing(() => {
-                byDomidSingle("topRightButton").click()
-            })
-            clog("mooooodaaaaal shown")
-
-            const entropy = nextIndexForTest()
-            {const s = debug.setControlValue
-                s("name", `Fuckita Boobisto ${entropy}`)
-                s("email", `fuckita-${entropy}@mail.com`)
-                s("phone", `+38 (911) 4542877-${entropy}`)
-            }
-            {const p = cast(state.debug.nameToControl.documentCategory, isDocumentCategoryPicker)
-                p.debug_handleBackButtonClick()
-                p.debug_setSelectValue(AlUADocumentCategories.humanitiesID)
-                p.debug_setSelectValue(AlUADocumentCategories.linguisticsID)
-            }
-        })
-
-        function declareMaf(activeWhenPath: string, f: () => void) {
-            const itemName = f.name
-            if (window.location.href.startsWith(`https://alraune.local${activeWhenPath}?`)) {
-                addItem(itemName, () => {
-                    const newHref = amendHref(window.location, "maf", itemName)
-                    console.log("newHref =", newHref)
-                    window.location.href = newHref
-                })
-            }
-            if (currentMafValue == itemName) {
-                f()
-            }
-        }
-
-        function addItem(name: String, block: () => void) {
-            const jItem = $(`<div><a class='${linkClass}' href='#'>${name}</a></div>`)
-            jDrawer.append(jItem)
-            jItem.on("click", e => {
-                preventAndStop(e)
-                block()
-            })
-        }
-    }
 
     const Color = {
         // https://www.google.com/design/spec/style/color.html#color-color-palette

@@ -1,7 +1,9 @@
 namespace alraune {
 
     export class DocumentCategoryPicker {
-        public readonly __isDocumentCategoryPicker = true
+        readonly __isDocumentCategoryPicker = true
+        readonly __stackAtCreation = new Error("Capturing stack")
+
         private readonly containerDomid = nextUID()
         private readonly selectID = nextUID()
         private readonly backButtonID = nextUID()
@@ -29,7 +31,7 @@ namespace alraune {
         }
 
         private findCategoryOrBitch(id: string): AlUADocumentCategory {
-            return maybeFindByID(id, AlUADocumentCategories.root) || bitch("id = $id    c6606a3c-c677-4f8d-8a0b-b1336efbd3fb")
+            return maybeFindByID(id, AlUADocumentCategories.root) || bitch("bfe6c71d-2bd0-4c3b-9757-932f662780cf", {id})
 
             function maybeFindByID(id: string, parent: AlUADocumentCategory): AlUADocumentCategory | undefined {
                 for (const child of parent.children) {
