@@ -66,6 +66,7 @@ namespace alraune {
                 p.debug_setSelectValue(AlUADocumentCategories.technicalID)
                 p.debug_setSelectValue(AlUADocumentCategories.programmingID)
             }
+            byDebugTag("submitButton").click()
         })
 
         function getDocumentCategoryPickerControl(): DocumentCategoryPicker {

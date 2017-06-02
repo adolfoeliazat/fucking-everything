@@ -383,6 +383,13 @@ namespace alraune {
         return j
     }
 
+    export function byDebugTag(tag: AlDebugTag): JQuery {
+        const j = $(`*[data-debugTag="${tag}"]`)
+        if (j.length != 1)
+            bitch(`I want one element with debug tag [${tag}], got ${j.length}`)
+        return j
+    }
+
     export function byIDNoneOrSingle(id: string): JQuery | undefined {
         const j = byID(id)
         if (j.length === 0)

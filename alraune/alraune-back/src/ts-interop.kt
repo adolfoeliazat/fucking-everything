@@ -38,6 +38,7 @@ class AlBackResponsePile {
 }
 
 class AlButtonParams(
+    val debugTag: AlDebugTag? = null,
     val title: String,
     val level: AlButtonLevel,
     val onClick: List<AlBackToFrontCommandPile>
@@ -77,6 +78,10 @@ class TitledValue(val value: String, val title: String)
 
 enum class AlFrontToBackCommandOpcode {
     SubmitOrderCreationForm, SubmitOrderParamsForm
+}
+
+enum class AlDebugTag {
+    submitButton
 }
 
 enum class AlDomid {

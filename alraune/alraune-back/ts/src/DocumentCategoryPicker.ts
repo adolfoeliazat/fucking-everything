@@ -63,7 +63,13 @@ namespace alraune {
                 s.ln(`<div>`)
 
                 for (const [index, button] of withIndex(buttons)) {
-                    s.ln(`<button id="${buttonIDBase}-${index}" class="btn btn-${button.level.toLowerCase()}">${escapeHTML(button.title)}</button>`)
+                    let debugAttrs = ""
+                    if (button.debugTag)
+                        debugAttrs += ` data-debugTag="${button.debugTag}"`
+                    s.ln(`<button id="${buttonIDBase}-${index}"
+                                  class="btn btn-${button.level.toLowerCase()}"
+                                  ${debugAttrs}>
+                          ${escapeHTML(button.title)}</button>`)
                 }
                 s.ln(`<div id="${tickerID}"></div>`)
                 s.ln(`</div>`)

@@ -34,20 +34,23 @@ fun handleGet_orderCreationForm() {
                 o.controlUUID = buttonBarUUID
                 o.rawDomid = domid
                 o.buttons = listOf(
-                    AlButtonParams(title = t("TOTE", "Продолжить"), level = AlButtonLevel.Primary,
-                                   onClick = listOf(
-                                       AlBackToFrontCommandPile()-{o->
-                                           o.opcode = AlBackToFrontCommandOpcode.SetTickerActive
-                                           o.controlUUID = buttonBarUUID
-                                           o.bool = true
-                                       },
-                                       AlBackToFrontCommandPile()-{o->
-                                           o.opcode = AlBackToFrontCommandOpcode.CallBackend
-                                           o.postURL = "https://alraune.local/fuckingCall"
-                                           o.backOpcode = AlFrontToBackCommandOpcode.SubmitOrderCreationForm
-                                           o.readValuesOfControlsWithUUIDs = inputControlUUIDs
-                                       }
-                                   )))
+                    AlButtonParams(
+                        debugTag = AlDebugTag.submitButton,
+                        title = t("TOTE", "Продолжить"),
+                        level = AlButtonLevel.Primary,
+                        onClick = listOf(
+                            AlBackToFrontCommandPile()-{o->
+                                o.opcode = AlBackToFrontCommandOpcode.SetTickerActive
+                                o.controlUUID = buttonBarUUID
+                                o.bool = true
+                            },
+                            AlBackToFrontCommandPile()-{o->
+                                o.opcode = AlBackToFrontCommandOpcode.CallBackend
+                                o.postURL = "https://alraune.local/fuckingCall"
+                                o.backOpcode = AlFrontToBackCommandOpcode.SubmitOrderCreationForm
+                                o.readValuesOfControlsWithUUIDs = inputControlUUIDs
+                            }
+                        )))
             }
             kdiv(Attrs(id = domid))
         }
