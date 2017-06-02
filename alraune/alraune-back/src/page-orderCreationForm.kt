@@ -11,7 +11,10 @@ fun handleGet_orderCreationForm() {
         o- pageHeader(t("TOTE", "Йобаный Заказ"))
 
         val initCommands = mutableListOf<AlBackToFrontCommandPile>()
+        val inputControlUUIDs = mutableListOf<String>()
+
         o- renderOrderParamsForm(initCommands = initCommands,
+                                 inputControlUUIDs = inputControlUUIDs,
                                  contactNameVirginValue = {""},
                                  emailVirginValue = {""},
                                  phoneVirginValue = {""},
@@ -24,15 +27,27 @@ fun handleGet_orderCreationForm() {
 
         o- run {
             val domid = AlBackPile.uuid()
+            val buttonBarUUID = AlBackPile.uuid()
             initCommands += AlBackToFrontCommandPile()-{o->
                 o.opcode = AlBackToFrontCommandOpcode.CreateControl
                 o.controlType = AlControlType.ButtonBarWithTicker
+                o.controlUUID = buttonBarUUID
                 o.rawDomid = domid
                 o.buttons = listOf(
-                    AlButtonParams(title = t("TOTE", "Продолжить"), level = AlButtonLevel.Primary, onClick = AlBackToFrontCommandPile()-{o->
-                        o.opcode = AlBackToFrontCommandOpcode.SayFuckYou
-                    })
-                )
+                    AlButtonParams(title = t("TOTE", "Продолжить"), level = AlButtonLevel.Primary,
+                                   onClick = listOf(
+                                       AlBackToFrontCommandPile()-{o->
+                                           o.opcode = AlBackToFrontCommandOpcode.SetTickerActive
+                                           o.controlUUID = buttonBarUUID
+                                           o.bool = true
+                                       },
+                                       AlBackToFrontCommandPile()-{o->
+                                           o.opcode = AlBackToFrontCommandOpcode.CallBackend
+                                           o.postURL = "https://alraune.local/fuckingCall"
+                                           o.backOpcode = AlFrontToBackCommandOpcode.SubmitOrderCreationForm
+                                           o.readValuesOfControlsWithUUIDs = inputControlUUIDs
+                                       }
+                                   )))
             }
             kdiv(Attrs(id = domid))
         }

@@ -124,6 +124,10 @@ object StartAlrauneBack {
                                     res.writer.print(File(AlBackPile0.tsMapOutputFile).readText())
                                 }
 
+                                "/fuckingCall" -> {
+                                    handleFuckingCall()
+                                }
+
                             // TODO:vgrechka @unboilerplate
 //                                AlPagePath.debug_post_dumpStackByID -> handlePost_debug_post_dumpStackByID()
 //                                AlPagePath.debug_post_dumpBackCodePath -> handlePost_debug_post_dumpBackCodePath()

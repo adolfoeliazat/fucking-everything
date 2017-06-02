@@ -42,18 +42,62 @@ namespace alraune {
         }
 
         update() {
+            const buttons = this.bob.backPile.buttons
+            const tickerID = nextUID()
+            const buttonIDBase = nextUID()
+
             this.bob.setHTML(buildString(s => {
-                s.ln("pizdarde")
+                s.ln(`<style>
+                          #${tickerID} {
+                              display: none;
+                              width: 14px;
+                              background-color: ${Color.BLUE_GRAY_600};
+                              height: 34px;
+                              float: right;
+                              animation-name: ${tickerID};
+                              animation-duration: 500ms;
+                              animation-iteration-count: infinite;
+                          }
+                          @keyframes ${tickerID} {0% {opacity: 1;} 100% {opacity: 0;}}
+                      </style>`)
+                s.ln(`<div>`)
+
+                for (const [index, button] of withIndex(buttons)) {
+                    s.ln(`<button id="${buttonIDBase}-${index}" class="btn btn-${button.level.toLowerCase()}">${escapeHTML(button.title)}</button>`)
+                }
+                s.ln(`<div id="${tickerID}"></div>`)
+                s.ln(`</div>`)
             }))
+
+            for (const [index, button] of withIndex(buttons)) {
+                setOnClick(byIDSingle(`${buttonIDBase}-${index}`), () => {
+                    executeBackCommands(button.onClick)
+                })
+            }
+
+            state.uuidToSomething[this.bob.backPile.controlUUID] =
+                new class implements Ticker {
+                    /// @augment 543740c9-1bb5-4e6e-a4b0-2adec91f19b1
+                    setActive(x: boolean): void {
+                        byIDSingle(tickerID).show()
+                        for (const [index, button] of withIndex(buttons)) {
+                            byIDSingle(`${buttonIDBase}-${index}`).attr("disabled", "disabled")
+                        }
+                    }
+                }
         }
     }
 
-    export class DocumentCategoryPicker implements Alice10 {
+    export class DocumentCategoryPicker implements Alice10, FrontToBackContributor {
         /// @augment 9086702e-f236-465b-b689-8a57da9d55a6
         readonly bob = new Bob10()
         readonly selectID = nextUID()
         readonly backButtonID = nextUID()
         readonly pathExceptLast = <AlUADocumentCategory[]>[]
+
+        contributeToFrontToBackCommand(): void {
+            state2.frontToBackCommand[this.bob.backPile.ftbProp] = this.jSelect().val()
+        }
 
         init() {
             let category = this.findCategoryOrBitch(this.bob.backPile.stringValue)
@@ -71,7 +115,7 @@ namespace alraune {
 
             this.update()
 
-            this.selectJQ().val(last.id)
+            this.jSelect().val(last.id)
         }
 
         private findCategoryOrBitch(id: string): AlUADocumentCategory {
@@ -94,7 +138,7 @@ namespace alraune {
         }
 
         debug_setSelectValue(categoryID: string) {
-            this.selectJQ().val(categoryID)
+            this.jSelect().val(categoryID)
             this.handleSelectChange()
         }
 
@@ -124,19 +168,19 @@ namespace alraune {
                 }
             }))
 
-            this.selectJQ().on("change", () => {
+            this.jSelect().on("change", () => {
                 this.handleSelectChange()
             })
 
-            const backButtonJQ = byIDNoneOrSingle(this.backButtonID)
-            if (backButtonJQ !== undefined) {
-                backButtonJQ.on("click", () => {
+            const jBackButton = byIDNoneOrSingle(this.backButtonID)
+            if (jBackButton !== undefined) {
+                jBackButton.on("click", () => {
                     this.handleBackButtonClick()
                 })
             }
         }
 
-        private selectJQ(): JQuery {
+        private jSelect(): JQuery {
             return byIDSingle(this.selectID)
         }
 
@@ -144,7 +188,7 @@ namespace alraune {
             const categoryID = this.getSelectedCategoryID()
             const item = this.pathExceptLast[this.pathExceptLast.length - 1].children
                     .find(x => x.id == categoryID)
-                || wtf("5162f6ed-31bc-4e89-8088-5528b9ea43d5")
+                    || wtf("5162f6ed-31bc-4e89-8088-5528b9ea43d5")
             if (item.children.length > 0) {
                 this.pathExceptLast.push(item)
                 this.update()
@@ -152,12 +196,20 @@ namespace alraune {
         }
 
         private getSelectedCategoryID(): string {
-            return this.selectJQ().val() || wtf("975e6a00-5798-44dd-a704-5e9f47e1e678")
+            return this.jSelect().val() || wtf("975e6a00-5798-44dd-a704-5e9f47e1e678")
         }
     }
 
     export function isDocumentCategoryPicker(x: any): x is DocumentCategoryPicker {
         return x && x.__isDocumentCategoryPicker
+    }
+
+    export interface Ticker {
+        setActive(x: boolean): void
+    }
+
+    export function isTicker(x: any): x is Ticker {
+        return x && x.__isTicker
     }
 
 }

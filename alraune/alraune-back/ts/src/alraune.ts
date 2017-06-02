@@ -7,10 +7,30 @@ namespace alraune {
     export function cast<T>(shit: any, check: (x: any) => x is T): T {
         if (check(shit))
             return shit
-        else
-            if (shit.__stackAtCreation)
+        else {
+            if (typeof shit === "object" && shit.__stackAtCreation)
                 console.warn("shit.__stackAtCreation", shit.__stackAtCreation)
-            return wtf(`One does not simply cast shit via ${check.name}`, {shit, check})
+
+            let shitDescription: string = typeof shit
+            if (shitDescription === "object")
+                shitDescription = "shit"
+            return wtf(`One does not simply cast ${shitDescription} via ${check.name}`, {shit, check})
+        }
+    }
+
+    export function castIndexed<T>(shitContainer: any, index: string | number, check: (x: any) => x is T): T {
+        const shit = shitContainer[index]
+        if (check(shit))
+            return shit
+        else {
+            if (typeof shit === "object" && shit.__stackAtCreation)
+                console.warn("shit.__stackAtCreation", shit.__stackAtCreation)
+
+            let shitDescription: string = typeof shit
+            if (shitDescription === "object")
+                shitDescription = "shit"
+            return wtf(`One does not simply cast ${shitDescription} via ${check.name}`, {shitContainer, index, shit, check})
+        }
     }
 
     export function unpileDomid(p: AlBackToFrontCommandPile): string {
@@ -104,10 +124,20 @@ namespace alraune {
                     })
                     const jControl = JQPile.ensureSingle(jShit.find(selector))
 
-                    const co = new class implements StringValueControl, Focusable {
+                    const co = new class implements StringValueControl, Focusable, FrontToBackContributor {
                         /// @augment 662e6426-5c73-49d5-b876-fe1ace1230b1
-                        setValue(value: string) {jControl.val(value)}
-                        focus() {jControl.focus()}
+
+                        contributeToFrontToBackCommand(): void {
+                            state2.frontToBackCommand[pile.ftbProp] = jControl.val()
+                        }
+
+                        setValue(value: string) {
+                            jControl.val(value)
+                        }
+
+                        focus() {
+                            jControl.focus()
+                        }
                     }
                     control = co
                     co.setValue(pile.stringValue)
@@ -115,6 +145,7 @@ namespace alraune {
                 else wtf(`adf4ab63-23c2-40bc-b059-c0232cabcdb2`, pile)
             }
 
+            state.uuidToSomething[pile.controlUUID] = control
             ;(state.debug.nameToControl as any)[pile.name] = control
             byIDSingle(unpileDomid(pile)).replaceWith(jShit)
             afterControlDOMCreated()
@@ -153,8 +184,46 @@ namespace alraune {
             })
         }
 
+        else if (pile.opcode === "SayFuckYou") {
+            clog("Yeah, fuck you... sure...")
+        }
+
         else if (pile.opcode === "FocusControl") {
             controlByProp(pile.ftbProp).which(isFocusable).focus()
+        }
+
+        else if (pile.opcode === "SetTickerActive") {
+            const ticker = cast(state.uuidToSomething[pile.controlUUID], isTicker)
+            ticker.setActive(pile.bool)
+        }
+
+        else if (pile.opcode === "CallBackend") {
+            state2.frontToBackCommand = {} as AlFrontToBackCommandPile
+            state2.frontToBackCommand.opcode = pile.backOpcode
+            for (const controlUUID of pile.readValuesOfControlsWithUUIDs) {
+                const contributor = castIndexed(state.uuidToSomething, controlUUID, isFrontToBackContributor)
+                contributor.contributeToFrontToBackCommand()
+            }
+
+            const xhr = new XMLHttpRequest()
+            xhr.open("POST", pile.postURL)
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4) {
+                    if (xhr.status == 200) {
+                        state.backResponse = JSON.parse(xhr.responseText)
+                        executeBackCommands(state.backResponse.commands)
+                    } else {
+                        console.error(`Got shitty response from backend: status = ${xhr.status}`)
+                        // TODO:vgrechka Show error banner
+                    }
+                }
+            }
+
+            const shitForSending = state2.frontToBackCommand
+            clog({shitForSending})
+            xhr.send(JSON.stringify(shitForSending))
         }
 
         else wtf(`184e8001-a4eb-49fc-accb-ad17dabc052f`, {pile})
@@ -235,11 +304,16 @@ namespace alraune {
     }
 
     export const state = {
-        backShit: {} as BackShit,
+        backResponse: {} as AlBackResponsePile,
         modalShown: new TestLock(),
         debug: {
-            nameToControl: {} as {[Key in AlFrontToBackCommandPileProp]?: any}
-        }
+            nameToControl: {} as {[K in AlFrontToBackCommandPileProp]?: any}
+        },
+        uuidToSomething: {} as {[K: string]: any},
+    }
+
+    export const state2 = new class {
+        frontToBackCommand: AlFrontToBackCommandPile
     }
 
     function orTestTimeout<T>({promise, ms} : {promise: Promise<T>, ms: number}): Promise<T> {
@@ -366,10 +440,6 @@ namespace alraune {
         return res
     }
 
-    interface BackShit {
-        commands: AlBackToFrontCommandPile[]
-    }
-
     export namespace JQPile {
         export function ensureSingle(j: JQuery): JQuery {
             if (j.length != 1)
@@ -378,7 +448,7 @@ namespace alraune {
         }
     }
 
-    function escapeHTML(s: string): string {
+    export function escapeHTML(s: string): string {
         return s
             .replace("&", "&amp;")
             .replace("<", "&lt;")
@@ -407,7 +477,9 @@ namespace alraune {
     }
 
     export function initShit() {
-        parseShitFromBackAndExecuteCommands()
+        const j = byIDSingle("shitPassedFromBackToFront2")
+        state.backResponse = JSON.parse(j.attr("data-shit"))
+        executeBackCommands(state.backResponse.commands)
         initDebugShit()
     }
 
@@ -417,17 +489,21 @@ namespace alraune {
         }
     }
 
-    function parseShitFromBackAndExecuteCommands() {
-        const j = byIDSingle("shitPassedFromBackToFront2")
-        state.backShit = JSON.parse(j.attr("data-shit"))
-        // clog("backShit", JSON.stringify(state.backShit))
+    export function withIndex<T>(xs: T[]): [number, T][] {
+        let i = 0
+        return xs.map(x => [i++, x]) as [number, T][]
+    }
 
-        executeBackCommands(state.backShit.commands)
+    export interface FrontToBackContributor {
+        contributeToFrontToBackCommand(): void
+    }
+
+    export function isFrontToBackContributor(x: any): x is FrontToBackContributor {
+        return x && x.__isFrontToBackContributor
     }
 
 
-
-    const Color = {
+    export const Color = {
         // https://www.google.com/design/spec/style/color.html#color-color-palette
         BLACK: "#000000", BLACK_BOOT: "#333333", WHITE: "#ffffff",
         RED_50: "#ffebee", RED_100: "#ffcdd2", RED_200: "#ef9a9a", RED_300: "#e57373", RED_400: "#ef5350", RED_500: "#f44336", RED_600: "#e53935", RED_700: "#d32f2f", RED_800: "#c62828", RED_900: "#b71c1c", RED_A100: "#ff8a80", RED_A200: "#ff5252", RED_A400: "#ff1744", RED_A700: "#d50000",

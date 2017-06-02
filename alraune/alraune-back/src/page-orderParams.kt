@@ -69,11 +69,23 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
                 exhaustive=when (activeTab) {
                     OrderTab.PARAMS -> {
                         val initCommands = mutableListOf<AlBackToFrontCommandPile>()
+                        val inputControlUUIDs = mutableListOf<String>()
                         val modalHtml = AlRenderPile.renderModal(ModalParams(
                             width = "80rem",
                             leftMarginColor = Color.BLUE_GRAY_300,
                             title = t("TOTE", "Параметры"),
-                            body = AlRenderPile.renderOrderParamsForm(initCommands, {rctx.order.contactName}, {rctx.order.email}, {rctx.order.phone}, {rctx.order.documentTypeID}, {rctx.order.documentCategoryID}, {rctx.order.documentTitle}, {rctx.order.numPages.toString()}, {rctx.order.numSources.toString()}) {rctx.order.documentDetails}
+                            body = AlRenderPile.renderOrderParamsForm(
+                                initCommands = initCommands,
+                                contactNameVirginValue = {rctx.order.contactName},
+                                emailVirginValue = {rctx.order.email},
+                                phoneVirginValue = {rctx.order.phone},
+                                documentTypeVirginValue = {rctx.order.documentTypeID},
+                                documentCategoryVirginValue = {rctx.order.documentCategoryID},
+                                documentTitleVirginValue = {rctx.order.documentTitle},
+                                numPagesVirginValue = {rctx.order.numPages.toString()},
+                                numSourcesVirginValue = {rctx.order.numSources.toString()},
+                                detailsVirginValue = {rctx.order.documentDetails},
+                                inputControlUUIDs = inputControlUUIDs)
                         )).render()
 
 

@@ -233,11 +233,11 @@ object AlRenderPile {
 //        }
 //    }
 
-    fun renderOrderParamsForm(initCommands: MutableList<AlBackToFrontCommandPile>, contactNameVirginValue: () -> String, emailVirginValue: () -> String, phoneVirginValue: () -> String, documentTypeVirginValue: () -> String, documentCategoryVirginValue: () -> String, documentTitleVirginValue: () -> String, numPagesVirginValue: () -> String, numSourcesVirginValue: () -> String, detailsVirginValue: () -> String): Tag {
+    fun renderOrderParamsForm(initCommands: MutableList<AlBackToFrontCommandPile>, contactNameVirginValue: () -> String, emailVirginValue: () -> String, phoneVirginValue: () -> String, documentTypeVirginValue: () -> String, documentCategoryVirginValue: () -> String, documentTitleVirginValue: () -> String, numPagesVirginValue: () -> String, numSourcesVirginValue: () -> String, detailsVirginValue: () -> String, inputControlUUIDs: MutableList<String>): Tag {
         return insideMarkers(
             id = AlDomid.modalContent,
             content = kdiv{o->
-                val cf = ControlFucker(initCommands = initCommands)
+                val cf = ControlBuilder(initCommands = initCommands, inputControlUUIDs = inputControlUUIDs)
 
                 o- row(marginBottom = null){o->
                     o- col(4, cf.begin(title = t("TOTE", "Контактное имя"),

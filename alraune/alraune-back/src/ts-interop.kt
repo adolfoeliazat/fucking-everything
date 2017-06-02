@@ -21,16 +21,26 @@ class AlBackToFrontCommandPile {
     var initCommands: MutableList<AlBackToFrontCommandPile>? = null
     var putInFormGroup: Boolean? = null
     var controlType: AlControlType? = null
+    var controlUUID: String? = null
+    var readValuesOfControlsWithUUIDs: List<String>? = null
     var buttons: List<AlButtonParams>? = null
+    var bool: Boolean? = null
+    var backOpcode: AlFrontToBackCommandOpcode? = null
+    var postURL: String? = null
+    var errorBannerPlaceholderDomidForLowLevelPostFailure: String? = null
 
     @JsonSerialize(using = PropertyNameSerializer::class)
     var ftbProp: KProperty1<AlFrontToBackCommandPile, *>? = null
 }
 
+class AlBackResponsePile {
+    var commands: List<AlBackToFrontCommandPile>? = null
+}
+
 class AlButtonParams(
     val title: String,
     val level: AlButtonLevel,
-    val onClick: AlBackToFrontCommandPile
+    val onClick: List<AlBackToFrontCommandPile>
 )
 
 enum class AlButtonLevel {
@@ -38,7 +48,7 @@ enum class AlButtonLevel {
 }
 
 enum class AlBackToFrontCommandOpcode {
-    CreateControl, OpenModalOnElementClick, FocusControl, SayFuckYou
+    CreateControl, OpenModalOnElementClick, FocusControl, SayFuckYou, SetTickerActive, CallBackend
 }
 
 enum class AlControlType {
@@ -66,7 +76,7 @@ class TitledValue(val value: String, val title: String)
 )
 
 enum class AlFrontToBackCommandOpcode {
-    SubmitOrderParamsForm
+    SubmitOrderCreationForm, SubmitOrderParamsForm
 }
 
 enum class AlDomid {

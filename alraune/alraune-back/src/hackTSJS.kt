@@ -76,8 +76,12 @@ fun hackTSJS(): String {
                 out.append(" this.__is$className = true;")
             }
 
-            if (s1.startsWith("implements ")) {
-                val s2 = s1.substring("implements ".length)
+            val implementsPrefix = when {
+                className.isBlank() -> "implements "
+                else -> "$className implements "
+            }
+            if (s1.startsWith(implementsPrefix)) {
+                val s2 = s1.substring(implementsPrefix.length)
                 val interfaceNames = s2.split(",").map {it.trim()}
                 for (interfaceName in interfaceNames) {
                     out.append(" this.__is$interfaceName = true;")
