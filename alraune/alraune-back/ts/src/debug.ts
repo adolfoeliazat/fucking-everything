@@ -69,6 +69,30 @@ namespace alraune {
             byDebugTag("submitButton").click()
         })
 
+        declareMaf("/orderCreationForm", async function maf202() {
+            { // Everything wrong
+                byDebugTag("submitButton").click()
+                if (1 === 1) return
+            }
+            {
+                {const s = debug.setControlValue
+                    s("contactName", `Иммануил Пердондэ`)
+                    s("email", `bullshit`)
+                    s("phone", `+38 (068) 4542823`)
+                    s("documentType", "PRACTICE")
+                    s("documentTitle", "Как я пинал хуи на практике")
+                    s("documentDetails", "Детали? Я ебу, какие там детали...")
+                    s("numPages", "35")
+                    s("numSources", "7")
+                }
+                {const p = getDocumentCategoryPickerControl()
+                    p.debug_setSelectValue(AlUADocumentCategories.technicalID)
+                    p.debug_setSelectValue(AlUADocumentCategories.programmingID)
+                }
+                byDebugTag("submitButton").click()
+            }
+        })
+
         function getDocumentCategoryPickerControl(): DocumentCategoryPicker {
             return cast(state.debug.nameToControl.documentCategory, isDocumentCategoryPicker)
         }

@@ -226,6 +226,29 @@ namespace alraune {
             xhr.send(JSON.stringify(shitForSending))
         }
 
+        else if (pile.opcode === "ReplaceElement") {
+            let jTemporaryNodeContainer: JQuery; {
+                const domid = "jTemporaryNodeContainer"
+                let j = byIDNoneOrSingle(domid)
+                if (!j) {
+                    j = $(`<div id="${domid}" style="display: none;"></div>`)
+                    $("body").append(j)
+                }
+                jTemporaryNodeContainer = j
+            }
+
+            const domid = unpileDomid(pile)
+            const jElementToBeReplaced = byIDSingle(domid)
+            jElementToBeReplaced.attr("id", "toBeReplaced")
+            const jNewElement = $(pile.html)
+            if (jNewElement.attr("id") !== domid)
+                bitch("97b83d01-53bf-4e85-b54a-8d7d9a9b016f", {pile})
+            jTemporaryNodeContainer.append(jNewElement)
+            executeBackCommands(pile.initCommands)
+
+            jElementToBeReplaced.replaceWith(jNewElement)
+        }
+
         else wtf(`184e8001-a4eb-49fc-accb-ad17dabc052f`, {pile})
     }
 

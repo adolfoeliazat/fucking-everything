@@ -5,7 +5,7 @@
  */
 
 //
-// Generated on Fri Jun 02 13:02:08 EEST 2017
+// Generated on Fri Jun 02 14:55:08 EEST 2017
 // Model: e:/fegh/alraune/alraune-back/src/alraune-entities.kt
 //
 

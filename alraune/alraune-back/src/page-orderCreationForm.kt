@@ -7,7 +7,19 @@ import alraune.shared.AlUADocumentCategories
 import vgrechka.*
 
 fun handleGet_orderCreationForm() {
-    spitUsualPage(replaceableContent(kdiv{o->
+    spitUsualPage(renderOrderCreationFormPage())
+//    val fields = OrderParamsFields(
+//        newAlUAOrder(
+//            uuid = "boobs", state = UAOrderState.CUSTOMER_DRAFT, email = "",
+//            contactName = "", phone = "", documentTypeID = AlDocumentType.ABSTRACT.name, documentTitle = "",
+//            documentDetails = "", documentCategoryID = AlDocumentCategories.miscID, numPages = -1, numSources = -1)
+//            .toForm())
+//    fields.fieldCtx.noValidation()
+//    spitOrderCreationFormPage(fields)
+}
+
+private fun renderOrderCreationFormPage(): Tag {
+    return kdiv(Attrs(domid = AlDomid.replaceableContent)){o->
         o- pageHeader(t("TOTE", "Йобаный Заказ"))
 
         val initCommands = mutableListOf<AlBackToFrontCommandPile>()
@@ -57,15 +69,7 @@ fun handleGet_orderCreationForm() {
         shitToFront2("b690958f-f5d8-40c6-997d-39f5f4debf49") {
             it.commands += initCommands
         }
-    }))
-//    val fields = OrderParamsFields(
-//        newAlUAOrder(
-//            uuid = "boobs", state = UAOrderState.CUSTOMER_DRAFT, email = "",
-//            contactName = "", phone = "", documentTypeID = AlDocumentType.ABSTRACT.name, documentTitle = "",
-//            documentDetails = "", documentCategoryID = AlDocumentCategories.miscID, numPages = -1, numSources = -1)
-//            .toForm())
-//    fields.fieldCtx.noValidation()
-//    spitOrderCreationFormPage(fields)
+    }
 }
 
 fun handlePost_createOrder() {

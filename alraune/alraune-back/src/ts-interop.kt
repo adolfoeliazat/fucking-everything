@@ -49,7 +49,8 @@ enum class AlButtonLevel {
 }
 
 enum class AlBackToFrontCommandOpcode {
-    CreateControl, OpenModalOnElementClick, FocusControl, SayFuckYou, SetTickerActive, CallBackend
+    CreateControl, OpenModalOnElementClick, FocusControl, SayFuckYou, SetTickerActive, CallBackend,
+    ReplaceElement
 }
 
 enum class AlControlType {
