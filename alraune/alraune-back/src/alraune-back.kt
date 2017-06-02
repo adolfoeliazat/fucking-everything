@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import org.eclipse.jetty.server.handler.HandlerCollection
 import org.eclipse.jetty.server.handler.ResourceHandler
-import sun.misc.Regexp
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty0
@@ -109,6 +108,12 @@ object StartAlrauneBack {
                             res.contentType = "text/html; charset=utf-8"
 
                             when (req.pathInfo) {
+                                "/favicon.ico" -> {
+                                    // TODO:vgrechka ...
+                                    res.contentType = "text/css; charset=utf-8"
+                                    res.writer.print("")
+                                }
+
                                 "/alraune.css" -> {
                                     res.contentType = "text/css; charset=utf-8"
                                     res.writer.print(AlCSS.sheet)
@@ -133,7 +138,6 @@ object StartAlrauneBack {
 //                                AlPagePath.debug_post_dumpBackCodePath -> handlePost_debug_post_dumpBackCodePath()
                                 AlPagePath.debug_post_fuckDatabaseForNextPost -> handlePost_debug_post_fuckDatabaseForNextPost()
                                 AlPagePath.orderCreationForm -> handleGet_orderCreationForm()
-                                AlPagePath.post_createOrder -> handlePost_createOrder()
                                 AlPagePath.orderParams -> handleGet_orderParams()
                                 AlPagePath.post_setOrderParams -> handlePost_setOrderParams()
                                 AlPagePath.orderFiles -> handleGet_orderFiles()
@@ -276,7 +280,8 @@ class AlRequestContext {
 }
 
 fun spitLandingPage() {
-    spitUsualPage(pageTitle("Fuck You"))
+    imf("8ca6cab6-bc76-4485-b267-bfc0794693af")
+//    spitUsualPage(pageTitle("Fuck You"))
 }
 
 val shitForFront get() = AlRequestContext.the.shitPassedFromBackToFront
@@ -335,19 +340,54 @@ fun makeURLPart(path: String, params: AlGetParams = AlGetParams()): String {
 }
 
 
-fun spitUsualPage(pipiska: Renderable) {
+//fun spitUsualPage(pipiska: Renderable) {
+//    val ctx = AlRequestContext.the
+//    val html = kdiv.className("container"){o->
+//        o- pipiska
+//
+//        val om = ObjectMapper()
+//        o- insideMarkers(AlDomid.shitPassedFromBackToFront, tamperWithAttrs = {
+//            it.copy(dataShit = om.writeValueAsString(ctx.shitPassedFromBackToFront))
+//        })
+//        o- insideMarkers(AlDomid.shitPassedFromBackToFront2, tamperWithAttrs = {
+//            it.copy(dataShit = om.writeValueAsString(ctx.shitPassedFromBackToFront2))
+//        })
+//    }.render()
+//
+//    ctx.res.writer.print(buildString {
+//        ln("<!DOCTYPE html>")
+//        ln("<html lang='en'>")
+//        ln("<head>")
+//        ln("    <meta charset='utf-8'>")
+//        ln("    <meta http-equiv='X-UA-Compatible' content='IE=edge'>")
+//        ln("    <meta name='viewport' content='width=device-width, initial-scale=1'>")
+//        ln("    <title>Alraune</title>")
+//        ln("")
+//        ln("    <link href='/node_modules/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet'>")
+//        ln("    <link rel='stylesheet' href='/node_modules/font-awesome/css/font-awesome.min.css'>")
+//        ln("    <link rel='stylesheet' href='alraune.css'>")
+//        ln("</head>")
+//        ln("<body>")
+//        ln(html)
+//        ln("    <script src='/node_modules/jquery/dist/jquery.min.js'></script>")
+//        ln("    <script src='/node_modules/bootstrap/dist/js/bootstrap.min.js'></script>")
+//        ln("    <script src='/alraune.js?${System.currentTimeMillis()}'></script>")
+////        ln("    <script src='/ts/out/alraune.js?${System.currentTimeMillis()}'></script>")
+//        // ln("    <script src='/alraune-front/lib/kotlin.js'></script>")
+//        // ln("    <script src='/shared-kjs/shared-kjs.js?${System.currentTimeMillis()}'></script>")
+//        // ln("    <script src='/alraune-front/alraune-front.js?${System.currentTimeMillis()}'></script>")
+//        ln("</body>")
+//        ln("</html>")
+//    })
+//}
+
+fun spitUsualPage(pipiska: Renderable, initialBackResponse: AlBackResponsePile) {
     val ctx = AlRequestContext.the
     val html = kdiv.className("container"){o->
         o- pipiska
-
-        val om = ObjectMapper()
-        o- insideMarkers(AlDomid.shitPassedFromBackToFront, tamperWithAttrs = {
-            it.copy(dataShit = om.writeValueAsString(ctx.shitPassedFromBackToFront))
-        })
-        o- insideMarkers(AlDomid.shitPassedFromBackToFront2, tamperWithAttrs = {
-            it.copy(dataShit = om.writeValueAsString(ctx.shitPassedFromBackToFront2))
-        })
     }.render()
+
+    val json = ObjectMapper().writeValueAsString(initialBackResponse)
 
     ctx.res.writer.print(buildString {
         ln("<!DOCTYPE html>")
@@ -367,6 +407,7 @@ fun spitUsualPage(pipiska: Renderable) {
         ln("    <script src='/node_modules/jquery/dist/jquery.min.js'></script>")
         ln("    <script src='/node_modules/bootstrap/dist/js/bootstrap.min.js'></script>")
         ln("    <script src='/alraune.js?${System.currentTimeMillis()}'></script>")
+        ln("    <script>window.initialBackResponse = $json</script>")
 //        ln("    <script src='/ts/out/alraune.js?${System.currentTimeMillis()}'></script>")
         // ln("    <script src='/alraune-front/lib/kotlin.js'></script>")
         // ln("    <script src='/shared-kjs/shared-kjs.js?${System.currentTimeMillis()}'></script>")

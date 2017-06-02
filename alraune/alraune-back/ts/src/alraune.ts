@@ -507,8 +507,12 @@ namespace alraune {
     }
 
     export function initShit() {
-        const j = byIDSingle("shitPassedFromBackToFront2")
-        state.backResponse = JSON.parse(j.attr("data-shit"))
+        // const j = byIDSingle("shitPassedFromBackToFront2")
+        // state.backResponse = JSON.parse(j.attr("data-shit"))
+
+        const initialBackResponse = (window as any).initialBackResponse
+        clog({initialBackResponse})
+        state.backResponse = initialBackResponse
         executeBackCommands(state.backResponse.commands)
         initDebugShit()
     }

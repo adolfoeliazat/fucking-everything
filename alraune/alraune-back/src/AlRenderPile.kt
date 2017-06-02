@@ -233,80 +233,80 @@ object AlRenderPile {
 //        }
 //    }
 
-    fun renderOrderParamsForm(initCommands: MutableList<AlBackToFrontCommandPile>, contactNameVirginValue: () -> String, emailVirginValue: () -> String, phoneVirginValue: () -> String, documentTypeVirginValue: () -> String, documentCategoryVirginValue: () -> String, documentTitleVirginValue: () -> String, numPagesVirginValue: () -> String, numSourcesVirginValue: () -> String, detailsVirginValue: () -> String, inputControlUUIDs: MutableList<String>): Tag {
-        return insideMarkers(
-            id = AlDomid.modalContent,
-            content = kdiv{o->
-                val cf = ControlBuilder(initCommands = initCommands, inputControlUUIDs = inputControlUUIDs)
-
-                o- row(marginBottom = null){o->
-                    o- col(4, cf.begin(title = t("TOTE", "Контактное имя"),
-                                       prop = AlFrontToBackCommandPile::contactName,
-                                       validate = AlBackPile::validateName,
-                                       virginValue = contactNameVirginValue)
-                        .text())
-
-                    o- col(4, cf.begin(title = t("TOTE", "Почта"),
-                                        prop = AlFrontToBackCommandPile::email,
-                                        validate = AlBackPile::validateEmail,
-                                        virginValue = emailVirginValue)
-                        .text())
-
-                    o- col(4, cf.begin(title = t("TOTE", "Телефон"),
-                                        prop = AlFrontToBackCommandPile::phone,
-                                        validate = AlBackPile::validatePhone,
-                                        virginValue = phoneVirginValue)
-                        .text())
-                }
-
-                o- row(marginBottom = null){o->
-                    o- col(4, cf.begin(title = t("TOTE", "Тип документа"),
-                                        prop = AlFrontToBackCommandPile::documentType,
-                                        validate = {imf("d6996f06-3773-48c8-9ab8-652a34bdc3dd")},
-                                        virginValue = documentTypeVirginValue)
-                        .select(values = AlUADocumentType.values().map {
-                            TitledValue(value = it.name, title = it.title)}))
-
-                    o- col(8, cf.begin(title = t("TOTE", "Категория"),
-                                        prop = AlFrontToBackCommandPile::documentCategory,
-                                        validate = {imf("a60d0581-9eb1-4bcc-bcb7-aad9de55cd62")},
-                                        virginValue = documentCategoryVirginValue)
-                        .documentCategoryPicker())
-                }
-
-                o- cf.begin(title = t("TOTE", "Тема работы (задание)"),
-                             prop = AlFrontToBackCommandPile::documentTitle,
-                             validate = {AlBackPile.validateString(it, 5, 300)},
-                             virginValue = documentTitleVirginValue)
-                    .text()
-
-                o- row(marginBottom = null){o->
-                    o- col(6, cf.begin(title = t("TOTE", "Страниц"),
-                                        prop = AlFrontToBackCommandPile::numPages,
-                                        validate = {AlBackPile.validateInt(it, 3, 500)},
-                                        virginValue = numPagesVirginValue)
-                        .text())
-
-                    o- col(6, cf.begin(title = t("TOTE", "Источников"),
-                                        prop = AlFrontToBackCommandPile::numSources,
-                                        validate = {AlBackPile.validateInt(it, 0, 50)},
-                                        virginValue = numSourcesVirginValue)
-                        .text())
-                }
-
-                o- cf.begin(title = t("TOTE", "Детали"),
-                             prop = AlFrontToBackCommandPile::documentDetails,
-                             validate = {AlBackPile.validateString(it, 5, 3000)},
-                             virginValue = detailsVirginValue)
-                    .textArea()
-
-                initCommands.add(AlBackToFrontCommandPile()-{o->
-                    o.opcode = AlBackToFrontCommandOpcode.FocusControl
-                    o.ftbProp = AlFrontToBackCommandPile::contactName
-                })
-            }
-        )
-    }
+//    fun renderOrderParamsForm(initCommands: MutableList<AlBackToFrontCommandPile>, contactNameVirginValue: () -> String, emailVirginValue: () -> String, phoneVirginValue: () -> String, documentTypeVirginValue: () -> String, documentCategoryVirginValue: () -> String, documentTitleVirginValue: () -> String, numPagesVirginValue: () -> String, numSourcesVirginValue: () -> String, detailsVirginValue: () -> String, inputControlUUIDs: MutableList<String>): Tag {
+//        return insideMarkers(
+//            id = AlDomid.modalContent,
+//            content = kdiv{o->
+//                val cf = ControlBuilder(initCommands = initCommands, inputControlUUIDs = inputControlUUIDs)
+//
+//                o- row(marginBottom = null){o->
+//                    o- col(4, cf.begin(title = t("TOTE", "Контактное имя"),
+//                                       prop = AlFrontToBackCommandPile::contactName,
+//                                       validate = AlBackPile::validateName,
+//                                       virginValue = contactNameVirginValue)
+//                        .text())
+//
+//                    o- col(4, cf.begin(title = t("TOTE", "Почта"),
+//                                        prop = AlFrontToBackCommandPile::email,
+//                                        validate = AlBackPile::validateEmail,
+//                                        virginValue = emailVirginValue)
+//                        .text())
+//
+//                    o- col(4, cf.begin(title = t("TOTE", "Телефон"),
+//                                        prop = AlFrontToBackCommandPile::phone,
+//                                        validate = AlBackPile::validatePhone,
+//                                        virginValue = phoneVirginValue)
+//                        .text())
+//                }
+//
+//                o- row(marginBottom = null){o->
+//                    o- col(4, cf.begin(title = t("TOTE", "Тип документа"),
+//                                        prop = AlFrontToBackCommandPile::documentType,
+//                                        validate = {imf("d6996f06-3773-48c8-9ab8-652a34bdc3dd")},
+//                                        virginValue = documentTypeVirginValue)
+//                        .select(values = AlUADocumentType.values().map {
+//                            TitledValue(value = it.name, title = it.title)}))
+//
+//                    o- col(8, cf.begin(title = t("TOTE", "Категория"),
+//                                        prop = AlFrontToBackCommandPile::documentCategory,
+//                                        validate = {imf("a60d0581-9eb1-4bcc-bcb7-aad9de55cd62")},
+//                                        virginValue = documentCategoryVirginValue)
+//                        .documentCategoryPicker())
+//                }
+//
+//                o- cf.begin(title = t("TOTE", "Тема работы (задание)"),
+//                             prop = AlFrontToBackCommandPile::documentTitle,
+//                             validate = {AlBackPile.validateString(it, 5, 300)},
+//                             virginValue = documentTitleVirginValue)
+//                    .text()
+//
+//                o- row(marginBottom = null){o->
+//                    o- col(6, cf.begin(title = t("TOTE", "Страниц"),
+//                                        prop = AlFrontToBackCommandPile::numPages,
+//                                        validate = {AlBackPile.validateInt(it, 3, 500)},
+//                                        virginValue = numPagesVirginValue)
+//                        .text())
+//
+//                    o- col(6, cf.begin(title = t("TOTE", "Источников"),
+//                                        prop = AlFrontToBackCommandPile::numSources,
+//                                        validate = {AlBackPile.validateInt(it, 0, 50)},
+//                                        virginValue = numSourcesVirginValue)
+//                        .text())
+//                }
+//
+//                o- cf.begin(title = t("TOTE", "Детали"),
+//                             prop = AlFrontToBackCommandPile::documentDetails,
+//                             validate = {AlBackPile.validateString(it, 5, 3000)},
+//                             virginValue = detailsVirginValue)
+//                    .textArea()
+//
+//                initCommands.add(AlBackToFrontCommandPile()-{o->
+//                    o.opcode = AlBackToFrontCommandOpcode.FocusControl
+//                    o.ftbProp = AlFrontToBackCommandPile::contactName
+//                })
+//            }
+//        )
+//    }
 
 }
 

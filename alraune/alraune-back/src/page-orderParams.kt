@@ -15,96 +15,98 @@ enum class OrderTab {
 }
 
 class SpitOrderTabPage(val activeTab: OrderTab) {
-    init {
-        shitToFront("d7c0af0d-2d10-47ca-ba44-ed3b8e969685") {
-            it.pageID = when (activeTab) {
-                OrderTab.PARAMS -> AlPageID.orderParams
-                OrderTab.FILES -> AlPageID.orderFiles
-            }
-        }
+    init {imf("10abec5b-2895-4b25-ad8e-73b7eeafa912")}
 
-        spitUsualPage(replaceableContent(kdiv{o->
-            val canEdit = rctx.order.state == UAOrderState.CUSTOMER_DRAFT
-
-            o- renderOrderTitle(rctx.order)
-            o- kdiv.className(AlCSS.submitForReviewBanner){o->
-                o- kdiv(Style(flexGrow = "1")).text(t("TOTE", "Убедись, что все верно. Подредактируй, если нужно. Возможно, добавь файлы. А затем..."))
-                o- kbutton(Attrs(domid = AlDomid.submitOrderForReviewButton, className = "btn btn-primary"), t("TOTE", "Отправить на проверку"))
-            }
-
-            o- kdiv(Style(position = "relative")){o->
-                o- kdiv(Attrs(className = "nav nav-tabs", style = Style(marginBottom = "0.5rem"))){o->
-                    fun maybeActive(tab: OrderTab) = if (activeTab == tab) "active" else ""
-
-                    o- kli.className(maybeActive(OrderTab.PARAMS))
-                        .add(ka(Attrs(href = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = rctx.order.uuid))))
-                                 .add(t("Parameters", "Параметры")))
-
-                    o- kli.className(maybeActive(OrderTab.FILES))
-                        .add(ka(Attrs(href = makeURLPart(AlPagePath.orderFiles, AlGetParams(orderUUID = rctx.order.uuid))))
-                                 .add(t("Files", "Файлы")))
-                }
-
-                if (canEdit) {
-                    val topRightButtonIcon = when (activeTab) {
-                        OrderTab.PARAMS -> fa.pencil
-                        OrderTab.FILES -> fa.plus
-                    }
-                    o- kbutton(Attrs(domid = AlDomid.topRightButton, className = "btn btn-default",
-                                     style = Style(position = "absolute", right = "0", top = "0")))
-                        .add(ki.className(topRightButtonIcon))
-                }
-            }
-
-            exhaustive=when (activeTab) {
-                OrderTab.PARAMS -> {
-                    o- renderOrderParams(rctx.order)
-                }
-                OrderTab.FILES -> {
-                    imf("10a46306-0ce5-498d-94e1-e7c24efbb090")
-                }
-            }
-
-            if (canEdit) {
-                exhaustive=when (activeTab) {
-                    OrderTab.PARAMS -> {
-                        val initCommands = mutableListOf<AlBackToFrontCommandPile>()
-                        val inputControlUUIDs = mutableListOf<String>()
-                        val modalHtml = AlRenderPile.renderModal(ModalParams(
-                            width = "80rem",
-                            leftMarginColor = Color.BLUE_GRAY_300,
-                            title = t("TOTE", "Параметры"),
-                            body = AlRenderPile.renderOrderParamsForm(
-                                initCommands = initCommands,
-                                contactNameVirginValue = {rctx.order.contactName},
-                                emailVirginValue = {rctx.order.email},
-                                phoneVirginValue = {rctx.order.phone},
-                                documentTypeVirginValue = {rctx.order.documentType},
-                                documentCategoryVirginValue = {rctx.order.documentCategory},
-                                documentTitleVirginValue = {rctx.order.documentTitle},
-                                numPagesVirginValue = {rctx.order.numPages.toString()},
-                                numSourcesVirginValue = {rctx.order.numSources.toString()},
-                                detailsVirginValue = {rctx.order.documentDetails},
-                                inputControlUUIDs = inputControlUUIDs)
-                        )).render()
-
-
-                        shitToFront2("298dca01-eee5-49e4-8234-1002676f67ba") {
-                            it.commands += AlBackToFrontCommandPile().also {
-                                it.opcode = AlBackToFrontCommandOpcode.OpenModalOnElementClick
-                                it.domid = AlDomid.topRightButton
-                                it.html = modalHtml
-                                it.initCommands = initCommands
-                            }
-                        }
-                    }
-                    OrderTab.FILES -> {
-                        imf("f04ee25a-881d-4ca5-90e8-124cc42645ac")
-                    }
-                }
-            }
-        }))
-    }
+//    init {
+//        shitToFront("d7c0af0d-2d10-47ca-ba44-ed3b8e969685") {
+//            it.pageID = when (activeTab) {
+//                OrderTab.PARAMS -> AlPageID.orderParams
+//                OrderTab.FILES -> AlPageID.orderFiles
+//            }
+//        }
+//
+//        spitUsualPage(replaceableContent(kdiv{o->
+//            val canEdit = rctx.order.state == UAOrderState.CUSTOMER_DRAFT
+//
+//            o- renderOrderTitle(rctx.order)
+//            o- kdiv.className(AlCSS.submitForReviewBanner){o->
+//                o- kdiv(Style(flexGrow = "1")).text(t("TOTE", "Убедись, что все верно. Подредактируй, если нужно. Возможно, добавь файлы. А затем..."))
+//                o- kbutton(Attrs(domid = AlDomid.submitOrderForReviewButton, className = "btn btn-primary"), t("TOTE", "Отправить на проверку"))
+//            }
+//
+//            o- kdiv(Style(position = "relative")){o->
+//                o- kdiv(Attrs(className = "nav nav-tabs", style = Style(marginBottom = "0.5rem"))){o->
+//                    fun maybeActive(tab: OrderTab) = if (activeTab == tab) "active" else ""
+//
+//                    o- kli.className(maybeActive(OrderTab.PARAMS))
+//                        .add(ka(Attrs(href = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = rctx.order.uuid))))
+//                                 .add(t("Parameters", "Параметры")))
+//
+//                    o- kli.className(maybeActive(OrderTab.FILES))
+//                        .add(ka(Attrs(href = makeURLPart(AlPagePath.orderFiles, AlGetParams(orderUUID = rctx.order.uuid))))
+//                                 .add(t("Files", "Файлы")))
+//                }
+//
+//                if (canEdit) {
+//                    val topRightButtonIcon = when (activeTab) {
+//                        OrderTab.PARAMS -> fa.pencil
+//                        OrderTab.FILES -> fa.plus
+//                    }
+//                    o- kbutton(Attrs(domid = AlDomid.topRightButton, className = "btn btn-default",
+//                                     style = Style(position = "absolute", right = "0", top = "0")))
+//                        .add(ki.className(topRightButtonIcon))
+//                }
+//            }
+//
+//            exhaustive=when (activeTab) {
+//                OrderTab.PARAMS -> {
+//                    o- renderOrderParams(rctx.order)
+//                }
+//                OrderTab.FILES -> {
+//                    imf("10a46306-0ce5-498d-94e1-e7c24efbb090")
+//                }
+//            }
+//
+//            if (canEdit) {
+//                exhaustive=when (activeTab) {
+//                    OrderTab.PARAMS -> {
+//                        val initCommands = mutableListOf<AlBackToFrontCommandPile>()
+//                        val inputControlUUIDs = mutableListOf<String>()
+//                        val modalHtml = AlRenderPile.renderModal(ModalParams(
+//                            width = "80rem",
+//                            leftMarginColor = Color.BLUE_GRAY_300,
+//                            title = t("TOTE", "Параметры"),
+//                            body = AlRenderPile.renderOrderParamsForm(
+//                                initCommands = initCommands,
+//                                contactNameVirginValue = {rctx.order.contactName},
+//                                emailVirginValue = {rctx.order.email},
+//                                phoneVirginValue = {rctx.order.phone},
+//                                documentTypeVirginValue = {rctx.order.documentType},
+//                                documentCategoryVirginValue = {rctx.order.documentCategory},
+//                                documentTitleVirginValue = {rctx.order.documentTitle},
+//                                numPagesVirginValue = {rctx.order.numPages.toString()},
+//                                numSourcesVirginValue = {rctx.order.numSources.toString()},
+//                                detailsVirginValue = {rctx.order.documentDetails},
+//                                inputControlUUIDs = inputControlUUIDs)
+//                        )).render()
+//
+//
+//                        shitToFront2("298dca01-eee5-49e4-8234-1002676f67ba") {
+//                            it.commands += AlBackToFrontCommandPile().also {
+//                                it.opcode = AlBackToFrontCommandOpcode.OpenModalOnElementClick
+//                                it.domid = AlDomid.topRightButton
+//                                it.html = modalHtml
+//                                it.initCommands = initCommands
+//                            }
+//                        }
+//                    }
+//                    OrderTab.FILES -> {
+//                        imf("f04ee25a-881d-4ca5-90e8-124cc42645ac")
+//                    }
+//                }
+//            }
+//        }))
+//    }
 
 }
 

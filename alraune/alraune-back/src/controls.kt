@@ -57,7 +57,7 @@ class ControlBuilder(val initCommands: MutableList<AlBackToFrontCommandPile>, va
 
 }
 
-class ControlBuilder2(val initCommands: MutableList<AlBackToFrontCommandPile>, val inputControlUUIDs: MutableList<String>) {
+class ControlBuilder2(val commands: MutableList<AlBackToFrontCommandPile>, val inputControlUUIDs: MutableList<String>) {
 
     inner class begin(
         val title: String,
@@ -77,7 +77,7 @@ class ControlBuilder2(val initCommands: MutableList<AlBackToFrontCommandPile>, v
             cmd.ftbProp = prop
 
             inputControlUUIDs += cmd.controlUUID!!
-            initCommands += cmd
+            commands += cmd
         }
 
         private fun simple(type: AlControlType): Renderable {

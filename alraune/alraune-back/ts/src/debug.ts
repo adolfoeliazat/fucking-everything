@@ -69,25 +69,45 @@ namespace alraune {
             byDebugTag("submitButton").click()
         })
 
+        async function sleep(ms: number): Promise<void> {
+            return new Promise<void>((resolve, reject) => {
+                setTimeout(resolve, ms)
+            })
+        }
+
         declareMaf("/orderCreationForm", async function maf202() {
-            { // Everything wrong
+            { // Everything's wrong
                 byDebugTag("submitButton").click()
-                if (1 === 1) return
+                await sleep(1000)
             }
-            {
+            { // Fix 1
                 {const s = debug.setControlValue
                     s("contactName", `Иммануил Пердондэ`)
                     s("email", `bullshit`)
+                    s("phone", `crap`)
+                    s("documentType", "PRACTICE")
+                    s("documentTitle", "Как я пинал хуи на практике")
+                    s("documentDetails", "Детали? Я ебу, какие там детали...")
+                    s("numPages", "1000")
+                    s("numSources", "plenty")
+                }
+                {const p = getDocumentCategoryPickerControl()
+                    p.debug_setSelectValue(AlUADocumentCategories.technicalID)
+                    p.debug_setSelectValue(AlUADocumentCategories.programmingID)
+                }
+                byDebugTag("submitButton").click()
+                await sleep(1000)
+            }
+            { // All good
+                {const s = debug.setControlValue
+                    s("contactName", `Иммануил Пердондэ`)
+                    s("email", `perdonde@mail.com`)
                     s("phone", `+38 (068) 4542823`)
                     s("documentType", "PRACTICE")
                     s("documentTitle", "Как я пинал хуи на практике")
                     s("documentDetails", "Детали? Я ебу, какие там детали...")
                     s("numPages", "35")
                     s("numSources", "7")
-                }
-                {const p = getDocumentCategoryPickerControl()
-                    p.debug_setSelectValue(AlUADocumentCategories.technicalID)
-                    p.debug_setSelectValue(AlUADocumentCategories.programmingID)
                 }
                 byDebugTag("submitButton").click()
             }
