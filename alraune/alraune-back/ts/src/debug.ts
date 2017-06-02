@@ -40,7 +40,7 @@ namespace alraune {
 
             const entropy = nextIndexForTest()
             {const s = debug.setControlValue
-                s("name", `Fuckita Boobisto ${entropy}`)
+                s("contactName", `Fuckita Boobisto ${entropy}`)
                 s("email", `fuckita-${entropy}@mail.com`)
                 s("phone", `+38 (911) 4542877-${entropy}`)
             }
@@ -53,7 +53,7 @@ namespace alraune {
 
         declareMaf("/orderCreationForm", async function maf201() {
             {const s = debug.setControlValue
-                s("name", `Иммануил Пердондэ`)
+                s("contactName", `Иммануил Пердондэ`)
                 s("email", `iperdonde@mail.com`)
                 s("phone", `+38 (068) 4542823`)
                 s("documentType", "PRACTICE")

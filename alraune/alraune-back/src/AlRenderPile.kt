@@ -107,9 +107,9 @@ object AlRenderPile {
             }
 
             o- row{o->
-                o- col(3, f.documentType.title, AlDocumentType.valueOf(order.documentTypeID).title)
+                o- col(3, f.documentType.title, AlUADocumentType.valueOf(order.documentType).title)
                 o- col(6, f.documentCategory.title, run {
-                    var cat = AlUADocumentCategories.findByIDOrBitch(order.documentCategoryID)
+                    var cat = AlUADocumentCategories.findByIDOrBitch(order.documentCategory)
                     val steps = mutableListOf<String>()
                     while (cat.id != AlUADocumentCategories.root.id) {
                         steps += cat.title
@@ -241,9 +241,9 @@ object AlRenderPile {
 
                 o- row(marginBottom = null){o->
                     o- col(4, cf.begin(title = t("TOTE", "Контактное имя"),
-                                        prop = AlFrontToBackCommandPile::name,
-                                        validate = AlBackPile::validateName,
-                                        virginValue = contactNameVirginValue)
+                                       prop = AlFrontToBackCommandPile::contactName,
+                                       validate = AlBackPile::validateName,
+                                       virginValue = contactNameVirginValue)
                         .text())
 
                     o- col(4, cf.begin(title = t("TOTE", "Почта"),
@@ -264,7 +264,7 @@ object AlRenderPile {
                                         prop = AlFrontToBackCommandPile::documentType,
                                         validate = {imf("d6996f06-3773-48c8-9ab8-652a34bdc3dd")},
                                         virginValue = documentTypeVirginValue)
-                        .select(values = AlDocumentType.values().map {
+                        .select(values = AlUADocumentType.values().map {
                             TitledValue(value = it.name, title = it.title)}))
 
                     o- col(8, cf.begin(title = t("TOTE", "Категория"),
@@ -302,7 +302,7 @@ object AlRenderPile {
 
                 initCommands.add(AlBackToFrontCommandPile()-{o->
                     o.opcode = AlBackToFrontCommandOpcode.FocusControl
-                    o.ftbProp = AlFrontToBackCommandPile::name
+                    o.ftbProp = AlFrontToBackCommandPile::contactName
                 })
             }
         )

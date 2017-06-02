@@ -63,7 +63,7 @@ class TitledValue(val value: String, val title: String)
     val orderUUID: String,
     val itemUUID: String,
     val email: String,
-    val name: String,
+    val contactName: String,
     val phone: String,
     val documentType: String,
     val documentTitle: String,

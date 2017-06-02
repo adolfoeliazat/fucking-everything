@@ -5,7 +5,7 @@
  */
 
 /*1*///
-/*2*/// Generated on Fri Jun 02 11:46:07 EEST 2017
+/*2*/// Generated on Fri Jun 02 12:56:04 EEST 2017
 /*3*/// Model: e:/fegh/alraune/alraune-back/src/ts-interop.kt
 /*4*///
 /*5*/
@@ -79,7 +79,7 @@
 /*73*/        orderUUID: string
 /*74*/        itemUUID: string
 /*75*/        email: string
-/*76*/        name: string
+/*76*/        contactName: string
 /*77*/        phone: string
 /*78*/        documentType: string
 /*79*/        documentTitle: string
@@ -130,7 +130,7 @@
 /*124*/        | "orderUUID"
 /*125*/        | "itemUUID"
 /*126*/        | "email"
-/*127*/        | "name"
+/*127*/        | "contactName"
 /*128*/        | "phone"
 /*129*/        | "documentType"
 /*130*/        | "documentTitle"

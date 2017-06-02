@@ -13,10 +13,10 @@ interface AlUAOrder : GCommonEntityFields {
     var email: String
     var contactName: String
     var phone: String
-    var documentTypeID: String
+    var documentType: String
     var documentTitle: String
     var documentDetails: String
-    var documentCategoryID: String
+    var documentCategory: String
     var numPages: Int
     var numSources: Int
 

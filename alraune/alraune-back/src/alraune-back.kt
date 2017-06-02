@@ -376,7 +376,7 @@ fun spitUsualPage(pipiska: Renderable) {
     })
 }
 
-enum class AlDocumentType(val title: String) {
+enum class AlUADocumentType(val title: String) {
     ABSTRACT("Реферат"),
     COURSE("Курсовая работа"),
     GRADUATION("Дипломная работа"),
