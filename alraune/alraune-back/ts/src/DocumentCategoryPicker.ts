@@ -76,8 +76,8 @@ namespace alraune {
             }))
 
             for (const [index, button] of withIndex(buttons)) {
-                setOnClick(byIDSingle(`${buttonIDBase}-${index}`), () => {
-                    executeBackCommands(button.onClick)
+                setOnClick(byIDSingle(`${buttonIDBase}-${index}`), async () => {
+                    await executeBackCommands(button.onClick)
                 })
             }
 

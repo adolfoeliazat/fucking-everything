@@ -4,6 +4,10 @@ namespace alraune {
         return f()
     }
 
+    export function runIgnoring<T>(f: () => T): void {
+        f()
+    }
+
     export function cast<T>(shit: any, check: (x: any) => x is T): T {
         if (check(shit))
             return shit
@@ -48,7 +52,7 @@ namespace alraune {
         return res
     }
 
-    export function executeBackToFrontCommand(pile: AlBackToFrontCommandPile) {
+    export async function executeBackToFrontCommand(pile: AlBackToFrontCommandPile): Promise<void> {
         clog(`cmd: ${pile.opcode}`)
 
         if (pile.opcode === "CreateControl") {
@@ -152,35 +156,41 @@ namespace alraune {
         }
 
         else if (pile.opcode === "OpenModalOnElementClick") {
-            const jTriggerElement = byIDSingle(unpileDomid(pile))
-            setOnClick(jTriggerElement, () => {
-                const jModal = $(pile.html)
-                const jBody = $("body")
-                const bodyUnderModalClass = "paddingRightScrollbarWidthImportant"
+            function fuck() {
+                const jTriggerElement = byIDSingle(unpileDomid(pile))
+                setOnClick(jTriggerElement, async () => {
+                    const jModal = $(pile.html)
+                    const jBody = $("body")
+                    const bodyUnderModalClass = "paddingRightScrollbarWidthImportant"
 
-                jModal.on("show.bs.modal", () => {
-                    jBody.css("overflow-y", "hidden")
-                    jBody.addClass(bodyUnderModalClass)
+                    jModal.on("show.bs.modal", () => {
+                        jBody.css("overflow-y", "hidden")
+                        jBody.addClass(bodyUnderModalClass)
+                    })
+
+                    jModal.on("shown.bs.modal", () => {
+                        state.modalShown.resumeTestFromSut()
+                        state.jShownModal = jModal
+                    })
+
+                    jModal.on("hide.bs.modal", () => {})
+
+                    jModal.on("hidden.bs.modal", () => {
+                        jBody.css("overflow-y", "scroll")
+                        jBody.removeClass(bodyUnderModalClass)
+                        jModal.data("bs.modal", null)
+                        jModal.remove()
+                        state.jShownModal = undefined
+                        state.modalHidden.resumeTestFromSut()
+                    })
+
+                    jBody.append(jModal)
+                    await executeBackCommands(pile.initCommands)
+                    ;(jModal as any).modal()
                 })
-
-                jModal.on("shown.bs.modal", () => {
-                    state.modalShown.resumeTestFromSut()
-                })
-
-                jModal.on("hide.bs.modal", () => {})
-
-                jModal.on("hidden.bs.modal", () => {
-                    jBody.css("overflow-y", "scroll")
-                    jBody.removeClass(bodyUnderModalClass)
-
-                    jModal.data("bs.modal", null)
-                    jModal.remove()
-                })
-
-                jBody.append(jModal)
-                executeBackCommands(pile.initCommands)
-                ;(jModal as any).modal()
-            })
+            }
+            ;(window as any).fuck = fuck
+            fuck()
         }
 
         else if (pile.opcode === "SayFuckYou") {
@@ -198,6 +208,8 @@ namespace alraune {
 
         else if (pile.opcode === "CallBackend") {
             state2.frontToBackCommand = {} as AlFrontToBackCommandPile
+            state2.frontToBackCommand.orderUUID = pile.ftbOrderUUID
+            state2.frontToBackCommand.itemUUID = pile.ftbItemUUID
             state2.frontToBackCommand.opcode = pile.ftbOpcode
             for (const controlUUID of pile.readValuesOfControlsWithUUIDs) {
                 const contributor = castIndexed(state.uuidToSomething, controlUUID, isFrontToBackContributor)
@@ -234,7 +246,7 @@ namespace alraune {
                 const domid = "jTemporaryNodeContainer"
                 let j = byIDNoneOrSingle(domid)
                 if (!j) {
-                    j = $(`<div id="${domid}" style="display: none;"></div>`)
+                    j = $(`<div id="${domid}" style="display: block;"></div>`)
                     $("body").append(j)
                 }
                 jTemporaryNodeContainer = j
@@ -242,12 +254,12 @@ namespace alraune {
 
             const domid = unpileDomid(pile)
             const jElementToBeReplaced = byIDSingle(domid)
-            jElementToBeReplaced.attr("id", "toBeReplaced")
+            jElementToBeReplaced.find("*").addBack().attr("id", "toBeReplaced")
             const jNewElement = $(pile.html)
             if (jNewElement.attr("id") !== domid)
                 bitch("97b83d01-53bf-4e85-b54a-8d7d9a9b016f", {pile})
             jTemporaryNodeContainer.append(jNewElement)
-            executeBackCommands(pile.initCommands)
+            await executeBackCommands(pile.initCommands)
 
             jElementToBeReplaced.replaceWith(jNewElement)
         }
@@ -257,7 +269,17 @@ namespace alraune {
         }
 
         else if (pile.opcode === "OnClick") {
-            setOnClick(byIDSingle(unpileDomid(pile)), () => {executeBackCommands(pile.commands)})
+            setOnClick(byIDSingle(unpileDomid(pile)), async () => {await executeBackCommands(pile.commands)})
+        }
+
+        else if (pile.opcode === "CloseModal") {
+            if (!state.jShownModal) bitch("c3f1540d-57e0-4f2b-bd87-bb4dd82da7e0")
+            runIgnoring(async () => {
+                await state.modalHidden.reset_do_pauseTest(() => {
+                    ;(state.jShownModal as any).modal("hide")
+                })
+                await executeBackCommands(pile.afterModalHidden)
+            })
         }
 
         else wtf(`184e8001-a4eb-49fc-accb-ad17dabc052f`, {pile})
@@ -346,11 +368,13 @@ namespace alraune {
     export const state = {
         backResponse: {} as AlBackResponsePile,
         modalShown: new TestLock(),
+        modalHidden: new TestLock(),
         processedBackendResponse: new TestLock(),
         debug: {
             nameToControl: {} as {[K in AlFrontToBackCommandPileProp]?: any}
         },
         uuidToSomething: {} as {[K: string]: any},
+        jShownModal: undefined as JQuery | undefined
     }
 
     export const state2 = new class {
@@ -524,20 +548,21 @@ namespace alraune {
         return bitch("3962cdb9-8dc2-43e6-a26d-0acf5b148d7a")
     }
 
-    export function initShit() {
+    export async function initShit() {
         // const j = byIDSingle("shitPassedFromBackToFront2")
         // state.backResponse = JSON.parse(j.attr("data-shit"))
 
         const initialBackResponse = (window as any).initialBackResponse
         clog({initialBackResponse})
         state.backResponse = initialBackResponse
-        executeBackCommands(state.backResponse.commands)
+        await executeBackCommands(state.backResponse.commands)
         initDebugShit()
     }
 
-    export function executeBackCommands(cmds: AlBackToFrontCommandPile[]) {
+    export async function executeBackCommands(cmds: AlBackToFrontCommandPile[]): Promise<void> {
+        clog("---------------------")
         for (const cmd of cmds) {
-            executeBackToFrontCommand(cmd)
+            await executeBackToFrontCommand(cmd)
         }
     }
 

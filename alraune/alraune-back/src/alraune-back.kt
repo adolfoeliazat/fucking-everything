@@ -214,6 +214,22 @@ class AlRequestContext {
 //    var getParams by notNullOnce<AlGetParams>() // TODO:vgrechka Rename
     val codeSteps = mutableListOf<CodeStep>()
 
+    val ftb by lazy {
+        val requestText = rctx.req.reader.readText()
+        val ftb = ObjectMapper().readValue(requestText, AlFrontToBackCommandPile::class.java)!!
+        clog("ftb", ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(ftb))
+        ftb
+    }
+
+    val maybeOrderUUID by lazy {when{
+        isPost -> ftb.orderUUID
+        else -> rctx.req.getParameter("orderUUID")
+    }}
+
+    val orderUUID by lazy {maybeOrderUUID ?: bitch("428fa414-e891-4ece-a224-fb7e16b03f88")}
+
+    val order by lazy {alUAOrderRepo.findByUuid(orderUUID) ?: bitch("d65541de-d1cc-41b7-93b2-6f741c5a74eb")}
+
 //    val orderUUID by lazy {
 //        if (ftb != null) {
 //            ftb.orderUUID
@@ -237,7 +253,7 @@ class AlRequestContext {
             set(value) {threadLocal.set(value)}
     }
 
-//    val isPost get() = req.method == "POST"
+    val isPost get() = req.method == "POST"
 
 //    private fun <T : Any> readPostData(klass: KClass<T>): T {
 //        val dataString = AlRequestContext.the.req.reader.readText()

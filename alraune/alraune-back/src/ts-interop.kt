@@ -31,6 +31,9 @@ class AlBackToFrontCommandPile {
     var errorBannerPlaceholderDomidForLowLevelPostFailure: String? = null
     var href: String? = null
     var tickerFloat: String? = null
+    var ftbOrderUUID: String? = null
+    var ftbItemUUID: String? = null
+    var afterModalHidden: List<AlBackToFrontCommandPile>? = null
 
     @JsonSerialize(using = PropertyNameSerializer::class)
     var ftbProp: KProperty1<AlFrontToBackCommandPile, *>? = null
@@ -53,7 +56,7 @@ enum class AlButtonLevel {
 
 enum class AlBackToFrontCommandOpcode {
     CreateControl, OpenModalOnElementClick, FocusControl, SayFuckYou, SetTickerActive, CallBackend,
-    ReplaceElement, SetLocationHref, OnClick
+    ReplaceElement, SetLocationHref, OnClick, CloseModal
 }
 
 enum class AlControlType {
@@ -64,8 +67,8 @@ class TitledValue(val value: String, val title: String)
 
 @Ser data class AlFrontToBackCommandPile(
     val opcode: AlFrontToBackCommandOpcode,
-    val orderUUID: String,
-    val itemUUID: String,
+    val orderUUID: String?,
+    val itemUUID: String?,
     val email: String,
     val contactName: String,
     val phone: String,

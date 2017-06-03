@@ -33,48 +33,55 @@ namespace alraune {
         const currentMafValue = getURLParam(AlURLParams.maf)
 
         declareMaf("/orderParams", async function maf101() {
-            await modalShownAfterDoing(() => {
-                byDomidSingle("topRightButton").click()
+            await testStep("1", async () => {
+                await modalShownAfterDoing(() => {
+                    byDomidSingle("topRightButton").click()
+                })
+                clog("mooooodaaaaal shown")
             })
-            clog("mooooodaaaaal shown")
 
-            const entropy = nextIndexForTest()
-            {const s = debug.setControlValue
-                s("contactName", `Fuckita Boobisto ${entropy}`)
-                s("email", `fuckita-${entropy}@mail.com`)
-                s("phone", `+38 (911) 4542877-${entropy}`)
-            }
-            {const p = getDocumentCategoryPickerControl()
-                p.debug_handleBackButtonClick()
-                p.debug_setSelectValue(AlUADocumentCategories.humanitiesID)
-                p.debug_setSelectValue(AlUADocumentCategories.linguisticsID)
-            }
+            await testStep("2", async () => {
+                const entropy = nextIndexForTest()
+                {const s = debug.setControlValue
+                    s("contactName", `Fuckita Boobisto ${entropy}`)
+                    s("email", `fuckita-${entropy}@mail.com`)
+                    s("phone", `+38 (911) 4542877-${entropy}`)
+                }
+                {const p = getDocumentCategoryPickerControl()
+                    p.debug_handleBackButtonClick()
+                    p.debug_setSelectValue(AlUADocumentCategories.humanitiesID)
+                    p.debug_setSelectValue(AlUADocumentCategories.linguisticsID)
+                }
+            })
         })
 
         declareMaf("/orderCreationForm", async function maf201() {
-            {const s = debug.setControlValue
-                s("contactName", `Иммануил Пердондэ`)
-                s("email", `iperdonde@mail.com`)
-                s("phone", `+38 (068) 4542823`)
-                s("documentType", "PRACTICE")
-                s("documentTitle", "Как я пинал хуи на практике")
-                s("documentDetails", "Детали? Я ебу, какие там детали...")
-                s("numPages", "35")
-                s("numSources", "7")
-            }
-            {const p = getDocumentCategoryPickerControl()
-                p.debug_setSelectValue(AlUADocumentCategories.technicalID)
-                p.debug_setSelectValue(AlUADocumentCategories.programmingID)
-            }
-            byDebugTag("submitButton").click()
+            await testStep("1", async () => {
+                {const s = debug.setControlValue
+                    s("contactName", `Иммануил Пердондэ`)
+                    s("email", `iperdonde@mail.com`)
+                    s("phone", `+38 (068) 4542823`)
+                    s("documentType", "PRACTICE")
+                    s("documentTitle", "Как я пинал хуи на практике")
+                    s("documentDetails", "Детали? Я ебу, какие там детали...")
+                    s("numPages", "35")
+                    s("numSources", "7")
+                }
+                {const p = getDocumentCategoryPickerControl()
+                    p.debug_setSelectValue(AlUADocumentCategories.technicalID)
+                    p.debug_setSelectValue(AlUADocumentCategories.programmingID)
+                }
+                byDebugTag("submitButton").click()
+            })
         })
 
         declareMaf("/orderCreationForm", async function maf202() {
-            { // Everything's wrong
+            await testStep("Everything's wrong", async () => {
                 byDebugTag("submitButton").click()
                 await sleep(1000)
-            }
-            { // Slightly better
+            })
+
+            await testStep("Slightly better", async () => {
                 {const s = debug.setControlValue
                     s("contactName", `Иммануил Пердондэ`)
                     s("email", `bullshit`)
@@ -91,8 +98,9 @@ namespace alraune {
                 }
                 byDebugTag("submitButton").click()
                 await sleep(1000)
-            }
-            { // All good
+            })
+
+            await testStep("All good", async () => {
                 {const s = debug.setControlValue
                     s("contactName", `Иммануил Пердондэ`)
                     s("email", `perdonde@mail.com`)
@@ -104,18 +112,20 @@ namespace alraune {
                     s("numSources", "7")
                 }
                 byDebugTag("submitButton").click()
-            }
+            })
         })
 
         declareMaf("/order", async function maf301() {
-            { // Open edit params modal
+            await testStep("Open edit params modal", async () => {
                 await state.modalShown.reset_do_pauseTest(() => {
                     byDebugTag("topRightButton").click()
                 })
-            }
-            { // With validation errors
+            })
+
+            await testStep("With validation errors", async () => {
                 {const s = debug.setControlValue
-                    s("contactName", `Иммануил Пердондэ III`)
+                    const entropy = nextIndexForTest()
+                    s("contactName", `Иммануил Пердондэ ${entropy}`)
                     s("phone", `secret`)
                     s("documentType", "ESSAY")
                     s("documentTitle", "Как я пинал большие хуи на практике")
@@ -130,14 +140,23 @@ namespace alraune {
                 await state.processedBackendResponse.reset_do_pauseTest(() => {
                     byDebugTag("submitButton").click()
                 })
-            }
-            { // All good
+            })
+
+            await testStep("All good", async () => {
+                await sleep(0)
                 {const s = debug.setControlValue
                     s("phone", `+38 (068) 5992823`)
                 }
                 byDebugTag("submitButton").click()
-            }
+            })
         })
+
+
+        async function testStep(title: string, f: () => Promise<void>): Promise<void> {
+            await sleep(0) // Till all DOM manipulations settle
+            clog(`===== testStep: ${title} =====`)
+            await f()
+        }
 
         function getDocumentCategoryPickerControl(): DocumentCategoryPicker {
             return cast(state.debug.nameToControl.documentCategory, isDocumentCategoryPicker)
