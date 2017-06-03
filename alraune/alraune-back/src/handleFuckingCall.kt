@@ -56,17 +56,19 @@ fun handleFuckingCall() {
                     o.opcode = AlBackToFrontCommandOpcode.CloseModal
                 }
 
-                commands += AlBackToFrontCommandPile()-{o ->
-                    o.opcode = AlBackToFrontCommandOpcode.FuckElementOut
-                    o.domid = AlDomid.orderParams
-                }
+//                commands += AlBackToFrontCommandPile()-{o ->
+//                    o.opcode = AlBackToFrontCommandOpcode.FuckElementOut
+//                    o.domid = AlDomid.orderParams
+//                }
 
                 commands += AlBackToFrontCommandPile()-{o->
                     o.opcode = AlBackToFrontCommandOpcode.ReplaceElement
                     o.domid = AlDomid.replaceableContent
                     val initCommands = mutableListOf<AlBackToFrontCommandPile>()
                     o.initCommands = initCommands
-                    o.html = renderOrderPage(initCommands).render()
+                    o.html = renderOrderPage(initCommands, RenderingParamsPile(
+                        orderParamsClazz = AlCSS.fuckIn))
+                        .render()
                 }
             }
         }

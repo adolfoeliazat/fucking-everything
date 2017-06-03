@@ -289,9 +289,9 @@ namespace alraune {
     }
 
     export const AlFrontPile = new class {
-        readonly fuckOutClass = "fuckOutClass"
-        readonly fuckOutDuration = 300
-        readonly delayBeforeReplacingFuckingOutElement = 250
+        readonly fuckOutClass = "fuckOut"
+        readonly fuckOutDuration = 500
+        readonly delayBeforeReplacingFuckingOutElement = 450
     }
 
     export function controlByProp(name: AlFrontToBackCommandPileProp) {
@@ -564,7 +564,6 @@ namespace alraune {
                 animation-duration: ${AlFrontPile.fuckOutDuration}ms;
                 animation-iteration-count: 1;
             }
-            
             @keyframes fuckOut {
                 0% {opacity: 1;}
                 100% {opacity: 0;}

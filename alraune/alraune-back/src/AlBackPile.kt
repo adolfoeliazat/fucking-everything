@@ -1,8 +1,8 @@
 package alraune.back
 
-import alraune.shared.AlSharedPile.escapeHTML
+import alraune.shared.AlSharedPile_killme.escapeHTML
 import alraune.back.AlRenderPile.t
-import alraune.shared.AlSharedPile
+import alraune.shared.AlSharedPile_killme
 import alraune.shared.Color.*
 import org.apache.commons.validator.routines.EmailValidator
 import vgrechka.*
@@ -129,7 +129,10 @@ class Tag(val tag: String, var attrs: Attrs) : Renderable {
             }
             id?.let {append(" id='$it'")}
 
+            check(attrs.className == null || attrs.clazz == null) {"28e55d1e-ded3-4d08-8326-8afc22735fa9"}
             attrs.className?.let {append(" class='$it'")}
+            attrs.clazz?.let {append(" class='${it.className}'")}
+
             attrs.style?.let {append(" style='${it.render()}'")}
             attrs.type?.let {append(" type='$it'")}
             attrs.name?.let {append(" name='$it'")}
@@ -138,7 +141,7 @@ class Tag(val tag: String, var attrs: Attrs) : Renderable {
             attrs.rows?.let {append(" rows='$it'")}
             attrs.tabIndex?.let {append(" tabindex='$it'")}
             if (attrs.selected) append(" selected")
-            val attr = AlSharedPile.attribute
+            val attr = AlSharedPile_killme.attribute
             attrs.dataShit?.let {append(" ${attr.data_shit}='${escapeHTML(it)}'")}
             attrs.dataDismiss?.let {append(" data-dismiss='${escapeHTML(it)}'")}
             tagCreationStackID?.let {append(" ${attr.data_tagCreationStackID}='$it'")}
@@ -244,6 +247,7 @@ data class Attrs(
     val domid: AlDomid? = null,
     val idSuffix: String? = null,
     val className: String? = null,
+    val clazz: AlCSS.Pack? = null,
     val style: Style? = null,
     val type: String? = null,
     val value: String? = null,

@@ -273,8 +273,8 @@ fun replaceableContent(content: Renderable) =
     insideMarkers(id = AlDomid.replaceableContent, content = content)
 
 fun insideMarkers(id: AlDomid, content: Renderable? = null, tamperWithAttrs: (Attrs) -> Attrs = {it}): Tag {
-    val beginMarker = AlSharedPile.beginContentMarkerForDOMID(id)
-    val endMarker = AlSharedPile.endContentMarkerForDOMID(id)
+    val beginMarker = AlSharedPile_killme.beginContentMarkerForDOMID(id)
+    val endMarker = AlSharedPile_killme.endContentMarkerForDOMID(id)
     return kdiv{o->
         o- rawHTML(beginMarker)
         o- kdiv(tamperWithAttrs(Attrs(domid = id))){o->

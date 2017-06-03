@@ -7,7 +7,7 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 import kotlin.reflect.KProperty1
 
-object AlSharedPile {
+object AlSharedPile_killme {
 //    val beginContentMarker = "<!--4e2bb1ac-ec20-494c-8731-36d7c31e62ce-->"
 //    val endContentMarker = "<!--53693d6d-acc5-4a87-9dc4-b043e6370c10-->"
 //    val beginShitPassedFromBackToFrontMarker = "<!--a070f8fb-e925-4420-b74a-5de399f14277-->"
@@ -27,7 +27,6 @@ object AlSharedPile {
     }
 
     object className {
-        val fuckAway by myName()
         val paddingRightScrollbarWidthImportant by myName()
     }
 

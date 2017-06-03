@@ -1,6 +1,6 @@
 package alraune.back
 
-import alraune.shared.AlSharedPile
+import alraune.shared.AlSharedPile_killme
 import alraune.shared.Color
 import vgrechka.*
 import kotlin.reflect.KClass
@@ -121,11 +121,11 @@ margin-bottom: 1rem;
             animation-iteration-count: infinite;
     """)
 
-    val fuckAway = Pack("""
-            animation-name: fuckAway;
-            animation-duration: 500ms;
-            animation-iteration-count: 1;
-    """, forcedClassName = AlSharedPile.className.fuckAway)
+    val fuckIn = Pack("""
+        animation-name: fuckIn;
+        animation-duration: 1000ms;
+        animation-iteration-count: 1;
+    """)
 
     val sheet = run {
         val buf = StringBuilder()
@@ -147,8 +147,8 @@ margin-bottom: 1rem;
                 margin-left: 8px;
             }
 
-            .${AlSharedPile.className.paddingRightScrollbarWidthImportant} {
-                padding-right: ${AlSharedPile.scrollbarWidth}px !important;
+            .${AlSharedPile_killme.className.paddingRightScrollbarWidthImportant} {
+                padding-right: ${AlSharedPile_killme.scrollbarWidth}px !important;
             }
 
             button:disabled {cursor: default !important;}
@@ -189,14 +189,9 @@ margin-bottom: 1rem;
                 }
             }
 
-            @keyframes fuckAway {
-                0% {
-                    opacity: 1;
-                }
-
-                100% {
-                    opacity: 0;
-                }
+            @keyframes ${this::fuckIn.name} {
+                0% {opacity: 0;}
+                100% {opacity: 1;}
             }
 
             .btn-default:focus {border-color: #ccc; outline-color: transparent;}

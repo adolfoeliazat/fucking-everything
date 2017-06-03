@@ -14,7 +14,7 @@ fun renderModalContent(p: ModalParams): Tag {
         o - kdiv(Attrs(className = "modal-content", style = Style(borderLeft = borderLeft))) {o ->
             o - kdiv(Attrs(className = "modal-header", style = Style(borderTopLeftRadius = "6px", borderTopRightRadius = "6px"))) {o ->
                 o - kbutton(Attrs(domid = AlDomid.closeModalButton, className = "close", dataDismiss = "modal"))
-                    .add(AlSharedPile.text.times)
+                    .add(AlSharedPile_killme.text.times)
                 o - kh4(Attrs(className = "modal-title"))
                     .add(p.title)
             }

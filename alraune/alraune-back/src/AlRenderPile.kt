@@ -2,7 +2,7 @@ package alraune.back
 
 import alraune.back.AlBackPile0.log
 import alraune.back.AlRenderPile.t
-import alraune.shared.AlSharedPile
+import alraune.shared.AlSharedPile_killme
 import alraune.shared.AlUADocumentCategories
 import alraune.shared.Color
 import vgrechka.*
@@ -92,9 +92,9 @@ object AlRenderPile {
         }
     }
 
-    fun renderOrderParams(order: AlUAOrder): Renderable {
+    fun renderOrderParams(order: AlUAOrder, rpp: RenderingParamsPile): Renderable {
         val f = AlFields.order
-        return kdiv(Attrs(domid = AlDomid.orderParams, style = Style(position = "relative"))){o->
+        return kdiv(Attrs(domid = AlDomid.orderParams, style = Style(position = "relative"), clazz = rpp.orderParamsClazz)){o->
             o- row{o->
                 o- createdAtCol(3, order.createdAt)
                 o- col(3, f.status.title, order.state.title)
@@ -116,7 +116,7 @@ object AlRenderPile {
                         cat = cat.parent!!
                     }
                     steps.reverse()
-                    steps.joinToString(" " + AlSharedPile.text.rightAngleQuote + " ")
+                    steps.joinToString(" " + AlSharedPile_killme.text.rightAngleQuote + " ")
                 })
             }
 
