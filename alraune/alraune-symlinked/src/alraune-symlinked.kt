@@ -87,20 +87,13 @@ enum class AlPageID {
 
 // TODO:vgrechka Turn into enum
 object AlPagePath {
-    val debug_post_dumpStackByID by slashMyName()
-    val debug_post_dumpBackCodePath by slashMyName()
-    val debug_post_fuckDatabaseForNextPost by slashMyName()
+    val order by slashMyName()
     val orderCreationForm by slashMyName()
-    val post_createOrder by slashMyName()
-    val orderParams by slashMyName()
-    val orderFiles by slashMyName()
-    val post_setOrderParams by slashMyName()
-    val post_createOrderFile by slashMyName()
-    val post_deleteOrderFile by slashMyName()
 }
 
 class AlGetParams(
     val orderUUID: String? = null,
+    val tab: String? = null,
     val mab: String? = null
 )
 

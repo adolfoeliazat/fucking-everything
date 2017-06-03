@@ -3,14 +3,14 @@ package alraune.back
 import vgrechka.*
 
 fun handleGet_orderParams() {
-    SpitOrderTabPage(OrderTab.PARAMS)
+    SpitOrderTabPage(AlOrderTab.PARAMS)
 }
 
-enum class OrderTab {
+enum class AlOrderTab {
     PARAMS, FILES
 }
 
-class SpitOrderTabPage(val activeTab: OrderTab) {
+class SpitOrderTabPage(val activeTab: AlOrderTab) {
     init {imf("10abec5b-2895-4b25-ad8e-73b7eeafa912")}
 
 //    init {

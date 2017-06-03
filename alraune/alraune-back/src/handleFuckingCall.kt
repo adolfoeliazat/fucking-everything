@@ -10,7 +10,7 @@ fun handleFuckingCall() {
 
     exhaustive=when (rctx.ftb.opcode) {
         AlFrontToBackCommandOpcode.SubmitOrderCreationForm -> {
-            val fields = OrderParamsFields(rctx.ftb)
+            val fields = OrderParamsFields(FieldSource.POST)
             if (fields.validationResults.any {it.error != null}) {
                 emitCommandsForRenderingOrderCreationFormPage(commands, fields)
             } else {
@@ -29,7 +29,7 @@ fun handleFuckingCall() {
         }
 
         AlFrontToBackCommandOpcode.SubmitOrderParamsForm -> {
-            val fields = OrderParamsFields(rctx.ftb)
+            val fields = OrderParamsFields(FieldSource.POST)
             if (fields.validationResults.any {it.error != null}) {
                 val initCommands = mutableListOf<AlBackToFrontCommandPile>()
                 val inputControlUUIDs = mutableListOf<String>()
@@ -37,7 +37,7 @@ fun handleFuckingCall() {
                     o.opcode = AlBackToFrontCommandOpcode.ReplaceElement
                     o.domid = AlDomid.modalContent
                     o.initCommands = initCommands
-                    o.html = renderFuckingModalContent(initCommands, inputControlUUIDs, fields).render()
+                    o.html = renderOrderParamsModalContent(initCommands, inputControlUUIDs, fields).render()
                 }
             } else {
                 rctx.order.let {

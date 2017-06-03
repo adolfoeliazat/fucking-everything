@@ -22,6 +22,7 @@ import org.eclipse.jetty.server.handler.ResourceHandler
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.primaryConstructor
 
 // TODO:vgrechka Backend dies on exception?
 
@@ -122,18 +123,8 @@ object StartAlrauneBack {
                                     handleFuckingCall()
                                 }
 
-//                                AlPagePath.debug_post_dumpStackByID -> handlePost_debug_post_dumpStackByID()
-//                                AlPagePath.debug_post_dumpBackCodePath -> handlePost_debug_post_dumpBackCodePath()
-//                                AlPagePath.debug_post_fuckDatabaseForNextPost -> handlePost_debug_post_fuckDatabaseForNextPost()
-//                                AlPagePath.orderCreationForm -> handleGet_orderCreationForm()
-//                                AlPagePath.orderParams -> handleGet_orderParams()
-//                                AlPagePath.post_setOrderParams -> handlePost_setOrderParams()
-//                                AlPagePath.orderFiles -> handleGet_orderFiles()
-//                                AlPagePath.post_createOrderFile -> handlePost_createOrderFile()
-//                                AlPagePath.post_deleteOrderFile -> handlePost_deleteOrderFile()
-
-                                "/orderCreationForm" -> spitOrderCreationFormPage()
-                                "/order" -> spitOrderPage()
+                                AlPagePath.orderCreationForm -> spitOrderCreationFormPage()
+                                AlPagePath.order -> spitOrderPage()
 
                                 else -> {
                                     when {
@@ -211,7 +202,6 @@ class AlRequestContext {
     var res by notNullOnce<HttpServletResponse>()
     val shitPassedFromBackToFront = PieceOfShitFromBack()
     val shitPassedFromBackToFront2 = PieceOfShitFromBack2()
-//    var getParams by notNullOnce<AlGetParams>() // TODO:vgrechka Rename
     val codeSteps = mutableListOf<CodeStep>()
 
     val ftb by lazy {
@@ -221,29 +211,21 @@ class AlRequestContext {
         ftb
     }
 
+    val getParams by lazy {
+        val ctor = AlGetParams::class.primaryConstructor!!
+        val xs = ctor.parameters.map {req.getParameter(it.name)}
+        ctor.call(*xs.toTypedArray())
+    }
+
     val maybeOrderUUID by lazy {when{
         isPost -> ftb.orderUUID
-        else -> rctx.req.getParameter("orderUUID")
+        else -> getParams.orderUUID
     }}
 
     val orderUUID by lazy {maybeOrderUUID ?: bitch("428fa414-e891-4ece-a224-fb7e16b03f88")}
 
     val order by lazy {alUAOrderRepo.findByUuid(orderUUID) ?: bitch("d65541de-d1cc-41b7-93b2-6f741c5a74eb")}
 
-//    val orderUUID by lazy {
-//        if (ftb != null) {
-//            ftb.orderUUID
-//        } else {
-//            req.getParameter("orderUUID")
-//        }
-//
-////        when{
-////        isPost -> postData.pile.orderUUID
-////        else -> getParams.orderUUID ?: bitch("7aa84c05-79c3-4c8f-bfd2-26250414305d")
-////        }
-//    }
-
-//    val order by lazy {alUAOrderRepo.findByUuid(orderUUID) ?: bitch("18755da5-0458-49a6-bfdc-9a4e611de4ed")}
 
     companion object {
         private val threadLocal = ThreadLocal<AlRequestContext>()
@@ -254,11 +236,6 @@ class AlRequestContext {
     }
 
     val isPost get() = req.method == "POST"
-
-//    private fun <T : Any> readPostData(klass: KClass<T>): T {
-//        val dataString = AlRequestContext.the.req.reader.readText()
-//        return ObjectMapper().readValue(dataString, klass.java)
-//    }
 }
 
 fun spitLandingPage() {
@@ -314,6 +291,8 @@ fun makeURLPart(path: String, params: AlGetParams = AlGetParams()): String {
             if (first) {
                 first = false
                 buf += "?"
+            } else {
+                buf += "&"
             }
             buf += "${p.name}=$value" // TODO:vgrechka Encode
         }
@@ -557,7 +536,7 @@ class PropertyNameSerializer : StdSerializer<KProperty1<*, *>>(KProperty1::class
 
 fun spitOrderCreationFormPage() {
     val commands = mutableListOf<AlBackToFrontCommandPile>()
-    emitCommandsForRenderingOrderCreationFormPage(commands, OrderParamsFields())
+    emitCommandsForRenderingOrderCreationFormPage(commands, OrderParamsFields(FieldSource.INITIAL))
     val initialBackResponse = AlBackResponsePile()-{o->
         o.commands = commands
     }

@@ -5,22 +5,61 @@ import alraune.back.AlRenderPile.col
 import alraune.back.AlRenderPile.pageHeader
 import alraune.back.AlRenderPile.row
 import alraune.back.AlRenderPile.t
+import alraune.back.FieldSource.*
 import alraune.shared.AlUADocumentCategories
 
-class OrderParamsFields(ftb: AlFrontToBackCommandPile? = null, order: AlUAOrder? = null) {
+enum class FieldSource {INITIAL, POST, DB}
+
+class OrderParamsFields(source: FieldSource) {
     val validationResults = mutableListOf<ValidationResult>()
     fun addVR(vr: ValidationResult) = run {validationResults.add(vr); vr}
 
-    val email = addVR(if (ftb != null) AlBackPile.validateEmail(ftb.email) else ValidationResult(order?.email ?: "", null))
-    val contactName = addVR(if (ftb != null) AlBackPile.validateName(ftb.contactName) else ValidationResult(order?.contactName ?: "", null))
-    val phone = addVR(if (ftb != null) AlBackPile.validatePhone(ftb.phone) else ValidationResult(order?.phone ?: "", null))
-    val documentTitle = addVR(if (ftb != null) AlBackPile.validateDocumentTitle(ftb.documentTitle) else ValidationResult(order?.documentTitle ?: "", null))
-    val documentDetails = addVR(if (ftb != null) AlBackPile.validateDocumentDetails(ftb.documentDetails) else ValidationResult(order?.documentDetails ?: "", null))
-    val numPages = addVR(if (ftb != null) AlBackPile.validateNumPages(ftb.numPages) else ValidationResult(order?.numPages?.toString() ?: "", null))
-    val numSources = addVR(if (ftb != null) AlBackPile.validateNumSources(ftb.numSources) else ValidationResult(order?.numSources?.toString() ?: "", null))
-    val documentType = if (ftb != null) AlUADocumentType.valueOf(ftb.documentType) else order?.documentType?.let {AlUADocumentType.valueOf(it)} ?: AlUADocumentType.ABSTRACT
-    val documentCategory = if (ftb != null) AlUADocumentCategories.findByIDOrBitch(ftb.documentCategory).id else order?.documentCategory ?: AlUADocumentCategories.miscID
+    val email = addVR(when (source) {
+        INITIAL -> ValidationResult("", null)
+        DB -> ValidationResult(rctx.order.email, null)
+        POST -> AlBackPile.validateEmail(rctx.ftb.email)})
+
+    val contactName = addVR(when (source) {
+        INITIAL -> ValidationResult("", null)
+        DB -> ValidationResult(rctx.order.contactName, null)
+        POST -> AlBackPile.validateName(rctx.ftb.contactName)})
+
+    val phone = addVR(when (source) {
+        INITIAL -> ValidationResult("", null)
+        DB -> ValidationResult(rctx.order.phone, null)
+        POST -> AlBackPile.validatePhone(rctx.ftb.phone)})
+
+    val documentTitle = addVR(when (source) {
+        INITIAL -> ValidationResult("", null)
+        DB -> ValidationResult(rctx.order.documentTitle, null)
+        POST -> AlBackPile.validateDocumentTitle(rctx.ftb.documentTitle)})
+
+    val documentDetails = addVR(when (source) {
+        INITIAL -> ValidationResult("", null)
+        DB -> ValidationResult(rctx.order.documentDetails, null)
+        POST -> AlBackPile.validateDocumentDetails(rctx.ftb.documentDetails)})
+
+    val numPages = addVR(when (source) {
+        INITIAL -> ValidationResult("", null)
+        DB -> ValidationResult(rctx.order.numPages.toString(), null)
+        POST -> AlBackPile.validateNumPages(rctx.ftb.numPages)})
+
+    val numSources = addVR(when (source) {
+        INITIAL -> ValidationResult("", null)
+        DB -> ValidationResult(rctx.order.numSources.toString(), null)
+        POST -> AlBackPile.validateNumSources(rctx.ftb.numSources)})
+
+    val documentType = when (source) {
+        INITIAL -> AlUADocumentType.ABSTRACT
+        DB -> rctx.order.documentType.let {AlUADocumentType.valueOf(it)}
+        POST -> AlUADocumentType.valueOf(rctx.ftb.documentType)}
+
+    val documentCategory = when (source) {
+        INITIAL -> AlUADocumentCategories.miscID
+        DB -> rctx.order.documentCategory
+        POST -> AlUADocumentCategories.findByIDOrBitch(rctx.ftb.documentCategory).id}
 }
+
 
 fun emitCommandsForRenderingOrderCreationFormPage(commands: MutableList<AlBackToFrontCommandPile>, fields: OrderParamsFields) {
     val initCommands = mutableListOf<AlBackToFrontCommandPile>()
@@ -32,14 +71,14 @@ fun emitCommandsForRenderingOrderCreationFormPage(commands: MutableList<AlBackTo
         o.html = kdiv(Attrs(domid = AlDomid.replaceableContent)){o->
             o- kdiv.className("container"){o->
                 o- pageHeader(t("TOTE", "Йобаный Заказ"))
-                o- fuck10(initCommands, inputControlUUIDs, fields)
-                o- fuck20(initCommands, inputControlUUIDs, tickerFloat = "right", ftbOpcode = AlFrontToBackCommandOpcode.SubmitOrderCreationForm)
+                o- renderOrderParamsFormBody(initCommands, inputControlUUIDs, fields)
+                o- renderOrderParamsFormButtons(initCommands, inputControlUUIDs, tickerFloat = "right", ftbOpcode = AlFrontToBackCommandOpcode.SubmitOrderCreationForm)
             }
         }.render()
     }
 }
 
-fun fuck20(initCommands: MutableList<AlBackToFrontCommandPile>, inputControlUUIDs: MutableList<String>, tickerFloat: String, ftbOpcode: AlFrontToBackCommandOpcode): Tag {
+fun renderOrderParamsFormButtons(initCommands: MutableList<AlBackToFrontCommandPile>, inputControlUUIDs: MutableList<String>, tickerFloat: String, ftbOpcode: AlFrontToBackCommandOpcode): Tag {
     val domid = AlBackPile.uuid()
     val buttonBarUUID = AlBackPile.uuid()
     initCommands += AlBackToFrontCommandPile()-{o->
@@ -73,7 +112,7 @@ fun fuck20(initCommands: MutableList<AlBackToFrontCommandPile>, inputControlUUID
     return kdiv(Attrs(id = domid))
 }
 
-fun fuck10(initCommands: MutableList<AlBackToFrontCommandPile>, inputControlUUIDs: MutableList<String>, fields: OrderParamsFields): Tag {
+fun renderOrderParamsFormBody(initCommands: MutableList<AlBackToFrontCommandPile>, inputControlUUIDs: MutableList<String>, fields: OrderParamsFields): Tag {
     return kdiv{o->
         val cb = ControlBuilder2(commands = initCommands,
                                  inputControlUUIDs = inputControlUUIDs)

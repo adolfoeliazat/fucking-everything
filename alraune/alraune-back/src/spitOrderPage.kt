@@ -31,26 +31,26 @@ fun renderOrderPage(commands: MutableList<AlBackToFrontCommandPile>, rpp: Render
                 o- kbutton(Attrs(domid = AlDomid.submitOrderForReviewButton, className = "btn btn-primary"), t("TOTE", "Отправить на проверку"))
             }
 
-            val activeTab = OrderTab.values().find {it.name == rctx.req.getParameter("tab")}
-                ?: OrderTab.PARAMS
+            val activeTab = AlOrderTab.values().find {it.name.toLowerCase() == rctx.getParams.tab?.toLowerCase()}
+                ?: AlOrderTab.PARAMS
 
             o- kdiv(Style(position = "relative")){o->
                 o- kdiv(Attrs(className = "nav nav-tabs", style = Style(marginBottom = "0.5rem"))){o->
-                    fun maybeActive(tab: OrderTab) = if (activeTab == tab) "active" else ""
+                    fun maybeActive(tab: AlOrderTab) = if (activeTab == tab) "active" else ""
 
-                    o- kli.className(maybeActive(OrderTab.PARAMS))
-                        .add(ka(Attrs(href = makeURLPart(AlPagePath.orderParams, AlGetParams(orderUUID = rctx.order.uuid))))
+                    o- kli.className(maybeActive(AlOrderTab.PARAMS))
+                        .add(ka(Attrs(href = makeURLPart(AlPagePath.order, AlGetParams(orderUUID = rctx.order.uuid, tab = AlOrderTab.PARAMS.name.toLowerCase()))))
                                  .add(t("Parameters", "Параметры")))
 
-                    o- kli.className(maybeActive(OrderTab.FILES))
-                        .add(ka(Attrs(href = makeURLPart(AlPagePath.orderFiles, AlGetParams(orderUUID = rctx.order.uuid))))
+                    o- kli.className(maybeActive(AlOrderTab.FILES))
+                        .add(ka(Attrs(href = makeURLPart(AlPagePath.order, AlGetParams(orderUUID = rctx.order.uuid, tab = AlOrderTab.FILES.name.toLowerCase()))))
                                  .add(t("Files", "Файлы")))
                 }
 
                 if (canEdit) {
                     val topRightButtonIcon = when (activeTab) {
-                        OrderTab.PARAMS -> fa.pencil
-                        OrderTab.FILES -> fa.plus
+                        AlOrderTab.PARAMS -> fa.pencil
+                        AlOrderTab.FILES -> fa.plus
                     }
                     o- kbutton(Attrs(domid = AlDomid.topRightButton, dataDebugTag = AlDebugTag.topRightButton,
                                       className = "btn btn-default",
@@ -60,30 +60,39 @@ fun renderOrderPage(commands: MutableList<AlBackToFrontCommandPile>, rpp: Render
             }
 
             exhaustive = when (activeTab) {
-                OrderTab.PARAMS -> {
+                AlOrderTab.PARAMS -> {
                     o- renderOrderParams(rctx.order, rpp)
                 }
-                OrderTab.FILES -> {
-                    imf("10a46306-0ce5-498d-94e1-e7c24efbb090")
+                AlOrderTab.FILES -> {
+                    o- "pizda"
                 }
             }
 
             if (canEdit) {
                 exhaustive = when (activeTab) {
-                    OrderTab.PARAMS -> {
+                    AlOrderTab.PARAMS -> {
                         val initCommands = mutableListOf<AlBackToFrontCommandPile>()
                         val inputControlUUIDs = mutableListOf<String>()
-                        val fields = OrderParamsFields(order = rctx.order)
+                        val fields = OrderParamsFields(FieldSource.DB)
 
                         commands += AlBackToFrontCommandPile()-{o->
                             o.opcode = AlBackToFrontCommandOpcode.OpenModalOnElementClick
                             o.domid = AlDomid.topRightButton
-                            o.html = renderModal(renderFuckingModalContent(initCommands, inputControlUUIDs, fields)).render()
+                            o.html = renderModal(renderOrderParamsModalContent(initCommands, inputControlUUIDs, fields)).render()
                             o.initCommands = initCommands
                         }
                     }
-                    OrderTab.FILES -> {
-                        imf("f04ee25a-881d-4ca5-90e8-124cc42645ac")
+                    AlOrderTab.FILES -> {
+                        val initCommands = mutableListOf<AlBackToFrontCommandPile>()
+                        val inputControlUUIDs = mutableListOf<String>()
+                        val fields = OrderParamsFields(FieldSource.DB)
+
+                        commands += AlBackToFrontCommandPile()-{o->
+                            o.opcode = AlBackToFrontCommandOpcode.OpenModalOnElementClick
+                            o.domid = AlDomid.topRightButton
+                            o.html = renderModal(renderOrderParamsModalContent(initCommands, inputControlUUIDs, fields)).render()
+                            o.initCommands = initCommands
+                        }
                     }
                 }
             }
@@ -93,18 +102,25 @@ fun renderOrderPage(commands: MutableList<AlBackToFrontCommandPile>, rpp: Render
 }
 
 
-fun renderFuckingModalContent(initCommands: MutableList<AlBackToFrontCommandPile>, inputControlUUIDs: MutableList<String>, fields: OrderParamsFields) = renderModalContent(ModalParams(
-    domid = AlDomid.modalContent.name,
-    width = "80rem",
-    leftMarginColor = Color.BLUE_GRAY_300,
-    title = t("TOTE", "Параметры"),
-    body = kdiv{o->
-        o- fuck10(initCommands, inputControlUUIDs, fields)
-    },
-    footer = kdiv{o->
-        o- fuck20(initCommands, inputControlUUIDs, tickerFloat = "left", ftbOpcode = AlFrontToBackCommandOpcode.SubmitOrderParamsForm)
-    }
-))
+fun renderOrderParamsModalContent(initCommands: MutableList<AlBackToFrontCommandPile>, inputControlUUIDs: MutableList<String>, fields: OrderParamsFields) =
+    renderBlueModalContent(title = t("TOTE", "Параметры"),
+                           bodyContent = renderOrderParamsFormBody(initCommands, inputControlUUIDs, fields),
+                           footerContent = renderOrderParamsFormButtons(initCommands, inputControlUUIDs, tickerFloat = "left", ftbOpcode = AlFrontToBackCommandOpcode.SubmitOrderParamsForm))
+
+private fun renderBlueModalContent(title: String, bodyContent: Tag, footerContent: Tag): Tag {
+    return renderModalContent(ModalParams(
+        domid = AlDomid.modalContent.name,
+        width = "80rem",
+        leftMarginColor = Color.BLUE_GRAY_300,
+        title = title,
+        body = kdiv {o ->
+            o - bodyContent
+        },
+        footer = kdiv {o ->
+            o - footerContent
+        }
+    ))
+}
 
 
 
