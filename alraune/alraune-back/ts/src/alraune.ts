@@ -198,7 +198,7 @@ namespace alraune {
 
         else if (pile.opcode === "CallBackend") {
             state2.frontToBackCommand = {} as AlFrontToBackCommandPile
-            state2.frontToBackCommand.opcode = pile.backOpcode
+            state2.frontToBackCommand.opcode = pile.ftbOpcode
             for (const controlUUID of pile.readValuesOfControlsWithUUIDs) {
                 const contributor = castIndexed(state.uuidToSomething, controlUUID, isFrontToBackContributor)
                 contributor.contributeToFrontToBackCommand()
@@ -213,6 +213,7 @@ namespace alraune {
                     if (xhr.status == 200) {
                         state.backResponse = JSON.parse(xhr.responseText)
                         executeBackCommands(state.backResponse.commands)
+                        state.processedBackendResponse.resumeTestFromSut()
                     } else {
                         console.error(`Got shitty response from backend: status = ${xhr.status}`)
                         // TODO:vgrechka Show error banner
@@ -222,7 +223,10 @@ namespace alraune {
 
             const shitForSending = state2.frontToBackCommand
             clog({shitForSending})
-            xhr.send(JSON.stringify(shitForSending))
+            const debugDelay = 1000
+            setTimeout(() => {
+                xhr.send(JSON.stringify(shitForSending))
+            }, debugDelay)
         }
 
         else if (pile.opcode === "ReplaceElement") {
@@ -250,6 +254,10 @@ namespace alraune {
 
         else if (pile.opcode === "SetLocationHref") {
             window.location.href = pile.href
+        }
+
+        else if (pile.opcode === "OnClick") {
+            setOnClick(byIDSingle(unpileDomid(pile)), () => {executeBackCommands(pile.commands)})
         }
 
         else wtf(`184e8001-a4eb-49fc-accb-ad17dabc052f`, {pile})
@@ -327,11 +335,18 @@ namespace alraune {
         resumeTestFromSut() {
             this.testPause.resolve()
         }
+
+        reset_do_pauseTest(f: () => void): Promise<void> {
+            this.reset()
+            f()
+            return this.pauseTestFromTest()
+        }
     }
 
     export const state = {
         backResponse: {} as AlBackResponsePile,
         modalShown: new TestLock(),
+        processedBackendResponse: new TestLock(),
         debug: {
             nameToControl: {} as {[K in AlFrontToBackCommandPileProp]?: any}
         },

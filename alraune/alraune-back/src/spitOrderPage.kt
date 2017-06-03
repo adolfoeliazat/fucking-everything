@@ -65,22 +65,15 @@ fun spitOrderPage() {
             if (canEdit) {
                 exhaustive=when (activeTab) {
                     OrderTab.PARAMS -> {
-                        val modalInitCommands = mutableListOf<AlBackToFrontCommandPile>()
-                        emitCommandsForRenderingOrderCreationFormPage(modalInitCommands, OrderParamsFields(null))
-                        val modalHtml = AlRenderPile.renderModal(ModalParams(
-                            width = "80rem",
-                            leftMarginColor = Color.BLUE_GRAY_300,
-                            title = t("TOTE", "Параметры"),
-                            body = kdiv(Attrs(domid = AlDomid.replaceableContent)){o->
-                                o- "fuck you"
-                            }
-                        )).render()
+                        val initCommands = mutableListOf<AlBackToFrontCommandPile>()
+                        val inputControlUUIDs = mutableListOf<String>()
+                        val fields = OrderParamsFields(order= order)
 
                         commands += AlBackToFrontCommandPile()-{o->
                             o.opcode = AlBackToFrontCommandOpcode.OpenModalOnElementClick
                             o.domid = AlDomid.topRightButton
-                            o.html = modalHtml
-                            o.initCommands = modalInitCommands
+                            o.html = renderModal(renderFuckingModalContent(initCommands, inputControlUUIDs, fields)).render()
+                            o.initCommands = initCommands
                         }
                     }
                     OrderTab.FILES -> {
@@ -92,5 +85,23 @@ fun spitOrderPage() {
     }, initialBackResponse)
 
 }
+
+
+fun renderFuckingModalContent(initCommands: MutableList<AlBackToFrontCommandPile>, inputControlUUIDs: MutableList<String>, fields: OrderParamsFields) = renderModalContent(ModalParams(
+    domid = AlDomid.replaceableContent.name,
+    width = "80rem",
+    leftMarginColor = Color.BLUE_GRAY_300,
+    title = t("TOTE", "Параметры"),
+    body = kdiv{o->
+        o- fuck10(initCommands, inputControlUUIDs, fields)
+    },
+    footer = kdiv{o->
+        o- fuck20(initCommands, inputControlUUIDs, tickerFloat = "left", ftbOpcode = AlFrontToBackCommandOpcode.SubmitOrderParamsForm)
+    }
+))
+
+
+
+
 
 

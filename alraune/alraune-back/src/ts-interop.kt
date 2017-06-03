@@ -18,17 +18,19 @@ class AlBackToFrontCommandPile {
     var domid: AlDomid? = null
     var domidSuffix: String? = null
     var html: String? = null
-    var initCommands: MutableList<AlBackToFrontCommandPile>? = null
+    var initCommands: List<AlBackToFrontCommandPile>? = null
+    var commands: List<AlBackToFrontCommandPile>? = null
     var putInFormGroup: Boolean? = null
     var controlType: AlControlType? = null
     var controlUUID: String? = null
     var readValuesOfControlsWithUUIDs: List<String>? = null
     var buttons: List<AlButtonParams>? = null
     var bool: Boolean? = null
-    var backOpcode: AlFrontToBackCommandOpcode? = null
+    var ftbOpcode: AlFrontToBackCommandOpcode? = null
     var postURL: String? = null
     var errorBannerPlaceholderDomidForLowLevelPostFailure: String? = null
     var href: String? = null
+    var tickerFloat: String? = null
 
     @JsonSerialize(using = PropertyNameSerializer::class)
     var ftbProp: KProperty1<AlFrontToBackCommandPile, *>? = null
@@ -51,7 +53,7 @@ enum class AlButtonLevel {
 
 enum class AlBackToFrontCommandOpcode {
     CreateControl, OpenModalOnElementClick, FocusControl, SayFuckYou, SetTickerActive, CallBackend,
-    ReplaceElement, SetLocationHref
+    ReplaceElement, SetLocationHref, OnClick
 }
 
 enum class AlControlType {

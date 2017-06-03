@@ -53,7 +53,7 @@ namespace alraune {
                               width: 14px;
                               background-color: ${Color.BLUE_GRAY_600};
                               height: 34px;
-                              float: right;
+                              float: ${this.bob.backPile.tickerFloat};
                               animation-name: ${tickerID};
                               animation-duration: 500ms;
                               animation-iteration-count: infinite;

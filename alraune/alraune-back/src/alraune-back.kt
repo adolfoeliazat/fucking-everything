@@ -541,7 +541,7 @@ class PropertyNameSerializer : StdSerializer<KProperty1<*, *>>(KProperty1::class
 
 fun spitOrderCreationFormPage() {
     val commands = mutableListOf<AlBackToFrontCommandPile>()
-    emitCommandsForRenderingOrderCreationFormPage(commands, OrderParamsFields(null))
+    emitCommandsForRenderingOrderCreationFormPage(commands, OrderParamsFields())
     val initialBackResponse = AlBackResponsePile()-{o->
         o.commands = commands
     }

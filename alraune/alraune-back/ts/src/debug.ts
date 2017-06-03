@@ -72,7 +72,7 @@ namespace alraune {
         declareMaf("/orderCreationForm", async function maf202() {
             { // Everything's wrong
                 byDebugTag("submitButton").click()
-                await sectionPause()
+                await sleep(1000)
             }
             { // Slightly better
                 {const s = debug.setControlValue
@@ -90,7 +90,7 @@ namespace alraune {
                     p.debug_setSelectValue(AlUADocumentCategories.programmingID)
                 }
                 byDebugTag("submitButton").click()
-                await sectionPause()
+                await sleep(1000)
             }
             { // All good
                 {const s = debug.setControlValue
@@ -105,12 +105,37 @@ namespace alraune {
                 }
                 byDebugTag("submitButton").click()
             }
-            async function sectionPause() {await sleep(1000)}
         })
 
         declareMaf("/order", async function maf301() {
-            {
-                byDebugTag("topRightButton").click()
+            { // Open edit params modal
+                await state.modalShown.reset_do_pauseTest(() => {
+                    byDebugTag("topRightButton").click()
+                })
+            }
+            { // With validation errors
+                {const s = debug.setControlValue
+                    s("contactName", `Иммануил Пердондэ III`)
+                    s("phone", `secret`)
+                    s("documentType", "ESSAY")
+                    s("documentTitle", "Как я пинал большие хуи на практике")
+                    s("documentDetails", "Детали? Я ебу, какие там детали... Да, ебу! И не ебет")
+                    s("numPages", "35")
+                }
+                {const p = getDocumentCategoryPickerControl()
+                    p.debug_handleBackButtonClick()
+                    p.debug_setSelectValue(AlUADocumentCategories.humanitiesID)
+                    p.debug_setSelectValue(AlUADocumentCategories.linguisticsID)
+                }
+                await state.processedBackendResponse.reset_do_pauseTest(() => {
+                    byDebugTag("submitButton").click()
+                })
+            }
+            { // All good
+                {const s = debug.setControlValue
+                    s("phone", `+38 (068) 5992823`)
+                }
+                byDebugTag("submitButton").click()
             }
         })
 
