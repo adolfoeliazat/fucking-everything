@@ -59,11 +59,8 @@ object AlBackPile {
         }
     }
 
-    fun validateName(x: String?) = validateString(x, minLen = 3, maxLen = 50)
-    fun validateDocumentTitle(x: String?) = validateString(x, minLen = 5, maxLen = 250)
-    fun validateDocumentDetails(x: String?) = validateString(x, minLen = 5, maxLen = 1000)
-    fun validateNumPages(x: String?) = validateInt(x, min = 3, max = 500)
-    fun validateNumSources(x: String?) = validateInt(x, min = 0, max = 50)
+    fun validateGenericTitle(x: String?) = validateString(x, minLen = 5, maxLen = 250)
+    fun validateGenericDetails(x: String?) = validateString(x, minLen = 5, maxLen = 1000)
 
     fun uuid() = UUID.randomUUID().toString()
 }
@@ -261,7 +258,7 @@ data class Attrs(
     val dataDebugTag: AlDebugTag? = null
 )
 
-class ValidationResult(val sanitizedString: String, val error: String?) {
+class ValidationResult(val sanitizedString: String, val error: String? = null) {
     override fun toString(): String {
         return "ValidationResult(sanitizedString=`$sanitizedString`, error=$error)"
     }

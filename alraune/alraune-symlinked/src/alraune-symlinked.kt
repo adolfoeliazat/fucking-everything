@@ -93,6 +93,7 @@ object AlPagePath {
 
 class AlGetParams(
     val orderUUID: String? = null,
+    val fileUUID: String? = null,
     val tab: String? = null,
     val mab: String? = null
 )

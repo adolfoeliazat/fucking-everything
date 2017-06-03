@@ -221,11 +221,15 @@ class AlRequestContext {
         isPost -> ftb.orderUUID
         else -> getParams.orderUUID
     }}
-
     val orderUUID by lazy {maybeOrderUUID ?: bitch("428fa414-e891-4ece-a224-fb7e16b03f88")}
-
     val order by lazy {alUAOrderRepo.findByUuid(orderUUID) ?: bitch("d65541de-d1cc-41b7-93b2-6f741c5a74eb")}
 
+    val maybeFileUUID by lazy {when{
+        isPost -> ftb.fileUUID
+        else -> getParams.fileUUID
+    }}
+    val fileUUID by lazy {maybeFileUUID ?: bitch("428fa414-e891-4ece-a224-fb7e16b03f88")}
+    val file by lazy {alUAOrderFileRepo.findByUuid(fileUUID) ?: bitch("d65541de-d1cc-41b7-93b2-6f741c5a74eb")}
 
     companion object {
         private val threadLocal = ThreadLocal<AlRequestContext>()

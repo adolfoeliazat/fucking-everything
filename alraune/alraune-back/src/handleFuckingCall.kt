@@ -52,14 +52,9 @@ fun handleFuckingCall() {
                     it.numSources = fields.numSources.sanitizedString.toInt()
                 }
 
-                commands += AlBackToFrontCommandPile()-{o ->
+                commands += AlBackToFrontCommandPile()-{o->
                     o.opcode = AlBackToFrontCommandOpcode.CloseModal
                 }
-
-//                commands += AlBackToFrontCommandPile()-{o ->
-//                    o.opcode = AlBackToFrontCommandOpcode.FuckElementOut
-//                    o.domid = AlDomid.orderParams
-//                }
 
                 commands += AlBackToFrontCommandPile()-{o->
                     o.opcode = AlBackToFrontCommandOpcode.ReplaceElement
@@ -71,6 +66,44 @@ fun handleFuckingCall() {
                         .render()
                 }
             }
+        }
+
+        AlFrontToBackCommandOpcode.SubmitCreateOrderFileForm -> {
+            val fields = FileFields(FieldSource.POST)
+            if (fields.validationResults.any {it.error != null}) {
+                val initCommands = mutableListOf<AlBackToFrontCommandPile>()
+                val inputControlUUIDs = mutableListOf<String>()
+                commands += AlBackToFrontCommandPile()-{o->
+                    o.opcode = AlBackToFrontCommandOpcode.ReplaceElement
+                    o.domid = AlDomid.modalContent
+                    o.initCommands = initCommands
+                    o.html = renderFileModalContent(initCommands, inputControlUUIDs, fields, AlFrontToBackCommandOpcode.SubmitCreateOrderFileForm).render()
+                }
+            } else {
+                rctx.file.let {
+                    it.title = fields.title.sanitizedString
+                    it.details = fields.details.sanitizedString
+                }
+
+                commands += AlBackToFrontCommandPile()-{o->
+                    o.opcode = AlBackToFrontCommandOpcode.CloseModal
+                }
+
+                imf("449c8727-29b1-4a18-bb07-8af7d9d9cb69")
+                commands += AlBackToFrontCommandPile()-{o->
+                    o.opcode = AlBackToFrontCommandOpcode.ReplaceElement
+                    o.domid = AlDomid.replaceableContent
+                    val initCommands = mutableListOf<AlBackToFrontCommandPile>()
+                    o.initCommands = initCommands
+                    o.html = renderOrderPage(initCommands, RenderingParamsPile(
+                        orderParamsClazz = AlCSS.fuckIn))
+                        .render()
+                }
+            }
+        }
+
+        AlFrontToBackCommandOpcode.SubmitUpdateOrderFileForm -> {
+            imf("1de7677b-d975-484c-92ed-ee5831a8764f")
         }
     }
 

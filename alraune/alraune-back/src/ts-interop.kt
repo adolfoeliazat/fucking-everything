@@ -72,8 +72,6 @@ class TitledValue(val value: String, val title: String)
     val contactName: String,
     val phone: String,
     val documentType: String,
-    val documentTitle: String,
-    val documentDetails: String,
     val documentCategory: String,
     val numPages: String,
     val numSources: String,
@@ -83,7 +81,7 @@ class TitledValue(val value: String, val title: String)
 )
 
 enum class AlFrontToBackCommandOpcode {
-    SubmitOrderCreationForm, SubmitOrderParamsForm
+    SubmitOrderCreationForm, SubmitOrderParamsForm, SubmitCreateOrderFileForm, SubmitUpdateOrderFileForm
 }
 
 enum class AlDebugTag {

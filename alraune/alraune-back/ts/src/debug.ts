@@ -55,15 +55,15 @@ namespace alraune {
             })
         })
 
-        declareMaf("/orderCreationForm", async function maf201() {
+        declareMaf("/orderCreationForm", async function maf201_createOrder_happy() {
             await testStep("1", async () => {
                 {const s = debug.setControlValue
                     s("contactName", `Иммануил Пердондэ`)
                     s("email", `iperdonde@mail.com`)
                     s("phone", `+38 (068) 4542823`)
                     s("documentType", "PRACTICE")
-                    s("documentTitle", "Как я пинал хуи на практике")
-                    s("documentDetails", "Детали? Я ебу, какие там детали...")
+                    s("title", "Как я пинал хуи на практике")
+                    s("details", "Детали? Я ебу, какие там детали...")
                     s("numPages", "35")
                     s("numSources", "7")
                 }
@@ -75,7 +75,7 @@ namespace alraune {
             })
         })
 
-        declareMaf("/orderCreationForm", async function maf202() {
+        declareMaf("/orderCreationForm", async function maf202_createOrder_validation() {
             await testStep("Everything's wrong", async () => {
                 byDebugTag("submitButton").click()
                 await sleep(1000)
@@ -87,8 +87,8 @@ namespace alraune {
                     s("email", `bullshit`)
                     s("phone", `crap`)
                     s("documentType", "PRACTICE")
-                    s("documentTitle", "Как я пинал хуи на практике")
-                    s("documentDetails", "Детали? Я ебу, какие там детали...")
+                    s("title", "Как я пинал хуи на практике")
+                    s("details", "Детали? Я ебу, какие там детали...")
                     s("numPages", "1000")
                     s("numSources", "plenty")
                 }
@@ -106,8 +106,8 @@ namespace alraune {
                     s("email", `perdonde@mail.com`)
                     s("phone", `+38 (068) 4542823`)
                     s("documentType", "PRACTICE")
-                    s("documentTitle", "Как я пинал хуи на практике")
-                    s("documentDetails", "Детали? Я ебу, какие там детали...")
+                    s("title", "Как я пинал хуи на практике")
+                    s("details", "Детали? Я ебу, какие там детали...")
                     s("numPages", "35")
                     s("numSources", "7")
                 }
@@ -115,7 +115,7 @@ namespace alraune {
             })
         })
 
-        declareMaf("/order", async function maf301() {
+        declareMaf("/order", async function maf301_editOrderParams() {
             await testStep("Open edit params modal", async () => {
                 await state.modalShown.reset_do_pauseTest(() => {
                     byDebugTag("topRightButton").click()
@@ -128,8 +128,8 @@ namespace alraune {
                     s("contactName", `Иммануил Пердондэ ${entropy}`)
                     s("phone", `secret`)
                     s("documentType", "ESSAY")
-                    s("documentTitle", "Как я пинал большие хуи на практике")
-                    s("documentDetails", "Детали? Я ебу, какие там детали... Да, ебу! И не ебет")
+                    s("title", "Как я пинал большие хуи на практике")
+                    s("details", "Детали? Я ебу, какие там детали... Да, ебу! И не ебет")
                     s("numPages", "35")
                 }
                 {const p = getDocumentCategoryPickerControl()

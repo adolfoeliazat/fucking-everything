@@ -85,12 +85,12 @@ fun renderOrderPage(commands: MutableList<AlBackToFrontCommandPile>, rpp: Render
                     AlOrderTab.FILES -> {
                         val initCommands = mutableListOf<AlBackToFrontCommandPile>()
                         val inputControlUUIDs = mutableListOf<String>()
-                        val fields = OrderParamsFields(FieldSource.DB)
+                        val fields = FileFields(FieldSource.INITIAL)
 
                         commands += AlBackToFrontCommandPile()-{o->
                             o.opcode = AlBackToFrontCommandOpcode.OpenModalOnElementClick
                             o.domid = AlDomid.topRightButton
-                            o.html = renderModal(renderOrderParamsModalContent(initCommands, inputControlUUIDs, fields)).render()
+                            o.html = renderModal(renderFileModalContent(initCommands, inputControlUUIDs, fields, AlFrontToBackCommandOpcode.SubmitCreateOrderFileForm)).render()
                             o.initCommands = initCommands
                         }
                     }
@@ -106,6 +106,11 @@ fun renderOrderParamsModalContent(initCommands: MutableList<AlBackToFrontCommand
     renderBlueModalContent(title = t("TOTE", "Параметры"),
                            bodyContent = renderOrderParamsFormBody(initCommands, inputControlUUIDs, fields),
                            footerContent = renderOrderParamsFormButtons(initCommands, inputControlUUIDs, tickerFloat = "left", ftbOpcode = AlFrontToBackCommandOpcode.SubmitOrderParamsForm))
+
+fun renderFileModalContent(initCommands: MutableList<AlBackToFrontCommandPile>, inputControlUUIDs: MutableList<String>, fields: FileFields, ftbOpcode: AlFrontToBackCommandOpcode) =
+    renderBlueModalContent(title = t("TOTE", "Файл"),
+                           bodyContent = renderFileFormBody(initCommands, inputControlUUIDs, fields),
+                           footerContent = renderFileFormButtons(initCommands, inputControlUUIDs, tickerFloat = "left", ftbOpcode = ftbOpcode))
 
 private fun renderBlueModalContent(title: String, bodyContent: Tag, footerContent: Tag): Tag {
     return renderModalContent(ModalParams(
