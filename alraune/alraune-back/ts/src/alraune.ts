@@ -274,15 +274,24 @@ namespace alraune {
 
         else if (pile.opcode === "CloseModal") {
             if (!state.jShownModal) bitch("c3f1540d-57e0-4f2b-bd87-bb4dd82da7e0")
-            runIgnoring(async () => {
-                await state.modalHidden.reset_do_pauseTest(() => {
-                    ;(state.jShownModal as any).modal("hide")
-                })
-                await executeBackCommands(pile.afterModalHidden)
+            await state.modalHidden.reset_do_pauseTest(() => {
+                ;(state.jShownModal as any).modal("hide")
             })
         }
 
+        else if (pile.opcode === "FuckElementOut") {
+            const j = byIDSingle(unpileDomid(pile))
+            j.addClass(AlFrontPile.fuckOutClass)
+            await sleep(AlFrontPile.delayBeforeReplacingFuckingOutElement)
+        }
+
         else wtf(`184e8001-a4eb-49fc-accb-ad17dabc052f`, {pile})
+    }
+
+    export const AlFrontPile = new class {
+        readonly fuckOutClass = "fuckOutClass"
+        readonly fuckOutDuration = 300
+        readonly delayBeforeReplacingFuckingOutElement = 250
     }
 
     export function controlByProp(name: AlFrontToBackCommandPileProp) {
@@ -549,8 +558,18 @@ namespace alraune {
     }
 
     export async function initShit() {
-        // const j = byIDSingle("shitPassedFromBackToFront2")
-        // state.backResponse = JSON.parse(j.attr("data-shit"))
+        $("body").append(`<style>
+            .${AlFrontPile.fuckOutClass} {
+                animation-name: fuckOut;
+                animation-duration: ${AlFrontPile.fuckOutDuration}ms;
+                animation-iteration-count: 1;
+            }
+            
+            @keyframes fuckOut {
+                0% {opacity: 1;}
+                100% {opacity: 0;}
+            }
+        </style>`)
 
         const initialBackResponse = (window as any).initialBackResponse
         clog({initialBackResponse})

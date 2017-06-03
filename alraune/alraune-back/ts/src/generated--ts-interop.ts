@@ -5,7 +5,7 @@
  */
 
 /*1*///
-/*2*/// Generated on Sat Jun 03 11:59:12 EEST 2017
+/*2*/// Generated on Sat Jun 03 14:53:21 EEST 2017
 /*3*/// Model: e:/fegh/alraune/alraune-back/src/ts-interop.kt
 /*4*///
 /*5*/
@@ -37,40 +37,40 @@
 /*31*/        tickerFloat: string
 /*32*/        ftbOrderUUID: string
 /*33*/        ftbItemUUID: string
-/*34*/        afterModalHidden: AlBackToFrontCommandPile[]
-/*35*/        ftbProp: AlFrontToBackCommandPileProp
-/*36*/    }
-/*37*/
-/*38*/    export interface AlBackResponsePile {
-/*39*/        commands: AlBackToFrontCommandPile[]
-/*40*/    }
-/*41*/
-/*42*/    export interface AlButtonParams {
-/*43*/        debugTag: AlDebugTag
-/*44*/        title: string
-/*45*/        level: AlButtonLevel
-/*46*/        onClick: AlBackToFrontCommandPile[]
-/*47*/    }
-/*48*/
-/*49*/    export type AlButtonLevel =
-/*50*/          "Default"
-/*51*/        | "Primary"
-/*52*/        | "Success"
-/*53*/        | "Info"
-/*54*/        | "Warning"
-/*55*/        | "Danger"
-/*56*/
-/*57*/    export type AlBackToFrontCommandOpcode =
-/*58*/          "CreateControl"
-/*59*/        | "OpenModalOnElementClick"
-/*60*/        | "FocusControl"
-/*61*/        | "SayFuckYou"
-/*62*/        | "SetTickerActive"
-/*63*/        | "CallBackend"
-/*64*/        | "ReplaceElement"
-/*65*/        | "SetLocationHref"
-/*66*/        | "OnClick"
-/*67*/        | "CloseModal"
+/*34*/        ftbProp: AlFrontToBackCommandPileProp
+/*35*/    }
+/*36*/
+/*37*/    export interface AlBackResponsePile {
+/*38*/        commands: AlBackToFrontCommandPile[]
+/*39*/    }
+/*40*/
+/*41*/    export interface AlButtonParams {
+/*42*/        debugTag: AlDebugTag
+/*43*/        title: string
+/*44*/        level: AlButtonLevel
+/*45*/        onClick: AlBackToFrontCommandPile[]
+/*46*/    }
+/*47*/
+/*48*/    export type AlButtonLevel =
+/*49*/          "Default"
+/*50*/        | "Primary"
+/*51*/        | "Success"
+/*52*/        | "Info"
+/*53*/        | "Warning"
+/*54*/        | "Danger"
+/*55*/
+/*56*/    export type AlBackToFrontCommandOpcode =
+/*57*/          "CreateControl"
+/*58*/        | "OpenModalOnElementClick"
+/*59*/        | "FocusControl"
+/*60*/        | "SayFuckYou"
+/*61*/        | "SetTickerActive"
+/*62*/        | "CallBackend"
+/*63*/        | "ReplaceElement"
+/*64*/        | "SetLocationHref"
+/*65*/        | "OnClick"
+/*66*/        | "CloseModal"
+/*67*/        | "FuckElementOut"
 /*68*/
 /*69*/    export type AlControlType =
 /*70*/          "Text"
@@ -383,29 +383,29 @@
  *32 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:46    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
  *33 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:46    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
  *34 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:46    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
- *35 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:46    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
- *36 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:53    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
- *37 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:35    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
- *38 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:44    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
- *39 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:46    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
- *40 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:53    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
- *41 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:35    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
- *42 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:44    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
+ *35 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:53    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
+ *36 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:35    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
+ *37 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:44    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
+ *38 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:46    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
+ *39 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:53    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
+ *40 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:35    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
+ *41 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:44    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
+ *42 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:50    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
  *43 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:50    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
  *44 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:50    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
  *45 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:50    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
- *46 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:50    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
- *47 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:53    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
- *48 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:35    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
- *49 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:144    AlrauneTSInteropSpew.kt:37    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
+ *46 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:53    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
+ *47 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:35    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
+ *48 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:144    AlrauneTSInteropSpew.kt:37    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
+ *49 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:155    AlrauneTSInteropSpew.kt:40    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
  *50 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:155    AlrauneTSInteropSpew.kt:40    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
  *51 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:155    AlrauneTSInteropSpew.kt:40    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
  *52 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:155    AlrauneTSInteropSpew.kt:40    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
  *53 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:155    AlrauneTSInteropSpew.kt:40    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
  *54 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:155    AlrauneTSInteropSpew.kt:40    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
- *55 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:155    AlrauneTSInteropSpew.kt:40    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
- *56 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:35    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
- *57 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:144    AlrauneTSInteropSpew.kt:37    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
+ *55 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:35    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
+ *56 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:144    AlrauneTSInteropSpew.kt:37    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
+ *57 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:155    AlrauneTSInteropSpew.kt:40    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
  *58 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:155    AlrauneTSInteropSpew.kt:40    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
  *59 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:155    AlrauneTSInteropSpew.kt:40    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    
  *60 <-- spew.kt:106    spew.kt:103    AlrauneTSInteropSpew.kt:16    AlrauneTSInteropSpew.kt:14    AlrauneTSInteropSpew.kt:155    AlrauneTSInteropSpew.kt:40    AlrauneTSInteropSpew.kt:14    spew.kt:40    spew-run-configs-2.kt:71    

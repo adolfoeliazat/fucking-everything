@@ -33,7 +33,6 @@ class AlBackToFrontCommandPile {
     var tickerFloat: String? = null
     var ftbOrderUUID: String? = null
     var ftbItemUUID: String? = null
-    var afterModalHidden: List<AlBackToFrontCommandPile>? = null
 
     @JsonSerialize(using = PropertyNameSerializer::class)
     var ftbProp: KProperty1<AlFrontToBackCommandPile, *>? = null
@@ -56,7 +55,7 @@ enum class AlButtonLevel {
 
 enum class AlBackToFrontCommandOpcode {
     CreateControl, OpenModalOnElementClick, FocusControl, SayFuckYou, SetTickerActive, CallBackend,
-    ReplaceElement, SetLocationHref, OnClick, CloseModal
+    ReplaceElement, SetLocationHref, OnClick, CloseModal, FuckElementOut
 }
 
 enum class AlControlType {
@@ -116,7 +115,8 @@ enum class AlDomid {
     editItemIcon,
     deleteItemIcon,
     deleteItemModalContent,
-    itemShit
+    itemShit,
+    orderParams
 }
 
 

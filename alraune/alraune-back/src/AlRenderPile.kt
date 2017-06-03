@@ -94,7 +94,7 @@ object AlRenderPile {
 
     fun renderOrderParams(order: AlUAOrder): Renderable {
         val f = AlFields.order
-        return kdiv(Style(position = "relative")){o->
+        return kdiv(Attrs(domid = AlDomid.orderParams, style = Style(position = "relative"))){o->
             o- row{o->
                 o- createdAtCol(3, order.createdAt)
                 o- col(3, f.status.title, order.state.title)

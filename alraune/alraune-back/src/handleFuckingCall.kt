@@ -52,17 +52,21 @@ fun handleFuckingCall() {
                     it.numSources = fields.numSources.sanitizedString.toInt()
                 }
 
-                commands += AlBackToFrontCommandPile()-{o->
+                commands += AlBackToFrontCommandPile()-{o ->
                     o.opcode = AlBackToFrontCommandOpcode.CloseModal
-                    o.afterModalHidden = listOf(
-                        AlBackToFrontCommandPile()-{o->
-                            o.opcode = AlBackToFrontCommandOpcode.ReplaceElement
-                            o.domid = AlDomid.replaceableContent
-                            val initCommands = mutableListOf<AlBackToFrontCommandPile>()
-                            o.initCommands = initCommands
-                            o.html = renderOrderPage(initCommands).render()
-                        }
-                    )
+                }
+
+                commands += AlBackToFrontCommandPile()-{o ->
+                    o.opcode = AlBackToFrontCommandOpcode.FuckElementOut
+                    o.domid = AlDomid.orderParams
+                }
+
+                commands += AlBackToFrontCommandPile()-{o->
+                    o.opcode = AlBackToFrontCommandOpcode.ReplaceElement
+                    o.domid = AlDomid.replaceableContent
+                    val initCommands = mutableListOf<AlBackToFrontCommandPile>()
+                    o.initCommands = initCommands
+                    o.html = renderOrderPage(initCommands).render()
                 }
             }
         }
