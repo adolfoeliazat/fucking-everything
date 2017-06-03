@@ -69,18 +69,12 @@ namespace alraune {
             byDebugTag("submitButton").click()
         })
 
-        async function sleep(ms: number): Promise<void> {
-            return new Promise<void>((resolve, reject) => {
-                setTimeout(resolve, ms)
-            })
-        }
-
         declareMaf("/orderCreationForm", async function maf202() {
             { // Everything's wrong
                 byDebugTag("submitButton").click()
-                await sleep(1000)
+                await sectionPause()
             }
-            { // Fix 1
+            { // Slightly better
                 {const s = debug.setControlValue
                     s("contactName", `Иммануил Пердондэ`)
                     s("email", `bullshit`)
@@ -96,7 +90,7 @@ namespace alraune {
                     p.debug_setSelectValue(AlUADocumentCategories.programmingID)
                 }
                 byDebugTag("submitButton").click()
-                await sleep(1000)
+                await sectionPause()
             }
             { // All good
                 {const s = debug.setControlValue
@@ -111,6 +105,7 @@ namespace alraune {
                 }
                 byDebugTag("submitButton").click()
             }
+            async function sectionPause() {await sleep(1000)}
         })
 
         function getDocumentCategoryPickerControl(): DocumentCategoryPicker {

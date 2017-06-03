@@ -1,9 +1,5 @@
 package alraune.back
 
-import alraune.back.AlRenderPile.col
-import alraune.back.AlRenderPile.pageHeader
-import alraune.back.AlRenderPile.row
-import alraune.back.AlRenderPile.t
 import com.fasterxml.jackson.databind.ObjectMapper
 import vgrechka.*
 
@@ -15,6 +11,7 @@ fun handleFuckingCall() {
     val requestText = rctx.req.reader.readText()
     val ftb = ObjectMapper().readValue(requestText, AlFrontToBackCommandPile::class.java)
     clog("ftb", ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(ftb))
+//    rctx.ftb = ftb
 
     exhaustive=when (ftb.opcode) {
         AlFrontToBackCommandOpcode.SubmitOrderCreationForm -> {
@@ -30,7 +27,8 @@ fun handleFuckingCall() {
                     numPages = fields.numPages.sanitizedString.toInt(), numSources = fields.numSources.sanitizedString.toInt()))
 
                 commands += AlBackToFrontCommandPile()-{o->
-                    o.opcode = AlBackToFrontCommandOpcode.SayFuckYou
+                    o.opcode = AlBackToFrontCommandOpcode.SetLocationHref
+                    o.href = AlBackPile0.baseURL + "/order?orderUUID=${order.uuid}"
                 }
             }
         }

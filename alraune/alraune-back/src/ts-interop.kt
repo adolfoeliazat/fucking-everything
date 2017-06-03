@@ -28,6 +28,7 @@ class AlBackToFrontCommandPile {
     var backOpcode: AlFrontToBackCommandOpcode? = null
     var postURL: String? = null
     var errorBannerPlaceholderDomidForLowLevelPostFailure: String? = null
+    var href: String? = null
 
     @JsonSerialize(using = PropertyNameSerializer::class)
     var ftbProp: KProperty1<AlFrontToBackCommandPile, *>? = null
@@ -50,7 +51,7 @@ enum class AlButtonLevel {
 
 enum class AlBackToFrontCommandOpcode {
     CreateControl, OpenModalOnElementClick, FocusControl, SayFuckYou, SetTickerActive, CallBackend,
-    ReplaceElement
+    ReplaceElement, SetLocationHref
 }
 
 enum class AlControlType {

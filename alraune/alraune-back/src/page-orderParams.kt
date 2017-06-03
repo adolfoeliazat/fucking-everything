@@ -25,7 +25,7 @@ class SpitOrderTabPage(val activeTab: OrderTab) {
 //            }
 //        }
 //
-//        spitUsualPage(replaceableContent(kdiv{o->
+//        spitUsualPage(replaceableContent(kdiv{
 //            val canEdit = rctx.order.state == UAOrderState.CUSTOMER_DRAFT
 //
 //            o- renderOrderTitle(rctx.order)

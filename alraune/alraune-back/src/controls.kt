@@ -3,59 +3,59 @@ package alraune.back
 import vgrechka.*
 import kotlin.reflect.KProperty1
 
-class ControlBuilder(val initCommands: MutableList<AlBackToFrontCommandPile>, val inputControlUUIDs: MutableList<String>) {
-
-    inner class begin(
-        val title: String,
-        val prop: KProperty1<AlFrontToBackCommandPile, String>,
-        val validate: (String?) -> ValidationResult,
-        val virginValue: () -> String
-    ) {
-        val cmd = AlBackToFrontCommandPile()
-        val vr = when {
-            rctx.isPost -> validate(prop.get(rctx.postData.pile))
-            else -> ValidationResult(virginValue(), null)
-        }
-
-        init {
-            cmd.opcode = AlBackToFrontCommandOpcode.CreateControl
-            cmd.rawDomid = AlBackPile.uuid()
-            cmd.controlUUID = AlBackPile.uuid()
-            cmd.name = prop.name
-            cmd.error = vr.error
-//            cmd.error = "pizdets"
-            cmd.putInFormGroup = true
-            cmd.title = title
-            cmd.ftbProp = prop
-
-            inputControlUUIDs += cmd.controlUUID!!
-            initCommands += cmd
-        }
-
-        private fun simple(type: AlControlType): Renderable {
-            cmd.controlType = type
-            cmd.stringValue = vr.sanitizedString
-            return render()
-        }
-
-        fun text() = simple(AlControlType.Text)
-        fun textArea() = simple(AlControlType.TextArea)
-        fun documentCategoryPicker() = simple(AlControlType.DocumentCategoryPicker)
-
-        fun select(values: List<TitledValue>): Renderable {
-            cmd.titledValues = values
-            return simple(AlControlType.Select)
-        }
-
-        private fun render(): Renderable {
-            clog("Control creation command: controlUUID = ${cmd.controlUUID}; controlType = ${cmd.controlType}")
-            // clog(ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(cmd))
-            return kdiv(Attrs(id = cmd.rawDomid))
-        }
-    }
-
-
-}
+//class ControlBuilder(val initCommands: MutableList<AlBackToFrontCommandPile>, val inputControlUUIDs: MutableList<String>) {
+//
+//    inner class begin(
+//        val title: String,
+//        val prop: KProperty1<AlFrontToBackCommandPile, String>,
+//        val validate: (String?) -> ValidationResult,
+//        val virginValue: () -> String
+//    ) {
+//        val cmd = AlBackToFrontCommandPile()
+//        val vr = when {
+//            rctx.isPost -> validate(prop.get(rctx.postData.pile))
+//            else -> ValidationResult(virginValue(), null)
+//        }
+//
+//        init {
+//            cmd.opcode = AlBackToFrontCommandOpcode.CreateControl
+//            cmd.rawDomid = AlBackPile.uuid()
+//            cmd.controlUUID = AlBackPile.uuid()
+//            cmd.name = prop.name
+//            cmd.error = vr.error
+////            cmd.error = "pizdets"
+//            cmd.putInFormGroup = true
+//            cmd.title = title
+//            cmd.ftbProp = prop
+//
+//            inputControlUUIDs += cmd.controlUUID!!
+//            initCommands += cmd
+//        }
+//
+//        private fun simple(type: AlControlType): Renderable {
+//            cmd.controlType = type
+//            cmd.stringValue = vr.sanitizedString
+//            return render()
+//        }
+//
+//        fun text() = simple(AlControlType.Text)
+//        fun textArea() = simple(AlControlType.TextArea)
+//        fun documentCategoryPicker() = simple(AlControlType.DocumentCategoryPicker)
+//
+//        fun select(values: List<TitledValue>): Renderable {
+//            cmd.titledValues = values
+//            return simple(AlControlType.Select)
+//        }
+//
+//        private fun render(): Renderable {
+//            clog("Control creation command: controlUUID = ${cmd.controlUUID}; controlType = ${cmd.controlType}")
+//            // clog(ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(cmd))
+//            return kdiv(Attrs(id = cmd.rawDomid))
+//        }
+//    }
+//
+//
+//}
 
 class ControlBuilder2(val commands: MutableList<AlBackToFrontCommandPile>, val inputControlUUIDs: MutableList<String>) {
 

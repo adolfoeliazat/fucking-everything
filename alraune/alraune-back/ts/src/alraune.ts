@@ -249,6 +249,10 @@ namespace alraune {
             jElementToBeReplaced.replaceWith(jNewElement)
         }
 
+        else if (pile.opcode === "SetLocationHref") {
+            window.location.href = pile.href
+        }
+
         else wtf(`184e8001-a4eb-49fc-accb-ad17dabc052f`, {pile})
     }
 
@@ -534,6 +538,17 @@ namespace alraune {
 
     export function isFrontToBackContributor(x: any): x is FrontToBackContributor {
         return x && x.__isFrontToBackContributor
+    }
+
+    export async function sleep(ms: number): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            setTimeout(resolve, ms)
+        })
+    }
+
+    export function sleepTillEndOfTime(): Promise<void> {
+        console.warn("============ Sleeping till the end of time ===========")
+        return sleep(2147483647) // More causes no delay at all
     }
 
 
