@@ -13,25 +13,15 @@ import javax.servlet.http.HttpServletResponse
 import alraune.back.AlBackPile0.log
 import alraune.back.AlRenderPile.rawHTML
 import alraune.shared.*
-import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer
-import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import org.eclipse.jetty.server.handler.HandlerCollection
 import org.eclipse.jetty.server.handler.ResourceHandler
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.reflect.KClass
-import kotlin.reflect.KProperty0
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.full.memberFunctions
-import kotlin.reflect.full.valueParameters
 
 // TODO:vgrechka Backend dies on exception?
 
@@ -142,15 +132,7 @@ object StartAlrauneBack {
 //                                AlPagePath.post_createOrderFile -> handlePost_createOrderFile()
 //                                AlPagePath.post_deleteOrderFile -> handlePost_deleteOrderFile()
 
-                                "/orderCreationForm" -> {
-                                    val commands = mutableListOf<AlBackToFrontCommandPile>()
-                                    emitCommandsForRenderingOrderParamsForm(commands, OrderParamsFields(null))
-                                    val initialBackResponse = AlBackResponsePile()-{o->
-                                        o.commands = commands
-                                    }
-                                    spitUsualPage(kdiv(Attrs(domid = AlDomid.replaceableContent)), initialBackResponse)
-                                }
-
+                                "/orderCreationForm" -> spitOrderCreationFormPage()
                                 "/order" -> spitOrderPage()
 
                                 else -> {
@@ -467,7 +449,7 @@ class FieldContext {
 //        override fun render(): Renderable {
 //            val theError = vr.error
 //            val id = AlSharedPile.fieldDOMID(name = prop.name)
-//            return kdiv.className("form-group") {o ->
+//            return kdiv.className("form-group"){o->
 //                if (theError != null)
 //                    o.amend(Style(marginBottom = "0"))
 //                o - klabel(text = title)
@@ -475,7 +457,7 @@ class FieldContext {
 //                    FieldType.TEXT -> kinput(Attrs(type = "text", id = id, value = vr.sanitizedString, className = "form-control")) {}
 //                    FieldType.TEXTAREA -> ktextarea(Attrs(id = id, rows = 5, className = "form-control"), text = vr.sanitizedString)
 //                }
-//                o - kdiv(Style(position = "relative")) {o ->
+//                o - kdiv(Style(position = "relative")){o->
 //                    o - control
 //                    if (theError != null) {
 //                        o - kdiv(Style(marginTop = "5px", marginRight = "9px", textAlign = "right", color = "${Color.RED_700}"))
@@ -555,6 +537,15 @@ class PropertyNameSerializer : StdSerializer<KProperty1<*, *>>(KProperty1::class
     override fun serialize(value: KProperty1<*, *>, gen: JsonGenerator, provider: SerializerProvider) {
         gen.writeString(value.name)
     }
+}
+
+fun spitOrderCreationFormPage() {
+    val commands = mutableListOf<AlBackToFrontCommandPile>()
+    emitCommandsForRenderingOrderCreationFormPage(commands, OrderParamsFields(null))
+    val initialBackResponse = AlBackResponsePile()-{o->
+        o.commands = commands
+    }
+    spitUsualPage(kdiv(Attrs(domid = AlDomid.replaceableContent)), initialBackResponse)
 }
 
 

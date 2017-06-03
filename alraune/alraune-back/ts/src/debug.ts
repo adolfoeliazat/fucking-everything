@@ -108,6 +108,12 @@ namespace alraune {
             async function sectionPause() {await sleep(1000)}
         })
 
+        declareMaf("/order", async function maf301() {
+            {
+                byDebugTag("topRightButton").click()
+            }
+        })
+
         function getDocumentCategoryPickerControl(): DocumentCategoryPicker {
             return cast(state.debug.nameToControl.documentCategory, isDocumentCategoryPicker)
         }

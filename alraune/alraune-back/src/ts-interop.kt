@@ -83,7 +83,8 @@ enum class AlFrontToBackCommandOpcode {
 }
 
 enum class AlDebugTag {
-    submitButton
+    submitButton,
+    topRightButton
 }
 
 enum class AlDomid {

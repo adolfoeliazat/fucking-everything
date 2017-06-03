@@ -152,13 +152,13 @@ namespace alraune {
         }
 
         else if (pile.opcode === "OpenModalOnElementClick") {
-            const jTriggerElement = byIDSingle(pile.domid)
-            setOnClick(jTriggerElement, ()=>{
+            const jTriggerElement = byIDSingle(unpileDomid(pile))
+            setOnClick(jTriggerElement, () => {
                 const jModal = $(pile.html)
                 const jBody = $("body")
                 const bodyUnderModalClass = "paddingRightScrollbarWidthImportant"
 
-                jModal.on("show.bs.modal", ()=>{
+                jModal.on("show.bs.modal", () => {
                     jBody.css("overflow-y", "hidden")
                     jBody.addClass(bodyUnderModalClass)
                 })
@@ -172,7 +172,6 @@ namespace alraune {
                 jModal.on("hidden.bs.modal", () => {
                     jBody.css("overflow-y", "scroll")
                     jBody.removeClass(bodyUnderModalClass)
-                    // locks.hidden.resumeTestFromSut()
 
                     jModal.data("bs.modal", null)
                     jModal.remove()

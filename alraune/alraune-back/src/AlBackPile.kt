@@ -142,6 +142,7 @@ class Tag(val tag: String, var attrs: Attrs) : Renderable {
             attrs.dataShit?.let {append(" ${attr.data_shit}='${escapeHTML(it)}'")}
             attrs.dataDismiss?.let {append(" data-dismiss='${escapeHTML(it)}'")}
             tagCreationStackID?.let {append(" ${attr.data_tagCreationStackID}='$it'")}
+            attrs.dataDebugTag?.let {append(" data-debugTag='${escapeHTML(it.name)}'")}
 
             append(">")
             for (child in children) {
@@ -252,7 +253,8 @@ data class Attrs(
     val dataDismiss: String? = null,
     val selected: Boolean = false,
     val href: String? = null,
-    val tabIndex: Int? = null
+    val tabIndex: Int? = null,
+    val dataDebugTag: AlDebugTag? = null
 )
 
 class ValidationResult(val sanitizedString: String, val error: String?) {
