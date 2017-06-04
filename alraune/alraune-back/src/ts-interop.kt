@@ -18,13 +18,13 @@ class AlBackToFrontCommandPile {
     var domid: AlDomid? = null
     var domidSuffix: String? = null
     var html: String? = null
-    var initCommands: List<AlBackToFrontCommandPile>? = null
-    var commands: List<AlBackToFrontCommandPile>? = null
+    var initCommands: List<AlBackToFrontCommandPile> = listOf()
+    var commands: List<AlBackToFrontCommandPile> = listOf()
     var putInFormGroup: Boolean? = null
     var controlType: AlControlType? = null
     var controlUUID: String? = null
-    var readValuesOfControlsWithUUIDs: List<String>? = null
-    var buttons: List<AlButtonParams>? = null
+    var readValuesOfControlsWithUUIDs: List<String> = listOf()
+    var buttons: List<AlButtonParams> = listOf()
     var bool: Boolean? = null
     var ftbOpcode: AlFrontToBackCommandOpcode? = null
     var postURL: String? = null
@@ -33,6 +33,7 @@ class AlBackToFrontCommandPile {
     var tickerFloat: String? = null
     var ftbOrderUUID: String? = null
     var ftbItemUUID: String? = null
+    var onModalShown: List<AlBackToFrontCommandPile> = listOf()
 
     @JsonSerialize(using = PropertyNameSerializer::class)
     var ftbProp: KProperty1<AlFrontToBackCommandPile, *>? = null

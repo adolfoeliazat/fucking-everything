@@ -70,7 +70,7 @@ class ControlBuilder2(val commands: MutableList<AlBackToFrontCommandPile>, val i
             cmd.opcode = AlBackToFrontCommandOpcode.CreateControl
             cmd.rawDomid = AlBackPile.uuid()
             cmd.controlUUID = AlBackPile.uuid()
-            cmd.name = prop.name
+//            cmd.name = prop.name
             cmd.error = vr.error
             cmd.putInFormGroup = true
             cmd.title = title

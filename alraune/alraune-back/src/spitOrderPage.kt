@@ -71,27 +71,29 @@ fun renderOrderPage(commands: MutableList<AlBackToFrontCommandPile>, rpp: Render
             if (canEdit) {
                 exhaustive = when (activeTab) {
                     AlOrderTab.PARAMS -> {
-                        val initCommands = mutableListOf<AlBackToFrontCommandPile>()
+                        val modalInitCommands = mutableListOf<AlBackToFrontCommandPile>()
                         val inputControlUUIDs = mutableListOf<String>()
                         val fields = OrderParamsFields(FieldSource.DB)
 
                         commands += AlBackToFrontCommandPile()-{o->
                             o.opcode = AlBackToFrontCommandOpcode.OpenModalOnElementClick
                             o.domid = AlDomid.topRightButton
-                            o.html = renderModal(renderOrderParamsModalContent(initCommands, inputControlUUIDs, fields)).render()
-                            o.initCommands = initCommands
+                            o.html = renderModal(renderOrderParamsModalContent(modalInitCommands, inputControlUUIDs, fields)).render()
+                            o.initCommands = modalInitCommands
                         }
                     }
+
                     AlOrderTab.FILES -> {
-                        val initCommands = mutableListOf<AlBackToFrontCommandPile>()
+                        val modalInitCommands = mutableListOf<AlBackToFrontCommandPile>()
                         val inputControlUUIDs = mutableListOf<String>()
                         val fields = FileFields(FieldSource.INITIAL)
 
                         commands += AlBackToFrontCommandPile()-{o->
                             o.opcode = AlBackToFrontCommandOpcode.OpenModalOnElementClick
                             o.domid = AlDomid.topRightButton
-                            o.html = renderModal(renderFileModalContent(initCommands, inputControlUUIDs, fields, AlFrontToBackCommandOpcode.SubmitCreateOrderFileForm)).render()
-                            o.initCommands = initCommands
+                            o.html = renderModal(renderFileModalContent(modalInitCommands, inputControlUUIDs, fields, AlFrontToBackCommandOpcode.SubmitCreateOrderFileForm)).render()
+                            o.initCommands = modalInitCommands
+                            o.onModalShown = listOf(AlCommandPile.focusTitleField())
                         }
                     }
                 }

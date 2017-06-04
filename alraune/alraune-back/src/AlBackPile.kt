@@ -63,6 +63,16 @@ object AlBackPile {
     fun validateGenericDetails(x: String?) = validateString(x, minLen = 5, maxLen = 1000)
 
     fun uuid() = UUID.randomUUID().toString()
+
+}
+
+object AlCommandPile {
+    fun focusTitleField(): AlBackToFrontCommandPile {
+        return AlBackToFrontCommandPile()-{o->
+            o.opcode = AlBackToFrontCommandOpcode.FocusControl
+            o.ftbProp = AlFrontToBackCommandPile::title
+        }
+    }
 }
 
 val kdiv = TagCtor("div")

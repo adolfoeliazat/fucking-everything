@@ -224,11 +224,6 @@ fun renderFileFormBody(initCommands: MutableList<AlBackToFrontCommandPile>, inpu
                     prop = AlFrontToBackCommandPile::details,
                     vr = fields.details)
             .textArea()
-
-        initCommands.add(AlBackToFrontCommandPile()-{o->
-            o.opcode = AlBackToFrontCommandOpcode.FocusControl
-            o.ftbProp = AlFrontToBackCommandPile::title
-        })
     }
 }
 

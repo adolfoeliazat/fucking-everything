@@ -1,3 +1,5 @@
+import AlFrontToBackCommandPile = alraune.AlFrontToBackCommandPile
+
 namespace alraune {
 
     export function run<T>(f: () => T): T {
@@ -150,7 +152,8 @@ namespace alraune {
             }
 
             state.uuidToSomething[pile.controlUUID] = control
-            ;(state.debug.nameToControl as any)[pile.name] = control
+            state.debug.putControlForProp(pile.ftbProp, control)
+            // ;(state.debug.nameToControl as any)[pile.name] = control
             byIDSingle(unpileDomid(pile)).replaceWith(jShit)
             afterControlDOMCreated()
         }
@@ -168,9 +171,10 @@ namespace alraune {
                         jBody.addClass(bodyUnderModalClass)
                     })
 
-                    jModal.on("shown.bs.modal", () => {
-                        state.modalShown.resumeTestFromSut()
+                    jModal.on("shown.bs.modal", async () => {
                         state.jShownModal = jModal
+                        await executeBackCommands(pile.onModalShown)
+                        state.modalShown.resumeTestFromSut()
                     })
 
                     jModal.on("hide.bs.modal", () => {})
@@ -294,8 +298,9 @@ namespace alraune {
         readonly delayBeforeReplacingFuckingOutElement = 450
     }
 
-    export function controlByProp(name: AlFrontToBackCommandPileProp) {
-        const shit = state.debug.nameToControl[name]
+    export function controlByProp(prop: AlFrontToBackCommandPileProp) {
+        // const shit = state.debug.nameToControl[prop]
+        const shit = state.debug.getControlForProp(prop)
         return {
             which<T>(check: (x: any) => x is T): T {
                 return cast(shit, check)
@@ -374,16 +379,26 @@ namespace alraune {
         }
     }
 
-    export const state = {
-        backResponse: {} as AlBackResponsePile,
-        modalShown: new TestLock(),
-        modalHidden: new TestLock(),
-        processedBackendResponse: new TestLock(),
-        debug: {
-            nameToControl: {} as {[K in AlFrontToBackCommandPileProp]?: any}
-        },
-        uuidToSomething: {} as {[K: string]: any},
-        jShownModal: undefined as JQuery | undefined
+    export const state = new class {
+        backResponse = {} as AlBackResponsePile
+        readonly modalShown = new TestLock()
+        readonly modalHidden = new TestLock()
+        readonly processedBackendResponse = new TestLock()
+        readonly uuidToSomething = {} as {[K: string]: any}
+        jShownModal = undefined as JQuery | undefined
+
+        readonly debug = new class {
+            private readonly propToControl = {} as {[K in AlFrontToBackCommandPileProp]?: any}
+
+            putControlForProp(prop: AlFrontToBackCommandPileProp, control: any) {
+                clog(`putNameToControl: ${prop}`, {control, stackCapture: new Error("Capturing stack")})
+                this.propToControl[prop] = control
+            }
+
+            getControlForProp(prop: AlFrontToBackCommandPileProp): any {
+                return this.propToControl[prop]
+            }
+        }
     }
 
     export const state2 = new class {
@@ -538,16 +553,6 @@ namespace alraune {
             .replace("\"", "&#34;")
     }
 
-    export const debug = {
-        setControlValue(name: AlFrontToBackCommandPileProp, value: any) {
-            const ctrl = state.debug.nameToControl[name]
-            if (typeof value === "string") {
-                cast(ctrl, isStringValueControl).setValue(value)
-            }
-            else wtf("54da9c71-2b48-40dc-b265-17d5809ee013")
-        }
-    }
-
     let _nextUID = 1
     export function nextUID(): string {
         return "uid" + _nextUID++
@@ -574,7 +579,7 @@ namespace alraune {
         clog({initialBackResponse})
         state.backResponse = initialBackResponse
         await executeBackCommands(state.backResponse.commands)
-        initDebugShit()
+        debug.initDebugShit()
     }
 
     export async function executeBackCommands(cmds: AlBackToFrontCommandPile[]): Promise<void> {
